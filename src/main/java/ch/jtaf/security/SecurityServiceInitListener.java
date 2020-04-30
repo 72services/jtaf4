@@ -1,14 +1,15 @@
 package ch.jtaf.security;
 
-import ch.jtaf.ui.DashboardView;
 import ch.jtaf.ui.LoginView;
+import ch.jtaf.ui.MainView;
+import ch.jtaf.ui.RouteNotFoundError;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.server.ServiceInitEvent;
 import com.vaadin.flow.server.VaadinServiceInitListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ConfigureUIServiceInitListener implements VaadinServiceInitListener {
+public class SecurityServiceInitListener implements VaadinServiceInitListener {
 
     @Override
     public void serviceInit(ServiceInitEvent event) {
@@ -21,13 +22,15 @@ public class ConfigureUIServiceInitListener implements VaadinServiceInitListener
      * @param event before navigation event with event details
      */
     private void beforeEnter(BeforeEnterEvent event) {
-        if (protectedRoute(event) && !SecurityUtils.isUserLoggedIn()) {
-            event.rerouteTo(LoginView.class);
+        if (protectedRoute(event) && !SecurityContext.isUserLoggedIn()) {
+            String redirect = event.getNavigationTarget().getSimpleName().substring(0, event.getNavigationTarget().getSimpleName().indexOf("View")).toLowerCase();
+            event.forwardTo("login", redirect);
         }
     }
 
     private boolean protectedRoute(BeforeEnterEvent event) {
         return !LoginView.class.equals(event.getNavigationTarget())
-                && !DashboardView.class.equals(event.getNavigationTarget());
+                && !MainView.class.equals(event.getNavigationTarget())
+                && !RouteNotFoundError.class.equals(event.getNavigationTarget());
     }
 }

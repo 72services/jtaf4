@@ -6,7 +6,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.PWA;
 
-@Route("secure")
+@Route
 public class ProtectedView extends VerticalLayout {
 
     public ProtectedView() {
