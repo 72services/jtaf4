@@ -1,8 +1,6 @@
 package ch.jtaf.ui;
 
 import ch.jtaf.db.tables.records.SeriesRecord;
-import ch.jtaf.reporting.data.SeriesRankingData;
-import ch.jtaf.reporting.report.SeriesRankingReport;
 import ch.jtaf.service.CompetitionRankingService;
 import ch.jtaf.service.SeriesRankingService;
 import com.vaadin.flow.component.html.Anchor;
@@ -22,8 +20,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Locale;
 
 import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Series.SERIES;
