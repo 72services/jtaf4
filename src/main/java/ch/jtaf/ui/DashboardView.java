@@ -1,6 +1,11 @@
 package ch.jtaf.ui;
 
 import ch.jtaf.db.tables.records.SeriesRecord;
+import ch.jtaf.reporting.data.SeriesRankingData;
+import ch.jtaf.reporting.report.SeriesRankingReport;
+import ch.jtaf.service.CompetitionRankingService;
+import ch.jtaf.service.SeriesRankingService;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
@@ -17,6 +22,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Locale;
 
 import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Series.SERIES;
@@ -25,9 +32,8 @@ import static ch.jtaf.db.tables.Series.SERIES;
 @Route(value = "", layout = MainLayout.class)
 public class DashboardView extends VerticalLayout {
 
-    public DashboardView(DSLContext dsl) {
+    public DashboardView(DSLContext dsl, SeriesRankingService seriesRankingService, CompetitionRankingService competitionRankingService) {
         add(new H1("Dashboard"));
-
 
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setWidthFull();
@@ -44,10 +50,29 @@ public class DashboardView extends VerticalLayout {
                     seriesLayout.add(logo);
                     seriesLayout.add(new H2(series.getName()));
 
+                    Anchor seriesRanking = new Anchor(new StreamResource("series_ranking" + series.getId() + ".pdf",
+                            () -> {
+                                byte[] pdf = seriesRankingService.getSeriesRankingAsPdf(series.getId());
+                                return new ByteArrayInputStream(pdf);
+                            }), "Series Ranking");
+                    seriesRanking.getElement().setAttribute("download", true);
+                    seriesLayout.add(seriesRanking);
+
                     dsl.selectFrom(COMPETITION)
                             .where(COMPETITION.SERIES_ID.eq(series.getId()))
                             .fetch()
-                            .forEach(competition -> verticalLayout.add(new Paragraph(competition.getName() + " " + competition.getCompetitionDate())));
+                            .forEach(competition -> {
+                                verticalLayout.add(new Paragraph(competition.getName() + " " + competition.getCompetitionDate()));
+
+                                Anchor competitionRanking = new Anchor(new StreamResource("competition_ranking" + competition.getId() + ".pdf",
+                                        () -> {
+                                            byte[] pdf = competitionRankingService.getCompetitionRankingAsPdf(competition.getId());
+                                            return new ByteArrayInputStream(pdf);
+                                        }), "Competition Ranking");
+                                competitionRanking.getElement().setAttribute("download", true);
+                                seriesLayout.add(competitionRanking);
+
+                            });
                 });
     }
 
