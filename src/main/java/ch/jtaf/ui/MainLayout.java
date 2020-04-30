@@ -21,10 +21,10 @@ import java.util.Map;
 @PWA(name = "JTAF 4", shortName = "JTAF 4", description = "JTAF - Track and Field")
 public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
-    private Tabs tabs = new Tabs();
-    private Map<Class<? extends Component>, Tab> navigationTargetToTab = new HashMap<>();
+    private final Tabs tabs = new Tabs();
+    private final Map<Class<? extends Component>, Tab> navigationTargetToTab = new HashMap<>();
 
-    private Div userInfo = new Div();
+    private final Div userInfo = new Div();
 
     public MainLayout() {
         addMenuTab("Dashboard", DashboardView.class);

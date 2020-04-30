@@ -1,15 +1,8 @@
 package ch.jtaf.service;
 
-import ch.jtaf.db.tables.records.SecurityUserRecord;
 import com.vaadin.flow.server.VaadinSession;
-import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import org.jooq.DSLContext;
-import org.jooq.Record1;
-import org.jooq.Result;
 import org.springframework.stereotype.Component;
-
-import java.util.Collections;
-import java.util.List;
 
 import static ch.jtaf.db.tables.SecurityGroup.SECURITY_GROUP;
 import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;

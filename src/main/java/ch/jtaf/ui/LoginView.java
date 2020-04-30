@@ -19,7 +19,7 @@ import com.vaadin.flow.router.Route;
 @PageTitle("Login")
 public class LoginView extends VerticalLayout implements BeforeEnterObserver, HasUrlParameter<String> {
 
-    private LoginOverlay login = new LoginOverlay();
+    private final LoginOverlay login = new LoginOverlay();
     private String redirect;
     private QueryParameters queryParameters;
 

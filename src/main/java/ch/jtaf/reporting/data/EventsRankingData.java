@@ -9,7 +9,7 @@ public class EventsRankingData {
     private final String name;
     private final LocalDate competitionDate;
 
-    private List<EventsRankingEvent> events = new ArrayList<>();
+    private final List<EventsRankingEvent> events = new ArrayList<>();
 
     public EventsRankingData(String name, LocalDate competitionDate) {
         this.name = name;

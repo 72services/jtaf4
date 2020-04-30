@@ -24,7 +24,7 @@ public class SeriesRankingCategory {
         this.numberOfCompetitions = numberOfCompetitions;
     }
 
-    private List<SeriesRankingAthlete> athletes = new ArrayList<>();
+    private final List<SeriesRankingAthlete> athletes = new ArrayList<>();
 
     public List<SeriesRankingAthlete> getAthletes() {
         List<SeriesRankingAthlete> filteredAthletes = athletes.stream()

@@ -19,6 +19,7 @@ public class SecurityContext {
     }
 
     public static List<String> getRoles() {
+        //noinspection unchecked
         return (List<String>) VaadinSession.getCurrent().getAttribute(ROLES);
     }
 }
