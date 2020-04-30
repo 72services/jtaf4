@@ -67,7 +67,6 @@ public class DashboardView extends VerticalLayout {
                                         }), "Competition Ranking");
                                 competitionRanking.getElement().setAttribute("download", true);
                                 seriesLayout.add(competitionRanking);
-
                             });
                 });
     }
