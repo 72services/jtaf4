@@ -11,11 +11,12 @@ public class SeriesRankingResult {
     private final LocalDate competitionDate;
     private BigDecimal points;
 
-    public SeriesRankingResult(Long athleteId, Long competionId, String competitionName, LocalDate competitionDate) {
+    public SeriesRankingResult(Long athleteId, Long competionId, String competitionName, LocalDate competitionDate, BigDecimal points) {
         this.athleteId = athleteId;
         this.competionId = competionId;
         this.competitionName = competitionName;
         this.competitionDate = competitionDate;
+        this.points = points;
     }
 
     public void addPoints(BigDecimal points) {
