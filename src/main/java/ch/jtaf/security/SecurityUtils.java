@@ -1,8 +1,8 @@
 package ch.jtaf.security;
 
-import ch.jtaf.ui.DashboardView;
-import ch.jtaf.ui.LoginView;
-import ch.jtaf.ui.RouteNotFoundError;
+import ch.jtaf.ui.component.RouteNotFoundError;
+import ch.jtaf.ui.view.DashboardView;
+import ch.jtaf.ui.view.LoginView;
 import com.vaadin.flow.server.ServletHelper.RequestType;
 import com.vaadin.flow.shared.ApplicationConstants;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -105,8 +105,7 @@ public final class SecurityUtils {
      */
     static boolean isFrameworkInternalRequest(HttpServletRequest request) {
         final String parameterValue = request.getParameter(ApplicationConstants.REQUEST_TYPE_PARAMETER);
-        return parameterValue != null
-                && Stream.of(RequestType.values()).anyMatch(r -> r.getIdentifier().equals(parameterValue));
+        return parameterValue != null && Stream.of(RequestType.values()).anyMatch(r -> r.getIdentifier().equals(parameterValue));
     }
 
 }

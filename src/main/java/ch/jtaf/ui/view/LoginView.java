@@ -1,35 +1,26 @@
-package ch.jtaf.ui;
+package ch.jtaf.ui.view;
 
 import ch.jtaf.security.SecurityUtils;
-import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.login.LoginOverlay;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.Viewport;
 import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.HasUrlParameter;
-import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
 
-import javax.activation.DataHandler;
-
 @Route
-@PageTitle("JTAF - Track and Field")
+@PageTitle("JTAF - Login")
 public class LoginView extends LoginOverlay implements AfterNavigationObserver, BeforeEnterObserver {
 
     public LoginView() {
         LoginI18n i18n = LoginI18n.createDefault();
 
         i18n.setHeader(new LoginI18n.Header());
-        i18n.getHeader().setTitle("JTAF - Track and Field");
+        i18n.getHeader().setTitle("JTAF");
+        i18n.getHeader().setDescription("Track and Field");
         i18n.setAdditionalInformation(null);
 
         i18n.setForm(new LoginI18n.Form());

@@ -1,9 +1,11 @@
-package ch.jtaf.ui;
+package ch.jtaf.ui.view;
 
 import ch.jtaf.db.tables.records.SeriesRecord;
 import ch.jtaf.service.CompetitionRankingService;
 import ch.jtaf.service.SeriesRankingService;
+import ch.jtaf.ui.layout.MainLayout;
 import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
@@ -40,11 +42,18 @@ public class DashboardView extends VerticalLayout {
                 .fetch()
                 .forEach(series -> {
                     HorizontalLayout seriesLayout = new HorizontalLayout();
+                    seriesLayout.setDefaultVerticalComponentAlignment(Alignment.END);
+
                     verticalLayout.add(seriesLayout);
 
                     Image logo = resizeLogo(series);
-                    seriesLayout.add(logo);
-                    seriesLayout.add(new H2(series.getName()));
+                    Div divLogo = new Div(logo);
+                    divLogo.setWidth("100px");
+                    seriesLayout.add(divLogo);
+
+                    H2 h2SeriesName = new H2(series.getName());
+                    h2SeriesName.setWidth("400px");
+                    seriesLayout.add(h2SeriesName);
 
                     Anchor seriesRanking = new Anchor(new StreamResource("series_ranking" + series.getId() + ".pdf",
                             () -> {
@@ -52,13 +61,19 @@ public class DashboardView extends VerticalLayout {
                                 return new ByteArrayInputStream(pdf);
                             }), "Series Ranking");
                     seriesRanking.getElement().setAttribute("download", true);
-                    seriesLayout.add(seriesRanking);
+
+                    seriesLayout.add(new Paragraph(seriesRanking));
 
                     dsl.selectFrom(COMPETITION)
                             .where(COMPETITION.SERIES_ID.eq(series.getId()))
                             .fetch()
                             .forEach(competition -> {
-                                verticalLayout.add(new Paragraph(competition.getName() + " " + competition.getCompetitionDate()));
+                                HorizontalLayout competionLayout = new HorizontalLayout();
+                                verticalLayout.add(competionLayout);
+
+                                Paragraph pCompetition = new Paragraph(competition.getName() + " " + competition.getCompetitionDate());
+                                pCompetition.setWidth("515px");
+                                competionLayout.add(pCompetition);
 
                                 Anchor competitionRanking = new Anchor(new StreamResource("competition_ranking" + competition.getId() + ".pdf",
                                         () -> {
@@ -66,7 +81,8 @@ public class DashboardView extends VerticalLayout {
                                             return new ByteArrayInputStream(pdf);
                                         }), "Competition Ranking");
                                 competitionRanking.getElement().setAttribute("download", true);
-                                seriesLayout.add(competitionRanking);
+
+                                competionLayout.add(new Paragraph(competitionRanking));
                             });
                 });
     }

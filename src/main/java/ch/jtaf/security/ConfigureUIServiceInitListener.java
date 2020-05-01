@@ -1,6 +1,6 @@
 package ch.jtaf.security;
 
-import ch.jtaf.ui.LoginView;
+import ch.jtaf.ui.view.LoginView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.server.ServiceInitEvent;
