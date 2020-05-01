@@ -1,10 +1,15 @@
 package ch.jtaf.ui;
 
-import ch.jtaf.service.LoginService;
+import ch.jtaf.security.SecurityUtils;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.dependency.JsModule;
+import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Viewport;
+import com.vaadin.flow.router.AfterNavigationEvent;
+import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.BeforeEvent;
@@ -14,43 +19,46 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
 
-@Tag("sa-login-view")
-@Route("login")
-@PageTitle("Login")
-public class LoginView extends VerticalLayout implements BeforeEnterObserver, HasUrlParameter<String> {
+import javax.activation.DataHandler;
 
-    private final LoginOverlay login = new LoginOverlay();
-    private String redirect;
-    private QueryParameters queryParameters;
+@Route
+@PageTitle("JTAF - Track and Field")
+public class LoginView extends LoginOverlay implements AfterNavigationObserver, BeforeEnterObserver {
 
-    public LoginView(LoginService loginService) {
-        login.setTitle("JTAF - Login");
-        login.setDescription("Track and Field");
-        login.setOpened(true);
+    public LoginView() {
+        LoginI18n i18n = LoginI18n.createDefault();
 
-        login.addLoginListener(event -> {
-            boolean loggedIn = loginService.login(event.getUsername(), event.getPassword());
-            if (loggedIn) {
-                UI.getCurrent().navigate(redirect, queryParameters);
-                login.close();
-            } else {
-                login.setError(true);
-            }
-        });
+        i18n.setHeader(new LoginI18n.Header());
+        i18n.getHeader().setTitle("JTAF - Track and Field");
+        i18n.setAdditionalInformation(null);
 
-        getElement().appendChild(login.getElement());
+        i18n.setForm(new LoginI18n.Form());
+        i18n.getForm().setSubmit("Sign in");
+        i18n.getForm().setTitle("Sign in");
+        i18n.getForm().setUsername("Email");
+        i18n.getForm().setPassword("Password");
+
+        setI18n(i18n);
+
+        setForgotPasswordButtonVisible(false);
+
+        setAction("login");
 
         UI.getCurrent().getPage().executeJs("document.getElementById('vaadinLoginUsername').focus();");
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        login.setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
+        if (SecurityUtils.isUserLoggedIn()) {
+            event.forwardTo(DashboardView.class);
+        } else {
+            setOpened(true);
+        }
     }
 
     @Override
-    public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
-        redirect = parameter;
-        queryParameters = event.getLocation().getQueryParameters();
+    public void afterNavigation(AfterNavigationEvent event) {
+        setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
     }
+
 }

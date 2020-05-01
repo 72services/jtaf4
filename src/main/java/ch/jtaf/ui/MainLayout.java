@@ -1,6 +1,5 @@
 package ch.jtaf.ui;
 
-import ch.jtaf.security.SecurityContext;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -14,6 +13,8 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
+import com.vaadin.flow.server.VaadinServlet;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,9 +38,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
         userInfo.getStyle().set("cursor", "pointer");
         userInfo.addClickListener(clickEvent -> {
-            if (SecurityContext.isUserLoggedIn()) {
-                UI.getCurrent().getPage().executeJs("window.location.href='/'");
-                UI.getCurrent().getSession().close();
+            if (SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
+                UI.getCurrent().getPage().setLocation(VaadinServlet.getCurrent().getServletContext().getContextPath() + "/logout");
             } else {
                 UI.getCurrent().navigate(ProtectedView.class);
             }
@@ -66,8 +66,9 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
     public void beforeEnter(BeforeEnterEvent event) {
         tabs.setSelectedTab(navigationTargetToTab.get(event.getNavigationTarget()));
 
-        if (SecurityContext.isUserLoggedIn()) {
-            userInfo.setText("Logout (" + SecurityContext.getUser().getFirstName() + " " + SecurityContext.getUser().getLastName() + ")");
+        if (SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
+                && !SecurityContextHolder.getContext().getAuthentication().getName().equalsIgnoreCase("anonymousUser")) {
+            userInfo.setText("Logout (" + SecurityContextHolder.getContext().getAuthentication().getName() + ")");
         } else {
             userInfo.setText("Login");
         }
