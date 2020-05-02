@@ -31,25 +31,27 @@ public class OrganizationView extends VerticalLayout {
     public OrganizationView(DSLContext dsl, TransactionTemplate transactionTemplate) {
         this.dsl = dsl;
 
-        add(new H1("My Organizations"));
+        add(new H1(getTranslation("My.Organizations")));
 
-        Button add = new Button("Add Organization");
+        Button add = new Button(getTranslation("Add.Organization"));
 
         grid = new Grid<>();
-        grid.addColumn(OrganizationRecord::getOrganizationKey).setHeader("Key");
-        grid.addColumn(OrganizationRecord::getName).setHeader("Name");
+        grid.addColumn(OrganizationRecord::getOrganizationKey).setHeader(getTranslation("Key"));
+        grid.addColumn(OrganizationRecord::getName).setHeader(getTranslation("Name"));
 
         grid.addComponentColumn(organizationRecord -> {
-            Button select = new Button("Select");
+            Button select = new Button(getTranslation("Select"));
             select.addClickListener(event -> {
                 UI.getCurrent().getSession().setAttribute(OrganizationRecord.class, organizationRecord);
                 UI.getCurrent().getPage().reload();
             });
 
-            Button delete = new Button("Delete");
+            Button delete = new Button(getTranslation("Delete"));
             delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
-            return new HorizontalLayout(select, delete);
+            HorizontalLayout horizontalLayout = new HorizontalLayout(select, delete);
+            horizontalLayout.setJustifyContentMode(JustifyContentMode.END);
+            return horizontalLayout;
         }).setTextAlign(ColumnTextAlign.END).setHeader(add);
 
         OrganizationDialog dialog = new OrganizationDialog(dsl, transactionTemplate);

@@ -98,7 +98,7 @@ public class DiplomaReport extends AbstractReport {
         var table = new PdfPTable(1);
         table.setWidthPercentage(100f);
 
-        var cell = new PdfPCell(new Phrase(messages.getString("diploma"), FontFactory.getFont(HELVETICA, 60f)));
+        var cell = new PdfPCell(new Phrase(messages.getString("Diploma"), FontFactory.getFont(HELVETICA, 60f)));
         cell.setBorder(0);
         cell.setHorizontalAlignment(ALIGN_CENTER);
 

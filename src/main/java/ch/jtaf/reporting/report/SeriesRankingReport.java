@@ -37,7 +37,7 @@ public class SeriesRankingReport extends RankingReport {
                 document = new Document(A4);
                 PdfWriter pdfWriter = PdfWriter.getInstance(document, baos);
                 pdfWriter.setPageEvent(new HeaderFooter(
-                        messages.getString("series.ranking"), ranking.getName(), ""));
+                        messages.getString("Series.Ranking"), ranking.getName(), ""));
                 document.open();
 
                 createRanking();

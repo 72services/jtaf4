@@ -1,6 +1,7 @@
 package ch.jtaf.ui.view;
 
 import ch.jtaf.db.tables.records.SeriesRecord;
+import ch.jtaf.security.SecurityUtils;
 import ch.jtaf.service.CompetitionRankingService;
 import ch.jtaf.service.SeriesRankingService;
 import ch.jtaf.ui.layout.MainLayout;
@@ -14,9 +15,11 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.StreamResource;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -31,7 +34,7 @@ import static ch.jtaf.db.tables.Series.SERIES;
 public class DashboardView extends VerticalLayout {
 
     public DashboardView(DSLContext dsl, SeriesRankingService seriesRankingService, CompetitionRankingService competitionRankingService) {
-        add(new H1("Dashboard"));
+        add(new H1(getTranslation("Dashboard")));
 
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setWidthFull();
@@ -59,7 +62,7 @@ public class DashboardView extends VerticalLayout {
                             () -> {
                                 byte[] pdf = seriesRankingService.getSeriesRankingAsPdf(series.getId());
                                 return new ByteArrayInputStream(pdf);
-                            }), "Series Ranking");
+                            }), getTranslation("Series.Ranking"));
                     seriesRanking.getElement().setAttribute("download", true);
 
                     seriesLayout.add(new Paragraph(seriesRanking));
@@ -79,10 +82,17 @@ public class DashboardView extends VerticalLayout {
                                         () -> {
                                             byte[] pdf = competitionRankingService.getCompetitionRankingAsPdf(competition.getId());
                                             return new ByteArrayInputStream(pdf);
-                                        }), "Competition Ranking");
+                                        }), getTranslation("Competition.Ranking"));
                                 competitionRanking.getElement().setAttribute("download", true);
 
-                                competionLayout.add(new Paragraph(competitionRanking));
+                                HorizontalLayout links = new HorizontalLayout(competitionRanking);
+
+                                if (SecurityUtils.isUserLoggedIn()) {
+                                    RouterLink enterResults = new RouterLink(getTranslation("Enter.Results"), ResultCapturingView.class);
+                                    links.add(enterResults);
+                                }
+
+                                competionLayout.add(links);
                             });
                 });
     }

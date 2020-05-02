@@ -37,7 +37,7 @@ public class CompetitionRankingReport extends RankingReport {
                 document = new Document(PageSize.A4, border, border, border, border);
                 PdfWriter pdfWriter = PdfWriter.getInstance(document, baos);
                 pdfWriter.setPageEvent(new HeaderFooter(
-                        messages.getString("ranking"),
+                        messages.getString("Competition.Ranking"),
                         ranking.getName(), DATE_TIME_FORMATTER.format(ranking.getCompetitionDate())));
                 document.open();
 

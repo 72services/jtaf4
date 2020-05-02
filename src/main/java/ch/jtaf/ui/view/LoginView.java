@@ -24,10 +24,10 @@ public class LoginView extends LoginOverlay implements AfterNavigationObserver, 
         i18n.setAdditionalInformation(null);
 
         i18n.setForm(new LoginI18n.Form());
-        i18n.getForm().setSubmit("Sign in");
-        i18n.getForm().setTitle("Sign in");
-        i18n.getForm().setUsername("Email");
-        i18n.getForm().setPassword("Password");
+        i18n.getForm().setSubmit(getTranslation("Sign.in"));
+        i18n.getForm().setTitle(getTranslation("Sign.in"));
+        i18n.getForm().setUsername(getTranslation("Email"));
+        i18n.getForm().setPassword(getTranslation("Password"));
 
         setI18n(i18n);
 

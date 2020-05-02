@@ -1,6 +1,7 @@
 package ch.jtaf.ui.layout;
 
 import ch.jtaf.db.tables.records.OrganizationRecord;
+import ch.jtaf.security.SecurityUtils;
 import ch.jtaf.ui.view.DashboardView;
 import ch.jtaf.ui.view.OrganizationView;
 import ch.jtaf.ui.view.SeriesView;
@@ -67,18 +68,18 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
     }
 
     private void addMainMenu() {
-        Tab tabDashboard = new Tab(new RouterLink("Dashboard", DashboardView.class));
+        Tab tabDashboard = new Tab(new RouterLink(getTranslation("Dashboard"), DashboardView.class));
         navigationTargetToTab.put(DashboardView.class, tabDashboard);
         tabsMainMenu.add(tabDashboard);
 
-        Tab tabOrganizaton = new Tab(new RouterLink("My Organizations", OrganizationView.class));
+        Tab tabOrganizaton = new Tab(new RouterLink(getTranslation("My.Organizations"), OrganizationView.class));
         navigationTargetToTab.put(OrganizationView.class, tabOrganizaton);
         tabsMainMenu.add(tabOrganizaton);
 
         organizationTitle.setVisible(false);
         tabsMainMenu.add(organizationTitle);
 
-        tabSeries = new Tab(new RouterLink("Series", SeriesView.class));
+        tabSeries = new Tab(new RouterLink(getTranslation("Series"), SeriesView.class));
         tabSeries.setVisible(false);
         navigationTargetToTab.put(SeriesView.class, tabSeries);
         tabsMainMenu.add(tabSeries);
@@ -88,9 +89,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
     public void beforeEnter(BeforeEnterEvent event) {
         tabsMainMenu.setSelectedTab(navigationTargetToTab.get(event.getNavigationTarget()));
 
-        if (SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
-                && !SecurityContextHolder.getContext().getAuthentication().getName().equalsIgnoreCase("anonymousUser")) {
-            user.setText("Logout (" + SecurityContextHolder.getContext().getAuthentication().getName() + ")");
+        if (SecurityUtils.isUserLoggedIn()) {
+            user.setText(getTranslation("Sign.out") + " (" + SecurityContextHolder.getContext().getAuthentication().getName() + ")");
 
             OrganizationRecord organization = UI.getCurrent().getSession().getAttribute(OrganizationRecord.class);
             if (organization != null) {
@@ -99,7 +99,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
                 tabSeries.setVisible(true);
             }
         } else {
-            user.setText("Login");
+            user.setText(getTranslation("Sign.in"));
 
             organizationTitle.setVisible(false);
             tabSeries.setVisible(false);

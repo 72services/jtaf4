@@ -126,23 +126,23 @@ public class SheetsReport extends AbstractReport {
             addCell(table, " ");
         }
         if (athlete.getLastName() == null) {
-            addInfoCellWithBorder(table, messages.getString("last.name"));
+            addInfoCellWithBorder(table, messages.getString("Last.Name"));
         } else {
             addInfoCell(table, athlete.getLastName());
         }
         if (athlete.getFirstName() == null) {
-            addInfoCellWithBorder(table, messages.getString("first.name"));
+            addInfoCellWithBorder(table, messages.getString("First.Name"));
         } else {
             addInfoCell(table, athlete.getFirstName());
         }
         if (athlete.getYearOfBirth() == 0) {
-            addInfoCellWithBorder(table, messages.getString("year"));
+            addInfoCellWithBorder(table, messages.getString("Year"));
         } else {
             addInfoCell(table, athlete.getYearOfBirth() + "");
         }
         if (athlete.getClub() == null) {
             if (athlete.getId() == null) {
-                addInfoCellWithBorder(table, messages.getString("club"));
+                addInfoCellWithBorder(table, messages.getString("Club"));
             } else {
                 addInfoCell(table, "");
             }
