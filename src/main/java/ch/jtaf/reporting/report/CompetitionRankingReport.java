@@ -106,6 +106,7 @@ public class CompetitionRankingReport extends RankingReport {
         addCategoryTitleCellWithColspan(table, " ", 6);
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private void createAthleteRow(PdfPTable table, int rank, CompetitionRankingAthlete athlete, int numberOfMedals) {
         if (rank <= numberOfMedals) {
             addCell(table, "* " + rank + ".");

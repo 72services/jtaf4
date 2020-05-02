@@ -12,10 +12,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 @Route(layout = MainLayout.class)
 public class ResultCapturingView extends VerticalLayout {
 
-    private final DSLContext dsl;
-
     public ResultCapturingView(DSLContext dsl, TransactionTemplate transactionTemplate) {
-        this.dsl = dsl;
 
         add(new H1(getTranslation("Enter.Results")));
     }

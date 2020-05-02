@@ -165,6 +165,7 @@ public class SheetsReport extends AbstractReport {
         document.add(table);
     }
 
+    @SuppressWarnings("IfStatementWithIdenticalBranches")
     private void createEventTable(NumbersAndSheetsAthlete athlete) throws DocumentException {
         PdfPTable table = new PdfPTable(4);
         table.setWidthPercentage(100);
@@ -208,6 +209,7 @@ public class SheetsReport extends AbstractReport {
         table.addCell(cell);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void addInfoCellWithColspan(PdfPTable table, String text, int colspan) {
         PdfPCell cell = new PdfPCell(
                 new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE_TEXT)));

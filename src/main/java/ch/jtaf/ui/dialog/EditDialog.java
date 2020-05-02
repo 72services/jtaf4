@@ -14,7 +14,7 @@ import org.jooq.DSLContext;
 import org.jooq.UpdatableRecord;
 import org.springframework.transaction.support.TransactionTemplate;
 
-public abstract class EditDialog<R extends UpdatableRecord> extends Dialog {
+public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
 
     final Binder<R> binder;
     final FormLayout formLayout;

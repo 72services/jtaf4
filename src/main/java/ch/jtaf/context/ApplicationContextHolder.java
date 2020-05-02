@@ -11,14 +11,14 @@ public class ApplicationContextHolder implements ApplicationContextAware {
     private static ApplicationContext applicationContext;
 
     public static String getApplicationVersion() {
-        String version = applicationContext.getEnvironment().getProperty("application.version");
-        return version;
+        return applicationContext.getEnvironment().getProperty("application.version");
     }
 
     public static <T> T getBean(Class<T> type) {
         return applicationContext.getBean(type);
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         ApplicationContextHolder.applicationContext = applicationContext;

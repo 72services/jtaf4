@@ -1,7 +1,6 @@
 package ch.jtaf.ui.dialog;
 
 import ch.jtaf.db.tables.records.EventRecord;
-import ch.jtaf.db.tables.records.SeriesRecord;
 import com.vaadin.flow.component.textfield.TextField;
 
 public class EventDialog extends EditDialog<EventRecord> {

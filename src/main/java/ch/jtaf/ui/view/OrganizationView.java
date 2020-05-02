@@ -1,6 +1,5 @@
 package ch.jtaf.ui.view;
 
-import ch.jtaf.db.tables.Organization;
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.ui.dialog.OrganizationDialog;
 import ch.jtaf.ui.layout.MainLayout;
@@ -18,7 +17,6 @@ import com.vaadin.flow.router.Route;
 import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import static ch.jtaf.db.tables.Organization.ORGANIZATION;
 import static ch.jtaf.db.tables.OrganizationUser.ORGANIZATION_USER;

@@ -1,14 +1,8 @@
 package ch.jtaf.ui.view;
 
-import ch.jtaf.db.tables.Event;
 import ch.jtaf.db.tables.records.EventRecord;
-import ch.jtaf.db.tables.records.OrganizationRecord;
-import ch.jtaf.db.tables.records.SeriesRecord;
 import ch.jtaf.ui.dialog.EventDialog;
-import ch.jtaf.ui.dialog.SeriesDialog;
 import ch.jtaf.ui.layout.MainLayout;
-import ch.jtaf.util.LogoUtil;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
@@ -16,21 +10,12 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
 
-import java.time.Instant;
-
-import static ch.jtaf.db.tables.Athlete.ATHLETE;
-import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
 import static ch.jtaf.db.tables.Event.EVENT;
-import static ch.jtaf.db.tables.Series.SERIES;
-import static org.jooq.impl.DSL.field;
 
 @PageTitle("JTAF - Organizations")
 @Route(layout = MainLayout.class)

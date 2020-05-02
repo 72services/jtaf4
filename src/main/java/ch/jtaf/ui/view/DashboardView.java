@@ -1,6 +1,5 @@
 package ch.jtaf.ui.view;
 
-import ch.jtaf.db.tables.records.SeriesRecord;
 import ch.jtaf.security.SecurityUtil;
 import ch.jtaf.service.CompetitionRankingService;
 import ch.jtaf.service.SeriesRankingService;
@@ -20,10 +19,7 @@ import com.vaadin.flow.server.StreamResource;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
 import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Series.SERIES;
