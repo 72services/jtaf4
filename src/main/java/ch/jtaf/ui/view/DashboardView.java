@@ -27,6 +27,7 @@ import java.io.IOException;
 
 import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Series.SERIES;
+import static ch.jtaf.util.LogoUtil.resizeLogo;
 
 @PageTitle("JTAF - Dashboard")
 @Route(value = "", layout = MainLayout.class)
@@ -94,24 +95,6 @@ public class DashboardView extends VerticalLayout {
                                 competionLayout.add(links);
                             });
                 });
-    }
-
-    private Image resizeLogo(SeriesRecord series) {
-        Image logo = new Image();
-
-        try {
-            BufferedImage image = ImageIO.read(new ByteArrayInputStream(series.getLogo()));
-            double width = image.getWidth(null);
-            double height = image.getHeight(null);
-            double ratio = width / height;
-
-            logo.setSrc(new StreamResource("logo", () -> new ByteArrayInputStream(series.getLogo())));
-            logo.setHeight("60px");
-            logo.setWidth(60 * ratio + "px");
-        } catch (IOException e) {
-            // Ignore
-        }
-        return logo;
     }
 
 }

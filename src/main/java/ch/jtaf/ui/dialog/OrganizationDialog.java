@@ -2,9 +2,12 @@ package ch.jtaf.ui.dialog;
 
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.validator.StringLengthValidator;
 
 public class OrganizationDialog extends EditDialog<OrganizationRecord> {
+
+    public OrganizationDialog(String title) {
+        super(title);
+    }
 
     @Override
     public void createForm() {
@@ -17,13 +20,12 @@ public class OrganizationDialog extends EditDialog<OrganizationRecord> {
         formLayout.add(name);
 
         binder.forField(key)
-                .withValidator(new StringLengthValidator(
-                        "Please set the key", 1, null))
+                .withValidator(notEmptyValidator())
                 .bind(OrganizationRecord::getOrganizationKey, OrganizationRecord::setOrganizationKey);
 
         binder.forField(name)
-                .withValidator(new StringLengthValidator(
-                        "Please set the name", 1, null))
+                .withValidator(notEmptyValidator())
                 .bind(OrganizationRecord::getName, OrganizationRecord::setName);
     }
+
 }

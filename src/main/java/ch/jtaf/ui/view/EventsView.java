@@ -1,82 +1,65 @@
 package ch.jtaf.ui.view;
 
+import ch.jtaf.db.tables.Event;
+import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.db.tables.records.SeriesRecord;
+import ch.jtaf.ui.dialog.EventDialog;
 import ch.jtaf.ui.dialog.SeriesDialog;
 import ch.jtaf.ui.layout.MainLayout;
 import ch.jtaf.util.LogoUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
 
-import static ch.jtaf.db.tables.Category.CATEGORY;
+import java.time.Instant;
+
+import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
+import static ch.jtaf.db.tables.Event.EVENT;
 import static ch.jtaf.db.tables.Series.SERIES;
+import static org.jooq.impl.DSL.field;
 
 @PageTitle("JTAF - Organizations")
 @Route(layout = MainLayout.class)
-public class SeriesView extends ProtectedView {
+public class EventsView extends ProtectedView {
 
     private final DSLContext dsl;
-    private final Grid<SeriesRecord> grid;
+    private final Grid<EventRecord> grid;
 
-    public SeriesView(DSLContext dsl) {
+    public EventsView(DSLContext dsl) {
         this.dsl = dsl;
 
         setHeightFull();
 
-        add(new H1(getTranslation("Series")));
+        add(new H1(getTranslation("Events")));
 
         Button add = new Button(getTranslation("Add.Series"));
 
         grid = new Grid<>();
         grid.setHeightFull();
 
-        grid.addComponentColumn(LogoUtil::resizeLogo).setHeader(getTranslation("Logo"));
-        grid.addColumn(SeriesRecord::getName).setHeader(getTranslation("Name"));
+        grid.addColumn(EventRecord::getName).setHeader(getTranslation("Name"));
 
-        grid.addColumn(seriesRecord -> dsl
-                .select(DSL.count(CATEGORY_ATHLETE.ATHLETE_ID))
-                .from(CATEGORY_ATHLETE)
-                .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
-                .where(CATEGORY.SERIES_ID.eq(seriesRecord.getId()))
-                .fetchOneInto(Integer.class))
-                .setHeader(getTranslation("Number.of.Athletes"));
-
-        grid.addComponentColumn(seriesRecord -> {
-            Checkbox hidden = new Checkbox();
-            hidden.setReadOnly(true);
-            hidden.setValue(seriesRecord.getHidden());
-            return hidden;
-        }).setHeader(getTranslation("Hidden"));
-        grid.addComponentColumn(seriesRecord -> {
-            Checkbox locked = new Checkbox();
-            locked.setReadOnly(true);
-            locked.setValue(seriesRecord.getLocked());
-            return locked;
-        }).setHeader(getTranslation("Hidden"));
-
-        grid.addComponentColumn(seriesRecord -> {
+        grid.addComponentColumn(eventRecord -> {
             Button delete = new Button(getTranslation("Delete"));
             delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
             delete.addClickListener(event -> {
                 try {
-                    dsl.attach(seriesRecord);
-                    seriesRecord.delete();
+                    dsl.attach(eventRecord);
+                    eventRecord.delete();
                 } catch (DataAccessException e) {
                     Notification.show(e.getMessage());
                 }
@@ -87,21 +70,22 @@ public class SeriesView extends ProtectedView {
             return horizontalLayout;
         }).setTextAlign(ColumnTextAlign.END).setHeader(add);
 
-        SeriesDialog dialog = new SeriesDialog(getTranslation("Series"));
+        EventDialog dialog = new EventDialog(getTranslation("Event"));
 
         grid.addSelectionListener(event -> event.getFirstSelectedItem()
-                .ifPresent(seriesRecord -> dialog.open(seriesRecord, this::loadData)));
+                .ifPresent(eventRecord -> dialog.open(eventRecord, this::loadData)));
 
         add(grid);
     }
 
     @Override
     void loadData() {
-        var series = dsl
-                .selectFrom(SERIES)
-                .where(SERIES.ORGANIZATION_ID.eq(organizationRecord.getId()))
+        var events = dsl
+                .selectFrom(EVENT)
+                .where(EVENT.ORGANIZATION_ID.eq(organizationRecord.getId()))
                 .fetch();
 
-        grid.setItems(series);
+        grid.setItems(events);
     }
+
 }

@@ -3,6 +3,7 @@ package ch.jtaf.ui.layout;
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.security.SecurityUtil;
 import ch.jtaf.ui.view.DashboardView;
+import ch.jtaf.ui.view.EventsView;
 import ch.jtaf.ui.view.OrganizationView;
 import ch.jtaf.ui.view.SeriesView;
 import com.vaadin.flow.component.Component;
@@ -23,10 +24,13 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.VaadinServlet;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.annotation.PostConstruct;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,12 +44,14 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
     private final Div version = new Div();
     private final Button signIn = new Button();
-    private final H3 organizationTitle = new H3();
-
-    private Tab tabSeries;
+    private String organizationTitle;
 
     @Value("${application.version}")
     private String applicationVersion;
+
+    private Tab tabSeries;
+    private Tab tabEvents;
+    private RouterLink seriesLink;
 
     public MainLayout() {
         addMainMenu();
@@ -98,13 +104,17 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
         navigationTargetToTab.put(OrganizationView.class, tabOrganizaton);
         tabsMainMenu.add(tabOrganizaton);
 
-        organizationTitle.setVisible(false);
-        tabsMainMenu.add(organizationTitle);
-
-        tabSeries = new Tab(new RouterLink(getTranslation("Series"), SeriesView.class));
+        seriesLink = new RouterLink("", SeriesView.class);
+        seriesLink.getStyle().set("font-size", "20px");
+        tabSeries = new Tab(seriesLink);
         tabSeries.setVisible(false);
         navigationTargetToTab.put(SeriesView.class, tabSeries);
         tabsMainMenu.add(tabSeries);
+
+        tabEvents = new Tab(new RouterLink(getTranslation("Events"), EventsView.class));
+        tabEvents.setVisible(false);
+        navigationTargetToTab.put(EventsView.class, tabEvents);
+        tabsMainMenu.add(tabEvents);
     }
 
     @PostConstruct
@@ -121,16 +131,19 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
             OrganizationRecord organization = UI.getCurrent().getSession().getAttribute(OrganizationRecord.class);
             if (organization != null) {
-                organizationTitle.setText(organization.getOrganizationKey());
-                organizationTitle.setVisible(true);
-                tabSeries.setVisible(true);
+                seriesLink.setText(organization.getOrganizationKey());
+                setSeriesTabsVisible(true);
             }
         } else {
             signIn.setText(getTranslation("Sign.in"));
-
-            organizationTitle.setVisible(false);
-            tabSeries.setVisible(false);
+            seriesLink.setText("");
+            setSeriesTabsVisible(false);
         }
+    }
+
+    private void setSeriesTabsVisible(boolean visible) {
+        tabSeries.setVisible(visible);
+        tabEvents.setVisible(visible);
     }
 }
 
