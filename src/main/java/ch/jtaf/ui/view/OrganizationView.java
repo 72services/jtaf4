@@ -1,7 +1,7 @@
 package ch.jtaf.ui.view;
 
 import ch.jtaf.db.tables.records.OrganizationRecord;
-import ch.jtaf.ui.OrganizationDialog;
+import ch.jtaf.ui.dialog.OrganizationDialog;
 import ch.jtaf.ui.layout.MainLayout;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -54,7 +54,7 @@ public class OrganizationView extends VerticalLayout {
             return horizontalLayout;
         }).setTextAlign(ColumnTextAlign.END).setHeader(add);
 
-        OrganizationDialog dialog = new OrganizationDialog(dsl, transactionTemplate);
+        OrganizationDialog dialog = new OrganizationDialog();
 
         grid.addSelectionListener(event -> event.getFirstSelectedItem()
                 .ifPresent(organization -> dialog.open(organization, this::loadData)));

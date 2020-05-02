@@ -66,7 +66,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests()
 
                 // Allow all flow internal requests.
-                .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
+                .requestMatchers(SecurityUtil::isFrameworkInternalRequest).permitAll()
 
                 // Health Check
                 .antMatchers("/actuator/health").permitAll()

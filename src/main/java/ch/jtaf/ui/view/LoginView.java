@@ -1,6 +1,6 @@
 package ch.jtaf.ui.view;
 
-import ch.jtaf.security.SecurityUtils;
+import ch.jtaf.security.SecurityUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.login.LoginOverlay;
@@ -40,7 +40,7 @@ public class LoginView extends LoginOverlay implements AfterNavigationObserver, 
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        if (SecurityUtils.isUserLoggedIn()) {
+        if (SecurityUtil.isUserLoggedIn()) {
             event.forwardTo(DashboardView.class);
         } else {
             setOpened(true);

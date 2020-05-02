@@ -1,7 +1,7 @@
 package ch.jtaf.ui.view;
 
 import ch.jtaf.db.tables.records.SeriesRecord;
-import ch.jtaf.security.SecurityUtils;
+import ch.jtaf.security.SecurityUtil;
 import ch.jtaf.service.CompetitionRankingService;
 import ch.jtaf.service.SeriesRankingService;
 import ch.jtaf.ui.layout.MainLayout;
@@ -19,7 +19,6 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.StreamResource;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -87,7 +86,7 @@ public class DashboardView extends VerticalLayout {
 
                                 HorizontalLayout links = new HorizontalLayout(competitionRanking);
 
-                                if (SecurityUtils.isUserLoggedIn()) {
+                                if (SecurityUtil.isUserLoggedIn()) {
                                     RouterLink enterResults = new RouterLink(getTranslation("Enter.Results"), ResultCapturingView.class);
                                     links.add(enterResults);
                                 }
