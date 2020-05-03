@@ -30,7 +30,7 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
 
         binder = new Binder<>();
 
-        Button save = new Button("Save");
+        Button save = new Button(getTranslation("Save"));
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         save.addClickListener(event -> {
             DSLContext dsl = ApplicationContextHolder.getBean(DSLContext.class);
@@ -46,7 +46,7 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
             close();
         });
 
-        Button cancel = new Button("Cancel");
+        Button cancel = new Button(getTranslation("Cancel"));
         cancel.addClickListener(event -> close());
 
         HorizontalLayout buttons = new HorizontalLayout(save, cancel);
