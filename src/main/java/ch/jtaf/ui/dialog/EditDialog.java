@@ -18,7 +18,9 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
 
     final Binder<R> binder;
     final FormLayout formLayout;
+
     private Callback afterSave;
+    private boolean initalized;
 
     public EditDialog(String title) {
         H3 h3Title = new H3(title);
@@ -53,8 +55,6 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
         buttons.getStyle().set("padding-top", "20px");
 
         add(buttons);
-
-        createForm();
     }
 
     public abstract void createForm();
@@ -62,6 +62,11 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
     public void open(R record, Callback afterSave) {
         binder.setBean(record);
         this.afterSave = afterSave;
+
+        if (!initalized) {
+            createForm();
+            initalized = true;
+        }
 
         super.open();
     }

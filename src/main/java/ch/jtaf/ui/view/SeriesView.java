@@ -20,7 +20,6 @@ import org.jooq.impl.DSL;
 
 import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
-import static ch.jtaf.db.tables.Organization.ORGANIZATION;
 import static ch.jtaf.db.tables.Series.SERIES;
 
 @PageTitle("JTAF - Organizations")

@@ -2,6 +2,7 @@ package ch.jtaf.ui.layout;
 
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.security.SecurityUtil;
+import ch.jtaf.ui.view.AthletesView;
 import ch.jtaf.ui.view.DashboardView;
 import ch.jtaf.ui.view.EventsView;
 import ch.jtaf.ui.view.OrganizationView;
@@ -41,13 +42,13 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
     private final Div version = new Div();
     private final Button signIn = new Button();
-    private String organizationTitle;
 
     @Value("${application.version}")
     private String applicationVersion;
 
     private Tab tabSeries;
     private Tab tabEvents;
+    private Tab tabAthletes;
     private RouterLink seriesLink;
 
     public MainLayout() {
@@ -112,6 +113,11 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
         tabEvents.setVisible(false);
         navigationTargetToTab.put(EventsView.class, tabEvents);
         tabsMainMenu.add(tabEvents);
+
+        tabAthletes = new Tab(new RouterLink(getTranslation("Athletes"), AthletesView.class));
+        tabAthletes.setVisible(false);
+        navigationTargetToTab.put(EventsView.class, tabAthletes);
+        tabsMainMenu.add(tabAthletes);
     }
 
     @PostConstruct
@@ -141,6 +147,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
     private void setSeriesTabsVisible(boolean visible) {
         tabSeries.setVisible(visible);
         tabEvents.setVisible(visible);
+        tabAthletes.setVisible(visible);
     }
 }
 

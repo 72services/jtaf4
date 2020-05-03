@@ -31,7 +31,8 @@ public class EventDialog extends EditDialog<EventRecord> {
                 .withValidator(notEmptyValidator())
                 .bind(EventRecord::getName, EventRecord::setName);
 
-        Select<String> gender = new Select<>(getTranslation("Gender"));
+        Select<String> gender = new Select<>();
+        gender.setLabel(getTranslation("Gender"));
         gender.setRequiredIndicatorVisible(true);
         gender.setItems(Gender.valuesAsStrings());
         formLayout.add(gender);
@@ -39,7 +40,8 @@ public class EventDialog extends EditDialog<EventRecord> {
         binder.forField(gender)
                 .bind(EventRecord::getGender, EventRecord::setGender);
 
-        Select<String> eventType = new Select<>(getTranslation("Event.Type"));
+        Select<String> eventType = new Select<>();
+        eventType.setLabel(getTranslation("Event.Type"));
         eventType.setRequiredIndicatorVisible(true);
         eventType.setItems(EventType.valuesAsStrings());
         formLayout.add(eventType);
