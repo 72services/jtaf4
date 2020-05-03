@@ -3,6 +3,7 @@ package ch.jtaf.ui.dialog;
 import ch.jtaf.context.ApplicationContextHolder;
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
+import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.model.Gender;
 import com.vaadin.flow.component.UI;
@@ -11,6 +12,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Result;
 import com.vaadin.flow.data.binder.ValueContext;
 import com.vaadin.flow.data.converter.Converter;
+import com.vaadin.flow.data.converter.StringToDoubleConverter;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import org.jooq.DSLContext;
 
@@ -86,6 +88,14 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
                     }
                 })
                 .bind(AthleteRecord::getClubId, AthleteRecord::setClubId);
+
+        TextField year = new TextField("Year");
+        year.setRequiredIndicatorVisible(true);
+        formLayout.add(year);
+
+        binder.forField(year)
+                .withConverter(new StringToIntegerConverter(getTranslation("Must.be.a.number")))
+                .bind(AthleteRecord::getYearOfBirth, AthleteRecord::setYearOfBirth);
     }
 
     private List<ClubRecord> getClubs() {
