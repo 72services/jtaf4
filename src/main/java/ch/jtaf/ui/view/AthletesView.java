@@ -1,6 +1,7 @@
 package ch.jtaf.ui.view;
 
 import ch.jtaf.db.tables.records.AthleteRecord;
+import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.ui.dialog.AthleteDialog;
 import ch.jtaf.ui.layout.MainLayout;
@@ -17,6 +18,10 @@ import com.vaadin.flow.router.Route;
 import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Club.CLUB;
 
@@ -26,6 +31,7 @@ public class AthletesView extends ProtectedView {
 
     private final DSLContext dsl;
     private final Grid<AthleteRecord> grid;
+    private Map<Long, ClubRecord> clubRecordMap = new HashMap<>();
 
     public AthletesView(DSLContext dsl) {
         this.dsl = dsl;
@@ -42,20 +48,12 @@ public class AthletesView extends ProtectedView {
         grid = new Grid<>();
         grid.setHeightFull();
 
-        grid.addColumn(AthleteRecord::getFirstName).setHeader(getTranslation("First.Name"));
-        grid.addColumn(AthleteRecord::getLastName).setHeader(getTranslation("Last.Name"));
-        grid.addColumn(AthleteRecord::getGender).setHeader(getTranslation("Gender"));
-        grid.addColumn(AthleteRecord::getYearOfBirth).setHeader(getTranslation("Year"));
-        grid.addColumn(athleteRecord -> {
-            OrganizationRecord organizationRecord = UI.getCurrent().getSession().getAttribute(OrganizationRecord.class);
-            if (organizationRecord == null) {
-                return null;
-            } else {
-                return dsl.select(CLUB.ABBREVIATION).from(CLUB)
-                        .where(CLUB.ORGANIZATION_ID.eq(organizationRecord.getId())).and(CLUB.ID.eq(athleteRecord.getClubId()))
-                        .fetchOneInto(String.class);
-            }
-        }).setHeader(getTranslation("Club"));
+        grid.addColumn(AthleteRecord::getLastName).setHeader(getTranslation("Last.Name")).setSortable(true);
+        grid.addColumn(AthleteRecord::getFirstName).setHeader(getTranslation("First.Name")).setSortable(true);
+        grid.addColumn(AthleteRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true);
+        grid.addColumn(AthleteRecord::getYearOfBirth).setHeader(getTranslation("Year")).setSortable(true);
+        grid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
+                : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club"));
 
         grid.addComponentColumn(athleteRecord -> {
             Button delete = new Button(getTranslation("Delete"));
@@ -82,9 +80,13 @@ public class AthletesView extends ProtectedView {
 
     @Override
     void loadData() {
+        var clubs = dsl.selectFrom(CLUB).where(CLUB.ORGANIZATION_ID.eq(organizationRecord.getId())).fetch();
+        clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
+
         var athletes = dsl
                 .selectFrom(ATHLETE)
                 .where(ATHLETE.ORGANIZATION_ID.eq(organizationRecord.getId()))
+                .orderBy(ATHLETE.GENDER, ATHLETE.YEAR_OF_BIRTH, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME)
                 .fetch();
 
         grid.setItems(athletes);

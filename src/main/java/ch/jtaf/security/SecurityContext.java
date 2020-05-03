@@ -10,7 +10,6 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -20,12 +19,11 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * SecurityUtils takes care of all such static operations that have to do with
- * security and querying rights from different beans of the UI.
+ * Takes care of all such static operations that have to do with security and querying rights from different beans of the UI.
  */
-public final class SecurityUtil {
+public final class SecurityContext {
 
-    private SecurityUtil() {
+    private SecurityContext() {
         // Util methods only
     }
 
@@ -36,10 +34,9 @@ public final class SecurityUtil {
      * has not signed in
      */
     public static String getUsername() {
-        SecurityContext context = SecurityContextHolder.getContext();
-        Object principal = context.getAuthentication().getPrincipal();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) context.getAuthentication().getPrincipal();
+            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             return userDetails.getUsername();
         }
         // Anonymous or no authentication.

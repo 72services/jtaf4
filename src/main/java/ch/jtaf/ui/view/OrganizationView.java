@@ -1,6 +1,7 @@
 package ch.jtaf.ui.view;
 
 import ch.jtaf.db.tables.records.OrganizationRecord;
+import ch.jtaf.security.OrganizationHolder;
 import ch.jtaf.ui.dialog.OrganizationDialog;
 import ch.jtaf.ui.layout.MainLayout;
 import com.vaadin.flow.component.UI;
@@ -44,14 +45,14 @@ public class OrganizationView extends VerticalLayout {
         grid = new Grid<>();
         grid.setHeightFull();
 
-        grid.addColumn(OrganizationRecord::getOrganizationKey).setHeader(getTranslation("Key"));
-        grid.addColumn(OrganizationRecord::getName).setHeader(getTranslation("Name"));
+        grid.addColumn(OrganizationRecord::getOrganizationKey).setHeader(getTranslation("Key")).setSortable(true);
+        grid.addColumn(OrganizationRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
 
         grid.addComponentColumn(organizationRecord -> {
             Button select = new Button(getTranslation("Select"));
             select.addClickListener(event -> {
-                UI.getCurrent().getSession().setAttribute(OrganizationRecord.class, organizationRecord);
-                UI.getCurrent().navigate(SeriesView.class);
+                OrganizationHolder.setOrganization(organizationRecord);
+                UI.getCurrent().navigate(SeriesListView.class);
             });
 
             Button delete = new Button(getTranslation("Delete"));

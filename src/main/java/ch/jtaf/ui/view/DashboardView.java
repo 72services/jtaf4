@@ -1,6 +1,6 @@
 package ch.jtaf.ui.view;
 
-import ch.jtaf.security.SecurityUtil;
+import ch.jtaf.security.SecurityContext;
 import ch.jtaf.service.CompetitionRankingService;
 import ch.jtaf.service.SeriesRankingService;
 import ch.jtaf.ui.layout.MainLayout;
@@ -83,7 +83,7 @@ public class DashboardView extends VerticalLayout {
 
                                 HorizontalLayout links = new HorizontalLayout(competitionRanking);
 
-                                if (SecurityUtil.isUserLoggedIn()) {
+                                if (SecurityContext.isUserLoggedIn()) {
                                     RouterLink enterResults = new RouterLink(getTranslation("Enter.Results"), ResultCapturingView.class);
                                     links.add(enterResults);
                                 }

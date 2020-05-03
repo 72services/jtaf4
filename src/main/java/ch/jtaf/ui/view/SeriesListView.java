@@ -24,12 +24,12 @@ import static ch.jtaf.db.tables.Series.SERIES;
 
 @PageTitle("JTAF - Organizations")
 @Route(layout = MainLayout.class)
-public class SeriesView extends ProtectedView {
+public class SeriesListView extends ProtectedView {
 
     private final DSLContext dsl;
     private final Grid<SeriesRecord> grid;
 
-    public SeriesView(DSLContext dsl) {
+    public SeriesListView(DSLContext dsl) {
         this.dsl = dsl;
 
         setHeightFull();
@@ -45,7 +45,7 @@ public class SeriesView extends ProtectedView {
         grid.setHeightFull();
 
         grid.addComponentColumn(LogoUtil::resizeLogo).setHeader(getTranslation("Logo"));
-        grid.addColumn(SeriesRecord::getName).setHeader(getTranslation("Name"));
+        grid.addColumn(SeriesRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
 
         grid.addColumn(seriesRecord -> dsl
                 .select(DSL.count(CATEGORY_ATHLETE.ATHLETE_ID))

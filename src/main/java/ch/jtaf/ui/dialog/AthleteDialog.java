@@ -6,6 +6,7 @@ import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.model.Gender;
+import ch.jtaf.security.OrganizationHolder;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
@@ -99,7 +100,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
     }
 
     private List<ClubRecord> getClubs() {
-        OrganizationRecord organizationRecord = UI.getCurrent().getSession().getAttribute(OrganizationRecord.class);
+        OrganizationRecord organizationRecord = OrganizationHolder.getOrganization();
 
         if (organizationRecord == null) {
             return Collections.emptyList();

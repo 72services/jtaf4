@@ -1,6 +1,7 @@
 package ch.jtaf.ui.view;
 
 import ch.jtaf.db.tables.records.OrganizationRecord;
+import ch.jtaf.security.OrganizationHolder;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -12,7 +13,7 @@ public abstract class ProtectedView extends VerticalLayout implements BeforeEnte
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        organizationRecord = UI.getCurrent().getSession().getAttribute(OrganizationRecord.class);
+        organizationRecord = OrganizationHolder.getOrganization();
 
         if (organizationRecord == null) {
             event.rerouteTo(OrganizationView.class);

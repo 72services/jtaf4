@@ -1,12 +1,13 @@
 package ch.jtaf.ui.layout;
 
 import ch.jtaf.db.tables.records.OrganizationRecord;
-import ch.jtaf.security.SecurityUtil;
+import ch.jtaf.security.OrganizationHolder;
+import ch.jtaf.security.SecurityContext;
 import ch.jtaf.ui.view.AthletesView;
 import ch.jtaf.ui.view.DashboardView;
 import ch.jtaf.ui.view.EventsView;
 import ch.jtaf.ui.view.OrganizationView;
-import ch.jtaf.ui.view.SeriesView;
+import ch.jtaf.ui.view.SeriesListView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -82,7 +83,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
         signIn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         signIn.addClickListener(clickEvent -> {
-            if (SecurityUtil.isUserLoggedIn()) {
+            if (SecurityContext.isUserLoggedIn()) {
                 UI.getCurrent().getPage().setLocation(VaadinServlet.getCurrent().getServletContext().getContextPath() + "/logout");
             } else {
                 UI.getCurrent().navigate(OrganizationView.class);
@@ -102,11 +103,11 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
         navigationTargetToTab.put(OrganizationView.class, tabOrganizaton);
         tabsMainMenu.add(tabOrganizaton);
 
-        seriesLink = new RouterLink("", SeriesView.class);
+        seriesLink = new RouterLink("", SeriesListView.class);
         seriesLink.getStyle().set("font-size", "20px");
         tabSeries = new Tab(seriesLink);
         tabSeries.setVisible(false);
-        navigationTargetToTab.put(SeriesView.class, tabSeries);
+        navigationTargetToTab.put(SeriesListView.class, tabSeries);
         tabsMainMenu.add(tabSeries);
 
         tabEvents = new Tab(new RouterLink(getTranslation("Events"), EventsView.class));
@@ -129,10 +130,10 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
     public void beforeEnter(BeforeEnterEvent event) {
         tabsMainMenu.setSelectedTab(navigationTargetToTab.get(event.getNavigationTarget()));
 
-        if (SecurityUtil.isUserLoggedIn()) {
+        if (SecurityContext.isUserLoggedIn()) {
             signIn.setText(getTranslation("Sign.out") + " (" + SecurityContextHolder.getContext().getAuthentication().getName() + ")");
 
-            OrganizationRecord organization = UI.getCurrent().getSession().getAttribute(OrganizationRecord.class);
+            OrganizationRecord organization = OrganizationHolder.getOrganization();
             if (organization != null) {
                 seriesLink.setText(organization.getOrganizationKey());
                 setSeriesTabsVisible(true);
