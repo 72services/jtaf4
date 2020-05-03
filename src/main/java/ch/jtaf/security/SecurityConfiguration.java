@@ -86,7 +86,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
 
                 // Configure logout
-                .and().logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL);
+                .and().logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL)
+
+                // Remember Me
+                .and().rememberMe().key("secretJtaf4").alwaysRemember(true);
     }
 
     /**

@@ -31,12 +31,21 @@ public class EventsView extends ProtectedView {
 
         add(new H1(getTranslation("Events")));
 
-        Button add = new Button(getTranslation("Add.Series"));
+        EventDialog dialog = new EventDialog(getTranslation("Event"));
+
+        Button add = new Button(getTranslation("Add.Event"));
+        add.addClickListener(event -> dialog.open(EVENT.newRecord(), this::loadData));
 
         grid = new Grid<>();
         grid.setHeightFull();
 
+        grid.addColumn(EventRecord::getAbbreviation).setHeader(getTranslation("Abbreviation"));
         grid.addColumn(EventRecord::getName).setHeader(getTranslation("Name"));
+        grid.addColumn(EventRecord::getGender).setHeader(getTranslation("Gender"));
+        grid.addColumn(EventRecord::getEventType).setHeader(getTranslation("Event.Type"));
+        grid.addColumn(EventRecord::getA).setHeader("A");
+        grid.addColumn(EventRecord::getB).setHeader("B");
+        grid.addColumn(EventRecord::getC).setHeader("C");
 
         grid.addComponentColumn(eventRecord -> {
             Button delete = new Button(getTranslation("Delete"));
@@ -54,8 +63,6 @@ public class EventsView extends ProtectedView {
             horizontalLayout.setJustifyContentMode(JustifyContentMode.END);
             return horizontalLayout;
         }).setTextAlign(ColumnTextAlign.END).setHeader(add);
-
-        EventDialog dialog = new EventDialog(getTranslation("Event"));
 
         grid.addSelectionListener(event -> event.getFirstSelectedItem()
                 .ifPresent(eventRecord -> dialog.open(eventRecord, this::loadData)));

@@ -18,6 +18,7 @@ import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import static ch.jtaf.db.tables.Event.EVENT;
 import static ch.jtaf.db.tables.Organization.ORGANIZATION;
 import static ch.jtaf.db.tables.OrganizationUser.ORGANIZATION_USER;
 import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
@@ -36,7 +37,10 @@ public class OrganizationView extends VerticalLayout {
 
         add(new H1(getTranslation("My.Organizations")));
 
+        OrganizationDialog dialog = new OrganizationDialog(getTranslation("Organization"));
+
         Button add = new Button(getTranslation("Add.Organization"));
+        add.addClickListener(event -> dialog.open(ORGANIZATION.newRecord(), this::loadData));
 
         grid = new Grid<>();
         grid.setHeightFull();
@@ -66,8 +70,6 @@ public class OrganizationView extends VerticalLayout {
             horizontalLayout.setJustifyContentMode(JustifyContentMode.END);
             return horizontalLayout;
         }).setTextAlign(ColumnTextAlign.END).setHeader(add);
-
-        OrganizationDialog dialog = new OrganizationDialog(getTranslation("Organization"));
 
         grid.addSelectionListener(event -> event.getFirstSelectedItem()
                 .ifPresent(organization -> dialog.open(organization, this::loadData)));

@@ -67,6 +67,6 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
     }
 
     StringLengthValidator notEmptyValidator() {
-        return new StringLengthValidator(getTranslation("may.not.be.empty"), 1, null);
+        return new StringLengthValidator(getTranslation("May.not.be.empty"), 1, null);
     }
 }
