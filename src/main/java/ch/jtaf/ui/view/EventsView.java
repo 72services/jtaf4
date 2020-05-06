@@ -1,6 +1,8 @@
 package ch.jtaf.ui.view;
 
+import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.EventRecord;
+import ch.jtaf.security.OrganizationHolder;
 import ch.jtaf.ui.dialog.EventDialog;
 import ch.jtaf.ui.layout.MainLayout;
 import com.vaadin.flow.component.button.Button;
@@ -15,6 +17,7 @@ import com.vaadin.flow.router.Route;
 import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
 
+import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Event.EVENT;
 
 @PageTitle("JTAF - Organizations")
@@ -34,7 +37,12 @@ public class EventsView extends ProtectedView {
         EventDialog dialog = new EventDialog(getTranslation("Event"));
 
         Button add = new Button(getTranslation("Add.Event"));
-        add.addClickListener(event -> dialog.open(EVENT.newRecord(), this::loadData));
+        add.addClickListener(event -> {
+            EventRecord newRecord = EVENT.newRecord();
+            newRecord.setOrganizationId(organizationRecord.getId());
+            dialog.open(newRecord, this::loadData);
+        });
+
 
         grid = new Grid<>();
         grid.setHeightFull();

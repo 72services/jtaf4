@@ -4,9 +4,10 @@ import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.security.OrganizationHolder;
 import ch.jtaf.security.SecurityContext;
 import ch.jtaf.ui.view.AthletesView;
+import ch.jtaf.ui.view.ClubsView;
 import ch.jtaf.ui.view.DashboardView;
 import ch.jtaf.ui.view.EventsView;
-import ch.jtaf.ui.view.OrganizationView;
+import ch.jtaf.ui.view.OrganizationsView;
 import ch.jtaf.ui.view.SeriesListView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
@@ -49,6 +50,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
     private Tab tabSeries;
     private Tab tabEvents;
+    private Tab tabClubs;
     private Tab tabAthletes;
     private RouterLink seriesLink;
 
@@ -86,7 +88,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
             if (SecurityContext.isUserLoggedIn()) {
                 UI.getCurrent().getPage().setLocation(VaadinServlet.getCurrent().getServletContext().getContextPath() + "/logout");
             } else {
-                UI.getCurrent().navigate(OrganizationView.class);
+                UI.getCurrent().navigate(OrganizationsView.class);
             }
         });
         info.add(signIn);
@@ -99,8 +101,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
         navigationTargetToTab.put(DashboardView.class, tabDashboard);
         tabsMainMenu.add(tabDashboard);
 
-        Tab tabOrganizaton = new Tab(new RouterLink(getTranslation("My.Organizations"), OrganizationView.class));
-        navigationTargetToTab.put(OrganizationView.class, tabOrganizaton);
+        Tab tabOrganizaton = new Tab(new RouterLink(getTranslation("My.Organizations"), OrganizationsView.class));
+        navigationTargetToTab.put(OrganizationsView.class, tabOrganizaton);
         tabsMainMenu.add(tabOrganizaton);
 
         seriesLink = new RouterLink("", SeriesListView.class);
@@ -114,6 +116,11 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
         tabEvents.setVisible(false);
         navigationTargetToTab.put(EventsView.class, tabEvents);
         tabsMainMenu.add(tabEvents);
+
+        tabClubs = new Tab(new RouterLink(getTranslation("Clubs"), ClubsView.class));
+        tabClubs.setVisible(false);
+        navigationTargetToTab.put(ClubsView.class, tabClubs);
+        tabsMainMenu.add(tabClubs);
 
         tabAthletes = new Tab(new RouterLink(getTranslation("Athletes"), AthletesView.class));
         tabAthletes.setVisible(false);
@@ -148,6 +155,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
     private void setSeriesTabsVisible(boolean visible) {
         tabSeries.setVisible(visible);
         tabEvents.setVisible(visible);
+        tabClubs.setVisible(visible);
         tabAthletes.setVisible(visible);
     }
 }

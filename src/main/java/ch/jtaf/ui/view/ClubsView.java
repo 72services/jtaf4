@@ -1,8 +1,9 @@
 package ch.jtaf.ui.view;
 
-import ch.jtaf.db.tables.records.AthleteRecord;
+import ch.jtaf.db.tables.Club;
+import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.db.tables.records.SeriesRecord;
-import ch.jtaf.security.OrganizationHolder;
+import ch.jtaf.ui.dialog.ClubDialog;
 import ch.jtaf.ui.dialog.SeriesDialog;
 import ch.jtaf.ui.layout.MainLayout;
 import ch.jtaf.util.LogoUtil;
@@ -22,27 +23,28 @@ import org.jooq.impl.DSL;
 
 import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
+import static ch.jtaf.db.tables.Club.CLUB;
 import static ch.jtaf.db.tables.Series.SERIES;
 
-@PageTitle("JTAF - Organizations")
+@PageTitle("JTAF - Clubs")
 @Route(layout = MainLayout.class)
-public class SeriesListView extends ProtectedView {
+public class ClubsView extends ProtectedView {
 
     private final DSLContext dsl;
-    private final Grid<SeriesRecord> grid;
+    private final Grid<ClubRecord> grid;
 
-    public SeriesListView(DSLContext dsl) {
+    public ClubsView(DSLContext dsl) {
         this.dsl = dsl;
 
         setHeightFull();
 
-        add(new H1(getTranslation("Series")));
+        add(new H1(getTranslation("Clubs")));
 
-        SeriesDialog dialog = new SeriesDialog(getTranslation("Series"));
+        ClubDialog dialog = new ClubDialog(getTranslation("Clubs"));
 
-        Button add = new Button(getTranslation("Add.Series"));
+        Button add = new Button(getTranslation("Add.Club"));
         add.addClickListener(event -> {
-            SeriesRecord newRecord = SERIES.newRecord();
+            ClubRecord newRecord = CLUB.newRecord();
             newRecord.setOrganizationId(organizationRecord.getId());
             dialog.open(newRecord, this::loadData);
         });
@@ -50,37 +52,16 @@ public class SeriesListView extends ProtectedView {
         grid = new Grid<>();
         grid.setHeightFull();
 
-        grid.addComponentColumn(LogoUtil::resizeLogo).setHeader(getTranslation("Logo"));
-        grid.addColumn(SeriesRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
+        grid.addColumn(ClubRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true);
+        grid.addColumn(ClubRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
 
-        grid.addColumn(seriesRecord -> dsl
-                .select(DSL.count(CATEGORY_ATHLETE.ATHLETE_ID))
-                .from(CATEGORY_ATHLETE)
-                .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
-                .where(CATEGORY.SERIES_ID.eq(seriesRecord.getId()))
-                .fetchOneInto(Integer.class))
-                .setHeader(getTranslation("Number.of.Athletes"));
-
-        grid.addComponentColumn(seriesRecord -> {
-            Checkbox hidden = new Checkbox();
-            hidden.setReadOnly(true);
-            hidden.setValue(seriesRecord.getHidden());
-            return hidden;
-        }).setHeader(getTranslation("Hidden"));
-        grid.addComponentColumn(seriesRecord -> {
-            Checkbox locked = new Checkbox();
-            locked.setReadOnly(true);
-            locked.setValue(seriesRecord.getLocked());
-            return locked;
-        }).setHeader(getTranslation("Hidden"));
-
-        grid.addComponentColumn(seriesRecord -> {
+        grid.addComponentColumn(clubRecord -> {
             Button delete = new Button(getTranslation("Delete"));
             delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
             delete.addClickListener(event -> {
                 try {
-                    dsl.attach(seriesRecord);
-                    seriesRecord.delete();
+                    dsl.attach(clubRecord);
+                    clubRecord.delete();
                 } catch (DataAccessException e) {
                     Notification.show(e.getMessage());
                 }
@@ -100,8 +81,8 @@ public class SeriesListView extends ProtectedView {
     @Override
     void loadData() {
         var series = dsl
-                .selectFrom(SERIES)
-                .where(SERIES.ORGANIZATION_ID.eq(organizationRecord.getId()))
+                .selectFrom(CLUB)
+                .where(CLUB.ORGANIZATION_ID.eq(organizationRecord.getId()))
                 .fetch();
 
         grid.setItems(series);

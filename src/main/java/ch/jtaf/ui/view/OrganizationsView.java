@@ -25,12 +25,12 @@ import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
 
 @PageTitle("JTAF - Organizations")
 @Route(layout = MainLayout.class)
-public class OrganizationView extends VerticalLayout {
+public class OrganizationsView extends VerticalLayout {
 
     private final DSLContext dsl;
     private final Grid<OrganizationRecord> grid;
 
-    public OrganizationView(DSLContext dsl) {
+    public OrganizationsView(DSLContext dsl) {
         this.dsl = dsl;
 
         setHeightFull();

@@ -3,6 +3,7 @@ package ch.jtaf.ui.view;
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.db.tables.records.OrganizationRecord;
+import ch.jtaf.security.OrganizationHolder;
 import ch.jtaf.ui.dialog.AthleteDialog;
 import ch.jtaf.ui.layout.MainLayout;
 import com.vaadin.flow.component.UI;
@@ -43,7 +44,11 @@ public class AthletesView extends ProtectedView {
         AthleteDialog dialog = new AthleteDialog(getTranslation("Athlete"));
 
         Button add = new Button(getTranslation("Add.Athlete"));
-        add.addClickListener(event -> dialog.open(ATHLETE.newRecord(), this::loadData));
+        add.addClickListener(event -> {
+            AthleteRecord newRecord = ATHLETE.newRecord();
+            newRecord.setOrganizationId(organizationRecord.getId());
+            dialog.open(newRecord, this::loadData);
+        });
 
         grid = new Grid<>();
         grid.setHeightFull();
