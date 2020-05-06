@@ -1,6 +1,7 @@
 package ch.jtaf.ui.dialog;
 
 import ch.jtaf.db.tables.records.OrganizationRecord;
+import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.textfield.TextField;
 
 public class OrganizationDialog extends EditDialog<OrganizationRecord> {
@@ -16,7 +17,7 @@ public class OrganizationDialog extends EditDialog<OrganizationRecord> {
         formLayout.add(key);
 
         binder.forField(key)
-                .withValidator(notEmptyValidator())
+                .withValidator(new NotEmptyValidator(this))
                 .bind(OrganizationRecord::getOrganizationKey, OrganizationRecord::setOrganizationKey);
 
         TextField name = new TextField(getTranslation("Name"));
@@ -24,7 +25,7 @@ public class OrganizationDialog extends EditDialog<OrganizationRecord> {
         formLayout.add(name);
 
         binder.forField(name)
-                .withValidator(notEmptyValidator())
+                .withValidator(new NotEmptyValidator(this))
                 .bind(OrganizationRecord::getName, OrganizationRecord::setName);
     }
 

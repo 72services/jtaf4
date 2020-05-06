@@ -1,11 +1,9 @@
 package ch.jtaf.ui.view;
 
-import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.SeriesRecord;
-import ch.jtaf.security.OrganizationHolder;
-import ch.jtaf.ui.dialog.SeriesDialog;
 import ch.jtaf.ui.layout.MainLayout;
 import ch.jtaf.util.LogoUtil;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -38,13 +36,9 @@ public class SeriesListView extends ProtectedView {
 
         add(new H1(getTranslation("Series")));
 
-        SeriesDialog dialog = new SeriesDialog(getTranslation("Series"));
-
-        Button add = new Button(getTranslation("Add.Series"));
+        Button add = new Button(getTranslation("Add"));
         add.addClickListener(event -> {
-            SeriesRecord newRecord = SERIES.newRecord();
-            newRecord.setOrganizationId(organizationRecord.getId());
-            dialog.open(newRecord, this::loadData);
+            UI.getCurrent().navigate(SeriesView.class);
         });
 
         grid = new Grid<>();
@@ -92,7 +86,7 @@ public class SeriesListView extends ProtectedView {
         }).setTextAlign(ColumnTextAlign.END).setHeader(add);
 
         grid.addSelectionListener(event -> event.getFirstSelectedItem()
-                .ifPresent(seriesRecord -> dialog.open(seriesRecord, this::loadData)));
+                .ifPresent(seriesRecord -> UI.getCurrent().navigate(SeriesView.class, "" + seriesRecord.getId())));
 
         add(grid);
     }

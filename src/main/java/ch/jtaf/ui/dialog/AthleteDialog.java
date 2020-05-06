@@ -7,6 +7,7 @@ import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.model.Gender;
 import ch.jtaf.security.OrganizationHolder;
+import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
@@ -42,7 +43,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
         formLayout.add(firstName);
 
         binder.forField(firstName)
-                .withValidator(notEmptyValidator())
+                .withValidator(new NotEmptyValidator(this))
                 .bind(AthleteRecord::getFirstName, AthleteRecord::setFirstName);
 
         TextField lastName = new TextField(getTranslation("Last.Name"));
@@ -50,7 +51,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
         formLayout.add(lastName);
 
         binder.forField(lastName)
-                .withValidator(notEmptyValidator())
+                .withValidator(new NotEmptyValidator(this))
                 .bind(AthleteRecord::getLastName, AthleteRecord::setLastName);
 
         Select<String> gender = new Select<>(getTranslation("Gender"));

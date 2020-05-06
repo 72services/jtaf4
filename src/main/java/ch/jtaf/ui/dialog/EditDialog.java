@@ -9,7 +9,6 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.validator.StringLengthValidator;
 import org.jooq.DSLContext;
 import org.jooq.UpdatableRecord;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -59,8 +58,8 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
 
     public abstract void createForm();
 
-    public void open(R record, Callback afterSave) {
-        binder.setBean(record);
+    public void open(UpdatableRecord<?> record, Callback afterSave) {
+        binder.setBean((R) record);
         this.afterSave = afterSave;
 
         if (!initalized) {
@@ -71,7 +70,4 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
         super.open();
     }
 
-    StringLengthValidator notEmptyValidator() {
-        return new StringLengthValidator(getTranslation("May.not.be.empty"), 1, null);
-    }
 }

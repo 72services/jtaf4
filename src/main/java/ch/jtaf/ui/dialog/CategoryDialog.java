@@ -1,14 +1,13 @@
 package ch.jtaf.ui.dialog;
 
+import ch.jtaf.db.tables.records.CategoryRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
-import ch.jtaf.db.tables.records.SeriesRecord;
 import ch.jtaf.ui.validator.NotEmptyValidator;
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.textfield.TextField;
 
-public class ClubDialog extends EditDialog<ClubRecord> {
+public class CategoryDialog extends EditDialog<CategoryRecord> {
 
-    public ClubDialog(String title) {
+    public CategoryDialog(String title) {
         super(title);
     }
 
@@ -20,7 +19,7 @@ public class ClubDialog extends EditDialog<ClubRecord> {
 
         binder.forField(abbreviation)
                 .withValidator(new NotEmptyValidator(this))
-                .bind(ClubRecord::getAbbreviation, ClubRecord::setAbbreviation);
+                .bind(CategoryRecord::getAbbreviation, CategoryRecord::setAbbreviation);
 
         TextField name = new TextField(getTranslation("Name"));
         name.setRequiredIndicatorVisible(true);
@@ -28,6 +27,6 @@ public class ClubDialog extends EditDialog<ClubRecord> {
 
         binder.forField(name)
                 .withValidator(new NotEmptyValidator(this))
-                .bind(ClubRecord::getName, ClubRecord::setName);
+                .bind(CategoryRecord::getName, CategoryRecord::setName);
     }
 }

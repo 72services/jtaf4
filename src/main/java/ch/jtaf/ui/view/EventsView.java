@@ -1,6 +1,7 @@
 package ch.jtaf.ui.view;
 
 import ch.jtaf.db.tables.records.AthleteRecord;
+import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.security.OrganizationHolder;
 import ch.jtaf.ui.dialog.EventDialog;
@@ -18,7 +19,9 @@ import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
 
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
+import static ch.jtaf.db.tables.Club.CLUB;
 import static ch.jtaf.db.tables.Event.EVENT;
+import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
 
 @PageTitle("JTAF - Organizations")
 @Route(layout = MainLayout.class)
@@ -36,14 +39,6 @@ public class EventsView extends ProtectedView {
 
         EventDialog dialog = new EventDialog(getTranslation("Event"));
 
-        Button add = new Button(getTranslation("Add.Event"));
-        add.addClickListener(event -> {
-            EventRecord newRecord = EVENT.newRecord();
-            newRecord.setOrganizationId(organizationRecord.getId());
-            dialog.open(newRecord, this::loadData);
-        });
-
-
         grid = new Grid<>();
         grid.setHeightFull();
 
@@ -55,25 +50,11 @@ public class EventsView extends ProtectedView {
         grid.addColumn(EventRecord::getB).setHeader("B");
         grid.addColumn(EventRecord::getC).setHeader("C");
 
-        grid.addComponentColumn(eventRecord -> {
-            Button delete = new Button(getTranslation("Delete"));
-            delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            delete.addClickListener(event -> {
-                try {
-                    dsl.attach(eventRecord);
-                    eventRecord.delete();
-                } catch (DataAccessException e) {
-                    Notification.show(e.getMessage());
-                }
-            });
-
-            HorizontalLayout horizontalLayout = new HorizontalLayout(delete);
-            horizontalLayout.setJustifyContentMode(JustifyContentMode.END);
-            return horizontalLayout;
-        }).setTextAlign(ColumnTextAlign.END).setHeader(add);
-
-        grid.addSelectionListener(event -> event.getFirstSelectedItem()
-                .ifPresent(eventRecord -> dialog.open(eventRecord, this::loadData)));
+        addActionColumnAndSetSelectionListener(grid, dialog, this::loadData, () -> {
+            EventRecord newRecord = EVENT.newRecord();
+            newRecord.setOrganizationId(organizationRecord.getId());
+            return newRecord;
+        });
 
         add(grid);
     }

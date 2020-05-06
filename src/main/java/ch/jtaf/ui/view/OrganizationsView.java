@@ -39,7 +39,7 @@ public class OrganizationsView extends VerticalLayout {
 
         OrganizationDialog dialog = new OrganizationDialog(getTranslation("Organization"));
 
-        Button add = new Button(getTranslation("Add.Organization"));
+        Button add = new Button(getTranslation("Add"));
         add.addClickListener(event -> dialog.open(ORGANIZATION.newRecord(), this::loadData));
 
         grid = new Grid<>();

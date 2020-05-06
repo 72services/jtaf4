@@ -10,6 +10,10 @@ public abstract class ProtectedView extends VerticalLayout implements BeforeEnte
 
     OrganizationRecord organizationRecord;
 
+    public ProtectedView() {
+        setHeightFull();
+    }
+
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         organizationRecord = OrganizationHolder.getOrganization();

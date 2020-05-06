@@ -3,6 +3,7 @@ package ch.jtaf.ui.dialog;
 import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.model.EventType;
 import ch.jtaf.model.Gender;
+import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.converter.StringToDoubleConverter;
@@ -20,7 +21,7 @@ public class EventDialog extends EditDialog<EventRecord> {
         formLayout.add(abbreviation);
 
         binder.forField(abbreviation)
-                .withValidator(notEmptyValidator())
+                .withValidator(new NotEmptyValidator(this))
                 .bind(EventRecord::getAbbreviation, EventRecord::setAbbreviation);
 
         TextField name = new TextField(getTranslation("Name"));
@@ -28,7 +29,7 @@ public class EventDialog extends EditDialog<EventRecord> {
         formLayout.add(name);
 
         binder.forField(name)
-                .withValidator(notEmptyValidator())
+                .withValidator(new NotEmptyValidator(this))
                 .bind(EventRecord::getName, EventRecord::setName);
 
         Select<String> gender = new Select<>();
@@ -47,7 +48,7 @@ public class EventDialog extends EditDialog<EventRecord> {
         formLayout.add(eventType);
 
         binder.forField(eventType)
-                .withValidator(notEmptyValidator())
+                .withValidator(new NotEmptyValidator(this))
                 .bind(EventRecord::getEventType, EventRecord::setEventType);
 
         TextField a = new TextField("A");

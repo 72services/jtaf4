@@ -15,9 +15,11 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -69,10 +71,18 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
         image.setHeight(ICON_SIZE);
         addToNavbar(image);
 
+
         H3 title = new H3("JTAF - Track and Field");
-        title.setWidth("400px");
+        title.setWidth("320px");
         title.getStyle().set("padding-left", "20px");
         addToNavbar(title);
+
+        Anchor link = new Anchor();
+        link.setWidth("300px");
+        link.setText("by 72© Services LLC");
+        link.setHref("https://72.services");
+        link.setTarget("_blank");
+        addToNavbar(link);
 
         HorizontalLayout info = new HorizontalLayout();
         info.setWidthFull();
