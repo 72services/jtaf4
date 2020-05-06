@@ -26,6 +26,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final String LOGIN_PROCESSING_URL = "/login";
     private static final String LOGIN_FAILURE_URL = "/login?error";
     private static final String LOGIN_URL = "/login";
+    private static final String LOGIN_SUCCESS_URL = "/organization";
     private static final String LOGOUT_SUCCESS_URL = "/";
 
     private final UserDetailsService userDetailsService;
@@ -59,11 +60,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         // Not using Spring CSRF here to be able to use plain HTML for the login page
         http.csrf().disable()
 
-                // Register our CustomRequestCache, that saves unauthorized access attempts, so the user is redirected after login.
-                .requestCache().requestCache(new CustomRequestCache())
-
                 // Restrict access to our application.
-                .and().authorizeRequests()
+                .authorizeRequests()
 
                 // Allow all flow internal requests.
                 .requestMatchers(SecurityContext::isFrameworkInternalRequest).permitAll()
@@ -78,18 +76,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
 
                 // Configure the login page.
-                .and().formLogin().loginPage(LOGIN_URL).permitAll().loginProcessingUrl(LOGIN_PROCESSING_URL)
-                .failureUrl(LOGIN_FAILURE_URL)
-
-                // Register the success handler that redirects users to the page they last tried
-                // to access
-                .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
+                .and().formLogin().loginPage(LOGIN_URL).permitAll().loginProcessingUrl(LOGIN_PROCESSING_URL).successForwardUrl(LOGIN_SUCCESS_URL).failureUrl(LOGIN_FAILURE_URL)
 
                 // Configure logout
                 .and().logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL)
 
                 // Remember Me
-                .and().rememberMe().key("secretJtaf4").alwaysRemember(true);
+                .and().rememberMe().key("7QPVkH83\\jA==BA`").alwaysRemember(true);
     }
 
     /**
