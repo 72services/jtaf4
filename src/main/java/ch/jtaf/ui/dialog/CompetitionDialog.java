@@ -1,6 +1,5 @@
 package ch.jtaf.ui.dialog;
 
-import ch.jtaf.db.tables.records.CategoryRecord;
 import ch.jtaf.db.tables.records.CompetitionRecord;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -16,7 +15,6 @@ public class CompetitionDialog extends EditDialog<CompetitionRecord> {
     public void createForm() {
         TextField name = new TextField(getTranslation("Name"));
         name.setRequiredIndicatorVisible(true);
-        formLayout.add(name);
 
         binder.forField(name)
                 .withValidator(new NotEmptyValidator(this))
@@ -24,9 +22,10 @@ public class CompetitionDialog extends EditDialog<CompetitionRecord> {
 
         DatePicker date = new DatePicker(getTranslation("Date"));
         name.setRequiredIndicatorVisible(true);
-        formLayout.add(date);
 
         binder.forField(date)
                 .bind(CompetitionRecord::getCompetitionDate, CompetitionRecord::setCompetitionDate);
+
+        formLayout.add(name, date);
     }
 }

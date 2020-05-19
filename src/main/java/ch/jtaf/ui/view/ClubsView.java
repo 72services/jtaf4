@@ -1,24 +1,15 @@
 package ch.jtaf.ui.view;
 
-import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
-import ch.jtaf.ui.component.GridBuilder;
 import ch.jtaf.ui.dialog.ClubDialog;
 import ch.jtaf.ui.layout.MainLayout;
-import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.jooq.DSLContext;
-import org.jooq.exception.DataAccessException;
 
-import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Club.CLUB;
 import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
 
@@ -38,7 +29,7 @@ public class ClubsView extends ProtectedView {
 
         ClubDialog dialog = new ClubDialog(getTranslation("Clubs"));
 
-        Button add = new Button(getTranslation("Add.Club"));
+        Button add = new Button(getTranslation("Add"));
         add.addClickListener(event -> {
             ClubRecord newRecord = CLUB.newRecord();
             newRecord.setOrganizationId(organizationRecord.getId());

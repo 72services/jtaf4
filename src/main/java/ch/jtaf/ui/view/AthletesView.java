@@ -2,7 +2,6 @@ package ch.jtaf.ui.view;
 
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
-import ch.jtaf.ui.component.GridBuilder;
 import ch.jtaf.ui.dialog.AthleteDialog;
 import ch.jtaf.ui.layout.MainLayout;
 import com.vaadin.flow.component.grid.Grid;

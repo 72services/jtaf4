@@ -1,25 +1,14 @@
 package ch.jtaf.ui.view;
 
-import ch.jtaf.db.tables.records.AthleteRecord;
-import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.db.tables.records.EventRecord;
-import ch.jtaf.security.OrganizationHolder;
 import ch.jtaf.ui.dialog.EventDialog;
 import ch.jtaf.ui.layout.MainLayout;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.jooq.DSLContext;
-import org.jooq.exception.DataAccessException;
 
-import static ch.jtaf.db.tables.Athlete.ATHLETE;
-import static ch.jtaf.db.tables.Club.CLUB;
 import static ch.jtaf.db.tables.Event.EVENT;
 import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
 

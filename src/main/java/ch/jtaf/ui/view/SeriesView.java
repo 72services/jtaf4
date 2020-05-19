@@ -1,7 +1,6 @@
 package ch.jtaf.ui.view;
 
 import ch.jtaf.context.ApplicationContextHolder;
-import ch.jtaf.db.tables.CategoryAthlete;
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.CategoryRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
@@ -9,15 +8,19 @@ import ch.jtaf.db.tables.records.CompetitionRecord;
 import ch.jtaf.db.tables.records.SeriesRecord;
 import ch.jtaf.ui.dialog.CategoryDialog;
 import ch.jtaf.ui.dialog.CompetitionDialog;
+import ch.jtaf.ui.dialog.SearchAthleteDialog;
 import ch.jtaf.ui.layout.MainLayout;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
@@ -35,6 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static ch.jtaf.context.ApplicationContextHolder.getBean;
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
@@ -170,7 +174,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
     }
 
     private void createAthletesSection() {
-        CategoryDialog dialog = new CategoryDialog(getTranslation("Category"));
+        SearchAthleteDialog dialog = new SearchAthleteDialog();
 
         athletesGrid = new Grid<>();
         athletesGrid.setHeightFull();
@@ -181,11 +185,22 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         athletesGrid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
                 : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club"));
 
-        addActionColumnAndSetSelectionListener(categoriesGrid, dialog, this::loadData, () -> {
-            CategoryRecord newRecord = CATEGORY.newRecord();
-            newRecord.setSeriesId(seriesRecord.getId());
-            return newRecord;
-        }, this::removeAtheleteFromSeries);
+        Button assign = new Button(athletesGrid.getTranslation("Assign.Athelete"));
+        assign.addClickListener(event -> dialog.open());
+
+        athletesGrid.addComponentColumn(record -> {
+            Button remove = new Button(athletesGrid.getTranslation("Remove"));
+            remove.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            remove.addClickListener(event -> {
+                getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> {
+                    removeAtheleteFromSeries(record);
+                });
+            });
+
+            HorizontalLayout horizontalLayout = new HorizontalLayout(remove);
+            horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+            return horizontalLayout;
+        }).setTextAlign(ColumnTextAlign.END).setHeader(assign);
     }
 
     private void removeAtheleteFromSeries(UpdatableRecord<?> record) {
@@ -226,8 +241,6 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         } else {
             long seriesId = Long.parseLong(parameter);
             seriesRecord = dsl.selectFrom(SERIES).where(SERIES.ID.eq(seriesId)).fetchOne();
-
-            loadData();
         }
         binder.setBean(seriesRecord);
     }

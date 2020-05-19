@@ -18,7 +18,6 @@ public class EventDialog extends EditDialog<EventRecord> {
     public void createForm() {
         TextField abbreviation = new TextField(getTranslation("Abbreviation"));
         abbreviation.setRequiredIndicatorVisible(true);
-        formLayout.add(abbreviation);
 
         binder.forField(abbreviation)
                 .withValidator(new NotEmptyValidator(this))
@@ -26,7 +25,6 @@ public class EventDialog extends EditDialog<EventRecord> {
 
         TextField name = new TextField(getTranslation("Name"));
         name.setRequiredIndicatorVisible(true);
-        formLayout.add(name);
 
         binder.forField(name)
                 .withValidator(new NotEmptyValidator(this))
@@ -36,7 +34,6 @@ public class EventDialog extends EditDialog<EventRecord> {
         gender.setLabel(getTranslation("Gender"));
         gender.setRequiredIndicatorVisible(true);
         gender.setItems(Gender.valuesAsStrings());
-        formLayout.add(gender);
 
         binder.forField(gender)
                 .bind(EventRecord::getGender, EventRecord::setGender);
@@ -45,7 +42,6 @@ public class EventDialog extends EditDialog<EventRecord> {
         eventType.setLabel(getTranslation("Event.Type"));
         eventType.setRequiredIndicatorVisible(true);
         eventType.setItems(EventType.valuesAsStrings());
-        formLayout.add(eventType);
 
         binder.forField(eventType)
                 .withValidator(new NotEmptyValidator(this))
@@ -53,7 +49,6 @@ public class EventDialog extends EditDialog<EventRecord> {
 
         TextField a = new TextField("A");
         a.setRequiredIndicatorVisible(true);
-        formLayout.add(a);
 
         binder.forField(a)
                 .withConverter(new StringToDoubleConverter(getTranslation("Must.be.a.number")))
@@ -61,7 +56,6 @@ public class EventDialog extends EditDialog<EventRecord> {
 
         TextField b = new TextField("B");
         b.setRequiredIndicatorVisible(true);
-        formLayout.add(b);
 
         binder.forField(b)
                 .withConverter(new StringToDoubleConverter(getTranslation("Must.be.a.number")))
@@ -69,10 +63,11 @@ public class EventDialog extends EditDialog<EventRecord> {
 
         TextField c = new TextField("C");
         c.setRequiredIndicatorVisible(true);
-        formLayout.add(c);
 
         binder.forField(c)
                 .withConverter(new StringToDoubleConverter(getTranslation("Must.be.a.number")))
                 .bind(EventRecord::getC, EventRecord::setC);
+
+        formLayout.add(abbreviation, name, gender, eventType, a, b, c);
     }
 }
