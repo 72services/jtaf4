@@ -1,8 +1,10 @@
 package ch.jtaf.ui.view;
 
 import ch.jtaf.context.ApplicationContextHolder;
+import ch.jtaf.db.tables.CategoryAthlete;
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.CategoryRecord;
+import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.db.tables.records.CompetitionRecord;
 import ch.jtaf.db.tables.records.SeriesRecord;
 import ch.jtaf.ui.dialog.CategoryDialog;
@@ -31,10 +33,12 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
+import static ch.jtaf.db.tables.Club.CLUB;
 import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Series.SERIES;
 import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
@@ -54,6 +58,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
     Tabs sectionTabs = new Tabs();
 
     private Binder<SeriesRecord> binder = new Binder<>();
+
+    private Map<Long, ClubRecord> clubRecordMap;
 
     public SeriesView(DSLContext dsl) {
         this.dsl = dsl;
@@ -164,9 +170,30 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
     }
 
     private void createAthletesSection() {
+        CategoryDialog dialog = new CategoryDialog(getTranslation("Category"));
+
         athletesGrid = new Grid<>();
         athletesGrid.setHeightFull();
+        athletesGrid.addColumn(AthleteRecord::getLastName).setHeader(getTranslation("Last.Name")).setSortable(true);
         athletesGrid.addColumn(AthleteRecord::getFirstName).setHeader(getTranslation("First.Name")).setSortable(true);
+        athletesGrid.addColumn(AthleteRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true);
+        athletesGrid.addColumn(AthleteRecord::getYearOfBirth).setHeader(getTranslation("Year")).setSortable(true);
+        athletesGrid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
+                : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club"));
+
+        addActionColumnAndSetSelectionListener(categoriesGrid, dialog, this::loadData, () -> {
+            CategoryRecord newRecord = CATEGORY.newRecord();
+            newRecord.setSeriesId(seriesRecord.getId());
+            return newRecord;
+        }, this::removeAtheleteFromSeries);
+    }
+
+    private void removeAtheleteFromSeries(UpdatableRecord<?> record) {
+        AthleteRecord athleteRecord = (AthleteRecord) record;
+        dsl
+                .deleteFrom(CATEGORY_ATHLETE)
+                .where(CATEGORY_ATHLETE.ATHLETE_ID.eq(athleteRecord.getId()))
+                .and(CATEGORY_ATHLETE.CATEGORY_ID.in(dsl.select(CATEGORY.ID).from(CATEGORY).where(CATEGORY.SERIES_ID.eq(seriesRecord.getId()))));
     }
 
     @Override
@@ -176,6 +203,9 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
         var categoryRecords = dsl.selectFrom(CATEGORY).where(CATEGORY.SERIES_ID.eq(seriesRecord.getId())).orderBy(CATEGORY.ABBREVIATION).fetch();
         categoriesGrid.setItems(categoryRecords);
+
+        var clubs = dsl.selectFrom(CLUB).where(CLUB.ORGANIZATION_ID.eq(organizationRecord.getId())).fetch();
+        clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
 
         var athleteRecords = dsl
                 .select()

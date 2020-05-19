@@ -14,6 +14,7 @@ import org.jooq.UpdatableRecord;
 import org.jooq.exception.DataAccessException;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static ch.jtaf.context.ApplicationContextHolder.getBean;
@@ -23,7 +24,16 @@ public class GridBuilder {
     private GridBuilder() {
     }
 
-    public static void addActionColumnAndSetSelectionListener(Grid<? extends UpdatableRecord<?>> grid, EditDialog<? extends UpdatableRecord<?>> dialog, Callback afterSave, Supplier<UpdatableRecord> onNewRecord) {
+    public static void addActionColumnAndSetSelectionListener(Grid<? extends UpdatableRecord<?>> grid,
+                                                              EditDialog<? extends UpdatableRecord<?>> dialog,
+                                                              Callback afterSave, Supplier<UpdatableRecord<?>> onNewRecord) {
+        addActionColumnAndSetSelectionListener(grid, dialog, afterSave, onNewRecord, null);
+    }
+
+    public static void addActionColumnAndSetSelectionListener(Grid<? extends UpdatableRecord<?>> grid,
+                                                              EditDialog<? extends UpdatableRecord<?>> dialog,
+                                                              Callback afterSave, Supplier<UpdatableRecord<?>> onNewRecord,
+                                                              Consumer<UpdatableRecord<?>> insteadOfDelete) {
         Button buttonAdd = new Button(grid.getTranslation("Add"));
         buttonAdd.addClickListener(event -> dialog.open(onNewRecord.get(), afterSave));
 
@@ -33,7 +43,11 @@ public class GridBuilder {
             delete.addClickListener(event -> {
                 getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> {
                     try {
-                        getBean(DSLContext.class).attach(record);
+                        if (insteadOfDelete != null) {
+                            insteadOfDelete.accept(record);
+                        } else {
+                            getBean(DSLContext.class).attach(record);
+                        }
                         record.delete();
                     } catch (DataAccessException e) {
                         Notification.show(e.getMessage());

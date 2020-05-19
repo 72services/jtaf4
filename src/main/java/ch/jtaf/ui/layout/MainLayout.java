@@ -19,7 +19,6 @@ import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -58,9 +57,29 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
     public MainLayout() {
         addMainMenu();
-        tabsMainMenu.setOrientation(Tabs.Orientation.VERTICAL);
 
-        addToDrawer(tabsMainMenu);
+        tabsMainMenu.setOrientation(Tabs.Orientation.VERTICAL);
+        tabsMainMenu.getStyle().set("height", "calc(100%-30px)");
+
+        Div divFooter = new Div();
+        divFooter.setHeight("30px");
+        divFooter.getStyle().set("position", "absolute");
+        divFooter.getStyle().set("bottom", "20px");
+        divFooter.getStyle().set("left", "20px");
+
+        Anchor byLink = new Anchor();
+        byLink.setWidth("300px");
+        byLink.setText("by 72© Services LLC");
+        byLink.setHref("https://72.services");
+        byLink.setTarget("_blank");
+        divFooter.add(byLink);
+
+        Div divDrawer = new Div();
+        divDrawer.setHeightFull();
+        divDrawer.add(tabsMainMenu);
+        divDrawer.add(divFooter);
+
+        addToDrawer(divDrawer);
 
         addToNavbar(new DrawerToggle());
 
@@ -74,15 +93,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
         H3 title = new H3("JTAF - Track and Field");
         title.setWidth("320px");
-        title.getStyle().set("padding-left", "20px");
         addToNavbar(title);
-
-        Anchor link = new Anchor();
-        link.setWidth("300px");
-        link.setText("by 72© Services LLC");
-        link.setHref("https://72.services");
-        link.setTarget("_blank");
-        addToNavbar(link);
 
         HorizontalLayout info = new HorizontalLayout();
         info.setWidthFull();
