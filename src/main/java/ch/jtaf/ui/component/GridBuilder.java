@@ -24,19 +24,15 @@ public class GridBuilder {
     private GridBuilder() {
     }
 
-    public static void addActionColumnAndSetSelectionListener(Grid<? extends UpdatableRecord<?>> grid,
-                                                              EditDialog<? extends UpdatableRecord<?>> dialog,
-                                                              Callback afterSave, Supplier<UpdatableRecord<?>> onNewRecord) {
+    public static <R extends UpdatableRecord<R>>
+    void addActionColumnAndSetSelectionListener(Grid<R> grid, EditDialog<R> dialog, Callback afterSave, Supplier<R> onNewRecord) {
         addActionColumnAndSetSelectionListener(grid, dialog, afterSave, onNewRecord, null);
     }
 
-    public static void addActionColumnAndSetSelectionListener(Grid<? extends UpdatableRecord<?>> grid,
-                                                              EditDialog<? extends UpdatableRecord<?>> dialog,
-                                                              Callback afterSave, Supplier<UpdatableRecord<?>> onNewRecord,
-                                                              Consumer<UpdatableRecord<?>> insteadOfDelete) {
+    public static <R extends UpdatableRecord<R>>
+    void addActionColumnAndSetSelectionListener(Grid<R> grid, EditDialog<R> dialog, Callback afterSave, Supplier<R> onNewRecord, Consumer<R> insteadOfDelete) {
         Button buttonAdd = new Button(grid.getTranslation("Add"));
         buttonAdd.addClickListener(event -> dialog.open(onNewRecord.get(), afterSave));
-
         grid.addComponentColumn(record -> {
             Button delete = new Button(grid.getTranslation("Delete"));
             delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
@@ -54,13 +50,12 @@ public class GridBuilder {
                     }
                 });
             });
-
             HorizontalLayout horizontalLayout = new HorizontalLayout(delete);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
             return horizontalLayout;
         }).setTextAlign(ColumnTextAlign.END).setHeader(buttonAdd);
-
-        grid.addSelectionListener(event -> event.getFirstSelectedItem().ifPresent(record -> dialog.open(record, afterSave)));
+        grid.addSelectionListener(event -> event.getFirstSelectedItem().ifPresent(
+                record -> dialog.open(record, afterSave)));
     }
 
 }
