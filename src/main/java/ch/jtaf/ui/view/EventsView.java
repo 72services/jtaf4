@@ -5,31 +5,26 @@ import ch.jtaf.ui.dialog.EventDialog;
 import ch.jtaf.ui.layout.MainLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.Field;
 
 import static ch.jtaf.db.tables.Event.EVENT;
 import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
 
-@PageTitle("JTAF - Organizations")
 @Route(layout = MainLayout.class)
-public class EventsView extends ProtectedView {
+public class EventsView extends ProtectedGridView<EventRecord> {
 
-    private final DSLContext dsl;
-    private final Grid<EventRecord> grid;
 
     public EventsView(DSLContext dsl) {
-        this.dsl = dsl;
+        super(dsl, EVENT);
 
         setHeightFull();
 
         add(new H1(getTranslation("Events")));
 
         EventDialog dialog = new EventDialog(getTranslation("Event"));
-
-        grid = new Grid<>();
-        grid.setHeightFull();
 
         grid.addColumn(EventRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true);
         grid.addColumn(EventRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
@@ -39,23 +34,28 @@ public class EventsView extends ProtectedView {
         grid.addColumn(EventRecord::getB).setHeader("B");
         grid.addColumn(EventRecord::getC).setHeader("C");
 
-        addActionColumnAndSetSelectionListener(grid, dialog, this::loadData, () -> {
-            EventRecord newRecord = EVENT.newRecord();
-            newRecord.setOrganizationId(organizationRecord.getId());
-            return newRecord;
-        });
+        addActionColumnAndSetSelectionListener(grid, dialog, dataProvider::refreshAll,
+                () -> {
+                    EventRecord newRecord = EVENT.newRecord();
+                    newRecord.setOrganizationId(organizationRecord.getId());
+                    return newRecord;
+                });
 
         add(grid);
     }
 
     @Override
-    void loadData() {
-        var events = dsl
-                .selectFrom(EVENT)
-                .where(EVENT.ORGANIZATION_ID.eq(organizationRecord.getId()))
-                .fetch();
-
-        grid.setItems(events);
+    public String getPageTitle() {
+        return getTranslation("Events");
     }
 
+    @Override
+    protected Condition initialCondition() {
+        return EVENT.ORGANIZATION_ID.eq(organizationRecord.getId());
+    }
+
+    @Override
+    protected Field<?>[] initialSort() {
+        return new Field[]{EVENT.GENDER, EVENT.ABBREVIATION};
+    }
 }

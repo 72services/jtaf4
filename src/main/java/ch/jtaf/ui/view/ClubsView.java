@@ -6,22 +6,19 @@ import ch.jtaf.ui.layout.MainLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.Field;
 
 import static ch.jtaf.db.tables.Club.CLUB;
 import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
 
-@PageTitle("JTAF - Clubs")
 @Route(layout = MainLayout.class)
-public class ClubsView extends ProtectedView {
-
-    private final DSLContext dsl;
-    private final Grid<ClubRecord> grid;
+public class ClubsView extends ProtectedGridView<ClubRecord> {
 
     public ClubsView(DSLContext dsl) {
-        this.dsl = dsl;
+        super(dsl, CLUB);
 
         setHeightFull();
 
@@ -33,31 +30,34 @@ public class ClubsView extends ProtectedView {
         add.addClickListener(event -> {
             ClubRecord newRecord = CLUB.newRecord();
             newRecord.setOrganizationId(organizationRecord.getId());
-            dialog.open(newRecord, this::loadData);
+            dialog.open(newRecord, dataProvider::refreshAll);
         });
-
-        grid = new Grid<>();
-        grid.setHeightFull();
 
         grid.addColumn(ClubRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true);
         grid.addColumn(ClubRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
 
-        addActionColumnAndSetSelectionListener(grid, dialog, this::loadData, () -> {
-            ClubRecord newRecord = CLUB.newRecord();
-            newRecord.setOrganizationId(organizationRecord.getId());
-            return newRecord;
-        });
+        addActionColumnAndSetSelectionListener(grid, dialog, dataProvider::refreshAll,
+                () -> {
+                    ClubRecord newRecord = CLUB.newRecord();
+                    newRecord.setOrganizationId(organizationRecord.getId());
+                    return newRecord;
+                });
 
         add(grid);
     }
 
     @Override
-    void loadData() {
-        var series = dsl
-                .selectFrom(CLUB)
-                .where(CLUB.ORGANIZATION_ID.eq(organizationRecord.getId()))
-                .fetch();
+    public String getPageTitle() {
+        return getTranslation("Clubs");
+    }
 
-        grid.setItems(series);
+    @Override
+    protected Condition initialCondition() {
+        return CLUB.ORGANIZATION_ID.eq(organizationRecord.getId());
+    }
+
+    @Override
+    protected Field<?>[] initialSort() {
+        return new Field[]{CLUB.ABBREVIATION};
     }
 }

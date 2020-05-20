@@ -13,7 +13,7 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
 import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
@@ -23,9 +23,8 @@ import static ch.jtaf.db.tables.Organization.ORGANIZATION;
 import static ch.jtaf.db.tables.OrganizationUser.ORGANIZATION_USER;
 import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
 
-@PageTitle("JTAF - Organizations")
 @Route(layout = MainLayout.class)
-public class OrganizationsView extends VerticalLayout {
+public class OrganizationsView extends VerticalLayout implements HasDynamicTitle {
 
     private final DSLContext dsl;
     private final Grid<OrganizationRecord> grid;
@@ -91,4 +90,8 @@ public class OrganizationsView extends VerticalLayout {
         grid.setItems(organizations);
     }
 
+    @Override
+    public String getPageTitle() {
+        return getTranslation("Organizations");
+    }
 }

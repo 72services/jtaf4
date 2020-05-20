@@ -2,13 +2,17 @@ package ch.jtaf.ui.view;
 
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
+import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.ui.dialog.AthleteDialog;
 import ch.jtaf.ui.layout.MainLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
+import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.Field;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,17 +21,15 @@ import java.util.stream.Collectors;
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Club.CLUB;
 import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
+import static org.jooq.impl.DSL.upper;
 
-@PageTitle("JTAF - Organizations")
 @Route(layout = MainLayout.class)
-public class AthletesView extends ProtectedView {
+public class AthletesView extends ProtectedGridView<AthleteRecord> {
 
-    private final DSLContext dsl;
-    private final Grid<AthleteRecord> grid;
     private Map<Long, ClubRecord> clubRecordMap = new HashMap<>();
 
     public AthletesView(DSLContext dsl) {
-        this.dsl = dsl;
+        super(dsl, ATHLETE);
 
         setHeightFull();
 
@@ -35,8 +37,9 @@ public class AthletesView extends ProtectedView {
 
         AthleteDialog dialog = new AthleteDialog(getTranslation("Athlete"));
 
-        grid = new Grid<>();
-        grid.setHeightFull();
+        TextField filter = new TextField(getTranslation("Filter"));
+        filter.setValueChangeMode(ValueChangeMode.EAGER);
+        add(filter);
 
         grid.addColumn(AthleteRecord::getLastName).setHeader(getTranslation("Last.Name")).setSortable(true);
         grid.addColumn(AthleteRecord::getFirstName).setHeader(getTranslation("First.Name")).setSortable(true);
@@ -45,27 +48,39 @@ public class AthletesView extends ProtectedView {
         grid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
                 : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club"));
 
-        addActionColumnAndSetSelectionListener(grid, dialog, this::loadData, () -> {
-            AthleteRecord newRecord = ATHLETE.newRecord();
-            newRecord.setOrganizationId(organizationRecord.getId());
-            return newRecord;
-        });
+        addActionColumnAndSetSelectionListener(grid, dialog, dataProvider::refreshAll,
+                () -> {
+                    AthleteRecord newRecord = ATHLETE.newRecord();
+                    newRecord.setOrganizationId(organizationRecord.getId());
+                    return newRecord;
+                });
+
+        filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
 
         add(grid);
+
+        filter.focus();
     }
 
     @Override
-    void loadData() {
+    protected void refreshAll() {
+        super.refreshAll();
         var clubs = dsl.selectFrom(CLUB).where(CLUB.ORGANIZATION_ID.eq(organizationRecord.getId())).fetch();
         clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
-
-        var athletes = dsl
-                .selectFrom(ATHLETE)
-                .where(ATHLETE.ORGANIZATION_ID.eq(organizationRecord.getId()))
-                .orderBy(ATHLETE.GENDER, ATHLETE.YEAR_OF_BIRTH, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME)
-                .fetch();
-
-        grid.setItems(athletes);
     }
 
+    @Override
+    public String getPageTitle() {
+        return getTranslation("Athletes");
+    }
+
+    @Override
+    protected Condition initialCondition() {
+        return ATHLETE.ORGANIZATION_ID.eq(organizationRecord.getId());
+    }
+
+    @Override
+    protected Field<?>[] initialSort() {
+        return new Field[]{ATHLETE.GENDER, ATHLETE.YEAR_OF_BIRTH, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME};
+    }
 }

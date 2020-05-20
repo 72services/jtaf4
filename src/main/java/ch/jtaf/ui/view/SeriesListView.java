@@ -12,9 +12,10 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.Field;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 
@@ -22,15 +23,11 @@ import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
 import static ch.jtaf.db.tables.Series.SERIES;
 
-@PageTitle("JTAF - Organizations")
 @Route(layout = MainLayout.class)
-public class SeriesListView extends ProtectedView {
-
-    private final DSLContext dsl;
-    private final Grid<SeriesRecord> grid;
+public class SeriesListView extends ProtectedGridView<SeriesRecord> {
 
     public SeriesListView(DSLContext dsl) {
-        this.dsl = dsl;
+        super(dsl, SERIES);
 
         setHeightFull();
 
@@ -40,9 +37,6 @@ public class SeriesListView extends ProtectedView {
         add.addClickListener(event -> {
             UI.getCurrent().navigate(SeriesView.class);
         });
-
-        grid = new Grid<>();
-        grid.setHeightFull();
 
         grid.addComponentColumn(LogoUtil::resizeLogo).setHeader(getTranslation("Logo"));
         grid.addColumn(SeriesRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
@@ -92,12 +86,17 @@ public class SeriesListView extends ProtectedView {
     }
 
     @Override
-    void loadData() {
-        var series = dsl
-                .selectFrom(SERIES)
-                .where(SERIES.ORGANIZATION_ID.eq(organizationRecord.getId()))
-                .fetch();
+    public String getPageTitle() {
+        return getTranslation("Series");
+    }
 
-        grid.setItems(series);
+    @Override
+    protected Condition initialCondition() {
+        return SERIES.ORGANIZATION_ID.eq(organizationRecord.getId());
+    }
+
+    @Override
+    protected Field<?>[] initialSort() {
+        return new Field[]{SERIES.NAME};
     }
 }

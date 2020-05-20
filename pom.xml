@@ -50,7 +50,7 @@
     <properties>
         <java.version>14</java.version>
 
-        <vaadin.version>14.1.28</vaadin.version>
+        <vaadin.version>14.2.0</vaadin.version>
         <jooq.version>3.13.2</jooq.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

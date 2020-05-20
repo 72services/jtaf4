@@ -12,6 +12,7 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
@@ -25,9 +26,8 @@ import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Series.SERIES;
 import static ch.jtaf.util.LogoUtil.resizeLogo;
 
-@PageTitle("JTAF - Dashboard")
 @Route(value = "", layout = MainLayout.class)
-public class DashboardView extends VerticalLayout {
+public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 
     public DashboardView(DSLContext dsl, SeriesRankingService seriesRankingService, CompetitionRankingService competitionRankingService) {
         add(new H1(getTranslation("Dashboard")));
@@ -93,4 +93,8 @@ public class DashboardView extends VerticalLayout {
                 });
     }
 
+    @Override
+    public String getPageTitle() {
+        return getTranslation("Dashboard");
+    }
 }

@@ -5,13 +5,17 @@ import ch.jtaf.security.OrganizationHolder;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
+import com.vaadin.flow.router.HasDynamicTitle;
+import org.jooq.DSLContext;
 
-public abstract class ProtectedView extends VerticalLayout implements BeforeEnterObserver {
+public abstract class ProtectedView extends VerticalLayout implements BeforeEnterObserver, HasDynamicTitle {
+
+    final DSLContext dsl;
 
     OrganizationRecord organizationRecord;
 
-    public ProtectedView() {
-        setHeightFull();
+    ProtectedView(DSLContext dsl) {
+        this.dsl = dsl;
     }
 
     @Override
@@ -21,10 +25,9 @@ public abstract class ProtectedView extends VerticalLayout implements BeforeEnte
         if (organizationRecord == null) {
             event.rerouteTo(OrganizationsView.class);
         } else {
-            loadData();
+            refreshAll();
         }
     }
 
-    abstract void loadData();
-
+    protected abstract void refreshAll();
 }

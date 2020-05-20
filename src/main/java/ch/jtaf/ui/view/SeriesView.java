@@ -28,7 +28,6 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
-import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.jooq.DSLContext;
 import org.jooq.UpdatableRecord;
@@ -47,11 +46,8 @@ import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Series.SERIES;
 import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
 
-@PageTitle("JTAF - Organizations")
 @Route(layout = MainLayout.class)
 public class SeriesView extends ProtectedView implements HasUrlParameter<String> {
-
-    private final DSLContext dsl;
 
     private SeriesRecord seriesRecord;
 
@@ -66,7 +62,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
     private Map<Long, ClubRecord> clubRecordMap;
 
     public SeriesView(DSLContext dsl) {
-        this.dsl = dsl;
+        super(dsl);
 
         H3 h3Title = new H3(getTranslation("Series"));
         h3Title.getStyle().set("margin-top", "0px");
@@ -141,6 +137,45 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         });
     }
 
+    @Override
+    protected void refreshAll() {
+        var competitionRecords = dsl.selectFrom(COMPETITION).where(COMPETITION.SERIES_ID.eq(seriesRecord.getId())).orderBy(COMPETITION.COMPETITION_DATE).fetch();
+        competitionsGrid.setItems(competitionRecords);
+
+        var categoryRecords = dsl.selectFrom(CATEGORY).where(CATEGORY.SERIES_ID.eq(seriesRecord.getId())).orderBy(CATEGORY.ABBREVIATION).fetch();
+        categoriesGrid.setItems(categoryRecords);
+
+        var clubs = dsl.selectFrom(CLUB).where(CLUB.ORGANIZATION_ID.eq(organizationRecord.getId())).fetch();
+        clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
+
+        var athleteRecords = dsl
+                .select()
+                .from(ATHLETE)
+                .join(CATEGORY_ATHLETE).on(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
+                .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
+                .where(CATEGORY.SERIES_ID.eq(seriesRecord.getId()))
+                .orderBy(CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME)
+                .fetchInto(ATHLETE);
+        athletesGrid.setItems(athleteRecords);
+    }
+
+    @Override
+    public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
+        if (parameter == null) {
+            seriesRecord = SERIES.newRecord();
+            seriesRecord.setOrganizationId(organizationRecord.getId());
+        } else {
+            long seriesId = Long.parseLong(parameter);
+            seriesRecord = dsl.selectFrom(SERIES).where(SERIES.ID.eq(seriesId)).fetchOne();
+        }
+        binder.setBean(seriesRecord);
+    }
+
+    @Override
+    public String getPageTitle() {
+        return getTranslation("Series");
+    }
+
     private void createCompetitionsSection() {
         CompetitionDialog dialog = new CompetitionDialog(getTranslation("Category"));
 
@@ -149,7 +184,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         competitionsGrid.addColumn(CompetitionRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
         competitionsGrid.addColumn(CompetitionRecord::getCompetitionDate).setHeader(getTranslation("Date")).setSortable(true);
 
-        addActionColumnAndSetSelectionListener(competitionsGrid, dialog, this::loadData, () -> {
+        addActionColumnAndSetSelectionListener(competitionsGrid, dialog, this::refreshAll, () -> {
             CompetitionRecord newRecord = COMPETITION.newRecord();
             newRecord.setSeriesId(seriesRecord.getId());
             return newRecord;
@@ -166,7 +201,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         categoriesGrid.addColumn(CategoryRecord::getYearFrom).setHeader(getTranslation("Year.From")).setSortable(true);
         categoriesGrid.addColumn(CategoryRecord::getYearTo).setHeader(getTranslation("Year.To")).setSortable(true);
 
-        addActionColumnAndSetSelectionListener(categoriesGrid, dialog, this::loadData, () -> {
+        addActionColumnAndSetSelectionListener(categoriesGrid, dialog, this::refreshAll, () -> {
             CategoryRecord newRecord = CATEGORY.newRecord();
             newRecord.setSeriesId(seriesRecord.getId());
             return newRecord;
@@ -209,40 +244,6 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                 .deleteFrom(CATEGORY_ATHLETE)
                 .where(CATEGORY_ATHLETE.ATHLETE_ID.eq(athleteRecord.getId()))
                 .and(CATEGORY_ATHLETE.CATEGORY_ID.in(dsl.select(CATEGORY.ID).from(CATEGORY).where(CATEGORY.SERIES_ID.eq(seriesRecord.getId()))));
-    }
-
-    @Override
-    void loadData() {
-        var competitionRecords = dsl.selectFrom(COMPETITION).where(COMPETITION.SERIES_ID.eq(seriesRecord.getId())).orderBy(COMPETITION.COMPETITION_DATE).fetch();
-        competitionsGrid.setItems(competitionRecords);
-
-        var categoryRecords = dsl.selectFrom(CATEGORY).where(CATEGORY.SERIES_ID.eq(seriesRecord.getId())).orderBy(CATEGORY.ABBREVIATION).fetch();
-        categoriesGrid.setItems(categoryRecords);
-
-        var clubs = dsl.selectFrom(CLUB).where(CLUB.ORGANIZATION_ID.eq(organizationRecord.getId())).fetch();
-        clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
-
-        var athleteRecords = dsl
-                .select()
-                .from(ATHLETE)
-                .join(CATEGORY_ATHLETE).on(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
-                .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
-                .where(CATEGORY.SERIES_ID.eq(seriesRecord.getId()))
-                .orderBy(CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME)
-                .fetchInto(ATHLETE);
-        athletesGrid.setItems(athleteRecords);
-    }
-
-    @Override
-    public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
-        if (parameter == null) {
-            seriesRecord = SERIES.newRecord();
-            seriesRecord.setOrganizationId(organizationRecord.getId());
-        } else {
-            long seriesId = Long.parseLong(parameter);
-            seriesRecord = dsl.selectFrom(SERIES).where(SERIES.ID.eq(seriesId)).fetchOne();
-        }
-        binder.setBean(seriesRecord);
     }
 
 }
