@@ -19,6 +19,7 @@ import org.jooq.DSLContext;
 import org.jooq.Field;
 
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
@@ -38,7 +39,7 @@ public class SearchAthleteDialog extends Dialog {
     private final ConfigurableFilterDataProvider<AthleteRecord, Void, String> dataProvider;
     private AthleteRecord selectedAthleteRecord;
 
-    public SearchAthleteDialog(DSLContext dsl, OrganizationRecord organizationRecord) {
+    public SearchAthleteDialog(DSLContext dsl, OrganizationRecord organizationRecord, Consumer<AthleteRecord> onSelect) {
         getElement().getThemeList().add("jtaf-dialog");
         getElement().setAttribute("aria-labelledby", "dialog-title");
 
@@ -88,9 +89,11 @@ public class SearchAthleteDialog extends Dialog {
                     AthleteRecord newRecord = ATHLETE.newRecord();
                     newRecord.setOrganizationId(organizationRecord.getId());
                     return newRecord;
-                }, athleteRecord -> {
-                    this.selectedAthleteRecord = athleteRecord;
-                    this.close();
+                },
+                getTranslation("Assign.Athelete"),
+                athleteRecord -> {
+                    onSelect.accept(athleteRecord);
+                    close();
                 });
 
         filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
@@ -102,10 +105,6 @@ public class SearchAthleteDialog extends Dialog {
         maximise();
 
         filter.focus();
-    }
-
-    public AthleteRecord getSelectedAthleteRecord() {
-        return selectedAthleteRecord;
     }
 
     private void initialSize() {

@@ -220,7 +220,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
         Button assign = new Button(athletesGrid.getTranslation("Assign.Athelete"));
         assign.addClickListener(event -> {
-            SearchAthleteDialog dialog = new SearchAthleteDialog(dsl, organizationRecord);
+            SearchAthleteDialog dialog = new SearchAthleteDialog(dsl, organizationRecord, this::onAthleteSelect);
             dialog.open();
         });
 
@@ -237,6 +237,10 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
             return horizontalLayout;
         }).setTextAlign(ColumnTextAlign.END).setHeader(assign);
+    }
+
+    private void onAthleteSelect(AthleteRecord athleteRecord) {
+
     }
 
     private void removeAtheleteFromSeries(UpdatableRecord<?> record) {

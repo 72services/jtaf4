@@ -26,15 +26,20 @@ public class GridBuilder {
 
     public static <R extends UpdatableRecord<R>>
     void addActionColumnAndSetSelectionListener(Grid<R> grid, EditDialog<R> dialog, Callback afterSave, Supplier<R> onNewRecord) {
-        addActionColumnAndSetSelectionListener(grid, dialog, afterSave, onNewRecord, null);
+        addActionColumnAndSetSelectionListener(grid, dialog, afterSave, onNewRecord, null, null);
     }
 
     public static <R extends UpdatableRecord<R>>
     void addActionColumnAndSetSelectionListener(Grid<R> grid, EditDialog<R> dialog, Callback afterSave, Supplier<R> onNewRecord, Consumer<R> insteadOfDelete) {
+        addActionColumnAndSetSelectionListener(grid, dialog, afterSave, onNewRecord, null, insteadOfDelete);
+    }
+
+    public static <R extends UpdatableRecord<R>>
+    void addActionColumnAndSetSelectionListener(Grid<R> grid, EditDialog<R> dialog, Callback afterSave, Supplier<R> onNewRecord, String insteadOfDeleteTitle, Consumer<R> insteadOfDelete) {
         Button buttonAdd = new Button(grid.getTranslation("Add"));
         buttonAdd.addClickListener(event -> dialog.open(onNewRecord.get(), afterSave));
         grid.addComponentColumn(record -> {
-            Button delete = new Button(grid.getTranslation("Delete"));
+            Button delete = new Button(insteadOfDeleteTitle != null ? insteadOfDeleteTitle : grid.getTranslation("Delete"));
             delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
             delete.addClickListener(event -> {
                 getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> {
@@ -43,8 +48,8 @@ public class GridBuilder {
                             insteadOfDelete.accept(record);
                         } else {
                             getBean(DSLContext.class).attach(record);
+                            record.delete();
                         }
-                        record.delete();
                     } catch (DataAccessException e) {
                         Notification.show(e.getMessage());
                     }
