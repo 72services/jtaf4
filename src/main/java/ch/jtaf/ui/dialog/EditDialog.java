@@ -4,16 +4,30 @@ import ch.jtaf.context.ApplicationContextHolder;
 import ch.jtaf.ui.function.Callback;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.Header;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.theme.lumo.Lumo;
 import org.jooq.DSLContext;
 import org.jooq.UpdatableRecord;
 import org.springframework.transaction.support.TransactionTemplate;
 
+@CssImport("./styles/jtaf-dialog.css")
 public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
+
+    public String FULLSCREEN = "fullscreen";
+
+    private boolean isFullScreen = false;
+    private Header header;
+    private final Div content;
+    private Button max;
 
     final Binder<R> binder;
     final FormLayout formLayout;
@@ -22,12 +36,27 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
     private boolean initalized;
 
     public EditDialog(String title) {
-        H3 h3Title = new H3(title);
-        h3Title.getStyle().set("margin-top", "0px");
-        add(h3Title);
+        setDraggable(true);
+        setResizable(true);
+
+        getElement().getThemeList().add("jtaf-dialog");
+        getElement().setAttribute("aria-labelledby", "dialog-title");
+        setWidth("600px");
+
+        H2 headerTitel = new H2(title);
+        headerTitel.addClassName("dialog-title");
+
+        max = new Button(VaadinIcon.EXPAND_SQUARE.create());
+        max.addClickListener(event -> maximise());
+
+        Button close = new Button(VaadinIcon.CLOSE_SMALL.create());
+        close.addClickListener(event -> close());
+
+        header = new Header(headerTitel, max, close);
+        header.getElement().getThemeList().add(Lumo.LIGHT);
+        add(header);
 
         formLayout = new FormLayout();
-        add(formLayout);
 
         binder = new Binder<>();
 
@@ -53,7 +82,10 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
         HorizontalLayout buttons = new HorizontalLayout(save, cancel);
         buttons.getStyle().set("padding-top", "20px");
 
-        add(buttons);
+        content = new Div(formLayout, buttons);
+        content.addClassName("dialog-content");
+
+        add(content);
     }
 
     public abstract void createForm();
@@ -68,6 +100,25 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
         }
 
         super.open();
+    }
+
+    private void initialSize() {
+        max.setIcon(VaadinIcon.EXPAND_SQUARE.create());
+        getElement().getThemeList().remove(FULLSCREEN);
+        setHeight("auto");
+        setWidth("600px");
+    }
+
+    private void maximise() {
+        if (isFullScreen) {
+            initialSize();
+        } else {
+            max.setIcon(VaadinIcon.COMPRESS_SQUARE.create());
+            getElement().getThemeList().add(FULLSCREEN);
+            setSizeFull();
+            content.setVisible(true);
+        }
+        isFullScreen = !isFullScreen;
     }
 
 }
