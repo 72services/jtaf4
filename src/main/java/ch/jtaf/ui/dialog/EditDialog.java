@@ -36,11 +36,12 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
     private boolean initalized;
 
     public EditDialog(String title) {
+        getElement().getThemeList().add("jtaf-dialog");
+        getElement().setAttribute("aria-labelledby", "dialog-title");
+
         setDraggable(true);
         setResizable(true);
 
-        getElement().getThemeList().add("jtaf-dialog");
-        getElement().setAttribute("aria-labelledby", "dialog-title");
         setWidth("600px");
 
         H2 headerTitel = new H2(title);

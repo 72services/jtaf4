@@ -39,11 +39,11 @@ public class SearchAthleteDialog extends Dialog {
     private AthleteRecord selectedAthleteRecord;
 
     public SearchAthleteDialog(DSLContext dsl, OrganizationRecord organizationRecord) {
-        setDraggable(true);
-        setResizable(true);
-
         getElement().getThemeList().add("jtaf-dialog");
         getElement().setAttribute("aria-labelledby", "dialog-title");
+
+        setDraggable(true);
+        setResizable(true);
 
         H2 headerTitel = new H2(getTranslation("Athletes"));
         headerTitel.addClassName("dialog-title");
