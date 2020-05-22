@@ -16,6 +16,8 @@ public abstract class ProtectedView extends VerticalLayout implements BeforeEnte
 
     ProtectedView(DSLContext dsl) {
         this.dsl = dsl;
+
+        setHeightFull();
     }
 
     @Override

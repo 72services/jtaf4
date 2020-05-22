@@ -209,8 +209,6 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
     }
 
     private void createAthletesSection() {
-        SearchAthleteDialog dialog = new SearchAthleteDialog();
-
         athletesGrid = new Grid<>();
         athletesGrid.setHeightFull();
         athletesGrid.addColumn(AthleteRecord::getLastName).setHeader(getTranslation("Last.Name")).setSortable(true);
@@ -221,7 +219,10 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                 : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club"));
 
         Button assign = new Button(athletesGrid.getTranslation("Assign.Athelete"));
-        assign.addClickListener(event -> dialog.open());
+        assign.addClickListener(event -> {
+            SearchAthleteDialog dialog = new SearchAthleteDialog(dsl, organizationRecord);
+            dialog.open();
+        });
 
         athletesGrid.addComponentColumn(record -> {
             Button remove = new Button(athletesGrid.getTranslation("Remove"));
