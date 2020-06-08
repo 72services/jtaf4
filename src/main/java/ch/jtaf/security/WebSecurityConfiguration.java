@@ -20,7 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @EnableWebSecurity
 @Configuration
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private static final String LOGIN_PROCESSING_URL = "/login";
     private static final String LOGIN_FAILURE_URL = "/login?error";
@@ -30,7 +30,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
 
-    public SecurityConfiguration(UserDetailsService userDetailsService) {
+    public WebSecurityConfiguration(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
