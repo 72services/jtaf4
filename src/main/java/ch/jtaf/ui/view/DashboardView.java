@@ -84,7 +84,8 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                                 HorizontalLayout links = new HorizontalLayout(competitionRanking);
 
                                 if (SecurityContext.isUserLoggedIn()) {
-                                    RouterLink enterResults = new RouterLink(getTranslation("Enter.Results"), ResultCapturingView.class);
+                                    RouterLink enterResults = new RouterLink(getTranslation("Enter.Results"),
+                                            ResultCapturingView.class, competition.getId().toString());
                                     links.add(enterResults);
                                 }
 
