@@ -1,10 +1,13 @@
 package ch.jtaf.ui.dialog;
 
-import ch.jtaf.db.tables.records.OrganizationRecord;
-import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.textfield.TextField;
 
+import ch.jtaf.db.tables.records.OrganizationRecord;
+import ch.jtaf.ui.validator.NotEmptyValidator;
+
 public class OrganizationDialog extends EditDialog<OrganizationRecord> {
+	
+	private static final long serialVersionUID = 1L;
 
     public OrganizationDialog(String title) {
         super(title);

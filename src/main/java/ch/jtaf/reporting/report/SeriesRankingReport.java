@@ -1,22 +1,24 @@
 package ch.jtaf.reporting.report;
 
-import ch.jtaf.reporting.data.SeriesRankingAthlete;
-import ch.jtaf.reporting.data.SeriesRankingCategory;
-import ch.jtaf.reporting.data.SeriesRankingData;
-import ch.jtaf.reporting.data.SeriesRankingResult;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static com.lowagie.text.PageSize.A4;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.itextpdf.text.PageSize.A4;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+
+import ch.jtaf.reporting.data.SeriesRankingAthlete;
+import ch.jtaf.reporting.data.SeriesRankingCategory;
+import ch.jtaf.reporting.data.SeriesRankingData;
+import ch.jtaf.reporting.data.SeriesRankingResult;
 
 public class SeriesRankingReport extends RankingReport {
 

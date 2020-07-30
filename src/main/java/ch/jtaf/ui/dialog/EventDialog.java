@@ -1,14 +1,17 @@
 package ch.jtaf.ui.dialog;
 
-import ch.jtaf.db.tables.records.EventRecord;
-import ch.jtaf.model.EventType;
-import ch.jtaf.model.Gender;
-import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.converter.StringToDoubleConverter;
 
+import ch.jtaf.db.tables.records.EventRecord;
+import ch.jtaf.model.EventType;
+import ch.jtaf.model.Gender;
+import ch.jtaf.ui.validator.NotEmptyValidator;
+
 public class EventDialog extends EditDialog<EventRecord> {
+	
+	private static final long serialVersionUID = 1L;
 
     public EventDialog(String title) {
         super(title);

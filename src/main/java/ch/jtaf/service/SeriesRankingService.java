@@ -1,26 +1,5 @@
 package ch.jtaf.service;
 
-import ch.jtaf.reporting.data.ClubRankingData;
-import ch.jtaf.reporting.data.ClubResultData;
-import ch.jtaf.reporting.data.SeriesRankingAthlete;
-import ch.jtaf.reporting.data.SeriesRankingCategory;
-import ch.jtaf.reporting.data.SeriesRankingData;
-import ch.jtaf.reporting.data.SeriesRankingResult;
-import ch.jtaf.reporting.report.ClubRankingReport;
-import ch.jtaf.reporting.report.SeriesRankingReport;
-import org.jooq.DSLContext;
-import org.jooq.Record14;
-import org.jooq.Record2;
-import org.jooq.Result;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
@@ -35,6 +14,28 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.jooq.impl.DSL.count;
 import static org.jooq.impl.DSL.sum;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import org.jooq.DSLContext;
+import org.jooq.Record14;
+import org.jooq.Record2;
+import org.jooq.Result;
+import org.springframework.stereotype.Service;
+
+import ch.jtaf.reporting.data.ClubRankingData;
+import ch.jtaf.reporting.data.ClubResultData;
+import ch.jtaf.reporting.data.SeriesRankingAthlete;
+import ch.jtaf.reporting.data.SeriesRankingCategory;
+import ch.jtaf.reporting.data.SeriesRankingData;
+import ch.jtaf.reporting.data.SeriesRankingResult;
+import ch.jtaf.reporting.report.ClubRankingReport;
+import ch.jtaf.reporting.report.SeriesRankingReport;
 
 @Service
 public class SeriesRankingService {

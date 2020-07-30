@@ -18,7 +18,6 @@ public class ApplicationContextHolder implements ApplicationContextAware {
         return applicationContext.getBean(type);
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         ApplicationContextHolder.applicationContext = applicationContext;

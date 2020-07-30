@@ -1,9 +1,14 @@
 package ch.jtaf.ui.view;
 
-import ch.jtaf.security.SecurityContext;
-import ch.jtaf.service.CompetitionRankingService;
-import ch.jtaf.service.SeriesRankingService;
-import ch.jtaf.ui.layout.MainLayout;
+import static ch.jtaf.db.tables.Competition.COMPETITION;
+import static ch.jtaf.db.tables.Series.SERIES;
+import static ch.jtaf.util.LogoUtil.resizeLogo;
+
+import java.io.ByteArrayInputStream;
+
+import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
+
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
@@ -13,21 +18,19 @@ import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HasDynamicTitle;
-import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.StreamResource;
-import org.jooq.DSLContext;
-import org.jooq.impl.DSL;
 
-import java.io.ByteArrayInputStream;
-
-import static ch.jtaf.db.tables.Competition.COMPETITION;
-import static ch.jtaf.db.tables.Series.SERIES;
-import static ch.jtaf.util.LogoUtil.resizeLogo;
+import ch.jtaf.security.SecurityContext;
+import ch.jtaf.service.CompetitionRankingService;
+import ch.jtaf.service.SeriesRankingService;
+import ch.jtaf.ui.layout.MainLayout;
 
 @Route(value = "", layout = MainLayout.class)
 public class DashboardView extends VerticalLayout implements HasDynamicTitle {
+	
+	private static final long serialVersionUID = 1L;
 
     public DashboardView(DSLContext dsl, SeriesRankingService seriesRankingService, CompetitionRankingService competitionRankingService) {
         add(new H1(getTranslation("Dashboard")));

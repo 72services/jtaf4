@@ -1,10 +1,10 @@
 package ch.jtaf.reporting.data;
 
+import static java.util.Comparator.comparing;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.Comparator.comparing;
 
 public class SeriesRankingAthlete {
 

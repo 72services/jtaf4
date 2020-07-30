@@ -1,24 +1,25 @@
 package ch.jtaf.reporting.report;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfPageEventHelper;
-import com.itextpdf.text.pdf.PdfWriter;
-import org.slf4j.LoggerFactory;
+import static com.lowagie.text.Element.ALIGN_BOTTOM;
+import static com.lowagie.text.Element.ALIGN_CENTER;
+import static com.lowagie.text.Element.ALIGN_RIGHT;
+import static com.lowagie.text.FontFactory.HELVETICA;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static com.itextpdf.text.Element.ALIGN_BOTTOM;
-import static com.itextpdf.text.Element.ALIGN_CENTER;
-import static com.itextpdf.text.Element.ALIGN_RIGHT;
-import static com.itextpdf.text.FontFactory.HELVETICA;
+import org.slf4j.LoggerFactory;
+
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfPageEventHelper;
+import com.lowagie.text.pdf.PdfWriter;
 
 public abstract class AbstractReport {
 

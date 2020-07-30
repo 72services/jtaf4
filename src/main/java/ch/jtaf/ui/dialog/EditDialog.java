@@ -1,7 +1,9 @@
 package ch.jtaf.ui.dialog;
 
-import ch.jtaf.context.ApplicationContextHolder;
-import ch.jtaf.ui.function.Callback;
+import org.jooq.DSLContext;
+import org.jooq.UpdatableRecord;
+import org.springframework.transaction.support.TransactionTemplate;
+
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -9,20 +11,21 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.theme.lumo.Lumo;
-import org.jooq.DSLContext;
-import org.jooq.UpdatableRecord;
-import org.springframework.transaction.support.TransactionTemplate;
+
+import ch.jtaf.context.ApplicationContextHolder;
+import ch.jtaf.ui.function.Callback;
 
 @CssImport("./styles/jtaf-dialog.css")
 public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
+	
+	private static final long serialVersionUID = 1L;
 
-    public String FULLSCREEN = "fullscreen";
+    public static final String FULLSCREEN = "fullscreen";
 
     private boolean isFullScreen = false;
     private Header header;

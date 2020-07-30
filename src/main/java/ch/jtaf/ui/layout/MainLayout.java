@@ -1,14 +1,13 @@
 package ch.jtaf.ui.layout;
 
-import ch.jtaf.db.tables.records.OrganizationRecord;
-import ch.jtaf.security.OrganizationHolder;
-import ch.jtaf.security.SecurityContext;
-import ch.jtaf.ui.view.AthletesView;
-import ch.jtaf.ui.view.ClubsView;
-import ch.jtaf.ui.view.DashboardView;
-import ch.jtaf.ui.view.EventsView;
-import ch.jtaf.ui.view.OrganizationsView;
-import ch.jtaf.ui.view.SeriesListView;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -29,16 +28,22 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.VaadinServlet;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
 
-import javax.annotation.PostConstruct;
-import java.util.HashMap;
-import java.util.Map;
+import ch.jtaf.db.tables.records.OrganizationRecord;
+import ch.jtaf.security.OrganizationHolder;
+import ch.jtaf.security.SecurityContext;
+import ch.jtaf.ui.view.AthletesView;
+import ch.jtaf.ui.view.ClubsView;
+import ch.jtaf.ui.view.DashboardView;
+import ch.jtaf.ui.view.EventsView;
+import ch.jtaf.ui.view.OrganizationsView;
+import ch.jtaf.ui.view.SeriesListView;
 
 @CssImport(value = "./styles/dialog-overlay.css", themeFor = "vaadin-dialog-overlay")
 @PWA(name = "JTAF 4", shortName = "JTAF 4", description = "JTAF - Track and Field")
 public class MainLayout extends AppLayout implements BeforeEnterObserver {
+	
+	private static final long serialVersionUID = 1L;
 
     public static final String ICON_SIZE = "50px";
 

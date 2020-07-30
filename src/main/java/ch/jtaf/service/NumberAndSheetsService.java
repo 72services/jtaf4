@@ -1,18 +1,5 @@
 package ch.jtaf.service;
 
-import ch.jtaf.reporting.data.NumbersAndSheetsAthlete;
-import ch.jtaf.reporting.data.NumbersAndSheetsCompetition;
-import ch.jtaf.reporting.data.NumbersAndSheetsEvent;
-import ch.jtaf.reporting.report.NumbersReport;
-import ch.jtaf.reporting.report.SheetsReport;
-import org.jooq.DSLContext;
-import org.jooq.Record;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
@@ -22,6 +9,20 @@ import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Event.EVENT;
 import static ch.jtaf.db.tables.Series.SERIES;
 import static org.jooq.impl.DSL.field;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.springframework.stereotype.Service;
+
+import ch.jtaf.reporting.data.NumbersAndSheetsAthlete;
+import ch.jtaf.reporting.data.NumbersAndSheetsCompetition;
+import ch.jtaf.reporting.data.NumbersAndSheetsEvent;
+import ch.jtaf.reporting.report.NumbersReport;
+import ch.jtaf.reporting.report.SheetsReport;
 
 @Service
 public class NumberAndSheetsService {

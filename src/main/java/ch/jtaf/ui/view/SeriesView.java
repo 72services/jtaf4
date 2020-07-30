@@ -1,16 +1,22 @@
 package ch.jtaf.ui.view;
 
-import ch.jtaf.context.ApplicationContextHolder;
-import ch.jtaf.db.tables.records.AthleteRecord;
-import ch.jtaf.db.tables.records.CategoryRecord;
-import ch.jtaf.db.tables.records.ClubRecord;
-import ch.jtaf.db.tables.records.CompetitionRecord;
-import ch.jtaf.db.tables.records.SeriesRecord;
-import ch.jtaf.ui.dialog.CategoryDialog;
-import ch.jtaf.ui.dialog.CompetitionDialog;
-import ch.jtaf.ui.dialog.SearchAthleteDialog;
-import ch.jtaf.ui.layout.MainLayout;
-import ch.jtaf.ui.validator.NotEmptyValidator;
+import static ch.jtaf.context.ApplicationContextHolder.getBean;
+import static ch.jtaf.db.tables.Athlete.ATHLETE;
+import static ch.jtaf.db.tables.Category.CATEGORY;
+import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
+import static ch.jtaf.db.tables.Club.CLUB;
+import static ch.jtaf.db.tables.Competition.COMPETITION;
+import static ch.jtaf.db.tables.Series.SERIES;
+import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.jooq.DSLContext;
+import org.jooq.UpdatableRecord;
+import org.springframework.transaction.support.TransactionTemplate;
+
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -29,25 +35,23 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
-import org.jooq.DSLContext;
-import org.jooq.UpdatableRecord;
-import org.springframework.transaction.support.TransactionTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static ch.jtaf.context.ApplicationContextHolder.getBean;
-import static ch.jtaf.db.tables.Athlete.ATHLETE;
-import static ch.jtaf.db.tables.Category.CATEGORY;
-import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
-import static ch.jtaf.db.tables.Club.CLUB;
-import static ch.jtaf.db.tables.Competition.COMPETITION;
-import static ch.jtaf.db.tables.Series.SERIES;
-import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
+import ch.jtaf.context.ApplicationContextHolder;
+import ch.jtaf.db.tables.records.AthleteRecord;
+import ch.jtaf.db.tables.records.CategoryRecord;
+import ch.jtaf.db.tables.records.ClubRecord;
+import ch.jtaf.db.tables.records.CompetitionRecord;
+import ch.jtaf.db.tables.records.SeriesRecord;
+import ch.jtaf.ui.dialog.CategoryDialog;
+import ch.jtaf.ui.dialog.CompetitionDialog;
+import ch.jtaf.ui.dialog.SearchAthleteDialog;
+import ch.jtaf.ui.layout.MainLayout;
+import ch.jtaf.ui.validator.NotEmptyValidator;
 
 @Route(layout = MainLayout.class)
 public class SeriesView extends ProtectedView implements HasUrlParameter<String> {
+	
+	private static final long serialVersionUID = 1L;
 
     private SeriesRecord seriesRecord;
 

@@ -1,21 +1,24 @@
 package ch.jtaf.ui.view;
 
-import ch.jtaf.db.tables.records.ClubRecord;
-import ch.jtaf.ui.dialog.ClubDialog;
-import ch.jtaf.ui.layout.MainLayout;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.router.Route;
-import org.jooq.Condition;
-import org.jooq.DSLContext;
-import org.jooq.Field;
-
 import static ch.jtaf.db.tables.Club.CLUB;
 import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
 
+import org.jooq.Condition;
+import org.jooq.DSLContext;
+import org.jooq.SortField;
+
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.router.Route;
+
+import ch.jtaf.db.tables.records.ClubRecord;
+import ch.jtaf.ui.dialog.ClubDialog;
+import ch.jtaf.ui.layout.MainLayout;
+
 @Route(layout = MainLayout.class)
 public class ClubsView extends ProtectedGridView<ClubRecord> {
+	
+	private static final long serialVersionUID = 1L;
 
     public ClubsView(DSLContext dsl) {
         super(dsl, CLUB);
@@ -57,7 +60,7 @@ public class ClubsView extends ProtectedGridView<ClubRecord> {
     }
 
     @Override
-    protected Field<?>[] initialSort() {
-        return new Field[]{CLUB.ABBREVIATION};
+    protected SortField<?>[] initialSort() {
+        return new SortField[]{CLUB.ABBREVIATION.asc()};
     }
 }

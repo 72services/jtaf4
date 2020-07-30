@@ -1,13 +1,15 @@
 package ch.jtaf.util;
 
-import ch.jtaf.db.tables.records.SeriesRecord;
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.server.StreamResource;
-
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.server.StreamResource;
+
+import ch.jtaf.db.tables.records.SeriesRecord;
 
 public class LogoUtil {
 

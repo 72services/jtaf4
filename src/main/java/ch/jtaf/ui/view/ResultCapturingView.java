@@ -1,9 +1,23 @@
 package ch.jtaf.ui.view;
 
-import ch.jtaf.db.tables.records.EventRecord;
-import ch.jtaf.db.tables.records.ResultRecord;
-import ch.jtaf.model.EventType;
-import ch.jtaf.ui.layout.MainLayout;
+import static ch.jtaf.db.tables.Athlete.ATHLETE;
+import static ch.jtaf.db.tables.Category.CATEGORY;
+import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
+import static ch.jtaf.db.tables.CategoryEvent.CATEGORY_EVENT;
+import static ch.jtaf.db.tables.Competition.COMPETITION;
+import static ch.jtaf.db.tables.Event.EVENT;
+import static ch.jtaf.db.tables.Result.RESULT;
+
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.jooq.Condition;
+import org.jooq.DSLContext;
+import org.jooq.Record4;
+import org.jooq.Result;
+import org.jooq.impl.DSL;
+import org.springframework.transaction.support.TransactionTemplate;
+
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
@@ -13,34 +27,21 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
-import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.Query;
-import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
-import org.apache.commons.lang3.StringUtils;
-import org.jooq.Condition;
-import org.jooq.DSLContext;
-import org.jooq.Record4;
-import org.jooq.Result;
-import org.jooq.impl.DSL;
-import org.springframework.transaction.support.TransactionTemplate;
 
-import java.util.List;
-import java.util.stream.Stream;
-
-import static ch.jtaf.db.tables.Athlete.ATHLETE;
-import static ch.jtaf.db.tables.Category.CATEGORY;
-import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
-import static ch.jtaf.db.tables.CategoryEvent.CATEGORY_EVENT;
-import static ch.jtaf.db.tables.Competition.COMPETITION;
-import static ch.jtaf.db.tables.Event.EVENT;
-import static ch.jtaf.db.tables.Result.RESULT;
+import ch.jtaf.db.tables.records.EventRecord;
+import ch.jtaf.db.tables.records.ResultRecord;
+import ch.jtaf.model.EventType;
+import ch.jtaf.ui.layout.MainLayout;
 
 @Route(layout = MainLayout.class)
 public class ResultCapturingView extends VerticalLayout implements HasDynamicTitle, HasUrlParameter<String> {
+	
+	private static final long serialVersionUID = 1L;
 
     private final Grid<Record4<Long, String, String, Long>> grid = new Grid<>();
     private final ConfigurableFilterDataProvider<Record4<Long, String, String, Long>, Void, String> dataProvider;

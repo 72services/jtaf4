@@ -1,7 +1,15 @@
 package ch.jtaf.ui.component;
 
-import ch.jtaf.ui.dialog.EditDialog;
-import ch.jtaf.ui.function.Callback;
+import static ch.jtaf.context.ApplicationContextHolder.getBean;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import org.jooq.DSLContext;
+import org.jooq.UpdatableRecord;
+import org.jooq.exception.DataAccessException;
+import org.springframework.transaction.support.TransactionTemplate;
+
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
@@ -9,15 +17,9 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import org.jooq.DSLContext;
-import org.jooq.UpdatableRecord;
-import org.jooq.exception.DataAccessException;
-import org.springframework.transaction.support.TransactionTemplate;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
-import static ch.jtaf.context.ApplicationContextHolder.getBean;
+import ch.jtaf.ui.dialog.EditDialog;
+import ch.jtaf.ui.function.Callback;
 
 public class GridBuilder {
 

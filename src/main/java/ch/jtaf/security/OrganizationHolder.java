@@ -1,7 +1,8 @@
 package ch.jtaf.security;
 
-import ch.jtaf.db.tables.records.OrganizationRecord;
 import com.vaadin.flow.component.UI;
+
+import ch.jtaf.db.tables.records.OrganizationRecord;
 
 public class OrganizationHolder {
 

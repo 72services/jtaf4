@@ -1,26 +1,5 @@
 package ch.jtaf.service;
 
-import ch.jtaf.reporting.data.CompetitionRankingAthlete;
-import ch.jtaf.reporting.data.CompetitionRankingCategory;
-import ch.jtaf.reporting.data.CompetitionRankingData;
-import ch.jtaf.reporting.data.CompetitionRankingResult;
-import ch.jtaf.reporting.data.EventsRankingData;
-import ch.jtaf.reporting.data.EventsRankingEvent;
-import ch.jtaf.reporting.data.EventsRankingResult;
-import ch.jtaf.reporting.report.CompetitionRankingReport;
-import ch.jtaf.reporting.report.DiplomaReport;
-import ch.jtaf.reporting.report.EventsRankingReport;
-import org.jooq.DSLContext;
-import org.jooq.Record14;
-import org.jooq.Record9;
-import org.jooq.Result;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
@@ -31,6 +10,28 @@ import static ch.jtaf.db.tables.Event.EVENT;
 import static ch.jtaf.db.tables.Result.RESULT;
 import static ch.jtaf.db.tables.Series.SERIES;
 import static java.util.stream.Collectors.toMap;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import org.jooq.DSLContext;
+import org.jooq.Record14;
+import org.jooq.Record9;
+import org.jooq.Result;
+import org.springframework.stereotype.Service;
+
+import ch.jtaf.reporting.data.CompetitionRankingAthlete;
+import ch.jtaf.reporting.data.CompetitionRankingCategory;
+import ch.jtaf.reporting.data.CompetitionRankingData;
+import ch.jtaf.reporting.data.CompetitionRankingResult;
+import ch.jtaf.reporting.data.EventsRankingData;
+import ch.jtaf.reporting.data.EventsRankingEvent;
+import ch.jtaf.reporting.data.EventsRankingResult;
+import ch.jtaf.reporting.report.CompetitionRankingReport;
+import ch.jtaf.reporting.report.DiplomaReport;
+import ch.jtaf.reporting.report.EventsRankingReport;
 
 @Service
 public class CompetitionRankingService {

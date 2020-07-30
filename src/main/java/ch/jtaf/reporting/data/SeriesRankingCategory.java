@@ -1,10 +1,10 @@
 package ch.jtaf.reporting.data;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static java.lang.Integer.compare;
 import static java.util.stream.Collectors.toList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SeriesRankingCategory {
 

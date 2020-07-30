@@ -1,9 +1,13 @@
 package ch.jtaf.ui.view;
 
-import ch.jtaf.db.tables.records.OrganizationRecord;
-import ch.jtaf.security.OrganizationHolder;
-import ch.jtaf.ui.dialog.OrganizationDialog;
-import ch.jtaf.ui.layout.MainLayout;
+import static ch.jtaf.db.tables.Organization.ORGANIZATION;
+import static ch.jtaf.db.tables.OrganizationUser.ORGANIZATION_USER;
+import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
+
+import org.jooq.DSLContext;
+import org.jooq.exception.DataAccessException;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -15,18 +19,18 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
-import org.jooq.DSLContext;
-import org.jooq.exception.DataAccessException;
-import org.springframework.security.core.context.SecurityContextHolder;
 
-import static ch.jtaf.db.tables.Organization.ORGANIZATION;
-import static ch.jtaf.db.tables.OrganizationUser.ORGANIZATION_USER;
-import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
+import ch.jtaf.db.tables.records.OrganizationRecord;
+import ch.jtaf.security.OrganizationHolder;
+import ch.jtaf.ui.dialog.OrganizationDialog;
+import ch.jtaf.ui.layout.MainLayout;
 
 @Route(layout = MainLayout.class)
 public class OrganizationsView extends VerticalLayout implements HasDynamicTitle {
+	
+	private static final long serialVersionUID = 1L;
 
-    private final DSLContext dsl;
+    private final transient DSLContext dsl;
     private final Grid<OrganizationRecord> grid;
 
     public OrganizationsView(DSLContext dsl) {

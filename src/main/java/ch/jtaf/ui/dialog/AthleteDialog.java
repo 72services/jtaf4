@@ -1,19 +1,6 @@
 package ch.jtaf.ui.dialog;
 
-import ch.jtaf.context.ApplicationContextHolder;
-import ch.jtaf.db.tables.records.AthleteRecord;
-import ch.jtaf.db.tables.records.ClubRecord;
-import ch.jtaf.db.tables.records.OrganizationRecord;
-import ch.jtaf.model.Gender;
-import ch.jtaf.security.OrganizationHolder;
-import ch.jtaf.ui.validator.NotEmptyValidator;
-import com.vaadin.flow.component.select.Select;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.binder.Result;
-import com.vaadin.flow.data.binder.ValueContext;
-import com.vaadin.flow.data.converter.Converter;
-import com.vaadin.flow.data.converter.StringToIntegerConverter;
-import org.jooq.DSLContext;
+import static ch.jtaf.db.tables.Club.CLUB;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,9 +8,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static ch.jtaf.db.tables.Club.CLUB;
+import org.jooq.DSLContext;
+
+import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.Result;
+import com.vaadin.flow.data.binder.ValueContext;
+import com.vaadin.flow.data.converter.Converter;
+import com.vaadin.flow.data.converter.StringToIntegerConverter;
+
+import ch.jtaf.context.ApplicationContextHolder;
+import ch.jtaf.db.tables.records.AthleteRecord;
+import ch.jtaf.db.tables.records.ClubRecord;
+import ch.jtaf.db.tables.records.OrganizationRecord;
+import ch.jtaf.model.Gender;
+import ch.jtaf.security.OrganizationHolder;
+import ch.jtaf.ui.validator.NotEmptyValidator;
 
 public class AthleteDialog extends EditDialog<AthleteRecord> {
+	
+	private static final long serialVersionUID = 1L;
 
     private Map<Long, ClubRecord> clubRecordMap = new HashMap<>();
 
@@ -31,7 +35,8 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
         super(title);
     }
 
-    @Override
+    @SuppressWarnings("serial")
+	@Override
     public void createForm() {
         TextField lastName = new TextField(getTranslation("Last.Name"));
         lastName.setRequiredIndicatorVisible(true);

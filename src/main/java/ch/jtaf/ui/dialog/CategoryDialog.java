@@ -1,10 +1,13 @@
 package ch.jtaf.ui.dialog;
 
-import ch.jtaf.db.tables.records.CategoryRecord;
-import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.textfield.TextField;
 
+import ch.jtaf.db.tables.records.CategoryRecord;
+import ch.jtaf.ui.validator.NotEmptyValidator;
+
 public class CategoryDialog extends EditDialog<CategoryRecord> {
+	
+	private static final long serialVersionUID = 1L;
 
     public CategoryDialog(String title) {
         super(title);

@@ -1,9 +1,9 @@
 package ch.jtaf.reporting.data;
 
-import ch.jtaf.model.EventType;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import ch.jtaf.model.EventType;
 
 public class EventsRankingEvent {
 
