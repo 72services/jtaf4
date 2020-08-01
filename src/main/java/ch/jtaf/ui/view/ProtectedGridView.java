@@ -23,7 +23,7 @@ public abstract class ProtectedGridView<R extends Record> extends ProtectedView 
 		super(dsl);
 		this.table = table;
 
-		dataProvider = new JooqDataProviderProducer<>(dsl, table, initialCondition(), initialSort()).getDataProvider();
+		dataProvider = new JooqDataProviderProducer<>(dsl, table, this::initialCondition, this::initialSort).getDataProvider();
 
 		grid = new Grid<>();
 		grid.setHeightFull();

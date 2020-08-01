@@ -29,7 +29,7 @@ import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.ui.component.JooqDataProviderProducer;
 
 public class SearchAthleteDialog extends Dialog {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	public static final String FULLSCREEN = "fullscreen";
@@ -73,9 +73,9 @@ public class SearchAthleteDialog extends Dialog {
 		clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
 
 		dataProvider = new JooqDataProviderProducer<>(dsl, ATHLETE,
-				ATHLETE.ORGANIZATION_ID.eq(organizationRecord.getId()), new SortField<?>[] { ATHLETE.GENDER.asc(),
-						ATHLETE.YEAR_OF_BIRTH.asc(), ATHLETE.LAST_NAME.asc(), ATHLETE.FIRST_NAME.asc() })
-								.getDataProvider();
+				() -> ATHLETE.ORGANIZATION_ID.eq(organizationRecord.getId()),
+				() -> new SortField<?>[] { ATHLETE.GENDER.asc(), ATHLETE.YEAR_OF_BIRTH.asc(), ATHLETE.LAST_NAME.asc(),
+						ATHLETE.FIRST_NAME.asc() }).getDataProvider();
 
 		Grid<AthleteRecord> grid = new Grid<>();
 		grid.setDataProvider(dataProvider);

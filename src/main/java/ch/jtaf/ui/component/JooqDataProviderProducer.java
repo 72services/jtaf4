@@ -5,6 +5,8 @@ import static org.jooq.impl.DSL.upper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.jooq.Condition;
@@ -25,11 +27,11 @@ public class JooqDataProviderProducer<R extends Record> {
 	private final DSLContext dsl;
 	private final Table<R> table;
 	private final ConfigurableFilterDataProvider<R, Void, String> dataProvider;
-	private final Condition initialCondition;
-	private final SortField<?>[] initialSort;
+	private final Supplier<Condition> initialCondition;
+	private final Supplier<SortField<?>[]> initialSort;
 
-	public JooqDataProviderProducer(DSLContext dsl, Table<R> table, Condition initialCondition,
-			SortField<?>[] initialSort) {
+	public JooqDataProviderProducer(DSLContext dsl, Table<R> table, Supplier<Condition> initialCondition,
+			Supplier<SortField<?>[]> initialSort) {
 		this.dsl = dsl;
 		this.table = table;
 		this.initialCondition = initialCondition;
@@ -53,23 +55,24 @@ public class JooqDataProviderProducer<R extends Record> {
 
 	private Condition createCondition(Query<R, String> query) {
 		Condition condition = noCondition();
-		if (query.getFilter().isPresent()) {
+		Optional<String> filter = query.getFilter();
+		if (filter.isPresent()) {
 			for (Field<?> field : table.fields()) {
 				if (field.getType() == String.class) {
 					condition = condition
-							.or(upper((Field<String>) field).like(upper("%" + query.getFilter().get() + "%")));
+							.or(upper((Field<String>) field).like(upper("%" + filter.get() + "%")));
 				} else {
-					condition = condition.or(field.like("%" + query.getFilter().get() + "%"));
+					condition = condition.or(field.like("%" + filter.get() + "%"));
 				}
 			}
 		}
-		condition = condition.and(initialCondition);
+		condition = condition.and(initialCondition.get());
 		return condition;
 	}
 
 	private SortField<?>[] createOrderBy(Query<R, String> query) {
 		if (query.getSortOrders().isEmpty()) {
-			return initialSort;
+			return initialSort.get();
 		} else {
 			List<SortField<?>> sortFields = new ArrayList<>();
 			for (QuerySortOrder sortOrder : query.getSortOrders()) {
