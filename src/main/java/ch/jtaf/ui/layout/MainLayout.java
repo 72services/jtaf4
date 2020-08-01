@@ -66,7 +66,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
         addMainMenu();
 
         tabsMainMenu.setOrientation(Tabs.Orientation.VERTICAL);
-        tabsMainMenu.getStyle().set("height", "calc(100%-30px)");
+        tabsMainMenu.getStyle().set("height", "calc(100% - 30px)");
 
         Div divFooter = new Div();
         divFooter.setHeight("30px");
@@ -82,7 +82,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
         divFooter.add(byLink);
 
         Div divDrawer = new Div();
-        divDrawer.setHeightFull();
+        divDrawer.setHeight("95%");
         divDrawer.add(tabsMainMenu);
         divDrawer.add(divFooter);
 
