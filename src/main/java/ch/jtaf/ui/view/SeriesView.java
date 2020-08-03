@@ -55,8 +55,10 @@ import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionLis
 public class SeriesView extends ProtectedView implements HasUrlParameter<String> {
 
     private static final long serialVersionUID = 1L;
+    private static final String BLANK = "_blank";
+    private static final String DOWNLOAD = "download";
 
-    private final NumberAndSheetsService numberAndSheetsService;
+    private final transient NumberAndSheetsService numberAndSheetsService;
 
     private SeriesRecord seriesRecord;
 
@@ -66,7 +68,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
     Tabs sectionTabs = new Tabs();
 
-    private Binder<SeriesRecord> binder = new Binder<>();
+    private final transient Binder<SeriesRecord> binder = new Binder<>();
 
     private Map<Long, ClubRecord> clubRecordMap;
 
@@ -105,7 +107,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         save.addClickListener(event -> {
             TransactionTemplate transactionTemplate = ApplicationContextHolder.getBean(TransactionTemplate.class);
-            transactionTemplate.executeWithoutResult((transactionStatus) -> {
+            transactionTemplate.executeWithoutResult(transactionStatus -> {
                 dsl.attach(binder.getBean());
                 binder.getBean().store();
             });
@@ -202,8 +204,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                         CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Sheets"));
-            sheetsOrderedByAthlete.setTarget("_blank");
-            sheetsOrderedByAthlete.getElement().setAttribute("download", true);
+            sheetsOrderedByAthlete.setTarget(BLANK);
+            sheetsOrderedByAthlete.getElement().setAttribute(DOWNLOAD, true);
 
             Anchor sheetsOrderedByClub = new Anchor(new StreamResource("sheets_orderby_club" + competition.getId() + ".pdf",
                 () -> {
@@ -211,8 +213,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                         CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Ordered.by.club"));
-            sheetsOrderedByClub.setTarget("_blank");
-            sheetsOrderedByClub.getElement().setAttribute("download", true);
+            sheetsOrderedByClub.setTarget(BLANK);
+            sheetsOrderedByClub.getElement().setAttribute(DOWNLOAD, true);
 
             Anchor numbersOrderedByAthlete = new Anchor(new StreamResource("numbers_orderby_athlete" + competition.getId() + ".pdf",
                 () -> {
@@ -220,8 +222,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                         CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Numbers"));
-            numbersOrderedByAthlete.setTarget("_blank");
-            numbersOrderedByAthlete.getElement().setAttribute("download", true);
+            numbersOrderedByAthlete.setTarget(BLANK);
+            numbersOrderedByAthlete.getElement().setAttribute(DOWNLOAD, true);
 
             Anchor numbersOrderedByClub = new Anchor(new StreamResource("numbers_orderby_club" + competition.getId() + ".pdf",
                 () -> {
@@ -229,8 +231,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                         CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Ordered.by.club"));
-            numbersOrderedByClub.setTarget("_blank");
-            numbersOrderedByClub.getElement().setAttribute("download", true);
+            numbersOrderedByClub.setTarget(BLANK);
+            numbersOrderedByClub.getElement().setAttribute(DOWNLOAD, true);
 
             return new HorizontalLayout(sheetsOrderedByAthlete, sheetsOrderedByClub, numbersOrderedByAthlete, numbersOrderedByClub);
         }));
@@ -257,8 +259,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                     byte[] pdf = numberAndSheetsService.createEmptySheets(seriesRecord.getId(), category.getId());
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Sheets"));
-            sheet.setTarget("_blank");
-            sheet.getElement().setAttribute("download", true);
+            sheet.setTarget(BLANK);
+            sheet.getElement().setAttribute(DOWNLOAD, true);
 
             return new HorizontalLayout(sheet);
         }));
@@ -280,7 +282,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         athletesGrid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
             : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club"));
 
-        Button assign = new Button(athletesGrid.getTranslation("Assign.Athelete"));
+        Button assign = new Button(athletesGrid.getTranslation("Assign.Athlete"));
         assign.addClickListener(event -> {
             SearchAthleteDialog dialog = new SearchAthleteDialog(dsl, organizationRecord, this::onAthleteSelect);
             dialog.open();
@@ -289,11 +291,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         athletesGrid.addComponentColumn(record -> {
             Button remove = new Button(athletesGrid.getTranslation("Remove"));
             remove.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            remove.addClickListener(event -> {
-                getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> {
-                    removeAtheleteFromSeries(record);
-                });
-            });
+            remove.addClickListener(event ->
+                getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> removeAtheleteFromSeries(record)));
 
             HorizontalLayout horizontalLayout = new HorizontalLayout(remove);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
@@ -302,7 +301,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
     }
 
     private void onAthleteSelect(AthleteRecord athleteRecord) {
-
+        refreshAll();
     }
 
     private void removeAtheleteFromSeries(UpdatableRecord<?> record) {
