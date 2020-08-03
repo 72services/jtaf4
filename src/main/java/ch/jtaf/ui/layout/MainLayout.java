@@ -21,8 +21,8 @@ import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -40,12 +40,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @CssImport(value = "./styles/dialog-overlay.css", themeFor = "vaadin-dialog-overlay")
+@CssImport("./styles/jtaf.css")
 @PWA(name = "JTAF 4", shortName = "JTAF 4", description = "JTAF - Track and Field")
 public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
     private static final long serialVersionUID = 1L;
 
-    public static final String ICON_SIZE = "50px";
+    private static final String LOGO_SIZE = "50px";
+    private static final String NAVIGATION_ICON = "navigation-icon";
 
     private final Tabs tabsMainMenu = new Tabs();
     private final Map<Class<? extends Component>, Tab> navigationTargetToTab = new HashMap<>();
@@ -94,10 +96,10 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
         addToNavbar(new DrawerToggle());
 
         Image image = new Image("icons/icon.png", "JTAF");
-        image.setMinWidth(ICON_SIZE);
-        image.setWidth(ICON_SIZE);
-        image.setMinHeight(ICON_SIZE);
-        image.setHeight(ICON_SIZE);
+        image.setMinWidth(LOGO_SIZE);
+        image.setWidth(LOGO_SIZE);
+        image.setMinHeight(LOGO_SIZE);
+        image.setHeight(LOGO_SIZE);
         addToNavbar(image);
 
 
@@ -133,32 +135,59 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
     }
 
     private void addMainMenu() {
-        Tab tabDashboard = new Tab(new RouterLink(getTranslation("Dashboard"), DashboardView.class));
+        Icon iconDashboard = new Icon(VaadinIcon.DASHBOARD);
+        iconDashboard.setClassName(NAVIGATION_ICON);
+        RouterLink dashboard = new RouterLink(getTranslation("Dashboard"), DashboardView.class);
+        dashboard.addComponentAsFirst(iconDashboard);
+
+        Tab tabDashboard = new Tab(dashboard);
         navigationTargetToTab.put(DashboardView.class, tabDashboard);
         tabsMainMenu.add(tabDashboard);
 
-        Tab tabOrganizaton = new Tab(new RouterLink(getTranslation("My.Organizations"), OrganizationsView.class));
+        Icon iconOrganizations = new Icon(VaadinIcon.WORKPLACE);
+        iconOrganizations.setClassName(NAVIGATION_ICON);
+        RouterLink organizations = new RouterLink(getTranslation("My.Organizations"), OrganizationsView.class);
+        organizations.addComponentAsFirst(iconOrganizations);
+
+        Tab tabOrganizaton = new Tab(organizations);
         navigationTargetToTab.put(OrganizationsView.class, tabOrganizaton);
         tabsMainMenu.add(tabOrganizaton);
 
         seriesLink = new RouterLink("", SeriesListView.class);
+        seriesLink.getStyle().set("padding-top", "50px");
         seriesLink.getStyle().set("font-size", "20px");
+
         tabSeries = new Tab(seriesLink);
         tabSeries.setVisible(false);
         navigationTargetToTab.put(SeriesListView.class, tabSeries);
         tabsMainMenu.add(tabSeries);
 
-        tabEvents = new Tab(new RouterLink(getTranslation("Events"), EventsView.class));
+        Icon iconEvents = new Icon(VaadinIcon.LIST_OL);
+        iconEvents.setClassName(NAVIGATION_ICON);
+        RouterLink events = new RouterLink(getTranslation("Events"), EventsView.class);
+        events.addComponentAsFirst(iconEvents);
+
+        tabEvents = new Tab(events);
         tabEvents.setVisible(false);
         navigationTargetToTab.put(EventsView.class, tabEvents);
         tabsMainMenu.add(tabEvents);
 
-        tabClubs = new Tab(new RouterLink(getTranslation("Clubs"), ClubsView.class));
+        Icon iconClubs = new Icon(VaadinIcon.GROUP);
+        iconClubs.setClassName(NAVIGATION_ICON);
+        RouterLink clubs = new RouterLink(getTranslation("Clubs"), ClubsView.class);
+        clubs.addComponentAsFirst(iconClubs);
+
+        tabClubs = new Tab(clubs);
         tabClubs.setVisible(false);
         navigationTargetToTab.put(ClubsView.class, tabClubs);
         tabsMainMenu.add(tabClubs);
 
-        tabAthletes = new Tab(new RouterLink(getTranslation("Athletes"), AthletesView.class));
+        Icon iconAthletes = new Icon(VaadinIcon.FAMILY);
+        iconAthletes.setClassName(NAVIGATION_ICON);
+        RouterLink athletes = new RouterLink(getTranslation("Athletes"), AthletesView.class);
+        athletes.addComponentAsFirst(iconAthletes);
+
+        tabAthletes = new Tab(athletes);
         tabAthletes.setVisible(false);
         navigationTargetToTab.put(EventsView.class, tabAthletes);
         tabsMainMenu.add(tabAthletes);
