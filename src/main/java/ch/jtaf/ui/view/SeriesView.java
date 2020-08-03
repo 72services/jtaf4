@@ -1,5 +1,47 @@
 package ch.jtaf.ui.view;
 
+import ch.jtaf.context.ApplicationContextHolder;
+import ch.jtaf.db.tables.records.AthleteRecord;
+import ch.jtaf.db.tables.records.CategoryRecord;
+import ch.jtaf.db.tables.records.ClubRecord;
+import ch.jtaf.db.tables.records.CompetitionRecord;
+import ch.jtaf.db.tables.records.SeriesRecord;
+import ch.jtaf.service.NumberAndSheetsService;
+import ch.jtaf.ui.dialog.CategoryDialog;
+import ch.jtaf.ui.dialog.CompetitionDialog;
+import ch.jtaf.ui.dialog.SearchAthleteDialog;
+import ch.jtaf.ui.layout.MainLayout;
+import ch.jtaf.ui.validator.NotEmptyValidator;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.grid.ColumnTextAlign;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.HasUrlParameter;
+import com.vaadin.flow.router.OptionalParameter;
+import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.StreamResource;
+import org.jooq.DSLContext;
+import org.jooq.UpdatableRecord;
+import org.springframework.transaction.support.TransactionTemplate;
+
+import java.io.ByteArrayInputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import static ch.jtaf.context.ApplicationContextHolder.getBean;
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
@@ -9,49 +51,12 @@ import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Series.SERIES;
 import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.jooq.DSLContext;
-import org.jooq.UpdatableRecord;
-import org.springframework.transaction.support.TransactionTemplate;
-
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.grid.ColumnTextAlign;
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.tabs.Tab;
-import com.vaadin.flow.component.tabs.Tabs;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.HasUrlParameter;
-import com.vaadin.flow.router.OptionalParameter;
-import com.vaadin.flow.router.Route;
-
-import ch.jtaf.context.ApplicationContextHolder;
-import ch.jtaf.db.tables.records.AthleteRecord;
-import ch.jtaf.db.tables.records.CategoryRecord;
-import ch.jtaf.db.tables.records.ClubRecord;
-import ch.jtaf.db.tables.records.CompetitionRecord;
-import ch.jtaf.db.tables.records.SeriesRecord;
-import ch.jtaf.ui.dialog.CategoryDialog;
-import ch.jtaf.ui.dialog.CompetitionDialog;
-import ch.jtaf.ui.dialog.SearchAthleteDialog;
-import ch.jtaf.ui.layout.MainLayout;
-import ch.jtaf.ui.validator.NotEmptyValidator;
-
 @Route(layout = MainLayout.class)
 public class SeriesView extends ProtectedView implements HasUrlParameter<String> {
-	
-	private static final long serialVersionUID = 1L;
+
+    private static final long serialVersionUID = 1L;
+
+    private final NumberAndSheetsService numberAndSheetsService;
 
     private SeriesRecord seriesRecord;
 
@@ -65,8 +70,9 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
     private Map<Long, ClubRecord> clubRecordMap;
 
-    public SeriesView(DSLContext dsl) {
+    public SeriesView(DSLContext dsl, NumberAndSheetsService numberAndSheetsService) {
         super(dsl);
+        this.numberAndSheetsService = numberAndSheetsService;
 
         H3 h3Title = new H3(getTranslation("Series"));
         h3Title.getStyle().set("margin-top", "0px");
@@ -80,20 +86,20 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         formLayout.add(name);
 
         binder.forField(name)
-                .withValidator(new NotEmptyValidator(this))
-                .bind(SeriesRecord::getName, SeriesRecord::setName);
+            .withValidator(new NotEmptyValidator(this))
+            .bind(SeriesRecord::getName, SeriesRecord::setName);
 
         Checkbox hidden = new Checkbox(getTranslation("Hidden"));
         formLayout.add(hidden);
 
         binder.forField(hidden)
-                .bind(SeriesRecord::getHidden, SeriesRecord::setHidden);
+            .bind(SeriesRecord::getHidden, SeriesRecord::setHidden);
 
         Checkbox locked = new Checkbox(getTranslation("Locked"));
         formLayout.add(locked);
 
         binder.forField(locked)
-                .bind(SeriesRecord::getLocked, SeriesRecord::setLocked);
+            .bind(SeriesRecord::getLocked, SeriesRecord::setLocked);
 
         Button save = new Button(getTranslation("Save"));
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -143,23 +149,25 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
     @Override
     protected void refreshAll() {
-        var competitionRecords = dsl.selectFrom(COMPETITION).where(COMPETITION.SERIES_ID.eq(seriesRecord.getId())).orderBy(COMPETITION.COMPETITION_DATE).fetch();
+        var competitionRecords = dsl.selectFrom(COMPETITION).where(COMPETITION.SERIES_ID.eq(seriesRecord.getId()))
+            .orderBy(COMPETITION.COMPETITION_DATE).fetch();
         competitionsGrid.setItems(competitionRecords);
 
-        var categoryRecords = dsl.selectFrom(CATEGORY).where(CATEGORY.SERIES_ID.eq(seriesRecord.getId())).orderBy(CATEGORY.ABBREVIATION).fetch();
+        var categoryRecords = dsl.selectFrom(CATEGORY).where(CATEGORY.SERIES_ID.eq(seriesRecord.getId()))
+            .orderBy(CATEGORY.ABBREVIATION).fetch();
         categoriesGrid.setItems(categoryRecords);
 
         var clubs = dsl.selectFrom(CLUB).where(CLUB.ORGANIZATION_ID.eq(organizationRecord.getId())).fetch();
         clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
 
         var athleteRecords = dsl
-                .select()
-                .from(ATHLETE)
-                .join(CATEGORY_ATHLETE).on(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
-                .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
-                .where(CATEGORY.SERIES_ID.eq(seriesRecord.getId()))
-                .orderBy(CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME)
-                .fetchInto(ATHLETE);
+            .select()
+            .from(ATHLETE)
+            .join(CATEGORY_ATHLETE).on(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
+            .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
+            .where(CATEGORY.SERIES_ID.eq(seriesRecord.getId()))
+            .orderBy(CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME)
+            .fetchInto(ATHLETE);
         athletesGrid.setItems(athleteRecords);
     }
 
@@ -187,6 +195,41 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         competitionsGrid.setHeightFull();
         competitionsGrid.addColumn(CompetitionRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
         competitionsGrid.addColumn(CompetitionRecord::getCompetitionDate).setHeader(getTranslation("Date")).setSortable(true);
+        competitionsGrid.addColumn(new ComponentRenderer<>(competition -> {
+            Anchor sheetsOrderedByAthlete = new Anchor(new StreamResource("sheets_orderby_athlete" + competition.getId() + ".pdf",
+                () -> {
+                    byte[] pdf = numberAndSheetsService.createSheets(competition.getId(),
+                        CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
+                    return new ByteArrayInputStream(pdf);
+                }), getTranslation("Sheets"));
+            sheetsOrderedByAthlete.getElement().setAttribute("download", true);
+
+            Anchor sheetsOrderedByClub = new Anchor(new StreamResource("sheets_orderby_club" + competition.getId() + ".pdf",
+                () -> {
+                    byte[] pdf = numberAndSheetsService.createSheets(competition.getId(),
+                        CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
+                    return new ByteArrayInputStream(pdf);
+                }), getTranslation("Ordered.by.club"));
+            sheetsOrderedByClub.getElement().setAttribute("download", true);
+
+            Anchor numbersOrderedByAthlete = new Anchor(new StreamResource("numbers_orderby_athlete" + competition.getId() + ".pdf",
+                () -> {
+                    byte[] pdf = numberAndSheetsService.createNumbers(competition.getId(),
+                        CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
+                    return new ByteArrayInputStream(pdf);
+                }), getTranslation("Numbers"));
+            numbersOrderedByAthlete.getElement().setAttribute("download", true);
+
+            Anchor numbersOrderedByClub = new Anchor(new StreamResource("numbers_orderby_club" + competition.getId() + ".pdf",
+                () -> {
+                    byte[] pdf = numberAndSheetsService.createNumbers(competition.getId(),
+                        CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
+                    return new ByteArrayInputStream(pdf);
+                }), getTranslation("Ordered.by.club"));
+            numbersOrderedByClub.getElement().setAttribute("download", true);
+
+            return new HorizontalLayout(sheetsOrderedByAthlete, sheetsOrderedByClub, numbersOrderedByAthlete, numbersOrderedByClub);
+        }));
 
         addActionColumnAndSetSelectionListener(competitionsGrid, dialog, this::refreshAll, () -> {
             CompetitionRecord newRecord = COMPETITION.newRecord();
@@ -220,7 +263,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         athletesGrid.addColumn(AthleteRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true);
         athletesGrid.addColumn(AthleteRecord::getYearOfBirth).setHeader(getTranslation("Year")).setSortable(true);
         athletesGrid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
-                : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club"));
+            : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club"));
 
         Button assign = new Button(athletesGrid.getTranslation("Assign.Athelete"));
         assign.addClickListener(event -> {
@@ -250,9 +293,10 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
     private void removeAtheleteFromSeries(UpdatableRecord<?> record) {
         AthleteRecord athleteRecord = (AthleteRecord) record;
         dsl
-                .deleteFrom(CATEGORY_ATHLETE)
-                .where(CATEGORY_ATHLETE.ATHLETE_ID.eq(athleteRecord.getId()))
-                .and(CATEGORY_ATHLETE.CATEGORY_ID.in(dsl.select(CATEGORY.ID).from(CATEGORY).where(CATEGORY.SERIES_ID.eq(seriesRecord.getId()))));
+            .deleteFrom(CATEGORY_ATHLETE)
+            .where(CATEGORY_ATHLETE.ATHLETE_ID.eq(athleteRecord.getId()))
+            .and(CATEGORY_ATHLETE.CATEGORY_ID
+                .in(dsl.select(CATEGORY.ID).from(CATEGORY).where(CATEGORY.SERIES_ID.eq(seriesRecord.getId()))));
     }
 
 }

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.jooq.DSLContext;
+import org.jooq.Field;
 import org.jooq.Record;
 import org.springframework.stereotype.Service;
 
@@ -33,12 +34,12 @@ public class NumberAndSheetsService {
         this.dsl = dsl;
     }
 
-    public byte[] createNumbers(Long competitionId, String order) {
-        return new NumbersReport(getAthletes(competitionId, order), new Locale("de", "CH")).create();
+    public byte[] createNumbers(Long competitionId, Field<?>... orderBy) {
+        return new NumbersReport(getAthletes(competitionId, orderBy), new Locale("de", "CH")).create();
     }
 
-    public byte[] createSheets(Long competitionId, String order) {
-        return new SheetsReport(getCompetition(competitionId), getAthletes(competitionId, order), getLogo(competitionId), new Locale("de", "CH")).create();
+    public byte[] createSheets(Long competitionId, Field<?>... orderBy) {
+        return new SheetsReport(getCompetition(competitionId), getAthletes(competitionId, orderBy), getLogo(competitionId), new Locale("de", "CH")).create();
     }
 
     public byte[] createEmptySheets(Long competitionId, Long categoryId) {
@@ -85,7 +86,7 @@ public class NumberAndSheetsService {
         return logoRecord.get(SERIES.LOGO);
     }
 
-    private List<NumbersAndSheetsAthlete> getAthletes(Long competitionId, String order) {
+    private List<NumbersAndSheetsAthlete> getAthletes(Long competitionId, Field<?>... orderBy) {
         var athletes = new ArrayList<NumbersAndSheetsAthlete>();
 
         var records = dsl
@@ -102,7 +103,7 @@ public class NumberAndSheetsService {
                 .join(CATEGORY_EVENT).on(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
                 .join(EVENT).on(EVENT.ID.eq(CATEGORY_EVENT.EVENT_ID))
                 .where(COMPETITION.ID.eq(competitionId))
-                .orderBy(field(order))
+                .orderBy(orderBy)
                 .fetch();
 
         NumbersAndSheetsAthlete athlete = null;
