@@ -10,6 +10,7 @@ import ch.jtaf.ui.view.EventsView;
 import ch.jtaf.ui.view.OrganizationsView;
 import ch.jtaf.ui.view.SeriesListView;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -20,6 +21,8 @@ import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -63,19 +66,22 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
         addMainMenu();
 
         tabsMainMenu.setOrientation(Tabs.Orientation.VERTICAL);
-        tabsMainMenu.getStyle().set("height", "calc(100% - 30px)");
+        tabsMainMenu.setHeightFull();
 
         Div divFooter = new Div();
-        divFooter.setHeight("30px");
+        divFooter.setHeight("50px");
         divFooter.getStyle().set("position", "absolute");
         divFooter.getStyle().set("bottom", "20px");
         divFooter.getStyle().set("left", "20px");
 
+        Html htmlByLink = new Html("<p>JTAF is Free and Open Source<br>by 72© Services LLC</p>");
+
         Anchor byLink = new Anchor();
         byLink.setWidth("300px");
-        byLink.setText("by 72© Services LLC");
+        byLink.getElement().getStyle().set("font-size", "small");
         byLink.setHref("https://72.services");
         byLink.setTarget("_blank");
+        byLink.add(htmlByLink);
         divFooter.add(byLink);
 
         Div divDrawer = new Div();
@@ -104,6 +110,11 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
         info.getStyle().set("padding-right", "20px");
         info.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
         info.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+
+        Anchor about = new Anchor("https://github.com/72services/jtaf4", "About");
+        about.setTarget("_blank");
+        about.getStyle().set("padding-right", "50px");
+        info.add(about);
 
         version.getStyle().set("padding-right", "50px");
         info.add(version);
