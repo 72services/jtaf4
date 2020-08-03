@@ -247,6 +247,16 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         categoriesGrid.addColumn(CategoryRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
         categoriesGrid.addColumn(CategoryRecord::getYearFrom).setHeader(getTranslation("Year.From")).setSortable(true);
         categoriesGrid.addColumn(CategoryRecord::getYearTo).setHeader(getTranslation("Year.To")).setSortable(true);
+        categoriesGrid.addColumn(new ComponentRenderer<>(category -> {
+            Anchor sheet = new Anchor(new StreamResource("sheet" + category.getId() + ".pdf",
+                () -> {
+                    byte[] pdf = numberAndSheetsService.createEmptySheets(seriesRecord.getId(), category.getId());
+                    return new ByteArrayInputStream(pdf);
+                }), getTranslation("Sheets"));
+            sheet.getElement().setAttribute("download", true);
+
+            return new HorizontalLayout(sheet);
+        }));
 
         addActionColumnAndSetSelectionListener(categoriesGrid, dialog, this::refreshAll, () -> {
             CategoryRecord newRecord = CATEGORY.newRecord();

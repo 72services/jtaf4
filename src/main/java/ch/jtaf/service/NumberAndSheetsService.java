@@ -42,8 +42,8 @@ public class NumberAndSheetsService {
         return new SheetsReport(getCompetition(competitionId), getAthletes(competitionId, orderBy), getLogo(competitionId), new Locale("de", "CH")).create();
     }
 
-    public byte[] createEmptySheets(Long competitionId, Long categoryId) {
-        return new SheetsReport(createDummyAthlete(categoryId), getLogo(competitionId), new Locale("de", "CH")).create();
+    public byte[] createEmptySheets(Long seriesId, Long categoryId) {
+        return new SheetsReport(createDummyAthlete(categoryId), getLogo(seriesId), new Locale("de", "CH")).create();
     }
 
     private NumbersAndSheetsAthlete createDummyAthlete(Long categoryId) {
@@ -80,8 +80,7 @@ public class NumberAndSheetsService {
         var logoRecord = dsl
                 .select(SERIES.LOGO)
                 .from(SERIES)
-                .join(COMPETITION).on(COMPETITION.SERIES_ID.eq(SERIES.ID))
-                .where(COMPETITION.ID.eq(id))
+                .where(SERIES.ID.eq(id))
                 .fetchOne();
         return logoRecord.get(SERIES.LOGO);
     }
