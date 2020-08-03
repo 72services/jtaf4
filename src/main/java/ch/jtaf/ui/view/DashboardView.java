@@ -60,6 +60,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                         byte[] pdf = seriesRankingService.getSeriesRankingAsPdf(series.getId());
                         return new ByteArrayInputStream(pdf);
                     }), getTranslation("Series.Ranking"));
+                seriesRanking.setTarget("_blank");
                 seriesRanking.getElement().setAttribute("download", true);
 
                 seriesLayout.add(new Paragraph(seriesRanking));
@@ -80,6 +81,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                                 byte[] pdf = competitionRankingService.getCompetitionRankingAsPdf(competition.getId());
                                 return new ByteArrayInputStream(pdf);
                             }), getTranslation("Competition.Ranking"));
+                        competitionRanking.setTarget("_blank");
                         competitionRanking.getElement().setAttribute("download", true);
 
                         HorizontalLayout links = new HorizontalLayout(competitionRanking);
@@ -97,6 +99,6 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 
     @Override
     public String getPageTitle() {
-        return getTranslation("Dashboard");
+        return "JTAF - " + getTranslation("Dashboard");
     }
 }

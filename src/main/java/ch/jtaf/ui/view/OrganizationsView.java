@@ -94,6 +94,6 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
 
     @Override
     public String getPageTitle() {
-        return getTranslation("Organizations");
+        return "JTAF - " + getTranslation("Organizations");
     }
 }

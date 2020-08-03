@@ -49,7 +49,7 @@ public class ClubsView extends ProtectedGridView<ClubRecord> {
 
     @Override
     public String getPageTitle() {
-        return getTranslation("Clubs");
+        return "JTAF - " + getTranslation("Clubs");
     }
 
     @Override

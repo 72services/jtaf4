@@ -69,7 +69,7 @@ public class AthletesView extends ProtectedGridView<AthleteRecord> {
 
     @Override
     public String getPageTitle() {
-        return getTranslation("Athletes");
+        return "JTAF - " + getTranslation("Athletes");
     }
 
     @Override

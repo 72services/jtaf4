@@ -45,7 +45,7 @@ public class EventsView extends ProtectedGridView<EventRecord> {
 
     @Override
     public String getPageTitle() {
-        return getTranslation("Events");
+        return "JTAF - " + getTranslation("Events");
     }
 
     @Override

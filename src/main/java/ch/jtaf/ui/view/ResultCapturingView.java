@@ -167,7 +167,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
     @Override
     public String getPageTitle() {
-        return getTranslation("Enter.Results");
+        return "JTAF - " + getTranslation("Enter.Results");
     }
 
     @Override

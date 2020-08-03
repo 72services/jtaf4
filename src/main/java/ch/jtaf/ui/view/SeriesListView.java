@@ -85,7 +85,7 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
 
     @Override
     public String getPageTitle() {
-        return getTranslation("Series");
+        return "JTAF - " + getTranslation("Series");
     }
 
     @Override

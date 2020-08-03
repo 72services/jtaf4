@@ -185,7 +185,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
     @Override
     public String getPageTitle() {
-        return getTranslation("Series");
+        return "JTAF - " + getTranslation("Series");
     }
 
     private void createCompetitionsSection() {
@@ -202,6 +202,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                         CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Sheets"));
+            sheetsOrderedByAthlete.setTarget("_blank");
             sheetsOrderedByAthlete.getElement().setAttribute("download", true);
 
             Anchor sheetsOrderedByClub = new Anchor(new StreamResource("sheets_orderby_club" + competition.getId() + ".pdf",
@@ -210,6 +211,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                         CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Ordered.by.club"));
+            sheetsOrderedByClub.setTarget("_blank");
             sheetsOrderedByClub.getElement().setAttribute("download", true);
 
             Anchor numbersOrderedByAthlete = new Anchor(new StreamResource("numbers_orderby_athlete" + competition.getId() + ".pdf",
@@ -218,6 +220,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                         CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Numbers"));
+            numbersOrderedByAthlete.setTarget("_blank");
             numbersOrderedByAthlete.getElement().setAttribute("download", true);
 
             Anchor numbersOrderedByClub = new Anchor(new StreamResource("numbers_orderby_club" + competition.getId() + ".pdf",
@@ -226,6 +229,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                         CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Ordered.by.club"));
+            numbersOrderedByClub.setTarget("_blank");
             numbersOrderedByClub.getElement().setAttribute("download", true);
 
             return new HorizontalLayout(sheetsOrderedByAthlete, sheetsOrderedByClub, numbersOrderedByAthlete, numbersOrderedByClub);
@@ -253,6 +257,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                     byte[] pdf = numberAndSheetsService.createEmptySheets(seriesRecord.getId(), category.getId());
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Sheets"));
+            sheet.setTarget("_blank");
             sheet.getElement().setAttribute("download", true);
 
             return new HorizontalLayout(sheet);
