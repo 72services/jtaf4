@@ -56,7 +56,6 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
     private static final long serialVersionUID = 1L;
     private static final String BLANK = "_blank";
-    private static final String DOWNLOAD = "download";
 
     private final transient NumberAndSheetsService numberAndSheetsService;
 
@@ -205,7 +204,6 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Sheets"));
             sheetsOrderedByAthlete.setTarget(BLANK);
-            sheetsOrderedByAthlete.getElement().setAttribute(DOWNLOAD, true);
 
             Anchor sheetsOrderedByClub = new Anchor(new StreamResource("sheets_orderby_club" + competition.getId() + ".pdf",
                 () -> {
@@ -214,7 +212,6 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Ordered.by.club"));
             sheetsOrderedByClub.setTarget(BLANK);
-            sheetsOrderedByClub.getElement().setAttribute(DOWNLOAD, true);
 
             Anchor numbersOrderedByAthlete = new Anchor(new StreamResource("numbers_orderby_athlete" + competition.getId() + ".pdf",
                 () -> {
@@ -223,7 +220,6 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Numbers"));
             numbersOrderedByAthlete.setTarget(BLANK);
-            numbersOrderedByAthlete.getElement().setAttribute(DOWNLOAD, true);
 
             Anchor numbersOrderedByClub = new Anchor(new StreamResource("numbers_orderby_club" + competition.getId() + ".pdf",
                 () -> {
@@ -232,7 +228,6 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Ordered.by.club"));
             numbersOrderedByClub.setTarget(BLANK);
-            numbersOrderedByClub.getElement().setAttribute(DOWNLOAD, true);
 
             return new HorizontalLayout(sheetsOrderedByAthlete, sheetsOrderedByClub, numbersOrderedByAthlete, numbersOrderedByClub);
         }));
@@ -260,7 +255,6 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Sheets"));
             sheet.setTarget(BLANK);
-            sheet.getElement().setAttribute(DOWNLOAD, true);
 
             return new HorizontalLayout(sheet);
         }));
