@@ -61,7 +61,6 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                         return new ByteArrayInputStream(pdf);
                     }), getTranslation("Series.Ranking"));
                 seriesRanking.setTarget("_blank");
-                seriesRanking.getElement().setAttribute("download", true);
 
                 seriesLayout.add(new Paragraph(seriesRanking));
 
@@ -82,7 +81,6 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                                 return new ByteArrayInputStream(pdf);
                             }), getTranslation("Competition.Ranking"));
                         competitionRanking.setTarget("_blank");
-                        competitionRanking.getElement().setAttribute("download", true);
 
                         HorizontalLayout links = new HorizontalLayout(competitionRanking);
 
