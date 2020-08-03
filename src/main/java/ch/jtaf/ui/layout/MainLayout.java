@@ -11,11 +11,8 @@ import ch.jtaf.ui.view.OrganizationsView;
 import ch.jtaf.ui.view.SeriesListView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Html;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
@@ -31,9 +28,7 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
-import com.vaadin.flow.server.VaadinServlet;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
@@ -53,7 +48,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
     private final Map<Class<? extends Component>, Tab> navigationTargetToTab = new HashMap<>();
 
     private final Div version = new Div();
-    private final Button signIn = new Button();
+    private final RouterLink login;
+    private final Anchor logout;
 
     @Value("${application.version}")
     private String applicationVersion;
@@ -115,21 +111,16 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
         Anchor about = new Anchor("https://github.com/72services/jtaf4", "About");
         about.setTarget("_blank");
-        about.getStyle().set("padding-right", "50px");
         info.add(about);
 
-        version.getStyle().set("padding-right", "50px");
         info.add(version);
 
-        signIn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        signIn.addClickListener(clickEvent -> {
-            if (SecurityContext.isUserLoggedIn()) {
-                UI.getCurrent().getPage().setLocation(VaadinServlet.getCurrent().getServletContext().getContextPath() + "/logout");
-            } else {
-                UI.getCurrent().navigate(OrganizationsView.class);
-            }
-        });
-        info.add(signIn);
+        login = new RouterLink("Login", OrganizationsView.class);
+        login.setVisible(false);
+
+        logout = new Anchor("/logout", "Logout");
+
+        info.add(login, logout);
 
         addToNavbar(info);
     }
@@ -149,12 +140,11 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
         RouterLink organizations = new RouterLink(getTranslation("My.Organizations"), OrganizationsView.class);
         organizations.addComponentAsFirst(iconOrganizations);
 
-        Tab tabOrganizaton = new Tab(organizations);
-        navigationTargetToTab.put(OrganizationsView.class, tabOrganizaton);
-        tabsMainMenu.add(tabOrganizaton);
+        Tab tabOrganization = new Tab(organizations);
+        navigationTargetToTab.put(OrganizationsView.class, tabOrganization);
+        tabsMainMenu.add(tabOrganization);
 
         seriesLink = new RouterLink("", SeriesListView.class);
-        seriesLink.getStyle().set("padding-top", "50px");
         seriesLink.getStyle().set("font-size", "20px");
 
         tabSeries = new Tab(seriesLink);
@@ -189,7 +179,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
         tabAthletes = new Tab(athletes);
         tabAthletes.setVisible(false);
-        navigationTargetToTab.put(EventsView.class, tabAthletes);
+        navigationTargetToTab.put(AthletesView.class, tabAthletes);
         tabsMainMenu.add(tabAthletes);
     }
 
@@ -203,7 +193,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
         tabsMainMenu.setSelectedTab(navigationTargetToTab.get(event.getNavigationTarget()));
 
         if (SecurityContext.isUserLoggedIn()) {
-            signIn.setText(getTranslation("Sign.out") + " (" + SecurityContextHolder.getContext().getAuthentication().getName() + ")");
+            login.setVisible(false);
+            logout.setVisible(true);
 
             OrganizationRecord organization = OrganizationHolder.getOrganization();
             if (organization != null) {
@@ -211,7 +202,9 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
                 setSeriesTabsVisible(true);
             }
         } else {
-            signIn.setText(getTranslation("Sign.in"));
+            login.setVisible(true);
+            logout.setVisible(false);
+
             seriesLink.setText("");
             setSeriesTabsVisible(false);
         }
@@ -224,4 +217,3 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
         tabAthletes.setVisible(visible);
     }
 }
-
