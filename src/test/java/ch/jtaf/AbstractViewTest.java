@@ -1,16 +1,15 @@
 package ch.jtaf;
 
+import com.vaadin.flow.theme.AbstractTheme;
+import com.vaadin.testbench.ScreenshotOnFailureRule;
+import com.vaadin.testbench.TestBench;
+import com.vaadin.testbench.parallel.ParallelTest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-
-import com.vaadin.flow.theme.AbstractTheme;
-import com.vaadin.testbench.ScreenshotOnFailureRule;
-import com.vaadin.testbench.TestBench;
-import com.vaadin.testbench.parallel.ParallelTest;
 
 /**
  * Base class for TestBench IntegrationTests on chrome.
@@ -34,7 +33,7 @@ public abstract class AbstractViewTest extends ParallelTest {
 
     @Rule
     public ScreenshotOnFailureRule rule = new ScreenshotOnFailureRule(this,
-            false);
+        false);
 
     public AbstractViewTest() {
         this("", By.tagName("body"));
@@ -70,22 +69,22 @@ public abstract class AbstractViewTest extends ParallelTest {
      * identified by {@code themeClass}. If the theme is not found, JUnit
      * assert will fail the test case.
      *
-     * @param element       web element to check for the theme
-     * @param themeClass    theme class (such as {@code Lumo.class}
+     * @param element    web element to check for the theme
+     * @param themeClass theme class (such as {@code Lumo.class}
      */
     protected void assertThemePresentOnElement(
-            WebElement element, Class<? extends AbstractTheme> themeClass) {
+        WebElement element, Class<? extends AbstractTheme> themeClass) {
         String themeName = themeClass.getSimpleName().toLowerCase();
         Boolean hasStyle = (Boolean) executeScript("" +
-                "var styles = Array.from(arguments[0]._template.content" +
-                ".querySelectorAll('style'))" +
-                ".filter(style => style.textContent.indexOf('" +
-                themeName + "') > -1);" +
-                "return styles.length > 0;", element);
+            "var styles = Array.from(arguments[0]._template.content" +
+            ".querySelectorAll('style'))" +
+            ".filter(style => style.textContent.indexOf('" +
+            themeName + "') > -1);" +
+            "return styles.length > 0;", element);
 
         Assert.assertTrue("Element '" + element.getTagName() + "' should have" +
-                        " had theme '" + themeClass.getSimpleName() + "'.",
-                hasStyle);
+                " had theme '" + themeClass.getSimpleName() + "'.",
+            hasStyle);
     }
 
     /**
@@ -100,7 +99,7 @@ public abstract class AbstractViewTest extends ParallelTest {
      */
     private static String getURL(String route) {
         return String.format("http://%s:%d/%s", getDeploymentHostname(),
-                SERVER_PORT, route);
+            SERVER_PORT, route);
     }
 
     /**
@@ -112,7 +111,7 @@ public abstract class AbstractViewTest extends ParallelTest {
      */
     private static boolean isUsingHub() {
         return Boolean.TRUE.toString().equals(
-                System.getProperty(USE_HUB_PROPERTY));
+            System.getProperty(USE_HUB_PROPERTY));
     }
 
     /**

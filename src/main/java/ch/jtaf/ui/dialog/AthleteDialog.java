@@ -1,22 +1,5 @@
 package ch.jtaf.ui.dialog;
 
-import static ch.jtaf.db.tables.Club.CLUB;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.jooq.DSLContext;
-
-import com.vaadin.flow.component.select.Select;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.binder.Result;
-import com.vaadin.flow.data.binder.ValueContext;
-import com.vaadin.flow.data.converter.Converter;
-import com.vaadin.flow.data.converter.StringToIntegerConverter;
-
 import ch.jtaf.context.ApplicationContextHolder;
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
@@ -24,10 +7,25 @@ import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.model.Gender;
 import ch.jtaf.security.OrganizationHolder;
 import ch.jtaf.ui.validator.NotEmptyValidator;
+import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.Result;
+import com.vaadin.flow.data.binder.ValueContext;
+import com.vaadin.flow.data.converter.Converter;
+import com.vaadin.flow.data.converter.StringToIntegerConverter;
+import org.jooq.DSLContext;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static ch.jtaf.db.tables.Club.CLUB;
 
 public class AthleteDialog extends EditDialog<AthleteRecord> {
-	
-	private static final long serialVersionUID = 1L;
+
+    private static final long serialVersionUID = 1L;
 
     private Map<Long, ClubRecord> clubRecordMap = new HashMap<>();
 
@@ -36,21 +34,21 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
     }
 
     @SuppressWarnings("serial")
-	@Override
+    @Override
     public void createForm() {
         TextField lastName = new TextField(getTranslation("Last.Name"));
         lastName.setRequiredIndicatorVisible(true);
 
         binder.forField(lastName)
-                .withValidator(new NotEmptyValidator(this))
-                .bind(AthleteRecord::getLastName, AthleteRecord::setLastName);
+            .withValidator(new NotEmptyValidator(this))
+            .bind(AthleteRecord::getLastName, AthleteRecord::setLastName);
 
         TextField firstName = new TextField(getTranslation("First.Name"));
         firstName.setRequiredIndicatorVisible(true);
 
         binder.forField(firstName)
-                .withValidator(new NotEmptyValidator(this))
-                .bind(AthleteRecord::getFirstName, AthleteRecord::setFirstName);
+            .withValidator(new NotEmptyValidator(this))
+            .bind(AthleteRecord::getFirstName, AthleteRecord::setFirstName);
 
         Select<String> gender = new Select<>();
         gender.setLabel(getTranslation("Gender"));
@@ -58,14 +56,14 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
         gender.setItems(Gender.valuesAsStrings());
 
         binder.forField(gender)
-                .bind(AthleteRecord::getGender, AthleteRecord::setGender);
+            .bind(AthleteRecord::getGender, AthleteRecord::setGender);
 
         TextField yearOfBirth = new TextField(getTranslation("Year"));
         lastName.setRequiredIndicatorVisible(true);
 
         binder.forField(yearOfBirth)
-                .withConverter(new StringToIntegerConverter(getTranslation("Must.be.a.number")))
-                .bind(AthleteRecord::getYearOfBirth, AthleteRecord::setYearOfBirth);
+            .withConverter(new StringToIntegerConverter(getTranslation("Must.be.a.number")))
+            .bind(AthleteRecord::getYearOfBirth, AthleteRecord::setYearOfBirth);
 
         Select<ClubRecord> club = new Select<>();
         club.setLabel(getTranslation("Club"));
@@ -74,25 +72,25 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
         club.setItems(getClubs());
 
         binder.forField(club)
-                .withConverter(new Converter<ClubRecord, Long>() {
-                    @Override
-                    public Result<Long> convertToModel(ClubRecord value, ValueContext context) {
-                        return Result.ok(value == null ? null : value.getId());
-                    }
+            .withConverter(new Converter<ClubRecord, Long>() {
+                @Override
+                public Result<Long> convertToModel(ClubRecord value, ValueContext context) {
+                    return Result.ok(value == null ? null : value.getId());
+                }
 
-                    @Override
-                    public ClubRecord convertToPresentation(Long value, ValueContext context) {
-                        return clubRecordMap.get(value);
-                    }
-                })
-                .bind(AthleteRecord::getClubId, AthleteRecord::setClubId);
+                @Override
+                public ClubRecord convertToPresentation(Long value, ValueContext context) {
+                    return clubRecordMap.get(value);
+                }
+            })
+            .bind(AthleteRecord::getClubId, AthleteRecord::setClubId);
 
         TextField year = new TextField("Year");
         year.setRequiredIndicatorVisible(true);
 
         binder.forField(year)
-                .withConverter(new StringToIntegerConverter(getTranslation("Must.be.a.number")))
-                .bind(AthleteRecord::getYearOfBirth, AthleteRecord::setYearOfBirth);
+            .withConverter(new StringToIntegerConverter(getTranslation("Must.be.a.number")))
+            .bind(AthleteRecord::getYearOfBirth, AthleteRecord::setYearOfBirth);
 
         formLayout.add(lastName, firstName, gender, year, club);
     }

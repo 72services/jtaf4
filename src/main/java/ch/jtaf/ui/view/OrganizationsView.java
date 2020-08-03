@@ -1,13 +1,9 @@
 package ch.jtaf.ui.view;
 
-import static ch.jtaf.db.tables.Organization.ORGANIZATION;
-import static ch.jtaf.db.tables.OrganizationUser.ORGANIZATION_USER;
-import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
-
-import org.jooq.DSLContext;
-import org.jooq.exception.DataAccessException;
-import org.springframework.security.core.context.SecurityContextHolder;
-
+import ch.jtaf.db.tables.records.OrganizationRecord;
+import ch.jtaf.security.OrganizationHolder;
+import ch.jtaf.ui.dialog.OrganizationDialog;
+import ch.jtaf.ui.layout.MainLayout;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -19,16 +15,18 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
+import org.jooq.DSLContext;
+import org.jooq.exception.DataAccessException;
+import org.springframework.security.core.context.SecurityContextHolder;
 
-import ch.jtaf.db.tables.records.OrganizationRecord;
-import ch.jtaf.security.OrganizationHolder;
-import ch.jtaf.ui.dialog.OrganizationDialog;
-import ch.jtaf.ui.layout.MainLayout;
+import static ch.jtaf.db.tables.Organization.ORGANIZATION;
+import static ch.jtaf.db.tables.OrganizationUser.ORGANIZATION_USER;
+import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
 
 @Route(layout = MainLayout.class)
 public class OrganizationsView extends VerticalLayout implements HasDynamicTitle {
-	
-	private static final long serialVersionUID = 1L;
+
+    private static final long serialVersionUID = 1L;
 
     private final transient DSLContext dsl;
     private final Grid<OrganizationRecord> grid;
@@ -75,7 +73,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
         }).setTextAlign(ColumnTextAlign.END).setHeader(add);
 
         grid.addSelectionListener(event -> event.getFirstSelectedItem()
-                .ifPresent(organization -> dialog.open(organization, this::loadData)));
+            .ifPresent(organization -> dialog.open(organization, this::loadData)));
 
         loadData();
 
@@ -84,12 +82,12 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
 
     private void loadData() {
         var organizations = dsl
-                .select()
-                .from(ORGANIZATION)
-                .join(ORGANIZATION_USER).on(ORGANIZATION_USER.ORGANIZATION_ID.eq(ORGANIZATION.ID))
-                .join(SECURITY_USER).on(SECURITY_USER.ID.eq(ORGANIZATION_USER.USER_ID))
-                .where(SECURITY_USER.EMAIL.eq(SecurityContextHolder.getContext().getAuthentication().getName()))
-                .fetch().into(ORGANIZATION);
+            .select()
+            .from(ORGANIZATION)
+            .join(ORGANIZATION_USER).on(ORGANIZATION_USER.ORGANIZATION_ID.eq(ORGANIZATION.ID))
+            .join(SECURITY_USER).on(SECURITY_USER.ID.eq(ORGANIZATION_USER.USER_ID))
+            .where(SECURITY_USER.EMAIL.eq(SecurityContextHolder.getContext().getAuthentication().getName()))
+            .fetch().into(ORGANIZATION);
 
         grid.setItems(organizations);
     }

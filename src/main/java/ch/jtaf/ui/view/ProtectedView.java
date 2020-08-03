@@ -1,18 +1,16 @@
 package ch.jtaf.ui.view;
 
-import org.jooq.DSLContext;
-
+import ch.jtaf.db.tables.records.OrganizationRecord;
+import ch.jtaf.security.OrganizationHolder;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.HasDynamicTitle;
-
-import ch.jtaf.db.tables.records.OrganizationRecord;
-import ch.jtaf.security.OrganizationHolder;
+import org.jooq.DSLContext;
 
 public abstract class ProtectedView extends VerticalLayout implements BeforeEnterObserver, HasDynamicTitle {
-	
-	private static final long serialVersionUID = 1L;
+
+    private static final long serialVersionUID = 1L;
 
     final transient DSLContext dsl;
 

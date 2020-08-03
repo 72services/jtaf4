@@ -1,9 +1,9 @@
 package ch.jtaf.reporting.data;
 
-import static java.util.Comparator.comparingInt;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Comparator.comparingInt;
 
 public class NumbersAndSheetsAthlete {
 

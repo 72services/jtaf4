@@ -1,62 +1,60 @@
 package ch.jtaf.ui.view;
 
-import static ch.jtaf.db.tables.Event.EVENT;
-import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
-
+import ch.jtaf.db.tables.records.EventRecord;
+import ch.jtaf.ui.dialog.EventDialog;
+import ch.jtaf.ui.layout.MainLayout;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.router.Route;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.SortField;
 
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.router.Route;
-
-import ch.jtaf.db.tables.records.EventRecord;
-import ch.jtaf.ui.dialog.EventDialog;
-import ch.jtaf.ui.layout.MainLayout;
+import static ch.jtaf.db.tables.Event.EVENT;
+import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
 
 @Route(layout = MainLayout.class)
 public class EventsView extends ProtectedGridView<EventRecord> {
-	
-	private static final long serialVersionUID = 1L;
 
-	public EventsView(DSLContext dsl) {
-		super(dsl, EVENT);
+    private static final long serialVersionUID = 1L;
 
-		setHeightFull();
+    public EventsView(DSLContext dsl) {
+        super(dsl, EVENT);
 
-		add(new H1(getTranslation("Events")));
+        setHeightFull();
 
-		EventDialog dialog = new EventDialog(getTranslation("Event"));
+        add(new H1(getTranslation("Events")));
 
-		grid.addColumn(EventRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true);
-		grid.addColumn(EventRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
-		grid.addColumn(EventRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true);
-		grid.addColumn(EventRecord::getEventType).setHeader(getTranslation("Event.Type")).setSortable(true);
-		grid.addColumn(EventRecord::getA).setHeader("A");
-		grid.addColumn(EventRecord::getB).setHeader("B");
-		grid.addColumn(EventRecord::getC).setHeader("C");
+        EventDialog dialog = new EventDialog(getTranslation("Event"));
 
-		addActionColumnAndSetSelectionListener(grid, dialog, dataProvider::refreshAll, () -> {
-			EventRecord newRecord = EVENT.newRecord();
-			newRecord.setOrganizationId(organizationRecord.getId());
-			return newRecord;
-		});
+        grid.addColumn(EventRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true);
+        grid.addColumn(EventRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
+        grid.addColumn(EventRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true);
+        grid.addColumn(EventRecord::getEventType).setHeader(getTranslation("Event.Type")).setSortable(true);
+        grid.addColumn(EventRecord::getA).setHeader("A");
+        grid.addColumn(EventRecord::getB).setHeader("B");
+        grid.addColumn(EventRecord::getC).setHeader("C");
 
-		add(grid);
-	}
+        addActionColumnAndSetSelectionListener(grid, dialog, dataProvider::refreshAll, () -> {
+            EventRecord newRecord = EVENT.newRecord();
+            newRecord.setOrganizationId(organizationRecord.getId());
+            return newRecord;
+        });
 
-	@Override
-	public String getPageTitle() {
-		return getTranslation("Events");
-	}
+        add(grid);
+    }
 
-	@Override
-	protected Condition initialCondition() {
-		return EVENT.ORGANIZATION_ID.eq(organizationRecord.getId());
-	}
+    @Override
+    public String getPageTitle() {
+        return getTranslation("Events");
+    }
 
-	@Override
-	protected SortField<?>[] initialSort() {
-		return new SortField[] { EVENT.GENDER.asc(), EVENT.ABBREVIATION.asc() };
-	}
+    @Override
+    protected Condition initialCondition() {
+        return EVENT.ORGANIZATION_ID.eq(organizationRecord.getId());
+    }
+
+    @Override
+    protected SortField<?>[] initialSort() {
+        return new SortField[]{EVENT.GENDER.asc(), EVENT.ABBREVIATION.asc()};
+    }
 }

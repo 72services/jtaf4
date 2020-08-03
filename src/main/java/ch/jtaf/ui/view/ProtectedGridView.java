@@ -1,44 +1,42 @@
 package ch.jtaf.ui.view;
 
+import ch.jtaf.ui.component.JooqDataProviderProducer;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.SortField;
 import org.jooq.Table;
 
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
-
-import ch.jtaf.ui.component.JooqDataProviderProducer;
-
 public abstract class ProtectedGridView<R extends Record> extends ProtectedView {
-	
-	private static final long serialVersionUID = 1L;
 
-	final Table<R> table;
-	final ConfigurableFilterDataProvider<R, Void, String> dataProvider;
-	final Grid<R> grid;
+    private static final long serialVersionUID = 1L;
 
-	public ProtectedGridView(DSLContext dsl, Table<R> table) {
-		super(dsl);
-		this.table = table;
+    final Table<R> table;
+    final ConfigurableFilterDataProvider<R, Void, String> dataProvider;
+    final Grid<R> grid;
 
-		dataProvider = new JooqDataProviderProducer<>(dsl, table, this::initialCondition, this::initialSort).getDataProvider();
+    public ProtectedGridView(DSLContext dsl, Table<R> table) {
+        super(dsl);
+        this.table = table;
 
-		grid = new Grid<>();
-		grid.setHeightFull();
-		grid.setDataProvider(dataProvider);
+        dataProvider = new JooqDataProviderProducer<>(dsl, table, this::initialCondition, this::initialSort).getDataProvider();
 
-		setHeightFull();
-	}
+        grid = new Grid<>();
+        grid.setHeightFull();
+        grid.setDataProvider(dataProvider);
 
-	protected abstract Condition initialCondition();
+        setHeightFull();
+    }
 
-	protected abstract SortField<?>[] initialSort();
+    protected abstract Condition initialCondition();
 
-	@Override
-	protected void refreshAll() {
-		dataProvider.refreshAll();
-	}
+    protected abstract SortField<?>[] initialSort();
+
+    @Override
+    protected void refreshAll() {
+        dataProvider.refreshAll();
+    }
 
 }

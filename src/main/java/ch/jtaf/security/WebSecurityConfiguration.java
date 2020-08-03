@@ -59,29 +59,29 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         // Not using Spring CSRF here to be able to use plain HTML for the login page
         http.csrf().disable()
 
-                // Restrict access to our application.
-                .authorizeRequests()
+            // Restrict access to our application.
+            .authorizeRequests()
 
-                // Allow all flow internal requests.
-                .requestMatchers(SecurityContext::isFrameworkInternalRequest).permitAll()
+            // Allow all flow internal requests.
+            .requestMatchers(SecurityContext::isFrameworkInternalRequest).permitAll()
 
-                // Health Check
-                .antMatchers("/actuator/health").permitAll()
+            // Health Check
+            .antMatchers("/actuator/health").permitAll()
 
-                // Public
-                .antMatchers("/").permitAll()
+            // Public
+            .antMatchers("/").permitAll()
 
-                // Allow all requests by logged in users.
-                .anyRequest().authenticated()
+            // Allow all requests by logged in users.
+            .anyRequest().authenticated()
 
-                // Configure the login page.
-                .and().formLogin().loginPage(LOGIN_URL).permitAll().loginProcessingUrl(LOGIN_PROCESSING_URL).successForwardUrl(LOGIN_SUCCESS_URL).failureUrl(LOGIN_FAILURE_URL)
+            // Configure the login page.
+            .and().formLogin().loginPage(LOGIN_URL).permitAll().loginProcessingUrl(LOGIN_PROCESSING_URL).successForwardUrl(LOGIN_SUCCESS_URL).failureUrl(LOGIN_FAILURE_URL)
 
-                // Configure logout
-                .and().logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL)
+            // Configure logout
+            .and().logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL)
 
-                // Remember Me
-                .and().rememberMe().key("7QPVkH83\\jA==BA`").alwaysRemember(true);
+            // Remember Me
+            .and().rememberMe().key("7QPVkH83\\jA==BA`").alwaysRemember(true);
     }
 
     /**
@@ -90,34 +90,34 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers(
-                // Vaadin Flow static resources
-                "/VAADIN/**",
+            // Vaadin Flow static resources
+            "/VAADIN/**",
 
-                // the standard favicon URI
-                "/favicon.ico",
+            // the standard favicon URI
+            "/favicon.ico",
 
-                // the robots exclusion standard
-                "/robots.txt",
+            // the robots exclusion standard
+            "/robots.txt",
 
-                // web application manifest
-                "/manifest.webmanifest",
-                "/sw.js",
-                "/offline-page.html",
+            // web application manifest
+            "/manifest.webmanifest",
+            "/sw.js",
+            "/offline-page.html",
 
-                // icons and images
-                "/icons/**",
-                "/images/**",
+            // icons and images
+            "/icons/**",
+            "/images/**",
 
-                // (development mode) static resources
-                "/frontend/**",
+            // (development mode) static resources
+            "/frontend/**",
 
-                // (development mode) webjars
-                "/webjars/**",
+            // (development mode) webjars
+            "/webjars/**",
 
-                // (development mode) H2 debugging console
-                "/h2-console/**",
+            // (development mode) H2 debugging console
+            "/h2-console/**",
 
-                // (production mode) static resources
-                "/frontend-es5/**", "/frontend-es6/**");
+            // (production mode) static resources
+            "/frontend-es5/**", "/frontend-es6/**");
     }
 }

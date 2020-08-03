@@ -1,17 +1,5 @@
 package ch.jtaf.reporting.report;
 
-import static com.lowagie.text.Element.ALIGN_BOTTOM;
-import static com.lowagie.text.Element.ALIGN_CENTER;
-import static com.lowagie.text.Element.ALIGN_RIGHT;
-import static com.lowagie.text.FontFactory.HELVETICA;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
-import org.slf4j.LoggerFactory;
-
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.FontFactory;
@@ -20,6 +8,17 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfWriter;
+import org.slf4j.LoggerFactory;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import static com.lowagie.text.Element.ALIGN_BOTTOM;
+import static com.lowagie.text.Element.ALIGN_CENTER;
+import static com.lowagie.text.Element.ALIGN_RIGHT;
+import static com.lowagie.text.FontFactory.HELVETICA;
 
 public abstract class AbstractReport {
 

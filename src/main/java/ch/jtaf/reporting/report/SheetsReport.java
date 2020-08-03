@@ -1,17 +1,8 @@
 package ch.jtaf.reporting.report;
 
-import static com.lowagie.text.Element.ALIGN_RIGHT;
-import static com.lowagie.text.PageSize.A5;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import ch.jtaf.model.EventType;
+import ch.jtaf.reporting.data.NumbersAndSheetsAthlete;
+import ch.jtaf.reporting.data.NumbersAndSheetsCompetition;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.FontFactory;
@@ -21,10 +12,17 @@ import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import ch.jtaf.model.EventType;
-import ch.jtaf.reporting.data.NumbersAndSheetsAthlete;
-import ch.jtaf.reporting.data.NumbersAndSheetsCompetition;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import static com.lowagie.text.Element.ALIGN_RIGHT;
+import static com.lowagie.text.PageSize.A5;
 
 public class SheetsReport extends AbstractReport {
 
@@ -162,7 +160,7 @@ public class SheetsReport extends AbstractReport {
         table.setSpacingAfter(cmToPixel(0.5f));
 
         addCompetitionCell(table, competition == null ? ""
-                : competition.getName() + " " + DATE_TIME_FORMATTER.format(competition.getCompetitionDate()));
+            : competition.getName() + " " + DATE_TIME_FORMATTER.format(competition.getCompetitionDate()));
 
         document.add(table);
     }
@@ -189,7 +187,7 @@ public class SheetsReport extends AbstractReport {
 
     protected void addCategoryCell(PdfPTable table, String text) {
         PdfPCell cell = new PdfPCell(
-                new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 80f)));
+            new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 80f)));
         cell.setBorder(0);
         cell.setHorizontalAlignment(ALIGN_RIGHT);
         table.addCell(cell);
@@ -197,14 +195,14 @@ public class SheetsReport extends AbstractReport {
 
     private void addCompetitionCell(PdfPTable table, String text) {
         PdfPCell cell = new PdfPCell(
-                new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA_BOLD, FONT_SIZE_TEXT)));
+            new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA_BOLD, FONT_SIZE_TEXT)));
         cell.setBorder(0);
         table.addCell(cell);
     }
 
     private void addInfoCell(PdfPTable table, String text) {
         PdfPCell cell = new PdfPCell(
-                new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE_TEXT)));
+            new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE_TEXT)));
         cell.setBorder(0);
         cell.setMinimumHeight(INFO_LINE_HEIGHT);
         table.addCell(cell);
@@ -212,7 +210,7 @@ public class SheetsReport extends AbstractReport {
 
     private void addInfoCellWithColspan(PdfPTable table, String text, int colspan) {
         PdfPCell cell = new PdfPCell(
-                new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE_TEXT)));
+            new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE_TEXT)));
         cell.setBorder(0);
         cell.setColspan(colspan);
         cell.setMinimumHeight(INFO_LINE_HEIGHT);
@@ -221,7 +219,7 @@ public class SheetsReport extends AbstractReport {
 
     private void addInfoCellWithBorder(PdfPTable table, String text) {
         PdfPCell cell = new PdfPCell(
-                new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE_INFO)));
+            new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE_INFO)));
         cell.setMinimumHeight(INFO_LINE_HEIGHT);
         cell.setBorderWidth(1);
         table.addCell(cell);

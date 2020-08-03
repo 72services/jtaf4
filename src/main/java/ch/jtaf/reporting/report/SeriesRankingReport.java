@@ -1,24 +1,22 @@
 package ch.jtaf.reporting.report;
 
-import static com.lowagie.text.PageSize.A4;
+import ch.jtaf.reporting.data.SeriesRankingAthlete;
+import ch.jtaf.reporting.data.SeriesRankingCategory;
+import ch.jtaf.reporting.data.SeriesRankingData;
+import ch.jtaf.reporting.data.SeriesRankingResult;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
-
-import ch.jtaf.reporting.data.SeriesRankingAthlete;
-import ch.jtaf.reporting.data.SeriesRankingCategory;
-import ch.jtaf.reporting.data.SeriesRankingData;
-import ch.jtaf.reporting.data.SeriesRankingResult;
+import static com.lowagie.text.PageSize.A4;
 
 public class SeriesRankingReport extends RankingReport {
 
@@ -39,7 +37,7 @@ public class SeriesRankingReport extends RankingReport {
                 document = new Document(A4);
                 PdfWriter pdfWriter = PdfWriter.getInstance(document, baos);
                 pdfWriter.setPageEvent(new HeaderFooter(
-                        messages.getString("Series.Ranking"), ranking.getName(), ""));
+                    messages.getString("Series.Ranking"), ranking.getName(), ""));
                 document.open();
 
                 createRanking();
@@ -89,7 +87,7 @@ public class SeriesRankingReport extends RankingReport {
     private void createCategoryTitle(PdfPTable table, SeriesRankingCategory category) {
         addCategoryTitleCellWithColspan(table, category.getAbbreviation(), 1);
         addCategoryTitleCellWithColspan(table, category.getName() + " "
-                + category.getYearFrom() + " - " + category.getYearTo(), 5);
+            + category.getYearFrom() + " - " + category.getYearTo(), 5);
 
         addCategoryTitleCellWithColspan(table, " ", 6);
     }
