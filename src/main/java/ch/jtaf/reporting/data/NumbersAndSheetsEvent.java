@@ -1,6 +1,6 @@
 package ch.jtaf.reporting.data;
 
-public class NumbersAndSheetsEvent  {
+public class NumbersAndSheetsEvent {
 
     private final String abbreviation;
     private final String name;

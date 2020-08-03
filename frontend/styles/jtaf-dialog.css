@@ -1,0 +1,66 @@
+[theme~="jtaf-dialog"] flow-component-renderer > div {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* HEADER */
+[theme~="jtaf-dialog"] header {
+    align-items: center;
+    display: flex;
+    padding: var(--lumo-space-xs) var(--lumo-space-m);
+
+    background-color: var(--_lumo-button-background-color, var(--lumo-contrast-5pct));
+}
+
+[theme~="jtaf-dialog"] header .dialog-title {
+    font-size: var(--lumo-font-size-m);
+    margin: 0 auto 0 0;
+}
+
+[theme~="jtaf-dialog"] header vaadin-button:not(:last-child) {
+    margin-right: var(--lumo-space-xs);
+}
+
+/* CONTENT */
+[theme~="jtaf-dialog"] .dialog-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: auto;
+    padding: 0 var(--lumo-space-m) var(--lumo-space-l) var(--lumo-space-m);
+}
+
+[theme~="jtaf-dialog"] vaadin-text-field,
+[theme~="jtaf-dialog"] vaadin-text-area {
+    padding: var(--lumo-space-l) 0 0 0;
+}
+
+/* FOOTER */
+[theme~="jtaf-dialog"] footer {
+    box-shadow: 0 -1px var(--lumo-contrast-20pct);
+    display: flex;
+    padding: var(--lumo-space-xs) var(--lumo-space-m);
+    z-index: 1;
+}
+
+[theme~="jtaf-dialog"] footer vaadin-button:not(:last-child) {
+    margin-right: var(--lumo-space-xs);
+}
+
+[theme~="jtaf-dialog"] footer vaadin-button:last-child {
+    margin-left: auto;
+}
+
+/* DRAGGABLE and RESIZABLE */
+[theme~="jtaf-dialog"] header,
+[theme~="jtaf-dialog"] .dialog-content,
+[theme~="jtaf-dialog"] footer {
+    pointer-events: none;
+}
+
+[theme~="jtaf-dialog"] header *,
+[theme~="jtaf-dialog"] .dialog-content *,
+[theme~="jtaf-dialog"] footer * {
+    pointer-events: auto;
+}

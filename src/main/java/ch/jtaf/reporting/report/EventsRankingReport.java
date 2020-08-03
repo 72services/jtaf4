@@ -3,10 +3,10 @@ package ch.jtaf.reporting.report;
 import ch.jtaf.reporting.data.EventsRankingData;
 import ch.jtaf.reporting.data.EventsRankingEvent;
 import ch.jtaf.reporting.data.EventsRankingResult;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.itextpdf.text.PageSize.A4;
+import static com.lowagie.text.PageSize.A4;
 
 public class EventsRankingReport extends RankingReport {
 
@@ -37,8 +37,8 @@ public class EventsRankingReport extends RankingReport {
                 float border = cmToPixel(1.5f);
                 document = new Document(A4, border, border, border, border);
                 PdfWriter pdfWriter = PdfWriter.getInstance(document, baos);
-                pdfWriter.setPageEvent(new HeaderFooter(messages.getString("event.ranking"), ranking.getName(),
-                        DATE_TIME_FORMATTER.format(ranking.getCompetitionDate())));
+                pdfWriter.setPageEvent(new HeaderFooter(messages.getString("Event.Ranking"), ranking.getName(),
+                    DATE_TIME_FORMATTER.format(ranking.getCompetitionDate())));
                 document.open();
                 createRanking();
                 document.close();
@@ -53,7 +53,7 @@ public class EventsRankingReport extends RankingReport {
         }
     }
 
-    private void createRanking() throws DocumentException {
+    private void createRanking() {
         for (EventsRankingEvent event : ranking.getEvents()) {
             PdfPTable table = new PdfPTable(new float[]{2f, 10f, 10f, 2f, 2f, 5f, 5f});
             table.setWidthPercentage(100);

@@ -4,11 +4,11 @@ import ch.jtaf.reporting.data.CompetitionRankingAthlete;
 import ch.jtaf.reporting.data.CompetitionRankingCategory;
 import ch.jtaf.reporting.data.CompetitionRankingData;
 import ch.jtaf.reporting.data.CompetitionRankingResult;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,9 +36,8 @@ public class CompetitionRankingReport extends RankingReport {
                 float border = cmToPixel(1.5f);
                 document = new Document(PageSize.A4, border, border, border, border);
                 PdfWriter pdfWriter = PdfWriter.getInstance(document, baos);
-                pdfWriter.setPageEvent(new HeaderFooter(
-                        messages.getString("ranking"),
-                        ranking.getName(), DATE_TIME_FORMATTER.format(ranking.getCompetitionDate())));
+                pdfWriter.setPageEvent(new HeaderFooter(messages.getString("Competition.Ranking"), ranking.getName(),
+                    DATE_TIME_FORMATTER.format(ranking.getCompetitionDate())));
                 document.open();
 
                 createRanking();
@@ -55,7 +54,7 @@ public class CompetitionRankingReport extends RankingReport {
         }
     }
 
-    private void createRanking() throws DocumentException {
+    private void createRanking() {
         for (CompetitionRankingCategory category : ranking.getCategories()) {
             if (numberOfRows > 20) {
                 document.newPage();
@@ -100,8 +99,8 @@ public class CompetitionRankingReport extends RankingReport {
 
     private void createCategoryTitle(PdfPTable table, CompetitionRankingCategory category) {
         addCategoryTitleCellWithColspan(table, category.getAbbreviation(), 1);
-        addCategoryTitleCellWithColspan(table, category.getName() + " "
-                + category.getYearFrom() + " - " + category.getYearTo(), 5);
+        addCategoryTitleCellWithColspan(table,
+            category.getName() + " " + category.getYearFrom() + " - " + category.getYearTo(), 5);
 
         addCategoryTitleCellWithColspan(table, " ", 6);
     }

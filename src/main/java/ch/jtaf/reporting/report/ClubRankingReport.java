@@ -2,10 +2,10 @@ package ch.jtaf.reporting.report;
 
 import ch.jtaf.reporting.data.ClubRankingData;
 import ch.jtaf.reporting.data.ClubResultData;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.itextpdf.text.PageSize.A4;
+import static com.lowagie.text.PageSize.A4;
 
 public class ClubRankingReport extends RankingReport {
 
@@ -35,7 +35,8 @@ public class ClubRankingReport extends RankingReport {
                 document = new Document(A4, border, border, border, border);
 
                 var pdfWriter = PdfWriter.getInstance(document, baos);
-                pdfWriter.setPageEvent(new HeaderFooter(messages.getString("club.ranking"), ranking.getSeriesName(), ""));
+                pdfWriter.setPageEvent(
+                    new HeaderFooter(messages.getString("Club.Ranking"), ranking.getSeriesName(), ""));
 
                 document.open();
 
@@ -52,7 +53,7 @@ public class ClubRankingReport extends RankingReport {
         }
     }
 
-    private void createRanking() throws DocumentException {
+    private void createRanking() {
         var table = new PdfPTable(new float[]{2f, 10f, 10f});
         table.setWidthPercentage(100f);
         table.setSpacingBefore(1f);

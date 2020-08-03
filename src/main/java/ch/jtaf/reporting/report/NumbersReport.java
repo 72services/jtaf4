@@ -1,13 +1,13 @@
 package ch.jtaf.reporting.report;
 
 import ch.jtaf.reporting.data.NumbersAndSheetsAthlete;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,10 +16,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import static com.itextpdf.text.Element.ALIGN_CENTER;
-import static com.itextpdf.text.Element.ALIGN_MIDDLE;
-import static com.itextpdf.text.FontFactory.HELVETICA;
-import static com.itextpdf.text.PageSize.A4;
+import static com.lowagie.text.Element.ALIGN_CENTER;
+import static com.lowagie.text.Element.ALIGN_MIDDLE;
+import static com.lowagie.text.FontFactory.HELVETICA;
+import static com.lowagie.text.PageSize.A4;
 
 public class NumbersReport extends AbstractReport {
 
@@ -89,8 +89,8 @@ public class NumbersReport extends AbstractReport {
         atable.setWidthPercentage(100);
 
         PdfPCell cellId = new PdfPCell(
-                new Phrase(number + "",
-                        FontFactory.getFont(HELVETICA, FONT_SIZE_TEXT)));
+            new Phrase(number + "",
+                FontFactory.getFont(HELVETICA, FONT_SIZE_TEXT)));
         cellId.setBorder(0);
         cellId.setMinimumHeight(cmToPixel(2.5f));
         cellId.setHorizontalAlignment(ALIGN_CENTER);

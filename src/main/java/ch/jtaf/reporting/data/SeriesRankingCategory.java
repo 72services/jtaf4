@@ -28,9 +28,9 @@ public class SeriesRankingCategory {
 
     public List<SeriesRankingAthlete> getAthletes() {
         List<SeriesRankingAthlete> filteredAthletes = athletes.stream()
-                .filter(seriesRankingAthlete -> seriesRankingAthlete.getResults().size() == numberOfCompetitions)
-                .sorted((o1, o2) -> compare(o2.getTotalPoints(), o1.getTotalPoints()))
-                .collect(toList());
+            .filter(seriesRankingAthlete -> seriesRankingAthlete.getResults().size() == numberOfCompetitions)
+            .sorted((o1, o2) -> compare(o2.getTotalPoints(), o1.getTotalPoints()))
+            .collect(toList());
 
         int i = 0;
         for (SeriesRankingAthlete athlete : filteredAthletes) {

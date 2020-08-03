@@ -55,39 +55,39 @@ public class CompetitionRankingService {
 
     public CompetitionRankingData getCompetitionRanking(Long competitionId) {
         var competition = dsl
-                .select(COMPETITION.NAME, COMPETITION.COMPETITION_DATE, COMPETITION.ALWAYS_FIRST_THREE_MEDALS, COMPETITION.MEDAL_PERCENTAGE)
-                .from(COMPETITION)
-                .where(COMPETITION.ID.eq(competitionId))
-                .fetchOne();
+            .select(COMPETITION.NAME, COMPETITION.COMPETITION_DATE, COMPETITION.ALWAYS_FIRST_THREE_MEDALS, COMPETITION.MEDAL_PERCENTAGE)
+            .from(COMPETITION)
+            .where(COMPETITION.ID.eq(competitionId))
+            .fetchOne();
 
         var competitionRanking = new CompetitionRankingData(
-                competition.get(COMPETITION.NAME), competition.get(COMPETITION.COMPETITION_DATE),
-                competition.get(COMPETITION.ALWAYS_FIRST_THREE_MEDALS), competition.get(COMPETITION.MEDAL_PERCENTAGE));
+            competition.get(COMPETITION.NAME), competition.get(COMPETITION.COMPETITION_DATE),
+            competition.get(COMPETITION.ALWAYS_FIRST_THREE_MEDALS), competition.get(COMPETITION.MEDAL_PERCENTAGE));
 
         var results = dsl.
-                selectDistinct(
-                        CATEGORY.ID, CATEGORY.ABBREVIATION, CATEGORY.NAME, CATEGORY.YEAR_FROM, CATEGORY.YEAR_TO,
-                        ATHLETE.ID, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME, ATHLETE.YEAR_OF_BIRTH,
-                        ATHLETE.CLUB_ID,
-                        EVENT.ABBREVIATION,
-                        RESULT.RESULT_,
-                        RESULT.POINTS,
-                        RESULT.POSITION
-                )
-                .from(COMPETITION, CATEGORY, CATEGORY_ATHLETE, ATHLETE, CATEGORY_EVENT, EVENT, RESULT)
-                .where(COMPETITION.ID.eq(competitionId))
-                .and(CATEGORY.SERIES_ID.eq(COMPETITION.SERIES_ID))
-                .and(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
-                .and(CATEGORY_ATHLETE.CATEGORY_ID.eq(CATEGORY.ID))
-                .and(CATEGORY.ID.eq(CATEGORY_EVENT.CATEGORY_ID))
-                .and(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
-                .and(CATEGORY_EVENT.EVENT_ID.eq(EVENT.ID))
-                .and(RESULT.COMPETITION_ID.eq(COMPETITION.ID))
-                .and(RESULT.CATEGORY_ID.eq(CATEGORY.ID))
-                .and(RESULT.ATHLETE_ID.eq(ATHLETE.ID))
-                .and(EVENT.ID.eq(RESULT.EVENT_ID))
-                .orderBy(CATEGORY.ABBREVIATION, ATHLETE.ID)
-                .fetch();
+            selectDistinct(
+                CATEGORY.ID, CATEGORY.ABBREVIATION, CATEGORY.NAME, CATEGORY.YEAR_FROM, CATEGORY.YEAR_TO,
+                ATHLETE.ID, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME, ATHLETE.YEAR_OF_BIRTH,
+                ATHLETE.CLUB_ID,
+                EVENT.ABBREVIATION,
+                RESULT.RESULT_,
+                RESULT.POINTS,
+                RESULT.POSITION
+            )
+            .from(COMPETITION, CATEGORY, CATEGORY_ATHLETE, ATHLETE, CATEGORY_EVENT, EVENT, RESULT)
+            .where(COMPETITION.ID.eq(competitionId))
+            .and(CATEGORY.SERIES_ID.eq(COMPETITION.SERIES_ID))
+            .and(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
+            .and(CATEGORY_ATHLETE.CATEGORY_ID.eq(CATEGORY.ID))
+            .and(CATEGORY.ID.eq(CATEGORY_EVENT.CATEGORY_ID))
+            .and(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
+            .and(CATEGORY_EVENT.EVENT_ID.eq(EVENT.ID))
+            .and(RESULT.COMPETITION_ID.eq(COMPETITION.ID))
+            .and(RESULT.CATEGORY_ID.eq(CATEGORY.ID))
+            .and(RESULT.ATHLETE_ID.eq(ATHLETE.ID))
+            .and(EVENT.ID.eq(RESULT.EVENT_ID))
+            .orderBy(CATEGORY.ABBREVIATION, ATHLETE.ID)
+            .fetch();
 
         competitionRanking.getCategories().addAll(getCategories(results));
 
@@ -96,35 +96,35 @@ public class CompetitionRankingService {
 
     public EventsRankingData getEventsRanking(Long competitionId) {
         var competition = dsl
-                .select(COMPETITION.NAME, COMPETITION.COMPETITION_DATE)
-                .from(COMPETITION)
-                .where(COMPETITION.ID.eq(competitionId))
-                .fetchOne();
+            .select(COMPETITION.NAME, COMPETITION.COMPETITION_DATE)
+            .from(COMPETITION)
+            .where(COMPETITION.ID.eq(competitionId))
+            .fetchOne();
 
         var eventsRanking = new EventsRankingData(competition.get(COMPETITION.NAME), competition.get(COMPETITION.COMPETITION_DATE));
 
         var results = dsl.
-                selectDistinct(
-                        ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME, ATHLETE.YEAR_OF_BIRTH,
-                        CATEGORY.ABBREVIATION,
-                        ATHLETE.CLUB_ID,
-                        EVENT.ABBREVIATION, EVENT.GENDER, EVENT.EVENT_TYPE,
-                        RESULT.RESULT_
-                )
-                .from(COMPETITION, CATEGORY, CATEGORY_ATHLETE, ATHLETE, CATEGORY_EVENT, EVENT, RESULT)
-                .where(COMPETITION.ID.eq(competitionId))
-                .and(CATEGORY.SERIES_ID.eq(COMPETITION.SERIES_ID))
-                .and(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
-                .and(CATEGORY_ATHLETE.CATEGORY_ID.eq(CATEGORY.ID))
-                .and(CATEGORY.ID.eq(CATEGORY_EVENT.CATEGORY_ID))
-                .and(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
-                .and(CATEGORY_EVENT.EVENT_ID.eq(EVENT.ID))
-                .and(RESULT.COMPETITION_ID.eq(COMPETITION.ID))
-                .and(RESULT.CATEGORY_ID.eq(CATEGORY.ID))
-                .and(RESULT.ATHLETE_ID.eq(ATHLETE.ID))
-                .and(EVENT.ID.eq(RESULT.EVENT_ID))
-                .orderBy(EVENT.ABBREVIATION, EVENT.GENDER)
-                .fetch();
+            selectDistinct(
+                ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME, ATHLETE.YEAR_OF_BIRTH,
+                CATEGORY.ABBREVIATION,
+                ATHLETE.CLUB_ID,
+                EVENT.ABBREVIATION, EVENT.GENDER, EVENT.EVENT_TYPE,
+                RESULT.RESULT_
+            )
+            .from(COMPETITION, CATEGORY, CATEGORY_ATHLETE, ATHLETE, CATEGORY_EVENT, EVENT, RESULT)
+            .where(COMPETITION.ID.eq(competitionId))
+            .and(CATEGORY.SERIES_ID.eq(COMPETITION.SERIES_ID))
+            .and(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
+            .and(CATEGORY_ATHLETE.CATEGORY_ID.eq(CATEGORY.ID))
+            .and(CATEGORY.ID.eq(CATEGORY_EVENT.CATEGORY_ID))
+            .and(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
+            .and(CATEGORY_EVENT.EVENT_ID.eq(EVENT.ID))
+            .and(RESULT.COMPETITION_ID.eq(COMPETITION.ID))
+            .and(RESULT.CATEGORY_ID.eq(CATEGORY.ID))
+            .and(RESULT.ATHLETE_ID.eq(ATHLETE.ID))
+            .and(EVENT.ID.eq(RESULT.EVENT_ID))
+            .orderBy(EVENT.ABBREVIATION, EVENT.GENDER)
+            .fetch();
 
         eventsRanking.getEvents().addAll(getEvents(results));
 
@@ -140,18 +140,18 @@ public class CompetitionRankingService {
         for (var result : results) {
             if (category == null || !category.getId().equals(result.get(CATEGORY.ID))) {
                 category = new CompetitionRankingCategory(result.get(CATEGORY.ID), result.get(CATEGORY.ABBREVIATION),
-                        result.get(CATEGORY.NAME), result.get(CATEGORY.YEAR_FROM), result.get(CATEGORY.YEAR_TO));
+                    result.get(CATEGORY.NAME), result.get(CATEGORY.YEAR_FROM), result.get(CATEGORY.YEAR_TO));
                 categories.add(category);
             }
 
             if (athlete == null || !athlete.getId().equals(result.get(ATHLETE.ID))) {
                 athlete = new CompetitionRankingAthlete(result.get(ATHLETE.ID), result.get(ATHLETE.FIRST_NAME),
-                        result.get(ATHLETE.LAST_NAME), result.get(ATHLETE.YEAR_OF_BIRTH), result.get(ATHLETE.CLUB_ID));
+                    result.get(ATHLETE.LAST_NAME), result.get(ATHLETE.YEAR_OF_BIRTH), result.get(ATHLETE.CLUB_ID));
                 category.addAthlete(athlete);
             }
 
             CompetitionRankingResult competitionRankingResult = new CompetitionRankingResult(result.get(EVENT.ABBREVIATION),
-                    result.get(RESULT.RESULT_), result.get(RESULT.POINTS), result.get(RESULT.POSITION));
+                result.get(RESULT.RESULT_), result.get(RESULT.POINTS), result.get(RESULT.POSITION));
             athlete.addResult(competitionRankingResult);
         }
 
@@ -160,11 +160,11 @@ public class CompetitionRankingService {
 
     private byte[] getLogo(Long competitionId) {
         var logoRecord = dsl
-                .select(SERIES.LOGO)
-                .from(SERIES)
-                .join(COMPETITION).on(COMPETITION.SERIES_ID.eq(SERIES.ID))
-                .where(COMPETITION.ID.eq(competitionId))
-                .fetchOne();
+            .select(SERIES.LOGO)
+            .from(SERIES)
+            .join(COMPETITION).on(COMPETITION.SERIES_ID.eq(SERIES.ID))
+            .where(COMPETITION.ID.eq(competitionId))
+            .fetchOne();
         return logoRecord.get(SERIES.LOGO);
     }
 
@@ -175,14 +175,14 @@ public class CompetitionRankingService {
 
         for (var record : records) {
             if (event == null
-                    || (!event.getAbbreviation().equals(record.get(EVENT.ABBREVIATION))
-                    && !event.getAbbreviation().equals(record.get(EVENT.GENDER)))) {
+                || (!event.getAbbreviation().equals(record.get(EVENT.ABBREVIATION))
+                && !event.getAbbreviation().equals(record.get(EVENT.GENDER)))) {
                 event = new EventsRankingEvent(record.get(EVENT.ABBREVIATION), record.get(EVENT.GENDER));
                 events.add(event);
             }
             EventsRankingResult result = new EventsRankingResult(record.get(ATHLETE.FIRST_NAME), record.get(ATHLETE.LAST_NAME),
-                    record.get(ATHLETE.YEAR_OF_BIRTH), record.get(CATEGORY.ABBREVIATION), record.get(ATHLETE.CLUB_ID),
-                    record.get(EVENT.ABBREVIATION), record.get(EVENT.EVENT_TYPE), record.get(RESULT.RESULT_));
+                record.get(ATHLETE.YEAR_OF_BIRTH), record.get(CATEGORY.ABBREVIATION), record.get(ATHLETE.CLUB_ID),
+                record.get(EVENT.ABBREVIATION), record.get(EVENT.EVENT_TYPE), record.get(RESULT.RESULT_));
             event.getResults().add(result);
         }
 
@@ -191,9 +191,9 @@ public class CompetitionRankingService {
 
     private Map<Long, String> getClubs() {
         return dsl.
-                select(CLUB.ID, CLUB.ABBREVIATION)
-                .from(CLUB)
-                .stream()
-                .collect(toMap(club -> club.get(CLUB.ID), club -> club.get(CLUB.ABBREVIATION)));
+            select(CLUB.ID, CLUB.ABBREVIATION)
+            .from(CLUB)
+            .stream()
+            .collect(toMap(club -> club.get(CLUB.ID), club -> club.get(CLUB.ABBREVIATION)));
     }
 }

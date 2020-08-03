@@ -1,4 +1,4 @@
-package ch.jtaf.ui;
+package ch.jtaf.ui.component;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Tag;
@@ -13,6 +13,8 @@ import static com.vaadin.flow.component.Tag.DIV;
 
 @Tag(DIV)
 public class RouteNotFoundError extends Component implements HasErrorParameter<NotFoundException> {
+
+    private static final long serialVersionUID = 1L;
 
     @Override
     public int setErrorParameter(BeforeEnterEvent event, ErrorParameter<NotFoundException> parameter) {

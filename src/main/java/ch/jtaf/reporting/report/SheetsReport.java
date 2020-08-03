@@ -3,15 +3,15 @@ package ch.jtaf.reporting.report;
 import ch.jtaf.model.EventType;
 import ch.jtaf.reporting.data.NumbersAndSheetsAthlete;
 import ch.jtaf.reporting.data.NumbersAndSheetsCompetition;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.Image;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static com.itextpdf.text.Element.ALIGN_RIGHT;
-import static com.itextpdf.text.PageSize.A5;
+import static com.lowagie.text.Element.ALIGN_RIGHT;
+import static com.lowagie.text.PageSize.A5;
 
 public class SheetsReport extends AbstractReport {
 
@@ -126,23 +126,23 @@ public class SheetsReport extends AbstractReport {
             addCell(table, " ");
         }
         if (athlete.getLastName() == null) {
-            addInfoCellWithBorder(table, messages.getString("last.name"));
+            addInfoCellWithBorder(table, messages.getString("Last.Name"));
         } else {
             addInfoCell(table, athlete.getLastName());
         }
         if (athlete.getFirstName() == null) {
-            addInfoCellWithBorder(table, messages.getString("first.name"));
+            addInfoCellWithBorder(table, messages.getString("First.Name"));
         } else {
             addInfoCell(table, athlete.getFirstName());
         }
         if (athlete.getYearOfBirth() == 0) {
-            addInfoCellWithBorder(table, messages.getString("year"));
+            addInfoCellWithBorder(table, messages.getString("Year"));
         } else {
             addInfoCell(table, athlete.getYearOfBirth() + "");
         }
         if (athlete.getClub() == null) {
             if (athlete.getId() == null) {
-                addInfoCellWithBorder(table, messages.getString("club"));
+                addInfoCellWithBorder(table, messages.getString("Club"));
             } else {
                 addInfoCell(table, "");
             }
@@ -160,7 +160,7 @@ public class SheetsReport extends AbstractReport {
         table.setSpacingAfter(cmToPixel(0.5f));
 
         addCompetitionCell(table, competition == null ? ""
-                : competition.getName() + " " + DATE_TIME_FORMATTER.format(competition.getCompetitionDate()));
+            : competition.getName() + " " + DATE_TIME_FORMATTER.format(competition.getCompetitionDate()));
 
         document.add(table);
     }
@@ -187,7 +187,7 @@ public class SheetsReport extends AbstractReport {
 
     protected void addCategoryCell(PdfPTable table, String text) {
         PdfPCell cell = new PdfPCell(
-                new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 80f)));
+            new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 80f)));
         cell.setBorder(0);
         cell.setHorizontalAlignment(ALIGN_RIGHT);
         table.addCell(cell);
@@ -195,14 +195,14 @@ public class SheetsReport extends AbstractReport {
 
     private void addCompetitionCell(PdfPTable table, String text) {
         PdfPCell cell = new PdfPCell(
-                new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA_BOLD, FONT_SIZE_TEXT)));
+            new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA_BOLD, FONT_SIZE_TEXT)));
         cell.setBorder(0);
         table.addCell(cell);
     }
 
     private void addInfoCell(PdfPTable table, String text) {
         PdfPCell cell = new PdfPCell(
-                new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE_TEXT)));
+            new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE_TEXT)));
         cell.setBorder(0);
         cell.setMinimumHeight(INFO_LINE_HEIGHT);
         table.addCell(cell);
@@ -210,7 +210,7 @@ public class SheetsReport extends AbstractReport {
 
     private void addInfoCellWithColspan(PdfPTable table, String text, int colspan) {
         PdfPCell cell = new PdfPCell(
-                new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE_TEXT)));
+            new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE_TEXT)));
         cell.setBorder(0);
         cell.setColspan(colspan);
         cell.setMinimumHeight(INFO_LINE_HEIGHT);
@@ -219,7 +219,7 @@ public class SheetsReport extends AbstractReport {
 
     private void addInfoCellWithBorder(PdfPTable table, String text) {
         PdfPCell cell = new PdfPCell(
-                new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE_INFO)));
+            new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE_INFO)));
         cell.setMinimumHeight(INFO_LINE_HEIGHT);
         cell.setBorderWidth(1);
         table.addCell(cell);

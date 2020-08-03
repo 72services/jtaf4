@@ -51,39 +51,39 @@ public class SeriesRankingService {
 
     public SeriesRankingData getSeriesRanking(Long seriesId) {
         var series = dsl
-                .select(SERIES.ID, SERIES.NAME, count(COMPETITION.ID))
-                .from(SERIES)
-                .join(COMPETITION).on(COMPETITION.SERIES_ID.eq(SERIES.ID))
-                .where(SERIES.ID.eq(seriesId))
-                .groupBy(SERIES.ID, SERIES.NAME)
-                .fetchOne();
+            .select(SERIES.ID, SERIES.NAME, count(COMPETITION.ID))
+            .from(SERIES)
+            .join(COMPETITION).on(COMPETITION.SERIES_ID.eq(SERIES.ID))
+            .where(SERIES.ID.eq(seriesId))
+            .groupBy(SERIES.ID, SERIES.NAME)
+            .fetchOne();
 
         var seriesRanking = new SeriesRankingData(series.get(SERIES.NAME), series.get(count(COMPETITION.ID)));
 
         var results = dsl.
-                select(
-                        CATEGORY.ID, CATEGORY.ABBREVIATION, CATEGORY.NAME, CATEGORY.YEAR_FROM, CATEGORY.YEAR_TO,
-                        ATHLETE.ID, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME, ATHLETE.YEAR_OF_BIRTH,
-                        ATHLETE.CLUB_ID,
-                        COMPETITION.ID, COMPETITION.NAME, COMPETITION.COMPETITION_DATE,
-                        sum(RESULT.POINTS)
-                )
-                .from(COMPETITION, CATEGORY, CATEGORY_ATHLETE, ATHLETE, CATEGORY_EVENT, EVENT, RESULT)
-                .where(COMPETITION.SERIES_ID.eq(seriesId))
-                .and(CATEGORY.SERIES_ID.eq(COMPETITION.SERIES_ID))
-                .and(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
-                .and(CATEGORY_ATHLETE.CATEGORY_ID.eq(CATEGORY.ID))
-                .and(CATEGORY.ID.eq(CATEGORY_EVENT.CATEGORY_ID))
-                .and(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
-                .and(CATEGORY_EVENT.EVENT_ID.eq(EVENT.ID))
-                .and(RESULT.COMPETITION_ID.eq(COMPETITION.ID))
-                .and(RESULT.CATEGORY_ID.eq(CATEGORY.ID))
-                .and(RESULT.ATHLETE_ID.eq(ATHLETE.ID))
-                .and(EVENT.ID.eq(RESULT.EVENT_ID))
-                .groupBy(CATEGORY.ID, ATHLETE.ID, COMPETITION.ID)
-                .having(sum(RESULT.POINTS).gt(ZERO))
-                .orderBy(CATEGORY.ID, ATHLETE.ID, COMPETITION.ID)
-                .fetch();
+            select(
+                CATEGORY.ID, CATEGORY.ABBREVIATION, CATEGORY.NAME, CATEGORY.YEAR_FROM, CATEGORY.YEAR_TO,
+                ATHLETE.ID, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME, ATHLETE.YEAR_OF_BIRTH,
+                ATHLETE.CLUB_ID,
+                COMPETITION.ID, COMPETITION.NAME, COMPETITION.COMPETITION_DATE,
+                sum(RESULT.POINTS)
+            )
+            .from(COMPETITION, CATEGORY, CATEGORY_ATHLETE, ATHLETE, CATEGORY_EVENT, EVENT, RESULT)
+            .where(COMPETITION.SERIES_ID.eq(seriesId))
+            .and(CATEGORY.SERIES_ID.eq(COMPETITION.SERIES_ID))
+            .and(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
+            .and(CATEGORY_ATHLETE.CATEGORY_ID.eq(CATEGORY.ID))
+            .and(CATEGORY.ID.eq(CATEGORY_EVENT.CATEGORY_ID))
+            .and(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
+            .and(CATEGORY_EVENT.EVENT_ID.eq(EVENT.ID))
+            .and(RESULT.COMPETITION_ID.eq(COMPETITION.ID))
+            .and(RESULT.CATEGORY_ID.eq(CATEGORY.ID))
+            .and(RESULT.ATHLETE_ID.eq(ATHLETE.ID))
+            .and(EVENT.ID.eq(RESULT.EVENT_ID))
+            .groupBy(CATEGORY.ID, ATHLETE.ID, COMPETITION.ID)
+            .having(sum(RESULT.POINTS).gt(ZERO))
+            .orderBy(CATEGORY.ID, ATHLETE.ID, COMPETITION.ID)
+            .fetch();
 
         seriesRanking.getCategories().addAll(getCategories(seriesRanking, results));
 
@@ -96,25 +96,25 @@ public class SeriesRankingService {
 
     public ClubRankingData getClubRanking(Long seriesId) {
         var series = dsl
-                .select(SERIES.NAME)
-                .from(SERIES)
-                .where(SERIES.ID.eq(seriesId))
-                .fetchOne();
+            .select(SERIES.NAME)
+            .from(SERIES)
+            .where(SERIES.ID.eq(seriesId))
+            .fetchOne();
 
         var clubRanking = new ClubRankingData(series.get(SERIES.NAME));
 
         var results = dsl.
-                select(CLUB.NAME, sum(RESULT.POINTS))
-                .from(RESULT, COMPETITION, EVENT, CATEGORY_EVENT, CATEGORY, ATHLETE)
-                .leftOuterJoin(CLUB).on(CLUB.ID.eq(ATHLETE.CLUB_ID))
-                .where(COMPETITION.SERIES_ID.eq(seriesId))
-                .and(COMPETITION.ID.eq(RESULT.COMPETITION_ID))
-                .and(EVENT.ID.eq(RESULT.EVENT_ID))
-                .and(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID)).and(CATEGORY_EVENT.EVENT_ID.eq(EVENT.ID))
-                .and(CATEGORY.ID.eq(CATEGORY_EVENT.CATEGORY_ID))
-                .and(ATHLETE.ID.eq(RESULT.ATHLETE_ID))
-                .groupBy(CLUB.NAME)
-                .fetch();
+            select(CLUB.NAME, sum(RESULT.POINTS))
+            .from(RESULT, COMPETITION, EVENT, CATEGORY_EVENT, CATEGORY, ATHLETE)
+            .leftOuterJoin(CLUB).on(CLUB.ID.eq(ATHLETE.CLUB_ID))
+            .where(COMPETITION.SERIES_ID.eq(seriesId))
+            .and(COMPETITION.ID.eq(RESULT.COMPETITION_ID))
+            .and(EVENT.ID.eq(RESULT.EVENT_ID))
+            .and(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID)).and(CATEGORY_EVENT.EVENT_ID.eq(EVENT.ID))
+            .and(CATEGORY.ID.eq(CATEGORY_EVENT.CATEGORY_ID))
+            .and(ATHLETE.ID.eq(RESULT.ATHLETE_ID))
+            .groupBy(CLUB.NAME)
+            .fetch();
 
         clubRanking.getResults().addAll(getResults(results));
 
@@ -131,14 +131,14 @@ public class SeriesRankingService {
         for (var record : records) {
             if (category == null || !category.getId().equals(record.get(CATEGORY.ID))) {
                 category = new SeriesRankingCategory(record.get(CATEGORY.ID), record.get(CATEGORY.ABBREVIATION),
-                        record.get(CATEGORY.NAME), record.get(CATEGORY.YEAR_FROM), record.get(CATEGORY.YEAR_TO),
-                        seriesRankingData.getNumberOfCompetitions());
+                    record.get(CATEGORY.NAME), record.get(CATEGORY.YEAR_FROM), record.get(CATEGORY.YEAR_TO),
+                    seriesRankingData.getNumberOfCompetitions());
                 categories.add(category);
             }
 
             if (athlete == null || !athlete.getId().equals(record.get(ATHLETE.ID))) {
                 athlete = new SeriesRankingAthlete(record.get(ATHLETE.ID), record.get(ATHLETE.FIRST_NAME),
-                        record.get(ATHLETE.LAST_NAME), record.get(ATHLETE.YEAR_OF_BIRTH), record.get(ATHLETE.CLUB_ID));
+                    record.get(ATHLETE.LAST_NAME), record.get(ATHLETE.YEAR_OF_BIRTH), record.get(ATHLETE.CLUB_ID));
                 category.addAthlete(athlete);
             }
 
@@ -146,7 +146,7 @@ public class SeriesRankingService {
                 result.addPoints(record.get(sum(RESULT.POINTS)));
             } else {
                 result = new SeriesRankingResult(record.get(ATHLETE.ID), record.get(COMPETITION.ID),
-                        record.get(COMPETITION.NAME), record.get(COMPETITION.COMPETITION_DATE), record.get(sum(RESULT.POINTS)));
+                    record.get(COMPETITION.NAME), record.get(COMPETITION.COMPETITION_DATE), record.get(sum(RESULT.POINTS)));
                 athlete.addResult(result);
             }
         }
@@ -155,15 +155,15 @@ public class SeriesRankingService {
 
     private List<ClubResultData> getResults(Result<Record2<String, BigDecimal>> records) {
         return records.stream()
-                .map(record -> new ClubResultData(record.get(CLUB.NAME), record.get(sum(RESULT.POINTS))))
-                .collect(toList());
+            .map(record -> new ClubResultData(record.get(CLUB.NAME), record.get(sum(RESULT.POINTS))))
+            .collect(toList());
     }
 
     private Map<Long, String> getClubs() {
         return dsl.
-                select(CLUB.ID, CLUB.ABBREVIATION)
-                .from(CLUB)
-                .stream()
-                .collect(toMap(club -> club.get(CLUB.ID), club -> club.get(CLUB.ABBREVIATION)));
+            select(CLUB.ID, CLUB.ABBREVIATION)
+            .from(CLUB)
+            .stream()
+            .collect(toMap(club -> club.get(CLUB.ID), club -> club.get(CLUB.ABBREVIATION)));
     }
 }

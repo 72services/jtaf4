@@ -1,6 +1,6 @@
 package ch.jtaf.reporting.data;
 
-public class CompetitionRankingResult  {
+public class CompetitionRankingResult {
 
     private final String eventAbbreviation;
     private final String result;
