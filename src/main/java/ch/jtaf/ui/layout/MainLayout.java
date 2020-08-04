@@ -144,6 +144,11 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
         navigationTargetToTab.put(OrganizationsView.class, tabOrganization);
         tabsMainMenu.add(tabOrganization);
 
+        Tab tabEmpty = new Tab();
+        tabEmpty.setEnabled(false);
+        navigationTargetToTab.put(null, tabEmpty);
+        tabsMainMenu.add(tabEmpty);
+
         seriesLink = new RouterLink("", SeriesListView.class);
         seriesLink.getStyle().set("font-size", "20px");
 
