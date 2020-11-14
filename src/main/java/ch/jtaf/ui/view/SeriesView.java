@@ -65,7 +65,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
     private Grid<CategoryRecord> categoriesGrid;
     private Grid<AthleteRecord> athletesGrid;
 
-    Tabs sectionTabs = new Tabs();
+    final Tabs sectionTabs = new Tabs();
 
     private final transient Binder<SeriesRecord> binder = new Binder<>();
 

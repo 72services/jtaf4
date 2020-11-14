@@ -58,6 +58,7 @@ public class JooqDataProviderProducer<R extends Record> {
         if (filter.isPresent()) {
             for (Field<?> field : table.fields()) {
                 if (field.getType() == String.class) {
+                    //noinspection unchecked
                     condition = condition
                         .or(upper((Field<String>) field).like(upper("%" + filter.get() + "%")));
                 } else {
@@ -84,7 +85,7 @@ public class JooqDataProviderProducer<R extends Record> {
                     sortFields.add(field.asc());
                 }
             }
-            return sortFields.toArray(new SortField<?>[sortFields.size()]);
+            return sortFields.toArray(new SortField<?>[0]);
         }
     }
 }
