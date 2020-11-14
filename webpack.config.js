@@ -5,7 +5,9 @@
 const merge = require('webpack-merge');
 const flowDefaults = require('./webpack.generated.js');
 
-module.exports = merge(flowDefaults, {});
+module.exports = merge(flowDefaults, {
+
+});
 
 /**
  * This file can be used to configure the flow plugin defaults.
