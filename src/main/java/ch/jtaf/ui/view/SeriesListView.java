@@ -35,9 +35,7 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
         add(new H1(getTranslation("Series")));
 
         Button add = new Button(getTranslation("Add"));
-        add.addClickListener(event -> {
-            UI.getCurrent().navigate(SeriesView.class);
-        });
+        add.addClickListener(event -> UI.getCurrent().navigate(SeriesView.class));
 
         grid.addComponentColumn(LogoUtil::resizeLogo).setHeader(getTranslation("Logo"));
         grid.addColumn(SeriesRecord::getName).setHeader(getTranslation("Name")).setSortable(true);

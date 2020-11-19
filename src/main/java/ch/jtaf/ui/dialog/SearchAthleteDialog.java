@@ -33,9 +33,8 @@ public class SearchAthleteDialog extends Dialog {
     public static final String FULLSCREEN = "fullscreen";
 
     private boolean isFullScreen = false;
-    private Header header;
     private final Div content;
-    private Button max;
+    private final Button max;
 
     private final Map<Long, ClubRecord> clubRecordMap;
     private final ConfigurableFilterDataProvider<AthleteRecord, Void, String> dataProvider;
@@ -58,7 +57,7 @@ public class SearchAthleteDialog extends Dialog {
         Button close = new Button(VaadinIcon.CLOSE_SMALL.create());
         close.addClickListener(event -> close());
 
-        header = new Header(headerTitel, max, close);
+        Header header = new Header(headerTitel, max, close);
         header.getElement().getThemeList().add(Lumo.LIGHT);
         add(header);
 

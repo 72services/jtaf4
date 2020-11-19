@@ -41,20 +41,18 @@ public class GridBuilder {
         grid.addComponentColumn(record -> {
             Button delete = new Button(insteadOfDeleteTitle != null ? insteadOfDeleteTitle : grid.getTranslation("Delete"));
             delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            delete.addClickListener(event -> {
-                getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> {
-                    try {
-                        if (insteadOfDelete != null) {
-                            insteadOfDelete.accept(record);
-                        } else {
-                            getBean(DSLContext.class).attach(record);
-                            record.delete();
-                        }
-                    } catch (DataAccessException e) {
-                        Notification.show(e.getMessage());
+            delete.addClickListener(event -> getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> {
+                try {
+                    if (insteadOfDelete != null) {
+                        insteadOfDelete.accept(record);
+                    } else {
+                        getBean(DSLContext.class).attach(record);
+                        record.delete();
                     }
-                });
-            });
+                } catch (DataAccessException e) {
+                    Notification.show(e.getMessage());
+                }
+            }));
             HorizontalLayout horizontalLayout = new HorizontalLayout(delete);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
             return horizontalLayout;
