@@ -4,6 +4,7 @@ import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.textfield.TextField;
 
+@SuppressWarnings("DuplicatedCode")
 public class ClubDialog extends EditDialog<ClubRecord> {
 
     private static final long serialVersionUID = 1L;

@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 
+@SuppressWarnings("DuplicatedCode")
 public class CompetitionRankingReport extends RankingReport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CompetitionRankingReport.class);
