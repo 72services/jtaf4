@@ -17,7 +17,7 @@ public class ArchitectureTest {
     private static final String UTIL = "Util";
     private static final String DB = "DB";
 
-    private JavaClasses classes = new ClassFileImporter().importPackages("ch.jtaf");
+    private final JavaClasses classes = new ClassFileImporter().importPackages("ch.jtaf");
 
     @Test
     public void CheckLayeredArchitecture() {
@@ -41,7 +41,7 @@ public class ArchitectureTest {
 
     @Test
     public void checkCycles() {
-        slices().matching("ch.jtaf.(*)").should().beFreeOfCycles()
+        slices().matching("ch.jtaf.(*)..").should().beFreeOfCycles()
             .check(classes);
     }
 }
