@@ -1,4 +1,4 @@
-package ch.jtaf.security;
+package ch.jtaf.ui.security;
 
 import ch.jtaf.ui.view.LoginView;
 import com.vaadin.flow.component.UI;

@@ -1,4 +1,4 @@
-package ch.jtaf.security;
+package ch.jtaf.ui.security;
 
 import ch.jtaf.ui.component.RouteNotFoundError;
 import ch.jtaf.ui.view.DashboardView;
