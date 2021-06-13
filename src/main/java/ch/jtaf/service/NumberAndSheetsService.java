@@ -1,5 +1,7 @@
 package ch.jtaf.service;
 
+import ch.jtaf.db.tables.Athlete;
+import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.reporting.data.NumbersAndSheetsAthlete;
 import ch.jtaf.reporting.data.NumbersAndSheetsCompetition;
 import ch.jtaf.reporting.data.NumbersAndSheetsEvent;
@@ -8,6 +10,7 @@ import ch.jtaf.reporting.report.SheetsReport;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.Record;
+import org.jooq.Result;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
