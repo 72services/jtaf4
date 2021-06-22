@@ -1,7 +1,7 @@
 package ch.jtaf.ui.view;
 
 import ch.jtaf.db.tables.records.OrganizationRecord;
-import ch.jtaf.security.OrganizationHolder;
+import ch.jtaf.ui.security.OrganizationHolder;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;

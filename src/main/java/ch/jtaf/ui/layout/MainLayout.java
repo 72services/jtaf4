@@ -1,8 +1,8 @@
 package ch.jtaf.ui.layout;
 
 import ch.jtaf.db.tables.records.OrganizationRecord;
-import ch.jtaf.security.OrganizationHolder;
-import ch.jtaf.security.SecurityContext;
+import ch.jtaf.ui.security.OrganizationHolder;
+import ch.jtaf.ui.security.SecurityContext;
 import ch.jtaf.ui.view.AthletesView;
 import ch.jtaf.ui.view.ClubsView;
 import ch.jtaf.ui.view.DashboardView;

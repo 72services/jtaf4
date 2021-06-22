@@ -5,7 +5,7 @@ import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.model.Gender;
-import ch.jtaf.security.OrganizationHolder;
+import ch.jtaf.ui.security.OrganizationHolder;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
@@ -33,7 +33,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
         super(title);
     }
 
-    @SuppressWarnings("serial")
+    @SuppressWarnings({"DuplicatedCode"})
     @Override
     public void createForm() {
         TextField lastName = new TextField(getTranslation("Last.Name"));

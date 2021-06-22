@@ -4,6 +4,7 @@ import ch.jtaf.db.tables.records.CategoryRecord;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.textfield.TextField;
 
+@SuppressWarnings("DuplicatedCode")
 public class CategoryDialog extends EditDialog<CategoryRecord> {
 
     private static final long serialVersionUID = 1L;

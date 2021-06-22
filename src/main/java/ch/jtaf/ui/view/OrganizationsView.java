@@ -1,7 +1,7 @@
 package ch.jtaf.ui.view;
 
 import ch.jtaf.db.tables.records.OrganizationRecord;
-import ch.jtaf.security.OrganizationHolder;
+import ch.jtaf.ui.security.OrganizationHolder;
 import ch.jtaf.ui.dialog.OrganizationDialog;
 import ch.jtaf.ui.layout.MainLayout;
 import com.vaadin.flow.component.UI;

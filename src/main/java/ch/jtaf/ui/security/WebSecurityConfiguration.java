@@ -1,5 +1,6 @@
-package ch.jtaf.security;
+package ch.jtaf.ui.security;
 
+import ch.jtaf.security.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

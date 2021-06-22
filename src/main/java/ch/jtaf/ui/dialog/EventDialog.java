@@ -8,6 +8,7 @@ import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.converter.StringToDoubleConverter;
 
+@SuppressWarnings("DuplicatedCode")
 public class EventDialog extends EditDialog<EventRecord> {
 
     private static final long serialVersionUID = 1L;
