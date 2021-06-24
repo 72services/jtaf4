@@ -49,9 +49,9 @@
     </contributors>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>16</java.version>
 
-        <vaadin.version>14.6.3</vaadin.version>
+        <vaadin.version>20.0.3</vaadin.version>
         <jooq.version>3.14.11</jooq.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -68,12 +68,12 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                     .where(COMPETITION.SERIES_ID.eq(series.getId()))
                     .fetch()
                     .forEach(competition -> {
-                        HorizontalLayout competionLayout = new HorizontalLayout();
-                        verticalLayout.add(competionLayout);
+                        HorizontalLayout competitionLayout = new HorizontalLayout();
+                        verticalLayout.add(competitionLayout);
 
                         Paragraph pCompetition = new Paragraph(competition.getName() + " " + competition.getCompetitionDate());
                         pCompetition.setWidth("515px");
-                        competionLayout.add(pCompetition);
+                        competitionLayout.add(pCompetition);
 
                         Anchor competitionRanking = new Anchor(new StreamResource("competition_ranking" + competition.getId() + ".pdf",
                             () -> {
@@ -90,7 +90,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                             links.add(enterResults);
                         }
 
-                        competionLayout.add(links);
+                        competitionLayout.add(links);
                     });
             });
     }
