@@ -7,12 +7,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.0</version>
+        <version>2.5.1</version>
     </parent>
 
     <groupId>ch.jtaf</groupId>
     <artifactId>jtaf4</artifactId>
-    <version>4.0.6-SNAPSHOT</version>
+    <version>4.0.9-SNAPSHOT</version>
 
     <name>JTAF 4</name>
     <description>JTAF - Track And Field</description>
@@ -49,10 +49,10 @@
     </contributors>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>16</java.version>
 
-        <vaadin.version>14.4.2</vaadin.version>
-        <jooq.version>3.14.3</jooq.version>
+        <vaadin.version>20.0.3</vaadin.version>
+        <jooq.version>3.14.11</jooq.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
