@@ -33,7 +33,7 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
     final FormLayout formLayout;
 
     private Callback afterSave;
-    private boolean initalized;
+    private boolean initialized;
 
     public EditDialog(String title) {
         getElement().getThemeList().add("jtaf-dialog");
@@ -96,9 +96,9 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
         binder.setBean((R) record);
         this.afterSave = afterSave;
 
-        if (!initalized) {
+        if (!initialized) {
             createForm();
-            initalized = true;
+            initialized = true;
         }
 
         super.open();
