@@ -62,8 +62,4 @@ public class SeriesRankingCategory {
     public int getYearTo() {
         return yearTo;
     }
-
-    public int getNumberOfCompetitions() {
-        return numberOfCompetitions;
-    }
 }

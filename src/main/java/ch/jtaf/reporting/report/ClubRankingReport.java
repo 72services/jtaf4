@@ -36,7 +36,7 @@ public class ClubRankingReport extends RankingReport {
 
                 var pdfWriter = PdfWriter.getInstance(document, baos);
                 pdfWriter.setPageEvent(
-                    new HeaderFooter(messages.getString("Club.Ranking"), ranking.getSeriesName(), ""));
+                    new HeaderFooter(messages.getString("Club.Ranking"), ranking.seriesName(), ""));
 
                 document.open();
 

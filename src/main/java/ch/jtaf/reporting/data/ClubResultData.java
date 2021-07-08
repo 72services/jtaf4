@@ -28,4 +28,13 @@ public class ClubResultData {
     public BigDecimal getPoints() {
         return points;
     }
+
+    @Override
+    public String toString() {
+        return "ClubResultData{" +
+            "rank=" + rank +
+            ", club='" + club + '\'' +
+            ", points=" + points +
+            '}';
+    }
 }

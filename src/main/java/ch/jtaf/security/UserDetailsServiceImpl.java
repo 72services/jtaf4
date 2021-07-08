@@ -1,7 +1,6 @@
 package ch.jtaf.security;
 
 import org.jooq.DSLContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -22,7 +21,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final DSLContext dsl;
 
-    @Autowired
     public UserDetailsServiceImpl(DSLContext dsl) {
         this.dsl = dsl;
     }
