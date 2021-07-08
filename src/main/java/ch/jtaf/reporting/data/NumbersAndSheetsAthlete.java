@@ -11,4 +11,7 @@ public record NumbersAndSheetsAthlete(Long id, String firstName, String lastName
         events.sort(comparingInt(NumbersAndSheetsEvent::position));
         return events;
     }
+
+    public static  record NumbersAndSheetsEvent(String abbreviation, String name, String gender, String type, int position) {
+    }
 }

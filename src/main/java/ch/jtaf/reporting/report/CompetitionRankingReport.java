@@ -1,9 +1,6 @@
 package ch.jtaf.reporting.report;
 
-import ch.jtaf.reporting.data.CompetitionRankingAthlete;
-import ch.jtaf.reporting.data.CompetitionRankingCategory;
 import ch.jtaf.reporting.data.CompetitionRankingData;
-import ch.jtaf.reporting.data.CompetitionRankingResult;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.PageSize;
@@ -56,7 +53,7 @@ public class CompetitionRankingReport extends RankingReport {
     }
 
     private void createRanking() {
-        for (CompetitionRankingCategory category : ranking.categories()) {
+        for (CompetitionRankingData.CompetitionRankingCategory category : ranking.categories()) {
             if (numberOfRows > 20) {
                 document.newPage();
             }
@@ -65,7 +62,7 @@ public class CompetitionRankingReport extends RankingReport {
             numberOfRows += 2;
 
             int rank = 1;
-            for (CompetitionRankingAthlete athlete : category.sortedAthletes()) {
+            for (CompetitionRankingData.CompetitionRankingCategory.CompetitionRankingAthlete athlete : category.sortedAthletes()) {
                 if (numberOfRows > 23) {
                     document.add(table);
                     table = createAthletesTable();
@@ -79,7 +76,7 @@ public class CompetitionRankingReport extends RankingReport {
         }
     }
 
-    private int calculateNumberOfMedals(CompetitionRankingCategory category) {
+    private int calculateNumberOfMedals(CompetitionRankingData.CompetitionRankingCategory category) {
         double numberOfMedals = 0;
         if (ranking.medalPercentage() > 0) {
             double percentage = ranking.medalPercentage();
@@ -98,14 +95,14 @@ public class CompetitionRankingReport extends RankingReport {
         return table;
     }
 
-    private void createCategoryTitle(PdfPTable table, CompetitionRankingCategory category) {
+    private void createCategoryTitle(PdfPTable table, CompetitionRankingData.CompetitionRankingCategory category) {
         addCategoryTitleCellWithColspan(table, category.abbreviation(), 1);
         addCategoryTitleCellWithColspan(table, category.name() + " " + category.yearFrom() + " - " + category.yearTo(), 5);
 
         addCategoryTitleCellWithColspan(table, " ", 6);
     }
 
-    private void createAthleteRow(PdfPTable table, int rank, CompetitionRankingAthlete athlete, int numberOfMedals) {
+    private void createAthleteRow(PdfPTable table, int rank, CompetitionRankingData.CompetitionRankingCategory.CompetitionRankingAthlete athlete, int numberOfMedals) {
         if (rank <= numberOfMedals) {
             addCell(table, "* " + rank + ".");
         } else {
@@ -118,7 +115,7 @@ public class CompetitionRankingReport extends RankingReport {
         addCellAlignRight(table, athlete.totalPoints() + "");
 
         StringBuilder sb = new StringBuilder();
-        for (CompetitionRankingResult result : athlete.sortedResults()) {
+        for (CompetitionRankingData.CompetitionRankingCategory.CompetitionRankingAthlete.CompetitionRankingResult result : athlete.sortedResults()) {
             sb.append(result.eventAbbreviation());
             sb.append(": ");
             sb.append(result.result());

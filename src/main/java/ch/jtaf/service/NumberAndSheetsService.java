@@ -2,7 +2,6 @@ package ch.jtaf.service;
 
 import ch.jtaf.reporting.data.NumbersAndSheetsAthlete;
 import ch.jtaf.reporting.data.NumbersAndSheetsCompetition;
-import ch.jtaf.reporting.data.NumbersAndSheetsEvent;
 import ch.jtaf.reporting.report.NumbersReport;
 import ch.jtaf.reporting.report.SheetsReport;
 import org.jooq.DSLContext;
@@ -59,7 +58,7 @@ public class NumberAndSheetsService {
         var athlete = new NumbersAndSheetsAthlete(null, null, null, 0, records.get(0).get(CATEGORY.ABBREVIATION), null, new ArrayList<>());
 
         for (var record : records) {
-            athlete.sortedEvents().add(new NumbersAndSheetsEvent(record.get(EVENT.ABBREVIATION), record.get(EVENT.NAME),
+            athlete.sortedEvents().add(new NumbersAndSheetsAthlete.NumbersAndSheetsEvent(record.get(EVENT.ABBREVIATION), record.get(EVENT.NAME),
                 record.get(EVENT.EVENT_TYPE), record.get(EVENT.GENDER), record.get(CATEGORY_EVENT.POSITION)));
         }
 
@@ -111,7 +110,7 @@ public class NumberAndSheetsService {
                     record.get(ATHLETE.YEAR_OF_BIRTH), record.get(CATEGORY.ABBREVIATION), record.get(CLUB.ABBREVIATION), new ArrayList<>());
                 athletes.add(athlete);
             }
-            athlete.sortedEvents().add(new NumbersAndSheetsEvent(record.get(EVENT.ABBREVIATION), record.get(EVENT.NAME),
+            athlete.sortedEvents().add(new NumbersAndSheetsAthlete.NumbersAndSheetsEvent(record.get(EVENT.ABBREVIATION), record.get(EVENT.NAME),
                 record.get(EVENT.GENDER), record.get(EVENT.EVENT_TYPE), record.get(CATEGORY_EVENT.POSITION)));
         }
 

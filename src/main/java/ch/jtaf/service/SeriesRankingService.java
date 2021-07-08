@@ -1,19 +1,12 @@
 package ch.jtaf.service;
 
 import ch.jtaf.reporting.data.ClubRankingData;
-import ch.jtaf.reporting.data.ClubResultData;
-import ch.jtaf.reporting.data.SeriesRankingAthlete;
-import ch.jtaf.reporting.data.SeriesRankingCategory;
 import ch.jtaf.reporting.data.SeriesRankingData;
-import ch.jtaf.reporting.data.SeriesRankingResult;
 import ch.jtaf.reporting.report.ClubRankingReport;
 import ch.jtaf.reporting.report.SeriesRankingReport;
 import org.jooq.DSLContext;
 import org.jooq.Record14;
-import org.jooq.Record2;
-import org.jooq.Records;
 import org.jooq.Result;
-import org.jooq.impl.DSL;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -33,7 +26,6 @@ import static ch.jtaf.db.tables.Event.EVENT;
 import static ch.jtaf.db.tables.Result.RESULT;
 import static ch.jtaf.db.tables.Series.SERIES;
 import static java.math.BigDecimal.ZERO;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.jooq.Records.mapping;
 import static org.jooq.impl.DSL.count;
@@ -113,29 +105,29 @@ public class SeriesRankingService {
                     .and(CATEGORY.ID.eq(CATEGORY_EVENT.CATEGORY_ID))
                     .and(ATHLETE.ID.eq(RESULT.ATHLETE_ID))
                     .groupBy(CLUB.NAME)
-                ).convertFrom(r -> r.map(mapping(ClubResultData::new)))
+                ).convertFrom(r -> r.map(mapping(ClubRankingData.ClubResultData::new)))
             )
             .from(SERIES)
             .where(SERIES.ID.eq(seriesId))
             .fetchOne(mapping(ClubRankingData::new));
     }
 
-    private List<SeriesRankingCategory> getCategories(Result<Record14<Long, String, String, Integer, Integer, Long, String, String, Integer, Long, Long, String, LocalDate, BigDecimal>> records) {
-        List<SeriesRankingCategory> categories = new ArrayList<>();
+    private List<SeriesRankingData.SeriesRankingCategory> getCategories(Result<Record14<Long, String, String, Integer, Integer, Long, String, String, Integer, Long, Long, String, LocalDate, BigDecimal>> records) {
+        List<SeriesRankingData.SeriesRankingCategory> categories = new ArrayList<>();
 
-        SeriesRankingCategory category = null;
-        SeriesRankingAthlete athlete = null;
-        SeriesRankingResult result = null;
+        SeriesRankingData.SeriesRankingCategory category = null;
+        SeriesRankingData.SeriesRankingCategory.SeriesRankingAthlete athlete = null;
+        SeriesRankingData.SeriesRankingCategory.SeriesRankingAthlete.SeriesRankingResult result = null;
 
         for (var record : records) {
             if (category == null || !category.id().equals(record.get(CATEGORY.ID))) {
-                category = new SeriesRankingCategory(record.get(CATEGORY.ID), record.get(CATEGORY.ABBREVIATION),
+                category = new SeriesRankingData.SeriesRankingCategory(record.get(CATEGORY.ID), record.get(CATEGORY.ABBREVIATION),
                     record.get(CATEGORY.NAME), record.get(CATEGORY.YEAR_FROM), record.get(CATEGORY.YEAR_TO), new ArrayList<>());
                 categories.add(category);
             }
 
             if (athlete == null || !athlete.id().equals(record.get(ATHLETE.ID))) {
-                athlete = new SeriesRankingAthlete(record.get(ATHLETE.ID), record.get(ATHLETE.FIRST_NAME),
+                athlete = new SeriesRankingData.SeriesRankingCategory.SeriesRankingAthlete(record.get(ATHLETE.ID), record.get(ATHLETE.FIRST_NAME),
                     record.get(ATHLETE.LAST_NAME), record.get(ATHLETE.YEAR_OF_BIRTH), record.get(ATHLETE.CLUB_ID), new ArrayList<>());
                 category.athletes().add(athlete);
             }
@@ -143,7 +135,7 @@ public class SeriesRankingService {
             if (result != null && result.athleteId().equals(record.get(ATHLETE.ID)) && result.competitionDate().equals(record.get(COMPETITION.ID))) {
                 result.points().add(record.get(sum(RESULT.POINTS)));
             } else {
-                result = new SeriesRankingResult(record.get(ATHLETE.ID), record.get(COMPETITION.ID),
+                result = new SeriesRankingData.SeriesRankingCategory.SeriesRankingAthlete.SeriesRankingResult(record.get(ATHLETE.ID), record.get(COMPETITION.ID),
                     record.get(COMPETITION.NAME), record.get(COMPETITION.COMPETITION_DATE), record.get(sum(RESULT.POINTS)));
                 athlete.results().add(result);
             }

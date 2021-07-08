@@ -1,7 +1,5 @@
 package ch.jtaf.reporting.report;
 
-import ch.jtaf.reporting.data.CompetitionRankingAthlete;
-import ch.jtaf.reporting.data.CompetitionRankingCategory;
 import ch.jtaf.reporting.data.CompetitionRankingData;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -81,7 +79,8 @@ public class DiplomaReport extends AbstractReport {
         }
     }
 
-    private void createAthleteInfo(CompetitionRankingAthlete athlete, CompetitionRankingCategory category, int rank) throws DocumentException {
+    private void createAthleteInfo(CompetitionRankingData.CompetitionRankingCategory.CompetitionRankingAthlete athlete,
+                                   CompetitionRankingData.CompetitionRankingCategory category, int rank) throws DocumentException {
         var table = new PdfPTable(new float[]{2f, 10f, 10f, 3f, 2f});
         table.setWidthPercentage(100f);
         table.setSpacingBefore(cmToPixel(1.5f));

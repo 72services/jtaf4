@@ -1,7 +1,6 @@
 package ch.jtaf.reporting.report;
 
 import ch.jtaf.reporting.data.ClubRankingData;
-import ch.jtaf.reporting.data.ClubResultData;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfPTable;
@@ -59,7 +58,7 @@ public class ClubRankingReport extends RankingReport {
         table.setSpacingBefore(1f);
 
         int rank = 1;
-        for (ClubResultData result : ranking.sortedResults()) {
+        for (ClubRankingData.ClubResultData result : ranking.sortedResults()) {
             createClubRow(table, result, rank);
             rank++;
         }
@@ -67,7 +66,7 @@ public class ClubRankingReport extends RankingReport {
         document.add(table);
     }
 
-    private void createClubRow(PdfPTable table, ClubResultData clubResultData, int rank) {
+    private void createClubRow(PdfPTable table, ClubRankingData.ClubResultData clubResultData, int rank) {
         addCell(table, rank + ".");
         addCell(table, clubResultData.club());
         addCellAlignRight(table, "" + clubResultData.points());

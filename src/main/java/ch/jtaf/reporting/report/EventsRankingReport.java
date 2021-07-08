@@ -1,8 +1,6 @@
 package ch.jtaf.reporting.report;
 
 import ch.jtaf.reporting.data.EventsRankingData;
-import ch.jtaf.reporting.data.EventsRankingEvent;
-import ch.jtaf.reporting.data.EventsRankingResult;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfPTable;
@@ -54,7 +52,7 @@ public class EventsRankingReport extends RankingReport {
     }
 
     private void createRanking() {
-        for (EventsRankingEvent event : ranking.events()) {
+        for (EventsRankingData.EventsRankingEvent event : ranking.events()) {
             PdfPTable table = new PdfPTable(new float[]{2f, 10f, 10f, 2f, 2f, 5f, 5f});
             table.setWidthPercentage(100);
             table.setSpacingBefore(cmToPixel(1f));
@@ -63,7 +61,7 @@ public class EventsRankingReport extends RankingReport {
             createEventTitle(table, event);
 
             int position = 1;
-            for (EventsRankingResult result : event.sortedResults()) {
+            for (EventsRankingData.EventsRankingEvent.EventsRankingResult result : event.sortedResults()) {
                 createAthleteRow(table, position, result);
                 position++;
             }
@@ -71,13 +69,13 @@ public class EventsRankingReport extends RankingReport {
         }
     }
 
-    private void createEventTitle(PdfPTable table, EventsRankingEvent event) {
+    private void createEventTitle(PdfPTable table, EventsRankingData.EventsRankingEvent event) {
         addCategoryTitleCellWithColspan(table, event.abbreviation() + " / " + event.gender(), 7);
 
         addCategoryTitleCellWithColspan(table, " ", 7);
     }
 
-    private void createAthleteRow(PdfPTable table, int position, EventsRankingResult result) {
+    private void createAthleteRow(PdfPTable table, int position, EventsRankingData.EventsRankingEvent.EventsRankingResult result) {
         addCell(table, position + ".");
         addCell(table, result.lastName());
         addCell(table, result.firstName());
