@@ -16,7 +16,7 @@ public abstract class AbstractTestcontainersTest {
 
     @DynamicPropertySource
     static void postgresqlProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", mySQLContainer::getJdbcUrl);
+        registry.add("spring.datasource.url", () -> mySQLContainer.getJdbcUrl() + "?allowMultiQueries=true");
         registry.add("spring.datasource.password", mySQLContainer::getPassword);
         registry.add("spring.datasource.username", mySQLContainer::getUsername);
     }

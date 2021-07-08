@@ -111,7 +111,7 @@ public class CompetitionRankingService {
                                 ATHLETE.CLUB_ID,
                                 EVENT.ABBREVIATION, EVENT.EVENT_TYPE,
                                 RESULT.RESULT_)
-                                .from(CATEGORY, CATEGORY_ATHLETE, ATHLETE, CATEGORY_EVENT, EVENT, RESULT)
+                                .from(COMPETITION, CATEGORY, CATEGORY_ATHLETE, ATHLETE, CATEGORY_EVENT, EVENT, RESULT)
                                 .where(CATEGORY.SERIES_ID.eq(COMPETITION.SERIES_ID))
                                 .and(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
                                 .and(CATEGORY_ATHLETE.CATEGORY_ID.eq(CATEGORY.ID))
