@@ -31,6 +31,9 @@ public class LoginView extends LoginOverlay implements AfterNavigationObserver, 
         i18n.getForm().setUsername(getTranslation("Email"));
         i18n.getForm().setPassword(getTranslation("Password"));
 
+        i18n.getErrorMessage().setTitle(getTranslation("Auth.ErrorTitle"));
+        i18n.getErrorMessage().setMessage(getTranslation("Auth.ErrorMessage"));
+
         setI18n(i18n);
 
         setForgotPasswordButtonVisible(false);
