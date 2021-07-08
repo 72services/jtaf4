@@ -5,10 +5,10 @@ import java.util.List;
 import static java.lang.Integer.compare;
 import static java.util.stream.Collectors.toList;
 
-public record  SeriesRankingCategory(Long id, String abbreviation, String name, int yearFrom, int yearTo, int numberOfCompetitions,
-                                     List<SeriesRankingAthlete> athletes) {
+public record SeriesRankingCategory(Long id, String abbreviation, String name, int yearFrom, int yearTo,
+                                    List<SeriesRankingAthlete> athletes) {
 
-    public List<SeriesRankingAthlete> getFilteredAthletes() {
+    public List<SeriesRankingAthlete> getFilteredAthletes(int numberOfCompetitions) {
         return athletes.stream()
             .filter(seriesRankingAthlete -> seriesRankingAthlete.sortedResults().size() == numberOfCompetitions)
             .sorted((o1, o2) -> compare(o2.totalPoints(), o1.totalPoints()))

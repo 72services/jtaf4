@@ -89,8 +89,7 @@ public class SeriesRankingService {
                 .orderBy(CATEGORY.ID, ATHLETE.ID, COMPETITION.ID)
                 .fetch();
 
-            return new SeriesRankingData(series.get(SERIES.NAME), series.get(count(COMPETITION.ID)),
-                getCategories(series.get(count(COMPETITION.ID)), results));
+            return new SeriesRankingData(series.get(SERIES.NAME), series.get(count(COMPETITION.ID)), getCategories(results));
         } else {
             return null;
         }
@@ -121,7 +120,7 @@ public class SeriesRankingService {
             .fetchOne(mapping(ClubRankingData::new));
     }
 
-    private List<SeriesRankingCategory> getCategories(int numberOfCompetitions, Result<Record14<Long, String, String, Integer, Integer, Long, String, String, Integer, Long, Long, String, LocalDate, BigDecimal>> records) {
+    private List<SeriesRankingCategory> getCategories(Result<Record14<Long, String, String, Integer, Integer, Long, String, String, Integer, Long, Long, String, LocalDate, BigDecimal>> records) {
         List<SeriesRankingCategory> categories = new ArrayList<>();
 
         SeriesRankingCategory category = null;
@@ -131,8 +130,7 @@ public class SeriesRankingService {
         for (var record : records) {
             if (category == null || !category.id().equals(record.get(CATEGORY.ID))) {
                 category = new SeriesRankingCategory(record.get(CATEGORY.ID), record.get(CATEGORY.ABBREVIATION),
-                    record.get(CATEGORY.NAME), record.get(CATEGORY.YEAR_FROM), record.get(CATEGORY.YEAR_TO),
-                    numberOfCompetitions, new ArrayList<>());
+                    record.get(CATEGORY.NAME), record.get(CATEGORY.YEAR_FROM), record.get(CATEGORY.YEAR_TO), new ArrayList<>());
                 categories.add(category);
             }
 
