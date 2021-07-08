@@ -58,15 +58,19 @@ public class ClubRankingReport extends RankingReport {
         table.setWidthPercentage(100f);
         table.setSpacingBefore(1f);
 
-        ranking.getResults().forEach(result -> createClubRow(table, result));
+        int rank = 1;
+        for (ClubResultData result : ranking.sortedResults()) {
+            createClubRow(table, result, rank);
+            rank++;
+        }
 
         document.add(table);
     }
 
-    private void createClubRow(PdfPTable table, ClubResultData clubResultData) {
-        addCell(table, clubResultData.getRank() + ".");
-        addCell(table, clubResultData.getClub());
-        addCellAlignRight(table, "" + clubResultData.getPoints());
+    private void createClubRow(PdfPTable table, ClubResultData clubResultData, int rank) {
+        addCell(table, rank + ".");
+        addCell(table, clubResultData.club());
+        addCellAlignRight(table, "" + clubResultData.points());
     }
 
 }

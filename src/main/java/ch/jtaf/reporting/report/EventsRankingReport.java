@@ -37,8 +37,8 @@ public class EventsRankingReport extends RankingReport {
                 float border = cmToPixel(1.5f);
                 document = new Document(A4, border, border, border, border);
                 PdfWriter pdfWriter = PdfWriter.getInstance(document, baos);
-                pdfWriter.setPageEvent(new HeaderFooter(messages.getString("Event.Ranking"), ranking.getName(),
-                    DATE_TIME_FORMATTER.format(ranking.getCompetitionDate())));
+                pdfWriter.setPageEvent(new HeaderFooter(messages.getString("Event.Ranking"), ranking.name(),
+                    DATE_TIME_FORMATTER.format(ranking.competitionDate())));
                 document.open();
                 createRanking();
                 document.close();
@@ -54,7 +54,7 @@ public class EventsRankingReport extends RankingReport {
     }
 
     private void createRanking() {
-        for (EventsRankingEvent event : ranking.getEvents()) {
+        for (EventsRankingEvent event : ranking.events()) {
             PdfPTable table = new PdfPTable(new float[]{2f, 10f, 10f, 2f, 2f, 5f, 5f});
             table.setWidthPercentage(100);
             table.setSpacingBefore(cmToPixel(1f));
@@ -63,7 +63,7 @@ public class EventsRankingReport extends RankingReport {
             createEventTitle(table, event);
 
             int position = 1;
-            for (EventsRankingResult result : event.getResults()) {
+            for (EventsRankingResult result : event.sortedResults()) {
                 createAthleteRow(table, position, result);
                 position++;
             }
@@ -72,19 +72,19 @@ public class EventsRankingReport extends RankingReport {
     }
 
     private void createEventTitle(PdfPTable table, EventsRankingEvent event) {
-        addCategoryTitleCellWithColspan(table, event.getAbbreviation() + " / " + event.getGender(), 7);
+        addCategoryTitleCellWithColspan(table, event.abbreviation() + " / " + event.gender(), 7);
 
         addCategoryTitleCellWithColspan(table, " ", 7);
     }
 
     private void createAthleteRow(PdfPTable table, int position, EventsRankingResult result) {
         addCell(table, position + ".");
-        addCell(table, result.getLastName());
-        addCell(table, result.getFirstName());
-        addCell(table, result.getYearOfBirth() + "");
-        addCell(table, result.getCategory());
-        addCell(table, result.getClubId() == null ? "" : clubs.get(result.getClubId()));
-        addCellAlignRight(table, "" + result.getResult());
+        addCell(table, result.lastName());
+        addCell(table, result.firstName());
+        addCell(table, result.yearOfBirth() + "");
+        addCell(table, result.category());
+        addCell(table, result.clubId() == null ? "" : clubs.get(result.clubId()));
+        addCellAlignRight(table, "" + result.result());
     }
 
 }

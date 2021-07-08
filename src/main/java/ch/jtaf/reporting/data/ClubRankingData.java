@@ -4,14 +4,8 @@ import java.util.List;
 
 public record ClubRankingData(String seriesName, List<ClubResultData> results) {
 
-    public List<ClubResultData> getResults() {
-        results.sort((o1, o2) -> o2.getPoints().compareTo(o1.getPoints()));
-
-        int rank = 0;
-        for (ClubResultData result : results) {
-            result.setRank(++rank);
-        }
-
+    public List<ClubResultData> sortedResults() {
+        results.sort((o1, o2) -> o2.points().compareTo(o1.points()));
         return results;
     }
 }

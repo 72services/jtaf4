@@ -37,8 +37,8 @@ public class CompetitionRankingReport extends RankingReport {
                 float border = cmToPixel(1.5f);
                 document = new Document(PageSize.A4, border, border, border, border);
                 PdfWriter pdfWriter = PdfWriter.getInstance(document, baos);
-                pdfWriter.setPageEvent(new HeaderFooter(messages.getString("Competition.Ranking"), ranking.getName(),
-                    DATE_TIME_FORMATTER.format(ranking.getCompetitionDate())));
+                pdfWriter.setPageEvent(new HeaderFooter(messages.getString("Competition.Ranking"), ranking.name(),
+                    DATE_TIME_FORMATTER.format(ranking.competitionDate())));
                 document.open();
 
                 createRanking();
@@ -56,7 +56,7 @@ public class CompetitionRankingReport extends RankingReport {
     }
 
     private void createRanking() {
-        for (CompetitionRankingCategory category : ranking.getCategories()) {
+        for (CompetitionRankingCategory category : ranking.categories()) {
             if (numberOfRows > 20) {
                 document.newPage();
             }
@@ -65,7 +65,7 @@ public class CompetitionRankingReport extends RankingReport {
             numberOfRows += 2;
 
             int rank = 1;
-            for (CompetitionRankingAthlete athlete : category.getAthletes()) {
+            for (CompetitionRankingAthlete athlete : category.sortedAthletes()) {
                 if (numberOfRows > 23) {
                     document.add(table);
                     table = createAthletesTable();
@@ -81,10 +81,10 @@ public class CompetitionRankingReport extends RankingReport {
 
     private int calculateNumberOfMedals(CompetitionRankingCategory category) {
         double numberOfMedals = 0;
-        if (ranking.getMedalPercentage() > 0) {
-            double percentage = ranking.getMedalPercentage();
-            numberOfMedals = category.getAthletes().size() * (percentage / 100);
-            if (numberOfMedals < 3 && ranking.isAlwaysFirstThreeMedals()) {
+        if (ranking.medalPercentage() > 0) {
+            double percentage = ranking.medalPercentage();
+            numberOfMedals = category.sortedAthletes().size() * (percentage / 100);
+            if (numberOfMedals < 3 && ranking.alwaysFirstThreeMedals()) {
                 numberOfMedals = 3;
             }
         }
@@ -99,9 +99,8 @@ public class CompetitionRankingReport extends RankingReport {
     }
 
     private void createCategoryTitle(PdfPTable table, CompetitionRankingCategory category) {
-        addCategoryTitleCellWithColspan(table, category.getAbbreviation(), 1);
-        addCategoryTitleCellWithColspan(table,
-            category.getName() + " " + category.getYearFrom() + " - " + category.getYearTo(), 5);
+        addCategoryTitleCellWithColspan(table, category.abbreviation(), 1);
+        addCategoryTitleCellWithColspan(table, category.name() + " " + category.yearFrom() + " - " + category.yearTo(), 5);
 
         addCategoryTitleCellWithColspan(table, " ", 6);
     }
@@ -112,19 +111,19 @@ public class CompetitionRankingReport extends RankingReport {
         } else {
             addCell(table, rank + ".");
         }
-        addCell(table, athlete.getLastName());
-        addCell(table, athlete.getFirstName());
-        addCell(table, athlete.getYearOfBirth() + "");
-        addCell(table, athlete.getClubId() == null ? "" : clubs.get(athlete.getClubId()));
-        addCellAlignRight(table, athlete.getTotalPoints() + "");
+        addCell(table, athlete.lastName());
+        addCell(table, athlete.firstName());
+        addCell(table, athlete.yearOfBirth() + "");
+        addCell(table, athlete.clubId() == null ? "" : clubs.get(athlete.clubId()));
+        addCellAlignRight(table, athlete.totalPoints() + "");
 
         StringBuilder sb = new StringBuilder();
-        for (CompetitionRankingResult result : athlete.getResults()) {
-            sb.append(result.getEventAbbreviation());
+        for (CompetitionRankingResult result : athlete.sortedResults()) {
+            sb.append(result.eventAbbreviation());
             sb.append(": ");
-            sb.append(result.getResult());
+            sb.append(result.result());
             sb.append(" (");
-            sb.append(result.getPoints());
+            sb.append(result.points());
             sb.append(") ");
         }
         addCell(table, "");

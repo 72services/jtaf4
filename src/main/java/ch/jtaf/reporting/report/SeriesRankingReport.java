@@ -37,7 +37,7 @@ public class SeriesRankingReport extends RankingReport {
                 document = new Document(A4);
                 PdfWriter pdfWriter = PdfWriter.getInstance(document, baos);
                 pdfWriter.setPageEvent(new HeaderFooter(
-                    messages.getString("Series.Ranking"), ranking.getName(), ""));
+                    messages.getString("Series.Ranking"), ranking.name(), ""));
                 document.open();
 
                 createRanking();
@@ -54,7 +54,7 @@ public class SeriesRankingReport extends RankingReport {
     }
 
     private void createRanking() throws DocumentException {
-        for (SeriesRankingCategory category : ranking.getCategories()) {
+        for (SeriesRankingCategory category : ranking.categories()) {
             if (numberOfRows > 20) {
                 document.newPage();
             }
@@ -62,15 +62,15 @@ public class SeriesRankingReport extends RankingReport {
             createCategoryTitle(table, category);
             numberOfRows += 2;
 
-            int position = 1;
-            for (SeriesRankingAthlete athlete : category.getAthletes()) {
+            int rank = 1;
+            for (SeriesRankingAthlete athlete : category.getFilteredAthletes()) {
                 if (numberOfRows > 23) {
                     document.add(table);
                     document.newPage();
                     table = createAthletesTable();
                 }
-                createAthleteRow(table, position, athlete);
-                position++;
+                createAthleteRow(table, rank, athlete);
+                rank++;
                 numberOfRows += 1;
             }
             document.add(table);
@@ -85,26 +85,26 @@ public class SeriesRankingReport extends RankingReport {
     }
 
     private void createCategoryTitle(PdfPTable table, SeriesRankingCategory category) {
-        addCategoryTitleCellWithColspan(table, category.getAbbreviation(), 1);
-        addCategoryTitleCellWithColspan(table, category.getName() + " "
-            + category.getYearFrom() + " - " + category.getYearTo(), 5);
+        addCategoryTitleCellWithColspan(table, category.abbreviation(), 1);
+        addCategoryTitleCellWithColspan(table, category.name() + " "
+            + category.yearFrom() + " - " + category.yearTo(), 5);
 
         addCategoryTitleCellWithColspan(table, " ", 6);
     }
 
-    private void createAthleteRow(PdfPTable table, int position, SeriesRankingAthlete athlete) {
-        addCell(table, position + ".");
-        addCell(table, athlete.getLastName());
-        addCell(table, athlete.getFirstName());
-        addCell(table, athlete.getYearOfBirth() + "");
-        addCell(table, athlete.getClubId() == null ? "" : clubs.get(athlete.getClubId()));
-        addCellAlignRight(table, athlete.getTotalPoints() + "");
+    private void createAthleteRow(PdfPTable table, int rank, SeriesRankingAthlete athlete) {
+        addCell(table, rank + ".");
+        addCell(table, athlete.lastName());
+        addCell(table, athlete.firstName());
+        addCell(table, athlete.yearOfBirth() + "");
+        addCell(table, athlete.clubId() == null ? "" : clubs.get(athlete.clubId()));
+        addCellAlignRight(table, athlete.totalPoints() + "");
 
         StringBuilder sb = new StringBuilder();
-        for (SeriesRankingResult result : athlete.getResults()) {
-            sb.append(result.getCompetitionName());
+        for (SeriesRankingResult result : athlete.sortedResults()) {
+            sb.append(result.competitionId());
             sb.append(": ");
-            sb.append(result.getPoints());
+            sb.append(result.points());
             sb.append(" ");
         }
         addCell(table, "");

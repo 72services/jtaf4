@@ -96,10 +96,10 @@ public class NumbersReport extends AbstractReport {
         cellId.setHorizontalAlignment(ALIGN_CENTER);
         atable.addCell(cellId);
 
-        String text = athlete.getLastName() + " " + athlete.getFirstName() + "\n";
-        text += athlete.getCategory();
-        if (athlete.getClub() != null) {
-            text += " / " + athlete.getClub();
+        String text = athlete.lastName() + " " + athlete.firstName() + "\n";
+        text += athlete.category();
+        if (athlete.club() != null) {
+            text += " / " + athlete.club();
         }
 
         PdfPCell cellName = new PdfPCell(new Phrase(text, FontFactory.getFont(HELVETICA, FONT_SIZE_INFO)));

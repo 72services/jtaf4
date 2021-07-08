@@ -56,10 +56,10 @@ public class NumberAndSheetsService {
             .orderBy(CATEGORY_EVENT.POSITION)
             .fetch();
 
-        var athlete = new NumbersAndSheetsAthlete(null, null, null, 0, records.get(0).get(CATEGORY.ABBREVIATION), null);
+        var athlete = new NumbersAndSheetsAthlete(null, null, null, 0, records.get(0).get(CATEGORY.ABBREVIATION), null, new ArrayList<>());
 
         for (var record : records) {
-            athlete.getEvents().add(new NumbersAndSheetsEvent(record.get(EVENT.ABBREVIATION), record.get(EVENT.NAME),
+            athlete.sortedEvents().add(new NumbersAndSheetsEvent(record.get(EVENT.ABBREVIATION), record.get(EVENT.NAME),
                 record.get(EVENT.EVENT_TYPE), record.get(EVENT.GENDER), record.get(CATEGORY_EVENT.POSITION)));
         }
 
@@ -106,12 +106,12 @@ public class NumberAndSheetsService {
         NumbersAndSheetsAthlete athlete = null;
 
         for (Record record : records) {
-            if (athlete == null || !athlete.getId().equals(record.get(ATHLETE.ID))) {
+            if (athlete == null || !athlete.id().equals(record.get(ATHLETE.ID))) {
                 athlete = new NumbersAndSheetsAthlete(record.get(ATHLETE.ID), record.get(ATHLETE.FIRST_NAME), record.get(ATHLETE.LAST_NAME),
-                    record.get(ATHLETE.YEAR_OF_BIRTH), record.get(CATEGORY.ABBREVIATION), record.get(CLUB.ABBREVIATION));
+                    record.get(ATHLETE.YEAR_OF_BIRTH), record.get(CATEGORY.ABBREVIATION), record.get(CLUB.ABBREVIATION), new ArrayList<>());
                 athletes.add(athlete);
             }
-            athlete.getEvents().add(new NumbersAndSheetsEvent(record.get(EVENT.ABBREVIATION), record.get(EVENT.NAME),
+            athlete.sortedEvents().add(new NumbersAndSheetsEvent(record.get(EVENT.ABBREVIATION), record.get(EVENT.NAME),
                 record.get(EVENT.GENDER), record.get(EVENT.EVENT_TYPE), record.get(CATEGORY_EVENT.POSITION)));
         }
 

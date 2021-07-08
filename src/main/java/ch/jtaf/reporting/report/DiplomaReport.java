@@ -45,13 +45,15 @@ public class DiplomaReport extends AbstractReport {
             var pdfWriter = PdfWriter.getInstance(document, baos);
             document.open();
 
-            for (var category : ranking.getCategories()) {
-                for (var athlete : category.getAthletes()) {
+            for (var category : ranking.categories()) {
+                int rank = 1;
+                for (var athlete : category.sortedAthletes()) {
                     createTitle();
                     createLogo();
                     createCompetitionInfo();
-                    createAthleteInfo(athlete, category);
+                    createAthleteInfo(athlete, category, rank);
 
+                    rank++;
                     document.newPage();
                 }
             }
@@ -79,17 +81,17 @@ public class DiplomaReport extends AbstractReport {
         }
     }
 
-    private void createAthleteInfo(CompetitionRankingAthlete athlete, CompetitionRankingCategory category) throws DocumentException {
+    private void createAthleteInfo(CompetitionRankingAthlete athlete, CompetitionRankingCategory category, int rank) throws DocumentException {
         var table = new PdfPTable(new float[]{2f, 10f, 10f, 3f, 2f});
         table.setWidthPercentage(100f);
         table.setSpacingBefore(cmToPixel(1.5f));
 
         float athleteFontSize = 12f;
-        addCell(table, athlete.getRank() + ".", athleteFontSize);
-        addCell(table, athlete.getLastName(), athleteFontSize);
-        addCell(table, athlete.getFirstName(), athleteFontSize);
-        addCell(table, "" + athlete.getYearOfBirth(), athleteFontSize);
-        addCell(table, category.getAbbreviation(), athleteFontSize);
+        addCell(table, rank + ".", athleteFontSize);
+        addCell(table, athlete.lastName(), athleteFontSize);
+        addCell(table, athlete.firstName(), athleteFontSize);
+        addCell(table, "" + athlete.yearOfBirth(), athleteFontSize);
+        addCell(table, category.abbreviation(), athleteFontSize);
 
         document.add(table);
     }
@@ -111,12 +113,12 @@ public class DiplomaReport extends AbstractReport {
         table.setWidthPercentage(100f);
         table.setSpacingBefore(cmToPixel(12f));
 
-        var cell = new PdfPCell(new Phrase(ranking.getName(), FontFactory.getFont(HELVETICA, 25f)));
+        var cell = new PdfPCell(new Phrase(ranking.name(), FontFactory.getFont(HELVETICA, 25f)));
         cell.setBorder(0);
         cell.setHorizontalAlignment(ALIGN_CENTER);
         table.addCell(cell);
 
-        cell = new PdfPCell(new Phrase(DATE_FORMATTER.format(ranking.getCompetitionDate()), FontFactory.getFont(HELVETICA, 25f)));
+        cell = new PdfPCell(new Phrase(DATE_FORMATTER.format(ranking.competitionDate()), FontFactory.getFont(HELVETICA, 25f)));
         cell.setBorder(0);
         cell.setHorizontalAlignment(ALIGN_CENTER);
         table.addCell(cell);

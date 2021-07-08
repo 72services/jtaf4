@@ -2,39 +2,20 @@ package ch.jtaf.reporting.data;
 
 import ch.jtaf.model.EventType;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class EventsRankingEvent {
+public record EventsRankingEvent(String abbreviation, String gender, List<EventsRankingResult> results) {
 
-    private final String abbreviation;
-    private final String gender;
-
-    private final List<EventsRankingResult> results = new ArrayList<>();
-
-    public EventsRankingEvent(String abbreviation, String gender) {
-        this.abbreviation = abbreviation;
-        this.gender = gender;
-    }
-
-    public List<EventsRankingResult> getResults() {
+    public List<EventsRankingResult> sortedResults() {
         results.sort((o1, o2) -> {
-            if (o1.getEventType().equals(EventType.JUMP_THROW.name())) {
+            if (o1.eventType().equals(EventType.JUMP_THROW.name())) {
                 // Higher results are better
-                return Double.compare(o2.getResultAsDouble(), o1.getResultAsDouble());
+                return Double.compare(o2.resultAsDouble(), o1.resultAsDouble());
             } else {
                 // Lower results are better
-                return Double.compare(o1.getResultAsDouble(), o2.getResultAsDouble());
+                return Double.compare(o1.resultAsDouble(), o2.resultAsDouble());
             }
         });
         return results;
-    }
-
-    public String getAbbreviation() {
-        return abbreviation;
-    }
-
-    public String getGender() {
-        return gender;
     }
 }
