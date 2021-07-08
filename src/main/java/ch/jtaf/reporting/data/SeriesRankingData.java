@@ -8,33 +8,32 @@ import static java.lang.Integer.compare;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
-public record SeriesRankingData(String name, int numberOfCompetitions, List<SeriesRankingCategory> categories) {
+public record SeriesRankingData(String name, int numberOfCompetitions, List<Category> categories) {
 
-    public static record SeriesRankingCategory(Long id, String abbreviation, String name, int yearFrom, int yearTo,
-                                               List<SeriesRankingAthlete> athletes) {
+    public static record Category(Long id, String abbreviation, String name, int yearFrom, int yearTo,
+                                  List<Athlete> athletes) {
 
-        public List<SeriesRankingAthlete> getFilteredAthletes(int numberOfCompetitions) {
+        public List<Athlete> getFilteredAthletes(int numberOfCompetitions) {
             return athletes.stream()
-                .filter(seriesRankingAthlete -> seriesRankingAthlete.sortedResults().size() == numberOfCompetitions)
+                .filter(athlete -> athlete.sortedResults().size() == numberOfCompetitions)
                 .sorted((o1, o2) -> compare(o2.totalPoints(), o1.totalPoints()))
                 .collect(toList());
         }
 
-        public static record SeriesRankingAthlete(Long id, String firstName, String lastName, int yearOfBirth, Long clubId,
-                                                  List<SeriesRankingResult> results) {
+        public static record Athlete(Long id, String firstName, String lastName, int yearOfBirth, Long clubId,
+                                     List<Result> results) {
 
             public int totalPoints() {
-                return results.stream().map(SeriesRankingResult::points).mapToInt(BigDecimal::intValue).sum();
+                return results.stream().map(Result::points).mapToInt(BigDecimal::intValue).sum();
             }
 
-            public List<SeriesRankingResult> sortedResults() {
-                results.sort(comparing(SeriesRankingResult::competitionDate));
+            public List<Result> sortedResults() {
+                results.sort(comparing(Result::competitionDate));
                 return results;
             }
 
-            public static record SeriesRankingResult(Long athleteId, Long competitionId, String competitionName,
-                                                     LocalDate competitionDate,
-                                                     BigDecimal points) {
+            public static record Result(Long athleteId, Long competitionId, String competitionName, LocalDate competitionDate,
+                                        BigDecimal points) {
             }
 
         }

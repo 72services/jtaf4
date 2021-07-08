@@ -58,7 +58,7 @@ public class ClubRankingReport extends RankingReport {
         table.setSpacingBefore(1f);
 
         int rank = 1;
-        for (ClubRankingData.ClubResultData result : ranking.sortedResults()) {
+        for (ClubRankingData.Result result : ranking.sortedResults()) {
             createClubRow(table, result, rank);
             rank++;
         }
@@ -66,10 +66,10 @@ public class ClubRankingReport extends RankingReport {
         document.add(table);
     }
 
-    private void createClubRow(PdfPTable table, ClubRankingData.ClubResultData clubResultData, int rank) {
+    private void createClubRow(PdfPTable table, ClubRankingData.Result result, int rank) {
         addCell(table, rank + ".");
-        addCell(table, clubResultData.club());
-        addCellAlignRight(table, "" + clubResultData.points());
+        addCell(table, result.club());
+        addCellAlignRight(table, "" + result.points());
     }
 
 }

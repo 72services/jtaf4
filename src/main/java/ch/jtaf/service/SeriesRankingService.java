@@ -105,29 +105,29 @@ public class SeriesRankingService {
                     .and(CATEGORY.ID.eq(CATEGORY_EVENT.CATEGORY_ID))
                     .and(ATHLETE.ID.eq(RESULT.ATHLETE_ID))
                     .groupBy(CLUB.NAME)
-                ).convertFrom(r -> r.map(mapping(ClubRankingData.ClubResultData::new)))
+                ).convertFrom(r -> r.map(mapping(ClubRankingData.Result::new)))
             )
             .from(SERIES)
             .where(SERIES.ID.eq(seriesId))
             .fetchOne(mapping(ClubRankingData::new));
     }
 
-    private List<SeriesRankingData.SeriesRankingCategory> getCategories(Result<Record14<Long, String, String, Integer, Integer, Long, String, String, Integer, Long, Long, String, LocalDate, BigDecimal>> records) {
-        List<SeriesRankingData.SeriesRankingCategory> categories = new ArrayList<>();
+    private List<SeriesRankingData.Category> getCategories(Result<Record14<Long, String, String, Integer, Integer, Long, String, String, Integer, Long, Long, String, LocalDate, BigDecimal>> records) {
+        List<SeriesRankingData.Category> categories = new ArrayList<>();
 
-        SeriesRankingData.SeriesRankingCategory category = null;
-        SeriesRankingData.SeriesRankingCategory.SeriesRankingAthlete athlete = null;
-        SeriesRankingData.SeriesRankingCategory.SeriesRankingAthlete.SeriesRankingResult result = null;
+        SeriesRankingData.Category category = null;
+        SeriesRankingData.Category.Athlete athlete = null;
+        SeriesRankingData.Category.Athlete.Result result = null;
 
         for (var record : records) {
             if (category == null || !category.id().equals(record.get(CATEGORY.ID))) {
-                category = new SeriesRankingData.SeriesRankingCategory(record.get(CATEGORY.ID), record.get(CATEGORY.ABBREVIATION),
+                category = new SeriesRankingData.Category(record.get(CATEGORY.ID), record.get(CATEGORY.ABBREVIATION),
                     record.get(CATEGORY.NAME), record.get(CATEGORY.YEAR_FROM), record.get(CATEGORY.YEAR_TO), new ArrayList<>());
                 categories.add(category);
             }
 
             if (athlete == null || !athlete.id().equals(record.get(ATHLETE.ID))) {
-                athlete = new SeriesRankingData.SeriesRankingCategory.SeriesRankingAthlete(record.get(ATHLETE.ID), record.get(ATHLETE.FIRST_NAME),
+                athlete = new SeriesRankingData.Category.Athlete(record.get(ATHLETE.ID), record.get(ATHLETE.FIRST_NAME),
                     record.get(ATHLETE.LAST_NAME), record.get(ATHLETE.YEAR_OF_BIRTH), record.get(ATHLETE.CLUB_ID), new ArrayList<>());
                 category.athletes().add(athlete);
             }
@@ -135,7 +135,7 @@ public class SeriesRankingService {
             if (result != null && result.athleteId().equals(record.get(ATHLETE.ID)) && result.competitionDate().equals(record.get(COMPETITION.ID))) {
                 result.points().add(record.get(sum(RESULT.POINTS)));
             } else {
-                result = new SeriesRankingData.SeriesRankingCategory.SeriesRankingAthlete.SeriesRankingResult(record.get(ATHLETE.ID), record.get(COMPETITION.ID),
+                result = new SeriesRankingData.Category.Athlete.Result(record.get(ATHLETE.ID), record.get(COMPETITION.ID),
                     record.get(COMPETITION.NAME), record.get(COMPETITION.COMPETITION_DATE), record.get(sum(RESULT.POINTS)));
                 athlete.results().add(result);
             }

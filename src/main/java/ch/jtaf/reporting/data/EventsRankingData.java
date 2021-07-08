@@ -9,9 +9,9 @@ import java.util.List;
 
 public record EventsRankingData(String name, LocalDate competitionDate, List<EventsRankingEvent> events) {
 
-    public static record EventsRankingEvent(String abbreviation, String gender, List<EventsRankingResult> results) {
+    public static record EventsRankingEvent(String abbreviation, String gender, List<Result> results) {
 
-        public List<EventsRankingResult> sortedResults() {
+        public List<Result> sortedResults() {
             results.sort((o1, o2) -> {
                 if (o1.eventType().equals(EventType.JUMP_THROW.name())) {
                     // Higher results are better
@@ -24,10 +24,10 @@ public record EventsRankingData(String name, LocalDate competitionDate, List<Eve
             return results;
         }
 
-        public static record EventsRankingResult(String firstName, String lastName, int yearOfBirth, String category, Long clubId,
-                                          String eventAbbrevation, String eventType, String result) {
+        public static record Result(String firstName, String lastName, int yearOfBirth, String category, Long clubId,
+                                    String eventAbbreviation, String eventType, String result) {
 
-            private static final Logger LOGGER = LoggerFactory.getLogger(EventsRankingResult.class);
+            private static final Logger LOGGER = LoggerFactory.getLogger(Result.class);
 
             double resultAsDouble() {
                 try {

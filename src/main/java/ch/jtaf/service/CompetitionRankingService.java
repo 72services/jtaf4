@@ -26,6 +26,9 @@ import static ch.jtaf.db.tables.Event.EVENT;
 import static ch.jtaf.db.tables.Result.RESULT;
 import static ch.jtaf.db.tables.Series.SERIES;
 import static java.util.stream.Collectors.toMap;
+import static org.jooq.Records.mapping;
+import static org.jooq.impl.DSL.multiset;
+import static org.jooq.impl.DSL.select;
 
 @Service
 public class CompetitionRankingService {
@@ -93,6 +96,42 @@ public class CompetitionRankingService {
         }
     }
 
+    public EventsRankingData getEventsRanking2(Long competitionId) {
+        return dsl
+            .select(
+                COMPETITION.NAME,
+                COMPETITION.COMPETITION_DATE,
+                multiset(
+                    select(
+                        EVENT.ABBREVIATION,
+                        EVENT.GENDER,
+                        multiset(
+                            select(ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME, ATHLETE.YEAR_OF_BIRTH,
+                                CATEGORY.ABBREVIATION,
+                                ATHLETE.CLUB_ID,
+                                EVENT.ABBREVIATION, EVENT.EVENT_TYPE,
+                                RESULT.RESULT_)
+                                .from(CATEGORY, CATEGORY_ATHLETE, ATHLETE, CATEGORY_EVENT, EVENT, RESULT)
+                                .where(CATEGORY.SERIES_ID.eq(COMPETITION.SERIES_ID))
+                                .and(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
+                                .and(CATEGORY_ATHLETE.CATEGORY_ID.eq(CATEGORY.ID))
+                                .and(CATEGORY.ID.eq(CATEGORY_EVENT.CATEGORY_ID))
+                                .and(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
+                                .and(CATEGORY_EVENT.EVENT_ID.eq(EVENT.ID))
+                                .and(RESULT.COMPETITION_ID.eq(COMPETITION.ID))
+                                .and(RESULT.CATEGORY_ID.eq(CATEGORY.ID))
+                                .and(RESULT.ATHLETE_ID.eq(ATHLETE.ID))
+                                .and(EVENT.ID.eq(RESULT.EVENT_ID)))
+                            .convertFrom(r -> r.map(mapping(EventsRankingData.EventsRankingEvent.Result::new))))
+                        .from(EVENT)
+                        .orderBy(EVENT.ABBREVIATION, EVENT.GENDER))
+                    .convertFrom(r -> r.map(mapping(EventsRankingData.EventsRankingEvent::new))))
+            .from(COMPETITION)
+            .where(COMPETITION.ID.eq(competitionId))
+            .fetchOne(mapping(EventsRankingData::new));
+    }
+
+
     public EventsRankingData getEventsRanking(Long competitionId) {
         var competition = dsl
             .select(COMPETITION.NAME, COMPETITION.COMPETITION_DATE)
@@ -134,27 +173,27 @@ public class CompetitionRankingService {
         }
     }
 
-    private List<CompetitionRankingData.CompetitionRankingCategory> getCategories(Result<Record14<Long, String, String, Integer, Integer, Long, String, String, Integer, Long, String, String, Integer, Integer>> results) {
-        List<CompetitionRankingData.CompetitionRankingCategory> categories = new ArrayList<>();
+    private List<CompetitionRankingData.Category> getCategories(Result<Record14<Long, String, String, Integer, Integer, Long, String, String, Integer, Long, String, String, Integer, Integer>> results) {
+        List<CompetitionRankingData.Category> categories = new ArrayList<>();
 
-        CompetitionRankingData.CompetitionRankingCategory category = null;
-        CompetitionRankingData.CompetitionRankingCategory.CompetitionRankingAthlete athlete = null;
+        CompetitionRankingData.Category category = null;
+        CompetitionRankingData.Category.Athlete athlete = null;
 
         for (var result : results) {
             if (category == null || !category.id().equals(result.get(CATEGORY.ID))) {
-                category = new CompetitionRankingData.CompetitionRankingCategory(result.get(CATEGORY.ID), result.get(CATEGORY.ABBREVIATION),
+                category = new CompetitionRankingData.Category(result.get(CATEGORY.ID), result.get(CATEGORY.ABBREVIATION),
                     result.get(CATEGORY.NAME), result.get(CATEGORY.YEAR_FROM), result.get(CATEGORY.YEAR_TO), new ArrayList<>());
                 categories.add(category);
             }
 
             if (athlete == null || !athlete.id().equals(result.get(ATHLETE.ID))) {
-                athlete = new CompetitionRankingData.CompetitionRankingCategory.CompetitionRankingAthlete(result.get(ATHLETE.ID), result.get(ATHLETE.FIRST_NAME),
+                athlete = new CompetitionRankingData.Category.Athlete(result.get(ATHLETE.ID), result.get(ATHLETE.FIRST_NAME),
                     result.get(ATHLETE.LAST_NAME), result.get(ATHLETE.YEAR_OF_BIRTH), result.get(ATHLETE.CLUB_ID), new ArrayList<>());
                 category.athletes().add(athlete);
             }
 
-            CompetitionRankingData.CompetitionRankingCategory.CompetitionRankingAthlete.CompetitionRankingResult competitionRankingResult =
-                new CompetitionRankingData.CompetitionRankingCategory.CompetitionRankingAthlete.CompetitionRankingResult
+            CompetitionRankingData.Category.Athlete.Result competitionRankingResult =
+                new CompetitionRankingData.Category.Athlete.Result
                     (result.get(EVENT.ABBREVIATION), result.get(RESULT.RESULT_), result.get(RESULT.POINTS), result.get(RESULT.POSITION));
             athlete.results().add(competitionRankingResult);
         }
@@ -188,8 +227,8 @@ public class CompetitionRankingService {
                 event = new EventsRankingData.EventsRankingEvent(record.get(EVENT.ABBREVIATION), record.get(EVENT.GENDER), new ArrayList<>());
                 events.add(event);
             }
-            EventsRankingData.EventsRankingEvent.EventsRankingResult result =
-                new EventsRankingData.EventsRankingEvent.EventsRankingResult(record.get(ATHLETE.FIRST_NAME), record.get(ATHLETE.LAST_NAME),
+            EventsRankingData.EventsRankingEvent.Result result =
+                new EventsRankingData.EventsRankingEvent.Result(record.get(ATHLETE.FIRST_NAME), record.get(ATHLETE.LAST_NAME),
                     record.get(ATHLETE.YEAR_OF_BIRTH), record.get(CATEGORY.ABBREVIATION), record.get(ATHLETE.CLUB_ID),
                     record.get(EVENT.ABBREVIATION), record.get(EVENT.EVENT_TYPE), record.get(RESULT.RESULT_));
             event.sortedResults().add(result);

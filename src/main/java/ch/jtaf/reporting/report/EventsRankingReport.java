@@ -61,7 +61,7 @@ public class EventsRankingReport extends RankingReport {
             createEventTitle(table, event);
 
             int position = 1;
-            for (EventsRankingData.EventsRankingEvent.EventsRankingResult result : event.sortedResults()) {
+            for (EventsRankingData.EventsRankingEvent.Result result : event.sortedResults()) {
                 createAthleteRow(table, position, result);
                 position++;
             }
@@ -75,7 +75,7 @@ public class EventsRankingReport extends RankingReport {
         addCategoryTitleCellWithColspan(table, " ", 7);
     }
 
-    private void createAthleteRow(PdfPTable table, int position, EventsRankingData.EventsRankingEvent.EventsRankingResult result) {
+    private void createAthleteRow(PdfPTable table, int position, EventsRankingData.EventsRankingEvent.Result result) {
         addCell(table, position + ".");
         addCell(table, result.lastName());
         addCell(table, result.firstName());

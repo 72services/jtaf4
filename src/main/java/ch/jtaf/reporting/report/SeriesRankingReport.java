@@ -51,7 +51,7 @@ public class SeriesRankingReport extends RankingReport {
     }
 
     private void createRanking() throws DocumentException {
-        for (SeriesRankingData.SeriesRankingCategory category : ranking.categories()) {
+        for (SeriesRankingData.Category category : ranking.categories()) {
             if (numberOfRows > 20) {
                 document.newPage();
             }
@@ -60,7 +60,7 @@ public class SeriesRankingReport extends RankingReport {
             numberOfRows += 2;
 
             int rank = 1;
-            for (SeriesRankingData.SeriesRankingCategory.SeriesRankingAthlete athlete : category.getFilteredAthletes(ranking.numberOfCompetitions())) {
+            for (SeriesRankingData.Category.Athlete athlete : category.getFilteredAthletes(ranking.numberOfCompetitions())) {
                 if (numberOfRows > 23) {
                     document.add(table);
                     document.newPage();
@@ -81,7 +81,7 @@ public class SeriesRankingReport extends RankingReport {
         return table;
     }
 
-    private void createCategoryTitle(PdfPTable table, SeriesRankingData.SeriesRankingCategory category) {
+    private void createCategoryTitle(PdfPTable table, SeriesRankingData.Category category) {
         addCategoryTitleCellWithColspan(table, category.abbreviation(), 1);
         addCategoryTitleCellWithColspan(table, category.name() + " "
             + category.yearFrom() + " - " + category.yearTo(), 5);
@@ -89,7 +89,7 @@ public class SeriesRankingReport extends RankingReport {
         addCategoryTitleCellWithColspan(table, " ", 6);
     }
 
-    private void createAthleteRow(PdfPTable table, int rank, SeriesRankingData.SeriesRankingCategory.SeriesRankingAthlete athlete) {
+    private void createAthleteRow(PdfPTable table, int rank, SeriesRankingData.Category.Athlete athlete) {
         addCell(table, rank + ".");
         addCell(table, athlete.lastName());
         addCell(table, athlete.firstName());
@@ -98,7 +98,7 @@ public class SeriesRankingReport extends RankingReport {
         addCellAlignRight(table, athlete.totalPoints() + "");
 
         StringBuilder sb = new StringBuilder();
-        for (SeriesRankingData.SeriesRankingCategory.SeriesRankingAthlete.SeriesRankingResult result : athlete.sortedResults()) {
+        for (SeriesRankingData.Category.Athlete.Result result : athlete.sortedResults()) {
             sb.append(result.competitionId());
             sb.append(": ");
             sb.append(result.points());

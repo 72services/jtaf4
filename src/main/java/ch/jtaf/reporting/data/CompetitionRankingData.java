@@ -6,29 +6,29 @@ import java.util.List;
 import static java.util.Comparator.comparingInt;
 
 public record CompetitionRankingData(String name, LocalDate competitionDate, boolean alwaysFirstThreeMedals, int medalPercentage,
-                                     List<CompetitionRankingCategory> categories) {
+                                     List<Category> categories) {
 
-    public static record CompetitionRankingCategory(Long id, String abbreviation, String name, int yearFrom, int yearTo,
-                                                    List<CompetitionRankingAthlete> athletes) {
+    public static record Category(Long id, String abbreviation, String name, int yearFrom, int yearTo,
+                                  List<Athlete> athletes) {
 
-        public List<CompetitionRankingAthlete> sortedAthletes() {
+        public List<Athlete> sortedAthletes() {
             athletes.sort((o1, o2) -> Integer.compare(o2.totalPoints(), o1.totalPoints()));
             return athletes;
         }
 
-        public static record CompetitionRankingAthlete(Long id, String firstName, String lastName, int yearOfBirth, Long clubId,
-                                                       List<CompetitionRankingResult> results) {
+        public static record Athlete(Long id, String firstName, String lastName, int yearOfBirth, Long clubId,
+                                     List<Result> results) {
 
             public int totalPoints() {
-                return results.stream().mapToInt(CompetitionRankingResult::points).sum();
+                return results.stream().mapToInt(Result::points).sum();
             }
 
-            public List<CompetitionRankingResult> sortedResults() {
-                results.sort(comparingInt(CompetitionRankingResult::position));
+            public List<Result> sortedResults() {
+                results.sort(comparingInt(Result::position));
                 return results;
             }
 
-            public static record CompetitionRankingResult(String eventAbbreviation, String result, int points, int position) {
+            public static record Result(String eventAbbreviation, String result, int points, int position) {
             }
 
         }

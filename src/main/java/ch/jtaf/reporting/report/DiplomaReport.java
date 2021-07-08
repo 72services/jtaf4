@@ -79,8 +79,8 @@ public class DiplomaReport extends AbstractReport {
         }
     }
 
-    private void createAthleteInfo(CompetitionRankingData.CompetitionRankingCategory.CompetitionRankingAthlete athlete,
-                                   CompetitionRankingData.CompetitionRankingCategory category, int rank) throws DocumentException {
+    private void createAthleteInfo(CompetitionRankingData.Category.Athlete athlete,
+                                   CompetitionRankingData.Category category, int rank) throws DocumentException {
         var table = new PdfPTable(new float[]{2f, 10f, 10f, 3f, 2f});
         table.setWidthPercentage(100f);
         table.setSpacingBefore(cmToPixel(1.5f));
