@@ -3,7 +3,7 @@ package ch.jtaf.service;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.containers.MariaDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -12,7 +12,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public abstract class AbstractTestcontainersTest {
 
     @Container
-    public static MySQLContainer mySQLContainer = new MySQLContainer("mysql:5.7.34");
+    public static MariaDBContainer mySQLContainer = new MariaDBContainer("mariadb:10.3.29");
 
     @DynamicPropertySource
     static void postgresqlProperties(DynamicPropertyRegistry registry) {
