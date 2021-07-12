@@ -114,7 +114,7 @@ public class CompetitionRankingReport extends RankingReport {
         addCellAlignRight(table, athlete.totalPoints() + "");
 
         StringBuilder sb = new StringBuilder();
-        for (CompetitionRankingData.Category.Athlete.Result result : athlete.sortedResults()) {
+        for (CompetitionRankingData.Category.Athlete.Result result : athlete.results()) {
             sb.append(result.eventAbbreviation());
             sb.append(": ");
             sb.append(result.result());

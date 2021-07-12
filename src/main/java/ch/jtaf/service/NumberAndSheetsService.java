@@ -83,11 +83,7 @@ public class NumberAndSheetsService {
     }
 
     private byte[] getLogo(Long id) {
-        var logoRecord = dsl
-            .select(SERIES.LOGO)
-            .from(SERIES)
-            .where(SERIES.ID.eq(id))
-            .fetchOne();
+        var logoRecord = dsl.select(SERIES.LOGO).from(SERIES).where(SERIES.ID.eq(id)).fetchOne();
         if (logoRecord != null) {
             return logoRecord.get(SERIES.LOGO);
         } else {
