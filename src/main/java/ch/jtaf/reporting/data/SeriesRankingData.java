@@ -10,9 +10,9 @@ public record SeriesRankingData(String name, int numberOfCompetitions, List<Cate
 
     public static record Category(String abbreviation, String name, int yearFrom, int yearTo, List<Athlete> athletes) {
 
-        public List<Athlete> getFilteredAthletes(int numberOfCompetitions) {
+        public List<Athlete> getFilteredAndSortedAthletes(int numberOfCompetitions) {
             return athletes.stream()
-                .filter(athlete -> athlete.results().size() == numberOfCompetitions)
+                .filter(athlete -> athlete.results != null && athlete.results().size() == numberOfCompetitions)
                 .sorted((o1, o2) -> compare(o2.totalPoints(), o1.totalPoints()))
                 .collect(toList());
         }

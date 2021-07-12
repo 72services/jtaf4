@@ -63,7 +63,7 @@ public class SeriesRankingService {
                                         .join(COMPETITION).on(COMPETITION.ID.eq(RESULT.COMPETITION_ID))
                                         .where(RESULT.ATHLETE_ID.eq(ATHLETE.ID))
                                         .and(COMPETITION.SERIES_ID.eq(SERIES.ID))
-                                        .groupBy(RESULT.ATHLETE_ID, RESULT.COMPETITION_ID, COMPETITION.NAME, COMPETITION.COMPETITION_DATE)
+                                        .groupBy(COMPETITION.NAME, COMPETITION.COMPETITION_DATE)
                                         .orderBy(COMPETITION.COMPETITION_DATE)
                                 ).convertFrom(r -> r.map(mapping(SeriesRankingData.Category.Athlete.Result::new)))
                             )

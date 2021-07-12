@@ -59,7 +59,7 @@ public class SeriesRankingReport extends RankingReport {
             numberOfRows += 2;
 
             int rank = 1;
-            for (SeriesRankingData.Category.Athlete athlete : category.getFilteredAthletes(ranking.numberOfCompetitions())) {
+            for (SeriesRankingData.Category.Athlete athlete : category.getFilteredAndSortedAthletes(ranking.numberOfCompetitions())) {
                 if (numberOfRows > 23) {
                     document.add(table);
                     document.newPage();
