@@ -111,7 +111,11 @@ public class NumberAndSheetsService {
             .from(SERIES)
             .where(SERIES.ID.eq(id))
             .fetchOne();
-        return logoRecord.get(SERIES.LOGO);
+        if (logoRecord != null) {
+            return logoRecord.get(SERIES.LOGO);
+        } else {
+            return new byte[0];
+        }
     }
 
     private List<NumbersAndSheetsAthlete> getAthletes(Long competitionId, Field<?>... orderBy) {
