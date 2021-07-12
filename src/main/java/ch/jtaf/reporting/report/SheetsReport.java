@@ -170,7 +170,7 @@ public class SheetsReport extends AbstractReport {
         table.setWidthPercentage(100);
         table.setSpacingBefore(cmToPixel(1f));
 
-        for (var event : athlete.sortedEvents()) {
+        for (var event : athlete.events()) {
             if (event.type().equals(EventType.JUMP_THROW.name())) {
                 addInfoCell(table, event.name());
                 addInfoCellWithBorder(table, "");

@@ -1,5 +1,6 @@
 package ch.jtaf.service;
 
+import ch.jtaf.reporting.data.EventsRankingData;
 import ch.jtaf.reporting.data.NumbersAndSheetsAthlete;
 import ch.jtaf.reporting.data.NumbersAndSheetsCompetition;
 import ch.jtaf.reporting.report.NumbersReport;
@@ -7,6 +8,8 @@ import ch.jtaf.reporting.report.SheetsReport;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.Record;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,6 +24,9 @@ import static ch.jtaf.db.tables.Club.CLUB;
 import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Event.EVENT;
 import static ch.jtaf.db.tables.Series.SERIES;
+import static org.jooq.Records.mapping;
+import static org.jooq.impl.DSL.multiset;
+import static org.jooq.impl.DSL.select;
 
 @Service
 public class NumberAndSheetsService {
@@ -44,6 +50,32 @@ public class NumberAndSheetsService {
     }
 
     private NumbersAndSheetsAthlete createDummyAthlete(Long categoryId) {
+//        return dsl
+//            .select(
+//                DSL.inline(null, SQLDataType.BIGINT),
+//                DSL.inline(null, SQLDataType.VARCHAR),
+//                DSL.inline(null, SQLDataType.VARCHAR),
+//                DSL.inline(null, SQLDataType.INTEGER),
+//                CATEGORY.ABBREVIATION,
+//                DSL.inline(null, SQLDataType.VARCHAR),
+//                multiset(
+//                    select(
+//                        EVENT.ABBREVIATION,
+//                        EVENT.NAME,
+//                        EVENT.GENDER,
+//                        EVENT.EVENT_TYPE,
+//                        CATEGORY_EVENT.POSITION
+//                    )
+//                        .from(EVENT)
+//                        .join(CATEGORY_EVENT).on(CATEGORY_EVENT.EVENT_ID.eq(EVENT.ID))
+//                        .where(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
+//                        .orderBy(CATEGORY_EVENT.POSITION)
+//                ).convertFrom(r -> r.map(mapping(NumbersAndSheetsAthlete.Event::new)))
+//            )
+//            .from(CATEGORY)
+//            .where(CATEGORY.ID.eq(categoryId))
+//            .fetchOne(mapping(NumbersAndSheetsAthlete::new));
+
         var records = dsl
             .select(CATEGORY.ABBREVIATION,
                 EVENT.ABBREVIATION, EVENT.NAME, EVENT.EVENT_TYPE, EVENT.EVENT_TYPE, EVENT.GENDER,
@@ -58,7 +90,7 @@ public class NumberAndSheetsService {
         var athlete = new NumbersAndSheetsAthlete(null, null, null, 0, records.get(0).get(CATEGORY.ABBREVIATION), null, new ArrayList<>());
 
         for (var record : records) {
-            athlete.sortedEvents().add(new NumbersAndSheetsAthlete.NumbersAndSheetsEvent(record.get(EVENT.ABBREVIATION), record.get(EVENT.NAME),
+            athlete.events().add(new NumbersAndSheetsAthlete.Event(record.get(EVENT.ABBREVIATION), record.get(EVENT.NAME),
                 record.get(EVENT.EVENT_TYPE), record.get(EVENT.GENDER), record.get(CATEGORY_EVENT.POSITION)));
         }
 
@@ -83,38 +115,36 @@ public class NumberAndSheetsService {
     }
 
     private List<NumbersAndSheetsAthlete> getAthletes(Long competitionId, Field<?>... orderBy) {
-        var athletes = new ArrayList<NumbersAndSheetsAthlete>();
-
-        var records = dsl
-            .select(ATHLETE.ID, ATHLETE.FIRST_NAME, ATHLETE.LAST_NAME, ATHLETE.YEAR_OF_BIRTH,
+        return dsl
+            .select(
+                ATHLETE.ID,
+                ATHLETE.FIRST_NAME,
+                ATHLETE.LAST_NAME,
+                ATHLETE.YEAR_OF_BIRTH,
                 CATEGORY.ABBREVIATION,
                 CLUB.ABBREVIATION,
-                EVENT.ABBREVIATION, EVENT.NAME, EVENT.GENDER, EVENT.EVENT_TYPE,
-                CATEGORY_EVENT.POSITION)
+                multiset(
+                    select(
+                        EVENT.ABBREVIATION,
+                        EVENT.NAME,
+                        EVENT.GENDER,
+                        EVENT.EVENT_TYPE,
+                        CATEGORY_EVENT.POSITION
+                    )
+                        .from(EVENT)
+                        .join(CATEGORY_EVENT).on(CATEGORY_EVENT.EVENT_ID.eq(EVENT.ID))
+                        .where(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
+                        .orderBy(CATEGORY_EVENT.POSITION)
+                ).convertFrom(r -> r.map(mapping(NumbersAndSheetsAthlete.Event::new)))
+            )
             .from(ATHLETE)
             .join(CATEGORY_ATHLETE).on(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
             .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
             .join(COMPETITION).on(COMPETITION.SERIES_ID.eq(CATEGORY.SERIES_ID))
             .leftOuterJoin(CLUB).on(CLUB.ID.eq(ATHLETE.CLUB_ID))
-            .join(CATEGORY_EVENT).on(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
-            .join(EVENT).on(EVENT.ID.eq(CATEGORY_EVENT.EVENT_ID))
             .where(COMPETITION.ID.eq(competitionId))
             .orderBy(orderBy)
-            .fetch();
-
-        NumbersAndSheetsAthlete athlete = null;
-
-        for (Record record : records) {
-            if (athlete == null || !athlete.id().equals(record.get(ATHLETE.ID))) {
-                athlete = new NumbersAndSheetsAthlete(record.get(ATHLETE.ID), record.get(ATHLETE.FIRST_NAME), record.get(ATHLETE.LAST_NAME),
-                    record.get(ATHLETE.YEAR_OF_BIRTH), record.get(CATEGORY.ABBREVIATION), record.get(CLUB.ABBREVIATION), new ArrayList<>());
-                athletes.add(athlete);
-            }
-            athlete.sortedEvents().add(new NumbersAndSheetsAthlete.NumbersAndSheetsEvent(record.get(EVENT.ABBREVIATION), record.get(EVENT.NAME),
-                record.get(EVENT.GENDER), record.get(EVENT.EVENT_TYPE), record.get(CATEGORY_EVENT.POSITION)));
-        }
-
-        return athletes;
+            .fetch(mapping(NumbersAndSheetsAthlete::new));
     }
 
 }

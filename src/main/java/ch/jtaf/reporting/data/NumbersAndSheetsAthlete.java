@@ -5,13 +5,8 @@ import java.util.List;
 import static java.util.Comparator.comparingInt;
 
 public record NumbersAndSheetsAthlete(Long id, String firstName, String lastName, int yearOfBirth, String category, String club,
-                                      List<NumbersAndSheetsEvent> events) {
+                                      List<Event> events) {
 
-    public List<NumbersAndSheetsEvent> sortedEvents() {
-        events.sort(comparingInt(NumbersAndSheetsEvent::position));
-        return events;
-    }
-
-    public static record NumbersAndSheetsEvent(String abbreviation, String name, String gender, String type, int position) {
+    public static record Event(String abbreviation, String name, String gender, String type, int position) {
     }
 }
