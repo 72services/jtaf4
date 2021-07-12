@@ -95,16 +95,19 @@ public class SeriesRankingService {
         return dsl
             .select(
                 SERIES.NAME,
-                multiset(select(CLUB.NAME, sum(RESULT.POINTS))
-                    .from(RESULT, COMPETITION, EVENT, CATEGORY_EVENT, CATEGORY, ATHLETE)
-                    .leftOuterJoin(CLUB).on(CLUB.ID.eq(ATHLETE.CLUB_ID))
-                    .where(COMPETITION.SERIES_ID.eq(seriesId))
-                    .and(COMPETITION.ID.eq(RESULT.COMPETITION_ID))
-                    .and(EVENT.ID.eq(RESULT.EVENT_ID))
-                    .and(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID)).and(CATEGORY_EVENT.EVENT_ID.eq(EVENT.ID))
-                    .and(CATEGORY.ID.eq(CATEGORY_EVENT.CATEGORY_ID))
-                    .and(ATHLETE.ID.eq(RESULT.ATHLETE_ID))
-                    .groupBy(CLUB.NAME)
+                multiset(
+                    select(
+                        CLUB.NAME,
+                        sum(RESULT.POINTS)
+                    )
+                        .from(RESULT)
+                        .join(COMPETITION).on(COMPETITION.ID.eq(RESULT.COMPETITION_ID))
+                        .join(EVENT).on(EVENT.ID.eq(RESULT.EVENT_ID))
+                        .join(CATEGORY_EVENT).on(CATEGORY_EVENT.EVENT_ID.eq(EVENT.ID))
+                        .join(ATHLETE).on(RESULT.ATHLETE_ID.eq(ATHLETE.ID))
+                        .join(CLUB).on(CLUB.ID.eq(ATHLETE.CLUB_ID))
+                        .where(COMPETITION.SERIES_ID.eq(seriesId))
+                        .groupBy(CLUB.NAME)
                 ).convertFrom(r -> r.map(mapping(ClubRankingData.Result::new)))
             )
             .from(SERIES)
