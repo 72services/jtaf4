@@ -98,8 +98,8 @@ public class SeriesRankingReport extends RankingReport {
         addCellAlignRight(table, athlete.totalPoints() + "");
 
         StringBuilder sb = new StringBuilder();
-        for (SeriesRankingData.Category.Athlete.Result result : athlete.sortedResults()) {
-            sb.append(result.competitionId());
+        for (SeriesRankingData.Category.Athlete.Result result : athlete.results()) {
+            sb.append(result.competitionName());
             sb.append(": ");
             sb.append(result.points());
             sb.append(" ");
