@@ -8,7 +8,6 @@ import org.jooq.DSLContext;
 import org.springframework.stereotype.Service;
 
 import java.util.Locale;
-import java.util.Map;
 
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
@@ -19,7 +18,6 @@ import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Event.EVENT;
 import static ch.jtaf.db.tables.Result.RESULT;
 import static ch.jtaf.db.tables.Series.SERIES;
-import static java.util.stream.Collectors.toMap;
 import static org.jooq.Records.mapping;
 import static org.jooq.impl.DSL.count;
 import static org.jooq.impl.DSL.multiset;
@@ -36,7 +34,7 @@ public class SeriesRankingService {
     }
 
     public byte[] getSeriesRankingAsPdf(Long seriesId) {
-        return new SeriesRankingReport(getSeriesRanking(seriesId), new Locale("de", "CH"), getClubs()).create();
+        return new SeriesRankingReport(getSeriesRanking(seriesId), new Locale("de", "CH")).create();
     }
 
     public SeriesRankingData getSeriesRanking(Long seriesId) {
@@ -46,18 +44,16 @@ public class SeriesRankingService {
                 count(COMPETITION.ID),
                 multiset(
                     select(
-                        CATEGORY.ID,
                         CATEGORY.ABBREVIATION,
                         CATEGORY.NAME,
                         CATEGORY.YEAR_FROM,
                         CATEGORY.YEAR_TO,
                         multiset(
                             select(
-                                ATHLETE.ID,
                                 ATHLETE.FIRST_NAME,
                                 ATHLETE.LAST_NAME,
                                 ATHLETE.YEAR_OF_BIRTH,
-                                ATHLETE.CLUB_ID,
+                                CLUB.NAME,
                                 multiset(
                                     select(
                                         COMPETITION.NAME,
@@ -72,6 +68,7 @@ public class SeriesRankingService {
                                 ).convertFrom(r -> r.map(mapping(SeriesRankingData.Category.Athlete.Result::new)))
                             )
                                 .from(ATHLETE)
+                                .leftOuterJoin(CLUB).on(CLUB.ID.eq(ATHLETE.CLUB_ID))
                                 .join(CATEGORY_ATHLETE).on(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID)).and(CATEGORY_ATHLETE.CATEGORY_ID.eq(CATEGORY.ID))
                         ).convertFrom(r -> r.map(mapping(SeriesRankingData.Category.Athlete::new)))
                     )
@@ -88,7 +85,7 @@ public class SeriesRankingService {
     }
 
     public byte[] getClubRankingAsPdf(Long seriesId) {
-        return new ClubRankingReport(getClubRanking(seriesId), new Locale("de", "CH"), getClubs()).create();
+        return new ClubRankingReport(getClubRanking(seriesId), new Locale("de", "CH")).create();
     }
 
     public ClubRankingData getClubRanking(Long seriesId) {
@@ -113,13 +110,5 @@ public class SeriesRankingService {
             .from(SERIES)
             .where(SERIES.ID.eq(seriesId))
             .fetchOne(mapping(ClubRankingData::new));
-    }
-
-    private Map<Long, String> getClubs() {
-        return dsl.
-            select(CLUB.ID, CLUB.ABBREVIATION)
-            .from(CLUB)
-            .stream()
-            .collect(toMap(club -> club.get(CLUB.ID), club -> club.get(CLUB.ABBREVIATION)));
     }
 }

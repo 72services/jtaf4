@@ -8,8 +8,7 @@ import static java.util.stream.Collectors.toList;
 
 public record SeriesRankingData(String name, int numberOfCompetitions, List<Category> categories) {
 
-    public static record Category(Long id, String abbreviation, String name, int yearFrom, int yearTo,
-                                  List<Athlete> athletes) {
+    public static record Category(String abbreviation, String name, int yearFrom, int yearTo, List<Athlete> athletes) {
 
         public List<Athlete> getFilteredAthletes(int numberOfCompetitions) {
             return athletes.stream()
@@ -18,8 +17,7 @@ public record SeriesRankingData(String name, int numberOfCompetitions, List<Cate
                 .collect(toList());
         }
 
-        public static record Athlete(Long id, String firstName, String lastName, int yearOfBirth, Long clubId,
-                                     List<Result> results) {
+        public static record Athlete(String firstName, String lastName, int yearOfBirth, String club, List<Result> results) {
 
             public int totalPoints() {
                 return results.stream().map(Result::points).mapToInt(BigDecimal::intValue).sum();

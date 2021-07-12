@@ -135,7 +135,7 @@ public class SheetsReport extends AbstractReport {
         } else {
             addInfoCell(table, athlete.firstName());
         }
-        if (athlete.yearOfBirth() == 0) {
+        if (athlete.yearOfBirth() == null) {
             addInfoCellWithBorder(table, messages.getString("Year"));
         } else {
             addInfoCell(table, athlete.yearOfBirth() + "");

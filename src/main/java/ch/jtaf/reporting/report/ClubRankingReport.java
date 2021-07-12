@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Locale;
-import java.util.Map;
 
 import static com.lowagie.text.PageSize.A4;
 
@@ -22,8 +21,8 @@ public class ClubRankingReport extends RankingReport {
     private final ClubRankingData ranking;
     private Document document;
 
-    public ClubRankingReport(ClubRankingData ranking, Locale locale, Map<Long, String> clubs) {
-        super(locale, clubs);
+    public ClubRankingReport(ClubRankingData ranking, Locale locale) {
+        super(locale);
         this.ranking = ranking;
     }
 

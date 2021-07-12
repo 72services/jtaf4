@@ -16,8 +16,7 @@ public record CompetitionRankingData(String name, LocalDate competitionDate, boo
             return athletes;
         }
 
-        public static record Athlete(Long id, String firstName, String lastName, int yearOfBirth, Long clubId,
-                                     List<Result> results) {
+        public static record Athlete(String firstName, String lastName, int yearOfBirth, String club, List<Result> results) {
 
             public int totalPoints() {
                 return results.stream().mapToInt(Result::points).sum();

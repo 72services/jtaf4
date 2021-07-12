@@ -1,18 +1,15 @@
 package ch.jtaf.service;
 
-import ch.jtaf.reporting.data.EventsRankingData;
 import ch.jtaf.reporting.data.NumbersAndSheetsAthlete;
 import ch.jtaf.reporting.data.NumbersAndSheetsCompetition;
 import ch.jtaf.reporting.report.NumbersReport;
 import ch.jtaf.reporting.report.SheetsReport;
 import org.jooq.DSLContext;
 import org.jooq.Field;
-import org.jooq.Record;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -50,51 +47,31 @@ public class NumberAndSheetsService {
     }
 
     private NumbersAndSheetsAthlete createDummyAthlete(Long categoryId) {
-//        return dsl
-//            .select(
-//                DSL.inline(null, SQLDataType.BIGINT),
-//                DSL.inline(null, SQLDataType.VARCHAR),
-//                DSL.inline(null, SQLDataType.VARCHAR),
-//                DSL.inline(null, SQLDataType.INTEGER),
-//                CATEGORY.ABBREVIATION,
-//                DSL.inline(null, SQLDataType.VARCHAR),
-//                multiset(
-//                    select(
-//                        EVENT.ABBREVIATION,
-//                        EVENT.NAME,
-//                        EVENT.GENDER,
-//                        EVENT.EVENT_TYPE,
-//                        CATEGORY_EVENT.POSITION
-//                    )
-//                        .from(EVENT)
-//                        .join(CATEGORY_EVENT).on(CATEGORY_EVENT.EVENT_ID.eq(EVENT.ID))
-//                        .where(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
-//                        .orderBy(CATEGORY_EVENT.POSITION)
-//                ).convertFrom(r -> r.map(mapping(NumbersAndSheetsAthlete.Event::new)))
-//            )
-//            .from(CATEGORY)
-//            .where(CATEGORY.ID.eq(categoryId))
-//            .fetchOne(mapping(NumbersAndSheetsAthlete::new));
-
-        var records = dsl
-            .select(CATEGORY.ABBREVIATION,
-                EVENT.ABBREVIATION, EVENT.NAME, EVENT.EVENT_TYPE, EVENT.EVENT_TYPE, EVENT.GENDER,
-                CATEGORY_EVENT.POSITION)
+        return dsl
+            .select(
+                DSL.inline(null, SQLDataType.BIGINT),
+                DSL.inline(null, SQLDataType.VARCHAR),
+                DSL.inline(null, SQLDataType.VARCHAR),
+                DSL.inline(null, SQLDataType.INTEGER),
+                CATEGORY.ABBREVIATION,
+                DSL.inline(null, SQLDataType.VARCHAR),
+                multiset(
+                    select(
+                        EVENT.ABBREVIATION,
+                        EVENT.NAME,
+                        EVENT.GENDER,
+                        EVENT.EVENT_TYPE,
+                        CATEGORY_EVENT.POSITION
+                    )
+                        .from(EVENT)
+                        .join(CATEGORY_EVENT).on(CATEGORY_EVENT.EVENT_ID.eq(EVENT.ID))
+                        .where(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
+                        .orderBy(CATEGORY_EVENT.POSITION)
+                ).convertFrom(r -> r.map(mapping(NumbersAndSheetsAthlete.Event::new)))
+            )
             .from(CATEGORY)
-            .join(CATEGORY_EVENT).on(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
-            .join(EVENT).on(EVENT.ID.eq(CATEGORY_EVENT.EVENT_ID))
             .where(CATEGORY.ID.eq(categoryId))
-            .orderBy(CATEGORY_EVENT.POSITION)
-            .fetch();
-
-        var athlete = new NumbersAndSheetsAthlete(null, null, null, 0, records.get(0).get(CATEGORY.ABBREVIATION), null, new ArrayList<>());
-
-        for (var record : records) {
-            athlete.events().add(new NumbersAndSheetsAthlete.Event(record.get(EVENT.ABBREVIATION), record.get(EVENT.NAME),
-                record.get(EVENT.EVENT_TYPE), record.get(EVENT.GENDER), record.get(CATEGORY_EVENT.POSITION)));
-        }
-
-        return athlete;
+            .fetchOne(mapping(NumbersAndSheetsAthlete::new));
     }
 
     private NumbersAndSheetsCompetition getCompetition(Long competitionId) {

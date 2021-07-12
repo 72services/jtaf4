@@ -7,14 +7,12 @@ import ch.jtaf.reporting.report.DiplomaReport;
 import ch.jtaf.reporting.report.EventsRankingReport;
 import org.jooq.DSLContext;
 import org.jooq.Record14;
-import org.jooq.Record9;
 import org.jooq.Result;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
@@ -25,7 +23,6 @@ import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Event.EVENT;
 import static ch.jtaf.db.tables.Result.RESULT;
 import static ch.jtaf.db.tables.Series.SERIES;
-import static java.util.stream.Collectors.toMap;
 import static org.jooq.Records.mapping;
 import static org.jooq.impl.DSL.multiset;
 import static org.jooq.impl.DSL.select;
@@ -41,7 +38,7 @@ public class CompetitionRankingService {
     }
 
     public byte[] getCompetitionRankingAsPdf(Long competitionId) {
-        return new CompetitionRankingReport(getCompetitionRanking(competitionId), new Locale("de", "CH"), getClubs()).create();
+        return new CompetitionRankingReport(getCompetitionRanking(competitionId), new Locale("de", "CH")).create();
     }
 
     public byte[] getDiplomasAsPdf(Long competitionId) {
@@ -49,7 +46,7 @@ public class CompetitionRankingService {
     }
 
     public byte[] getEventRankingAsPdf(Long competitionId) {
-        return new EventsRankingReport(getEventsRanking(competitionId), new Locale("de", "CH"), getClubs()).create();
+        return new EventsRankingReport(getEventsRanking(competitionId), new Locale("de", "CH")).create();
     }
 
     public CompetitionRankingData getCompetitionRanking(Long competitionId) {
@@ -110,9 +107,10 @@ public class CompetitionRankingService {
                         multiset(
                             selectDistinct(ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME, ATHLETE.YEAR_OF_BIRTH,
                                 CATEGORY.ABBREVIATION,
-                                ATHLETE.CLUB_ID,
+                                CLUB.NAME,
                                 RESULT.RESULT_)
                                 .from(ATHLETE)
+                                .leftOuterJoin(CLUB).on(CLUB.ID.eq(ATHLETE.CLUB_ID))
                                 .join(CATEGORY_ATHLETE).on(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
                                 .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
                                 .join(CATEGORY_EVENT).on(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
@@ -145,9 +143,9 @@ public class CompetitionRankingService {
                 categories.add(category);
             }
 
-            if (athlete == null || !athlete.id().equals(result.get(ATHLETE.ID))) {
-                athlete = new CompetitionRankingData.Category.Athlete(result.get(ATHLETE.ID), result.get(ATHLETE.FIRST_NAME),
-                    result.get(ATHLETE.LAST_NAME), result.get(ATHLETE.YEAR_OF_BIRTH), result.get(ATHLETE.CLUB_ID), new ArrayList<>());
+            if (athlete == null || !athlete.lastName().equals(result.get(ATHLETE.LAST_NAME))) {
+                athlete = new CompetitionRankingData.Category.Athlete(result.get(ATHLETE.FIRST_NAME), result.get(ATHLETE.LAST_NAME),
+                    result.get(ATHLETE.YEAR_OF_BIRTH), result.get(CLUB.NAME), new ArrayList<>());
                 category.athletes().add(athlete);
             }
 
@@ -172,13 +170,5 @@ public class CompetitionRankingService {
         } else {
             return new byte[0];
         }
-    }
-
-    private Map<Long, String> getClubs() {
-        return dsl.
-            select(CLUB.ID, CLUB.ABBREVIATION)
-            .from(CLUB)
-            .stream()
-            .collect(toMap(club -> club.get(CLUB.ID), club -> club.get(CLUB.ABBREVIATION)));
     }
 }

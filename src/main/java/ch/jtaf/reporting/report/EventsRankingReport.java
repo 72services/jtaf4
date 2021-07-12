@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Locale;
-import java.util.Map;
 
 import static com.lowagie.text.PageSize.A4;
 
@@ -23,8 +22,8 @@ public class EventsRankingReport extends RankingReport {
 
     private Document document;
 
-    public EventsRankingReport(EventsRankingData ranking, Locale locale, Map<Long, String> clubs) {
-        super(locale, clubs);
+    public EventsRankingReport(EventsRankingData ranking, Locale locale) {
+        super(locale);
         this.ranking = ranking;
     }
 
@@ -81,7 +80,7 @@ public class EventsRankingReport extends RankingReport {
         addCell(table, result.firstName());
         addCell(table, result.yearOfBirth() + "");
         addCell(table, result.category());
-        addCell(table, result.clubId() == null ? "" : clubs.get(result.clubId()));
+        addCell(table, result.club() != null ? result.club() : "");
         addCellAlignRight(table, "" + result.result());
     }
 

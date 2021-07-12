@@ -24,7 +24,7 @@ public record EventsRankingData(String name, LocalDate competitionDate, List<Eve
             return results;
         }
 
-        public static record Result(String firstName, String lastName, int yearOfBirth, String category, Long clubId, String result) {
+        public static record Result(String firstName, String lastName, int yearOfBirth, String category, String club, String result) {
 
             private static final Logger LOGGER = LoggerFactory.getLogger(Result.class);
 

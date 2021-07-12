@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Locale;
-import java.util.Map;
 
 @SuppressWarnings("DuplicatedCode")
 public class CompetitionRankingReport extends RankingReport {
@@ -22,8 +21,8 @@ public class CompetitionRankingReport extends RankingReport {
     private final CompetitionRankingData ranking;
     private Document document;
 
-    public CompetitionRankingReport(CompetitionRankingData ranking, Locale locale, Map<Long, String> clubs) {
-        super(locale, clubs);
+    public CompetitionRankingReport(CompetitionRankingData ranking, Locale locale) {
+        super(locale);
         this.ranking = ranking;
     }
 
@@ -111,7 +110,7 @@ public class CompetitionRankingReport extends RankingReport {
         addCell(table, athlete.lastName());
         addCell(table, athlete.firstName());
         addCell(table, athlete.yearOfBirth() + "");
-        addCell(table, athlete.clubId() == null ? "" : clubs.get(athlete.clubId()));
+        addCell(table, athlete.club());
         addCellAlignRight(table, athlete.totalPoints() + "");
 
         StringBuilder sb = new StringBuilder();
