@@ -52,7 +52,7 @@ public class EventsRankingReport extends RankingReport {
     }
 
     private void createRanking() {
-        for (EventsRankingData.EventsRankingEvent event : ranking.events()) {
+        for (EventsRankingData.Event event : ranking.events()) {
             PdfPTable table = new PdfPTable(new float[]{2f, 10f, 10f, 2f, 2f, 5f, 5f});
             table.setWidthPercentage(100);
             table.setSpacingBefore(cmToPixel(1f));
@@ -61,7 +61,7 @@ public class EventsRankingReport extends RankingReport {
             createEventTitle(table, event);
 
             int position = 1;
-            for (EventsRankingData.EventsRankingEvent.Result result : event.sortedResults()) {
+            for (EventsRankingData.Event.Result result : event.sortedResults()) {
                 createAthleteRow(table, position, result);
                 position++;
             }
@@ -69,13 +69,13 @@ public class EventsRankingReport extends RankingReport {
         }
     }
 
-    private void createEventTitle(PdfPTable table, EventsRankingData.EventsRankingEvent event) {
+    private void createEventTitle(PdfPTable table, EventsRankingData.Event event) {
         addCategoryTitleCellWithColspan(table, event.abbreviation() + " / " + event.gender(), 7);
 
         addCategoryTitleCellWithColspan(table, " ", 7);
     }
 
-    private void createAthleteRow(PdfPTable table, int position, EventsRankingData.EventsRankingEvent.Result result) {
+    private void createAthleteRow(PdfPTable table, int position, EventsRankingData.Event.Result result) {
         addCell(table, position + ".");
         addCell(table, result.lastName());
         addCell(table, result.firstName());

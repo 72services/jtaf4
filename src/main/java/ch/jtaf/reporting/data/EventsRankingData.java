@@ -7,13 +7,13 @@ import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
 import java.util.List;
 
-public record EventsRankingData(String name, LocalDate competitionDate, List<EventsRankingEvent> events) {
+public record EventsRankingData(String name, LocalDate competitionDate, List<Event> events) {
 
-    public static record EventsRankingEvent(String abbreviation, String gender, List<Result> results) {
+    public static record Event(String abbreviation, String gender, String eventType, List<Result> results) {
 
         public List<Result> sortedResults() {
             results.sort((o1, o2) -> {
-                if (o1.eventType().equals(EventType.JUMP_THROW.name())) {
+                if (eventType.equals(EventType.JUMP_THROW.name())) {
                     // Higher results are better
                     return Double.compare(o2.resultAsDouble(), o1.resultAsDouble());
                 } else {
@@ -24,8 +24,7 @@ public record EventsRankingData(String name, LocalDate competitionDate, List<Eve
             return results;
         }
 
-        public static record Result(String firstName, String lastName, int yearOfBirth, String category, Long clubId,
-                                    String eventAbbreviation, String eventType, String result) {
+        public static record Result(String firstName, String lastName, int yearOfBirth, String category, Long clubId, String result) {
 
             private static final Logger LOGGER = LoggerFactory.getLogger(Result.class);
 
