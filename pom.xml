@@ -52,7 +52,7 @@
         <java.version>16</java.version>
 
         <vaadin.version>20.0.4</vaadin.version>
-        <jooq.version>3.15.0</jooq.version>
+        <jooq.version>3.16.0-SNAPSHOT</jooq.version>
 
         <testcontainers.version>1.15.2</testcontainers.version>
 
