@@ -38,9 +38,9 @@ public class DiplomaReport extends AbstractReport {
     }
 
     public byte[] create() {
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             document = new Document(A5, cmToPixel(1.5f), cmToPixel(1.5f), cmToPixel(1f), cmToPixel(1.5f));
-            var pdfWriter = PdfWriter.getInstance(document, baos);
+            var pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
             document.open();
 
             for (var category : ranking.categories()) {
@@ -58,7 +58,7 @@ public class DiplomaReport extends AbstractReport {
 
             document.close();
             pdfWriter.flush();
-            return baos.toByteArray();
+            return byteArrayOutputStream.toByteArray();
         } catch (IOException | DocumentException e) {
             LOGGER.error(e.getMessage(), e);
             return new byte[0];

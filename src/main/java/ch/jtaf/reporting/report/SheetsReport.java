@@ -62,10 +62,10 @@ public class SheetsReport extends AbstractReport {
     }
 
     public byte[] create() {
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             float oneCm = cmToPixel(1f);
             document = new Document(A5, oneCm, oneCm, cmToPixel(4.5f), oneCm);
-            pdfWriter = PdfWriter.getInstance(document, baos);
+            pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
             document.open();
             boolean first = true;
             int number = 1;
@@ -83,7 +83,7 @@ public class SheetsReport extends AbstractReport {
             }
             document.close();
             pdfWriter.flush();
-            return baos.toByteArray();
+            return byteArrayOutputStream.toByteArray();
         } catch (DocumentException | IOException e) {
             LOGGER.error(e.getMessage(), e);
             return new byte[0];
@@ -208,7 +208,7 @@ public class SheetsReport extends AbstractReport {
         table.addCell(cell);
     }
 
-    private void addInfoCellWithColspan(PdfPTable table, String text, int colspan) {
+    private void addInfoCellWithColspan(PdfPTable table, String text, @SuppressWarnings("SameParameterValue") int colspan) {
         PdfPCell cell = new PdfPCell(
             new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE_TEXT)));
         cell.setBorder(0);

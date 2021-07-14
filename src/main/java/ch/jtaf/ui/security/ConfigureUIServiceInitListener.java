@@ -7,9 +7,12 @@ import com.vaadin.flow.server.ServiceInitEvent;
 import com.vaadin.flow.server.VaadinServiceInitListener;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 
+import java.io.Serial;
+
 @SpringComponent
 public class ConfigureUIServiceInitListener implements VaadinServiceInitListener {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Override

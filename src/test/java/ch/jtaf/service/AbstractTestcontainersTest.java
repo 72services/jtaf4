@@ -12,11 +12,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public abstract class AbstractTestcontainersTest {
 
     @Container
-    public static PostgreSQLContainer database = new PostgreSQLContainer("postgres:12.7");
+    public static final PostgreSQLContainer<?> database = new PostgreSQLContainer<>("postgres:12.7");
 
     @DynamicPropertySource
     static void postgresqlProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", () -> database.getJdbcUrl());
+        registry.add("spring.datasource.url", database::getJdbcUrl);
         registry.add("spring.datasource.password", database::getPassword);
         registry.add("spring.datasource.username", database::getUsername);
     }

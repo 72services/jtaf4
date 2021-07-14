@@ -13,7 +13,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Locale;
 
-@SuppressWarnings("DuplicatedCode")
 public class CompetitionRankingReport extends RankingReport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CompetitionRankingReport.class);
@@ -29,10 +28,10 @@ public class CompetitionRankingReport extends RankingReport {
     public byte[] create() {
         try {
             byte[] ba;
-            try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
                 float border = cmToPixel(1.5f);
                 document = new Document(PageSize.A4, border, border, border, border);
-                PdfWriter pdfWriter = PdfWriter.getInstance(document, baos);
+                PdfWriter pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
                 pdfWriter.setPageEvent(new HeaderFooter(messages.getString("Competition.Ranking"), ranking.name(),
                     DATE_TIME_FORMATTER.format(ranking.competitionDate())));
                 document.open();
@@ -41,7 +40,7 @@ public class CompetitionRankingReport extends RankingReport {
 
                 document.close();
                 pdfWriter.flush();
-                ba = baos.toByteArray();
+                ba = byteArrayOutputStream.toByteArray();
             }
 
             return ba;

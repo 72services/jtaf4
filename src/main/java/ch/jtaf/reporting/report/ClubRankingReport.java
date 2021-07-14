@@ -28,11 +28,11 @@ public class ClubRankingReport extends RankingReport {
 
     public byte[] create() {
         try {
-            try (var baos = new ByteArrayOutputStream()) {
+            try (var byteArrayOutputStream = new ByteArrayOutputStream()) {
                 var border = cmToPixel(1.5f);
                 document = new Document(A4, border, border, border, border);
 
-                var pdfWriter = PdfWriter.getInstance(document, baos);
+                var pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
                 pdfWriter.setPageEvent(
                     new HeaderFooter(messages.getString("Club.Ranking"), ranking.seriesName(), ""));
 
@@ -43,7 +43,7 @@ public class ClubRankingReport extends RankingReport {
                 document.close();
 
                 pdfWriter.flush();
-                return baos.toByteArray();
+                return byteArrayOutputStream.toByteArray();
             }
         } catch (IOException | DocumentException e) {
             LOGGER.error(e.getMessage(), e);

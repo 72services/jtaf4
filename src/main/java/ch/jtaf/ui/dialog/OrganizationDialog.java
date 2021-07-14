@@ -4,8 +4,11 @@ import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.textfield.TextField;
 
+import java.io.Serial;
+
 public class OrganizationDialog extends EditDialog<OrganizationRecord> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public OrganizationDialog(String title) {

@@ -20,6 +20,7 @@ import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 
 import java.io.ByteArrayInputStream;
+import java.io.Serial;
 
 import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Series.SERIES;
@@ -28,6 +29,7 @@ import static ch.jtaf.util.LogoUtil.resizeLogo;
 @Route(value = "", layout = MainLayout.class)
 public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public DashboardView(DSLContext dsl, SeriesRankingService seriesRankingService, CompetitionRankingService competitionRankingService) {

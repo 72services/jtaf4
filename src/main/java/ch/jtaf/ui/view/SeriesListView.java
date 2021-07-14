@@ -18,12 +18,15 @@ import org.jooq.SortField;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 
+import java.io.Serial;
+
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
 import static ch.jtaf.db.tables.Series.SERIES;
 
 @Route(layout = MainLayout.class)
 public class SeriesListView extends ProtectedGridView<SeriesRecord> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public SeriesListView(DSLContext dsl) {

@@ -49,7 +49,8 @@ public class JooqDataProviderProducer<R extends Record> {
     }
 
     private int count(Query<R, String> query) {
-        return dsl.selectCount().from(table).where(createCondition(query)).fetchOneInto(Integer.class);
+        var count = dsl.selectCount().from(table).where(createCondition(query)).fetchOneInto(Integer.class);
+        return count != null ? count : 0;
     }
 
     private Condition createCondition(Query<R, String> query) {
@@ -79,10 +80,12 @@ public class JooqDataProviderProducer<R extends Record> {
                 String column = sortOrder.getSorted();
                 SortDirection sortDirection = sortOrder.getDirection();
                 Field<?> field = table.field(column);
-                if (sortDirection == SortDirection.DESCENDING) {
-                    sortFields.add(field.desc());
-                } else {
-                    sortFields.add(field.asc());
+                if (field != null) {
+                    if (sortDirection == SortDirection.DESCENDING) {
+                        sortFields.add(field.desc());
+                    } else {
+                        sortFields.add(field.asc());
+                    }
                 }
             }
             return sortFields.toArray(new SortField<?>[0]);

@@ -11,10 +11,13 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import java.io.Serial;
+
 @Route
 @PageTitle("JTAF - Login")
 public class LoginView extends LoginOverlay implements AfterNavigationObserver, BeforeEnterObserver {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public LoginView() {

@@ -19,12 +19,15 @@ import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.io.Serial;
+
 import static ch.jtaf.db.tables.Organization.ORGANIZATION;
 import static ch.jtaf.db.tables.OrganizationUser.ORGANIZATION_USER;
 
 @Route(layout = MainLayout.class)
 public class OrganizationsView extends VerticalLayout implements HasDynamicTitle {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final transient DSLContext dsl;

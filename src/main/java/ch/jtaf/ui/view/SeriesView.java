@@ -38,6 +38,7 @@ import org.jooq.UpdatableRecord;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.io.ByteArrayInputStream;
+import java.io.Serial;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -54,7 +55,9 @@ import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionLis
 @Route(layout = MainLayout.class)
 public class SeriesView extends ProtectedView implements HasUrlParameter<String> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
+
     private static final String BLANK = "_blank";
 
     private final transient NumberAndSheetsService numberAndSheetsService;
@@ -284,7 +287,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
             Button remove = new Button(athletesGrid.getTranslation("Remove"));
             remove.addThemeVariants(ButtonVariant.LUMO_ERROR);
             remove.addClickListener(event ->
-                getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> removeAtheleteFromSeries(record)));
+                getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> removeAthleteFromSeries(record)));
 
             HorizontalLayout horizontalLayout = new HorizontalLayout(remove);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
@@ -296,13 +299,13 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         refreshAll();
     }
 
-    private void removeAtheleteFromSeries(UpdatableRecord<?> record) {
+    private void removeAthleteFromSeries(UpdatableRecord<?> record) {
         AthleteRecord athleteRecord = (AthleteRecord) record;
         dsl
             .deleteFrom(CATEGORY_ATHLETE)
             .where(CATEGORY_ATHLETE.ATHLETE_ID.eq(athleteRecord.getId()))
-            .and(CATEGORY_ATHLETE.CATEGORY_ID
-                .in(dsl.select(CATEGORY.ID).from(CATEGORY).where(CATEGORY.SERIES_ID.eq(seriesRecord.getId()))));
+            .and(CATEGORY_ATHLETE.CATEGORY_ID.in(dsl.select(CATEGORY.ID).from(CATEGORY).where(CATEGORY.SERIES_ID.eq(seriesRecord.getId()))))
+            .execute();
     }
 
 }

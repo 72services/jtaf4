@@ -18,6 +18,7 @@ import com.vaadin.flow.theme.lumo.Lumo;
 import org.jooq.DSLContext;
 import org.jooq.SortField;
 
+import java.io.Serial;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -28,6 +29,7 @@ import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionLis
 
 public class SearchAthleteDialog extends Dialog {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public static final String FULLSCREEN = "fullscreen";
@@ -38,7 +40,6 @@ public class SearchAthleteDialog extends Dialog {
 
     private final Map<Long, ClubRecord> clubRecordMap;
     private final ConfigurableFilterDataProvider<AthleteRecord, Void, String> dataProvider;
-    private AthleteRecord selectedAthleteRecord;
 
     public SearchAthleteDialog(DSLContext dsl, OrganizationRecord organizationRecord,
                                Consumer<AthleteRecord> onSelect) {
@@ -89,7 +90,7 @@ public class SearchAthleteDialog extends Dialog {
             AthleteRecord newRecord = ATHLETE.newRecord();
             newRecord.setOrganizationId(organizationRecord.getId());
             return newRecord;
-        }, getTranslation("Assign.Athelete"), athleteRecord -> {
+        }, getTranslation("Assign.Athlete"), athleteRecord -> {
             onSelect.accept(athleteRecord);
             close();
         });

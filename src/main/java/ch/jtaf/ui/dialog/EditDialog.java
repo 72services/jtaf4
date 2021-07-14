@@ -18,9 +18,12 @@ import org.jooq.DSLContext;
 import org.jooq.UpdatableRecord;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.io.Serial;
+
 @CssImport("./styles/jtaf-dialog.css")
 public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public static final String FULLSCREEN = "fullscreen";

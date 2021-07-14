@@ -29,9 +29,9 @@ public class SeriesRankingReport extends RankingReport {
     public byte[] create() {
         try {
             byte[] ba;
-            try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
                 document = new Document(A4);
-                PdfWriter pdfWriter = PdfWriter.getInstance(document, baos);
+                PdfWriter pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
                 pdfWriter.setPageEvent(new HeaderFooter(
                     messages.getString("Series.Ranking"), ranking.name(), ""));
                 document.open();
@@ -40,7 +40,7 @@ public class SeriesRankingReport extends RankingReport {
 
                 document.close();
                 pdfWriter.flush();
-                ba = baos.toByteArray();
+                ba = byteArrayOutputStream.toByteArray();
             }
             return ba;
         } catch (DocumentException | IOException e) {

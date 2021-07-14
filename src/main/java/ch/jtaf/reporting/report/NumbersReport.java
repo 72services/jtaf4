@@ -36,9 +36,9 @@ public class NumbersReport extends AbstractReport {
     }
 
     public byte[] create() {
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             Document document = new Document(A4, cmToPixel(1.5f), cmToPixel(1.7f), cmToPixel(0.8f), cmToPixel(0f));
-            PdfWriter pdfWriter = PdfWriter.getInstance(document, baos);
+            PdfWriter pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
             document.open();
 
             int i = 0;
@@ -65,7 +65,7 @@ public class NumbersReport extends AbstractReport {
 
             document.close();
             pdfWriter.flush();
-            return baos.toByteArray();
+            return byteArrayOutputStream.toByteArray();
         } catch (DocumentException | IOException e) {
             LOGGER.error(e.getMessage(), e);
             return new byte[0];
@@ -85,8 +85,8 @@ public class NumbersReport extends AbstractReport {
     }
 
     private void addAthleteInfo(PdfPTable table, NumbersAndSheetsAthlete athlete, int number) {
-        PdfPTable atable = new PdfPTable(1);
-        atable.setWidthPercentage(100);
+        PdfPTable pdfPTable = new PdfPTable(1);
+        pdfPTable.setWidthPercentage(100);
 
         PdfPCell cellId = new PdfPCell(
             new Phrase(number + "",
@@ -94,7 +94,7 @@ public class NumbersReport extends AbstractReport {
         cellId.setBorder(0);
         cellId.setMinimumHeight(cmToPixel(2.5f));
         cellId.setHorizontalAlignment(ALIGN_CENTER);
-        atable.addCell(cellId);
+        pdfPTable.addCell(cellId);
 
         String text = athlete.lastName() + " " + athlete.firstName() + "\n";
         text += athlete.category();
@@ -107,9 +107,9 @@ public class NumbersReport extends AbstractReport {
         cellName.setMinimumHeight(cmToPixel(1.8f));
         cellName.setHorizontalAlignment(ALIGN_CENTER);
         cellName.setVerticalAlignment(ALIGN_MIDDLE);
-        atable.addCell(cellName);
+        pdfPTable.addCell(cellName);
 
-        PdfPCell cellTable = new PdfPCell(atable);
+        PdfPCell cellTable = new PdfPCell(pdfPTable);
         cellTable.setBorder(0);
 
         table.addCell(cellTable);

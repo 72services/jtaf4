@@ -12,6 +12,7 @@ import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.SortField;
 
+import java.io.Serial;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionLis
 @Route(layout = MainLayout.class)
 public class AthletesView extends ProtectedGridView<AthleteRecord> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private Map<Long, ClubRecord> clubRecordMap = new HashMap<>();

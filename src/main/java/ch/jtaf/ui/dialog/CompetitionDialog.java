@@ -5,8 +5,11 @@ import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.textfield.TextField;
 
+import java.io.Serial;
+
 public class CompetitionDialog extends EditDialog<CompetitionRecord> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public CompetitionDialog(String title) {

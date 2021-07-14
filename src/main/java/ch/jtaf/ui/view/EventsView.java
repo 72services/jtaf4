@@ -9,12 +9,15 @@ import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.SortField;
 
+import java.io.Serial;
+
 import static ch.jtaf.db.tables.Event.EVENT;
 import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
 
 @Route(layout = MainLayout.class)
 public class EventsView extends ProtectedGridView<EventRecord> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public EventsView(DSLContext dsl) {
