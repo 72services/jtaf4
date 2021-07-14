@@ -9,13 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Locale;
 
-import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
-import static ch.jtaf.db.tables.CategoryEvent.CATEGORY_EVENT;
-import static ch.jtaf.db.tables.Club.CLUB;
 import static ch.jtaf.db.tables.Competition.COMPETITION;
-import static ch.jtaf.db.tables.Event.EVENT;
 import static ch.jtaf.db.tables.Result.RESULT;
 import static ch.jtaf.db.tables.Series.SERIES;
 import static org.jooq.Records.mapping;
@@ -40,7 +36,7 @@ public class SeriesRankingService {
     public SeriesRankingData getSeriesRanking(Long seriesId) {
         return dsl
             .select(
-                SERIES.NAME,
+                COMPETITION.series().NAME,
                 count(COMPETITION.ID),
                 multiset(
                     select(
@@ -50,37 +46,34 @@ public class SeriesRankingService {
                         CATEGORY.YEAR_TO,
                         multiset(
                             select(
-                                ATHLETE.FIRST_NAME,
-                                ATHLETE.LAST_NAME,
-                                ATHLETE.YEAR_OF_BIRTH,
-                                CLUB.NAME,
+                                CATEGORY_ATHLETE.athlete().FIRST_NAME,
+                                CATEGORY_ATHLETE.athlete().LAST_NAME,
+                                CATEGORY_ATHLETE.athlete().YEAR_OF_BIRTH,
+                                CATEGORY_ATHLETE.athlete().club().NAME,
                                 multiset(
                                     select(
-                                        COMPETITION.NAME,
+                                        RESULT.competition().NAME,
                                         sum(RESULT.POINTS)
                                     )
                                         .from(RESULT)
-                                        .join(COMPETITION).on(COMPETITION.ID.eq(RESULT.COMPETITION_ID))
-                                        .where(RESULT.ATHLETE_ID.eq(ATHLETE.ID))
-                                        .and(COMPETITION.SERIES_ID.eq(SERIES.ID))
-                                        .groupBy(COMPETITION.NAME, COMPETITION.COMPETITION_DATE)
-                                        .orderBy(COMPETITION.COMPETITION_DATE)
+                                        .where(RESULT.ATHLETE_ID.eq(CATEGORY_ATHLETE.ATHLETE_ID))
+                                        .and(RESULT.competition().SERIES_ID.eq(COMPETITION.series().ID))
+                                        .groupBy(RESULT.competition().NAME, RESULT.competition().COMPETITION_DATE)
+                                        .orderBy(RESULT.competition().COMPETITION_DATE)
                                 ).convertFrom(r -> r.map(mapping(SeriesRankingData.Category.Athlete.Result::new)))
                             )
-                                .from(ATHLETE)
-                                .leftOuterJoin(CLUB).on(CLUB.ID.eq(ATHLETE.CLUB_ID))
-                                .join(CATEGORY_ATHLETE).on(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID)).and(CATEGORY_ATHLETE.CATEGORY_ID.eq(CATEGORY.ID))
+                                .from(CATEGORY_ATHLETE)
+                                .where(CATEGORY_ATHLETE.CATEGORY_ID.eq(CATEGORY.ID))
                         ).convertFrom(r -> r.map(mapping(SeriesRankingData.Category.Athlete::new)))
                     )
                         .from(CATEGORY)
-                        .where(CATEGORY.SERIES_ID.eq(SERIES.ID))
+                        .where(CATEGORY.SERIES_ID.eq(COMPETITION.series().ID))
                         .orderBy(CATEGORY.ABBREVIATION)
                 ).convertFrom(r -> r.map(mapping(SeriesRankingData.Category::new)))
             )
-            .from(SERIES)
-            .join(COMPETITION).on(COMPETITION.SERIES_ID.eq(SERIES.ID))
-            .where(SERIES.ID.eq(seriesId))
-            .groupBy(SERIES.ID, SERIES.NAME)
+            .from(COMPETITION)
+            .where(COMPETITION.SERIES_ID.eq(seriesId))
+            .groupBy(COMPETITION.series().ID, COMPETITION.series().NAME)
             .fetchOne(mapping(SeriesRankingData::new));
     }
 
@@ -94,17 +87,12 @@ public class SeriesRankingService {
                 SERIES.NAME,
                 multiset(
                     select(
-                        CLUB.NAME,
+                        RESULT.athlete().club().NAME,
                         sum(RESULT.POINTS)
                     )
                         .from(RESULT)
-                        .join(COMPETITION).on(COMPETITION.ID.eq(RESULT.COMPETITION_ID))
-                        .join(EVENT).on(EVENT.ID.eq(RESULT.EVENT_ID))
-                        .join(CATEGORY_EVENT).on(CATEGORY_EVENT.EVENT_ID.eq(EVENT.ID))
-                        .join(ATHLETE).on(RESULT.ATHLETE_ID.eq(ATHLETE.ID))
-                        .join(CLUB).on(CLUB.ID.eq(ATHLETE.CLUB_ID))
-                        .where(COMPETITION.SERIES_ID.eq(seriesId))
-                        .groupBy(CLUB.NAME)
+                        .where(RESULT.competition().SERIES_ID.eq(seriesId))
+                        .groupBy(RESULT.athlete().club().NAME)
                 ).convertFrom(r -> r.map(mapping(ClubRankingData.Result::new)))
             )
             .from(SERIES)

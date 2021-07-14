@@ -10,11 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Locale;
 
-import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
-import static ch.jtaf.db.tables.CategoryEvent.CATEGORY_EVENT;
-import static ch.jtaf.db.tables.Club.CLUB;
 import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Event.EVENT;
 import static ch.jtaf.db.tables.Result.RESULT;
@@ -60,28 +57,26 @@ public class CompetitionRankingService {
                         CATEGORY.YEAR_TO,
                         multiset(
                             select(
-                                ATHLETE.FIRST_NAME,
-                                ATHLETE.LAST_NAME,
-                                ATHLETE.YEAR_OF_BIRTH,
-                                CLUB.NAME,
+                                CATEGORY_ATHLETE.athlete().FIRST_NAME,
+                                CATEGORY_ATHLETE.athlete().LAST_NAME,
+                                CATEGORY_ATHLETE.athlete().YEAR_OF_BIRTH,
+                                CATEGORY_ATHLETE.athlete().club().NAME,
                                 multiset(
                                     select(
-                                        EVENT.ABBREVIATION,
+                                        RESULT.event().ABBREVIATION,
                                         RESULT.RESULT_,
                                         RESULT.POINTS,
                                         RESULT.POSITION
                                     )
                                         .from(RESULT)
-                                        .join(EVENT).on(EVENT.ID.eq(RESULT.EVENT_ID))
-                                        .where(RESULT.ATHLETE_ID.eq(ATHLETE.ID))
+                                        .where(RESULT.ATHLETE_ID.eq(CATEGORY_ATHLETE.athlete().ID))
                                         .and(RESULT.COMPETITION_ID.eq(COMPETITION.ID))
                                         .and(RESULT.CATEGORY_ID.eq(CATEGORY.ID))
                                         .orderBy(RESULT.POSITION)
                                 ).convertFrom(r -> r.map(mapping(CompetitionRankingData.Category.Athlete.Result::new)))
                             )
-                                .from(ATHLETE)
-                                .leftOuterJoin(CLUB).on(CLUB.ID.eq(ATHLETE.CLUB_ID))
-                                .join(CATEGORY_ATHLETE).on(CATEGORY_ATHLETE.CATEGORY_ID.eq(CATEGORY.ID).and(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID)))
+                                .from(CATEGORY_ATHLETE)
+                                .where(CATEGORY_ATHLETE.CATEGORY_ID.eq(CATEGORY.ID))
                         ).convertFrom(r -> r.map(mapping(CompetitionRankingData.Category.Athlete::new)))
                     )
                         .from(CATEGORY)
@@ -105,36 +100,31 @@ public class CompetitionRankingService {
                         EVENT.GENDER,
                         EVENT.EVENT_TYPE,
                         multiset(
-                            selectDistinct(ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME, ATHLETE.YEAR_OF_BIRTH,
-                                CATEGORY.ABBREVIATION,
-                                CLUB.NAME,
+                            selectDistinct(
+                                RESULT.athlete().LAST_NAME,
+                                RESULT.athlete().FIRST_NAME,
+                                RESULT.athlete().YEAR_OF_BIRTH,
+                                RESULT.category().ABBREVIATION,
+                                RESULT.athlete().club().NAME,
                                 RESULT.RESULT_)
-                                .from(ATHLETE)
-                                .leftOuterJoin(CLUB).on(CLUB.ID.eq(ATHLETE.CLUB_ID))
-                                .join(CATEGORY_ATHLETE).on(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
-                                .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
-                                .join(CATEGORY_EVENT).on(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
-                                .join(RESULT).on(RESULT.ATHLETE_ID.eq(ATHLETE.ID)
-                                    .and(RESULT.COMPETITION_ID.eq(COMPETITION.ID))
-                                    .and(RESULT.CATEGORY_ID.eq(CATEGORY.ID))
-                                    .and(RESULT.EVENT_ID.eq(EVENT.ID)))
-                                .where(CATEGORY.SERIES_ID.eq(COMPETITION.SERIES_ID))
+                                .from(RESULT)
+                                .where(RESULT.category().SERIES_ID.eq(COMPETITION.SERIES_ID))
+                                .and(RESULT.event().ID.eq(EVENT.ID))
+                                .and(RESULT.RESULT_.isNotNull())
                         ).convertFrom(r -> r.map(mapping(EventsRankingData.Event.Result::new))))
                         .from(EVENT)
-                        .where(EVENT.ORGANIZATION_ID.eq(SERIES.ORGANIZATION_ID))
+                        .where(EVENT.ORGANIZATION_ID.eq(COMPETITION.series().ORGANIZATION_ID))
                         .orderBy(EVENT.ABBREVIATION, EVENT.GENDER))
                     .convertFrom(r -> r.map(mapping(EventsRankingData.Event::new))))
             .from(COMPETITION)
-            .join(SERIES).on(SERIES.ID.eq(COMPETITION.SERIES_ID))
             .where(COMPETITION.ID.eq(competitionId))
             .fetchOne(mapping(EventsRankingData::new));
     }
 
     private byte[] getLogo(Long competitionId) {
         var logoRecord = dsl
-            .select(SERIES.LOGO)
-            .from(SERIES)
-            .join(COMPETITION).on(COMPETITION.SERIES_ID.eq(SERIES.ID))
+            .select(COMPETITION.series().LOGO)
+            .from(COMPETITION)
             .where(COMPETITION.ID.eq(competitionId))
             .fetchOne();
         if (logoRecord != null) {

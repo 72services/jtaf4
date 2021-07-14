@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
 
-import static ch.jtaf.db.tables.SecurityGroup.SECURITY_GROUP;
 import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
 import static ch.jtaf.db.tables.UserGroup.USER_GROUP;
 
@@ -34,9 +33,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         if (securityUserRecord != null) {
             var groups = dsl
-                .select(SECURITY_GROUP.NAME)
+                .select(USER_GROUP.securityGroup().NAME)
                 .from(USER_GROUP)
-                .join(SECURITY_GROUP).on(SECURITY_GROUP.ID.eq(USER_GROUP.GROUP_ID))
                 .fetch();
 
             return new User(securityUserRecord.getEmail(), securityUserRecord.getSecret(),

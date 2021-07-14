@@ -13,13 +13,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Locale;
 
-import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
 import static ch.jtaf.db.tables.CategoryEvent.CATEGORY_EVENT;
-import static ch.jtaf.db.tables.Club.CLUB;
 import static ch.jtaf.db.tables.Competition.COMPETITION;
-import static ch.jtaf.db.tables.Event.EVENT;
 import static ch.jtaf.db.tables.Series.SERIES;
 import static org.jooq.Records.mapping;
 import static org.jooq.impl.DSL.multiset;
@@ -57,14 +54,13 @@ public class NumberAndSheetsService {
                 DSL.inline(null, SQLDataType.VARCHAR),
                 multiset(
                     select(
-                        EVENT.ABBREVIATION,
-                        EVENT.NAME,
-                        EVENT.GENDER,
-                        EVENT.EVENT_TYPE,
+                        CATEGORY_EVENT.event().ABBREVIATION,
+                        CATEGORY_EVENT.event().NAME,
+                        CATEGORY_EVENT.event().GENDER,
+                        CATEGORY_EVENT.event().EVENT_TYPE,
                         CATEGORY_EVENT.POSITION
                     )
-                        .from(EVENT)
-                        .join(CATEGORY_EVENT).on(CATEGORY_EVENT.EVENT_ID.eq(EVENT.ID))
+                        .from(CATEGORY_EVENT)
                         .where(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
                         .orderBy(CATEGORY_EVENT.POSITION)
                 ).convertFrom(r -> r.map(mapping(NumbersAndSheetsAthlete.Event::new)))
@@ -94,31 +90,26 @@ public class NumberAndSheetsService {
     private List<NumbersAndSheetsAthlete> getAthletes(Long competitionId, Field<?>... orderBy) {
         return dsl
             .select(
-                ATHLETE.ID,
-                ATHLETE.FIRST_NAME,
-                ATHLETE.LAST_NAME,
-                ATHLETE.YEAR_OF_BIRTH,
-                CATEGORY.ABBREVIATION,
-                CLUB.ABBREVIATION,
+                CATEGORY_ATHLETE.athlete().ID,
+                CATEGORY_ATHLETE.athlete().FIRST_NAME,
+                CATEGORY_ATHLETE.athlete().LAST_NAME,
+                CATEGORY_ATHLETE.athlete().YEAR_OF_BIRTH,
+                CATEGORY_ATHLETE.category().ABBREVIATION,
+                CATEGORY_ATHLETE.athlete().club().ABBREVIATION,
                 multiset(
                     select(
-                        EVENT.ABBREVIATION,
-                        EVENT.NAME,
-                        EVENT.GENDER,
-                        EVENT.EVENT_TYPE,
+                        CATEGORY_EVENT.event().ABBREVIATION,
+                        CATEGORY_EVENT.event().NAME,
+                        CATEGORY_EVENT.event().GENDER,
+                        CATEGORY_EVENT.event().EVENT_TYPE,
                         CATEGORY_EVENT.POSITION
                     )
-                        .from(EVENT)
-                        .join(CATEGORY_EVENT).on(CATEGORY_EVENT.EVENT_ID.eq(EVENT.ID))
-                        .where(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
+                        .from(CATEGORY_EVENT)
+                        .where(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
                         .orderBy(CATEGORY_EVENT.POSITION)
                 ).convertFrom(r -> r.map(mapping(NumbersAndSheetsAthlete.Event::new)))
             )
-            .from(ATHLETE)
-            .join(CATEGORY_ATHLETE).on(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
-            .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
-            .join(COMPETITION).on(COMPETITION.SERIES_ID.eq(CATEGORY.SERIES_ID))
-            .leftOuterJoin(CLUB).on(CLUB.ID.eq(ATHLETE.CLUB_ID))
+            .from(CATEGORY_ATHLETE)
             .where(COMPETITION.ID.eq(competitionId))
             .orderBy(orderBy)
             .fetch(mapping(NumbersAndSheetsAthlete::new));

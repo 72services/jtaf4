@@ -162,12 +162,10 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
 
         var athleteRecords = dsl
-            .select()
-            .from(ATHLETE)
-            .join(CATEGORY_ATHLETE).on(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
-            .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
-            .where(CATEGORY.SERIES_ID.eq(seriesRecord.getId()))
-            .orderBy(CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME)
+            .select(CATEGORY_ATHLETE.athlete().fields())
+            .from(CATEGORY_ATHLETE)
+            .where(CATEGORY_ATHLETE.category().SERIES_ID.eq(seriesRecord.getId()))
+            .orderBy(CATEGORY_ATHLETE.category().ABBREVIATION, CATEGORY_ATHLETE.athlete().LAST_NAME, CATEGORY_ATHLETE.athlete().FIRST_NAME)
             .fetchInto(ATHLETE);
         athletesGrid.setItems(athleteRecords);
     }

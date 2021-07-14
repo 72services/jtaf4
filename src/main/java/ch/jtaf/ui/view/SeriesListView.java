@@ -18,7 +18,6 @@ import org.jooq.SortField;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 
-import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
 import static ch.jtaf.db.tables.Series.SERIES;
 
@@ -40,9 +39,12 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
         grid.addComponentColumn(LogoUtil::resizeLogo).setHeader(getTranslation("Logo"));
         grid.addColumn(SeriesRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
 
-        grid.addColumn(seriesRecord -> dsl.select(DSL.count(CATEGORY_ATHLETE.ATHLETE_ID)).from(CATEGORY_ATHLETE)
-            .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
-            .where(CATEGORY.SERIES_ID.eq(seriesRecord.getId())).fetchOneInto(Integer.class))
+        grid.addColumn(seriesRecord ->
+                dsl
+                    .select(DSL.count(CATEGORY_ATHLETE.ATHLETE_ID)).from(CATEGORY_ATHLETE)
+                    .where(CATEGORY_ATHLETE.category().SERIES_ID.eq(seriesRecord.getId()))
+                    .fetchOneInto(Integer.class)
+            )
             .setHeader(getTranslation("Number.of.Athletes"));
 
         grid.addComponentColumn(seriesRecord -> {
