@@ -12,7 +12,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public abstract class AbstractTestcontainersTest {
 
     @Container
-    public static PostgreSQLContainer database = new PostgreSQLContainer("postgres");
+    public static PostgreSQLContainer database = new PostgreSQLContainer("postgres:12.7");
 
     @DynamicPropertySource
     static void postgresqlProperties(DynamicPropertyRegistry registry) {

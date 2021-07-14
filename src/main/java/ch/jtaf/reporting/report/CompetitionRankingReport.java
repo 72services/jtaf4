@@ -113,17 +113,19 @@ public class CompetitionRankingReport extends RankingReport {
         addCell(table, athlete.club());
         addCellAlignRight(table, athlete.totalPoints() + "");
 
-        StringBuilder sb = new StringBuilder();
-        for (CompetitionRankingData.Category.Athlete.Result result : athlete.results()) {
-            sb.append(result.eventAbbreviation());
-            sb.append(": ");
-            sb.append(result.result());
-            sb.append(" (");
-            sb.append(result.points());
-            sb.append(") ");
+        if (athlete.results() != null) {
+            StringBuilder sb = new StringBuilder();
+            for (CompetitionRankingData.Category.Athlete.Result result : athlete.results()) {
+                sb.append(result.eventAbbreviation());
+                sb.append(": ");
+                sb.append(result.result());
+                sb.append(" (");
+                sb.append(result.points());
+                sb.append(") ");
+            }
+            addCell(table, "");
+            addResultsCell(table, sb.toString());
         }
-        addCell(table, "");
-        addResultsCell(table, sb.toString());
     }
 
 }
