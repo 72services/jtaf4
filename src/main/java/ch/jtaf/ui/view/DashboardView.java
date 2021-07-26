@@ -20,6 +20,7 @@ import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 
 import java.io.ByteArrayInputStream;
+import java.io.Serial;
 
 import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Series.SERIES;
@@ -28,6 +29,7 @@ import static ch.jtaf.util.LogoUtil.resizeLogo;
 @Route(value = "", layout = MainLayout.class)
 public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public DashboardView(DSLContext dsl, SeriesRankingService seriesRankingService, CompetitionRankingService competitionRankingService) {
@@ -64,6 +66,15 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 
                 seriesLayout.add(new Paragraph(seriesRanking));
 
+                Anchor clubRanking = new Anchor(new StreamResource("club_ranking" + series.getId() + ".pdf",
+                    () -> {
+                        byte[] pdf = seriesRankingService.getClubRankingAsPdf(series.getId());
+                        return new ByteArrayInputStream(pdf);
+                    }), getTranslation("Club.Ranking"));
+                clubRanking.setTarget("_blank");
+
+                seriesLayout.add(new Paragraph(clubRanking));
+
                 dsl.selectFrom(COMPETITION)
                     .where(COMPETITION.SERIES_ID.eq(series.getId()))
                     .fetch()
@@ -85,6 +96,24 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                         HorizontalLayout links = new HorizontalLayout(competitionRanking);
 
                         if (SecurityContext.isUserLoggedIn()) {
+                            Anchor diploma = new Anchor(new StreamResource("diploma" + competition.getId() + ".pdf",
+                                () -> {
+                                    byte[] pdf = competitionRankingService.getDiplomasAsPdf(competition.getId());
+                                    return new ByteArrayInputStream(pdf);
+                                }), getTranslation("Diploma"));
+                            diploma.setTarget("_blank");
+
+                            links.add(diploma);
+
+                            Anchor eventRanking = new Anchor(new StreamResource("event_ranking" + competition.getId() + ".pdf",
+                                () -> {
+                                    byte[] pdf = competitionRankingService.getEventRankingAsPdf(competition.getId());
+                                    return new ByteArrayInputStream(pdf);
+                                }), getTranslation("Event.Ranking"));
+                            eventRanking.setTarget("_blank");
+
+                            links.add(eventRanking);
+
                             RouterLink enterResults = new RouterLink(getTranslation("Enter.Results"),
                                 ResultCapturingView.class, competition.getId().toString());
                             links.add(enterResults);

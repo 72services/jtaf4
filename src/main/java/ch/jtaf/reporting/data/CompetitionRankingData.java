@@ -1,42 +1,33 @@
 package ch.jtaf.reporting.data;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
-public class CompetitionRankingData {
+public record CompetitionRankingData(String name, LocalDate competitionDate, boolean alwaysFirstThreeMedals, int medalPercentage,
+                                     List<Category> categories) {
 
-    private final String name;
-    private final LocalDate competitionDate;
-    private final boolean alwaysFirstThreeMedals;
-    private final int medalPercentage;
+    public static record Category(String abbreviation, String name, int yearFrom, int yearTo, List<Athlete> athletes) {
 
-    private final List<CompetitionRankingCategory> categories = new ArrayList<>();
+        public List<Athlete> sortedAthletes() {
+            athletes.sort((o1, o2) -> Integer.compare(o2.totalPoints(), o1.totalPoints()));
+            return athletes;
+        }
 
-    public CompetitionRankingData(String name, LocalDate competitionDate, boolean alwaysFirstThreeMedals, int medalPercentage) {
-        this.name = name;
-        this.competitionDate = competitionDate;
-        this.alwaysFirstThreeMedals = alwaysFirstThreeMedals;
-        this.medalPercentage = medalPercentage;
+        public static record Athlete(String firstName, String lastName, int yearOfBirth, String club, List<Result> results) {
+
+            public int totalPoints() {
+                if (results == null) {
+                    return 0;
+                } else {
+                    return results.stream().mapToInt(Result::points).sum();
+                }
+            }
+
+            public static record Result(String eventAbbreviation, String result, int points, int position) {
+            }
+
+        }
+
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public LocalDate getCompetitionDate() {
-        return competitionDate;
-    }
-
-    public boolean isAlwaysFirstThreeMedals() {
-        return alwaysFirstThreeMedals;
-    }
-
-    public int getMedalPercentage() {
-        return medalPercentage;
-    }
-
-    public List<CompetitionRankingCategory> getCategories() {
-        return categories;
-    }
 }

@@ -6,18 +6,14 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 
 import java.util.Locale;
-import java.util.Map;
 
 import static com.lowagie.text.FontFactory.HELVETICA;
 import static com.lowagie.text.FontFactory.HELVETICA_BOLD;
 
 public class RankingReport extends AbstractReport {
 
-    final Map<Long, String> clubs;
-
-    RankingReport(Locale locale, Map<Long, String> clubs) {
+    RankingReport(Locale locale) {
         super(locale);
-        this.clubs = clubs;
     }
 
     void addCategoryTitleCellWithColspan(PdfPTable table, String text, int colspan) {

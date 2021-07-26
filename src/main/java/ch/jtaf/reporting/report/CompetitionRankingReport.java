@@ -1,9 +1,6 @@
 package ch.jtaf.reporting.report;
 
-import ch.jtaf.reporting.data.CompetitionRankingAthlete;
-import ch.jtaf.reporting.data.CompetitionRankingCategory;
 import ch.jtaf.reporting.data.CompetitionRankingData;
-import ch.jtaf.reporting.data.CompetitionRankingResult;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.PageSize;
@@ -15,9 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Locale;
-import java.util.Map;
 
-@SuppressWarnings("DuplicatedCode")
 public class CompetitionRankingReport extends RankingReport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CompetitionRankingReport.class);
@@ -25,27 +20,27 @@ public class CompetitionRankingReport extends RankingReport {
     private final CompetitionRankingData ranking;
     private Document document;
 
-    public CompetitionRankingReport(CompetitionRankingData ranking, Locale locale, Map<Long, String> clubs) {
-        super(locale, clubs);
+    public CompetitionRankingReport(CompetitionRankingData ranking, Locale locale) {
+        super(locale);
         this.ranking = ranking;
     }
 
     public byte[] create() {
         try {
             byte[] ba;
-            try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
                 float border = cmToPixel(1.5f);
                 document = new Document(PageSize.A4, border, border, border, border);
-                PdfWriter pdfWriter = PdfWriter.getInstance(document, baos);
-                pdfWriter.setPageEvent(new HeaderFooter(messages.getString("Competition.Ranking"), ranking.getName(),
-                    DATE_TIME_FORMATTER.format(ranking.getCompetitionDate())));
+                PdfWriter pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
+                pdfWriter.setPageEvent(new HeaderFooter(messages.getString("Competition.Ranking"), ranking.name(),
+                    DATE_TIME_FORMATTER.format(ranking.competitionDate())));
                 document.open();
 
                 createRanking();
 
                 document.close();
                 pdfWriter.flush();
-                ba = baos.toByteArray();
+                ba = byteArrayOutputStream.toByteArray();
             }
 
             return ba;
@@ -56,7 +51,7 @@ public class CompetitionRankingReport extends RankingReport {
     }
 
     private void createRanking() {
-        for (CompetitionRankingCategory category : ranking.getCategories()) {
+        for (CompetitionRankingData.Category category : ranking.categories()) {
             if (numberOfRows > 20) {
                 document.newPage();
             }
@@ -65,7 +60,7 @@ public class CompetitionRankingReport extends RankingReport {
             numberOfRows += 2;
 
             int rank = 1;
-            for (CompetitionRankingAthlete athlete : category.getAthletes()) {
+            for (CompetitionRankingData.Category.Athlete athlete : category.sortedAthletes()) {
                 if (numberOfRows > 23) {
                     document.add(table);
                     table = createAthletesTable();
@@ -79,12 +74,12 @@ public class CompetitionRankingReport extends RankingReport {
         }
     }
 
-    private int calculateNumberOfMedals(CompetitionRankingCategory category) {
+    private int calculateNumberOfMedals(CompetitionRankingData.Category category) {
         double numberOfMedals = 0;
-        if (ranking.getMedalPercentage() > 0) {
-            double percentage = ranking.getMedalPercentage();
-            numberOfMedals = category.getAthletes().size() * (percentage / 100);
-            if (numberOfMedals < 3 && ranking.isAlwaysFirstThreeMedals()) {
+        if (ranking.medalPercentage() > 0) {
+            double percentage = ranking.medalPercentage();
+            numberOfMedals = category.sortedAthletes().size() * (percentage / 100);
+            if (numberOfMedals < 3 && ranking.alwaysFirstThreeMedals()) {
                 numberOfMedals = 3;
             }
         }
@@ -98,37 +93,38 @@ public class CompetitionRankingReport extends RankingReport {
         return table;
     }
 
-    private void createCategoryTitle(PdfPTable table, CompetitionRankingCategory category) {
-        addCategoryTitleCellWithColspan(table, category.getAbbreviation(), 1);
-        addCategoryTitleCellWithColspan(table,
-            category.getName() + " " + category.getYearFrom() + " - " + category.getYearTo(), 5);
+    private void createCategoryTitle(PdfPTable table, CompetitionRankingData.Category category) {
+        addCategoryTitleCellWithColspan(table, category.abbreviation(), 1);
+        addCategoryTitleCellWithColspan(table, category.name() + " " + category.yearFrom() + " - " + category.yearTo(), 5);
 
         addCategoryTitleCellWithColspan(table, " ", 6);
     }
 
-    private void createAthleteRow(PdfPTable table, int rank, CompetitionRankingAthlete athlete, int numberOfMedals) {
+    private void createAthleteRow(PdfPTable table, int rank, CompetitionRankingData.Category.Athlete athlete, int numberOfMedals) {
         if (rank <= numberOfMedals) {
             addCell(table, "* " + rank + ".");
         } else {
             addCell(table, rank + ".");
         }
-        addCell(table, athlete.getLastName());
-        addCell(table, athlete.getFirstName());
-        addCell(table, athlete.getYearOfBirth() + "");
-        addCell(table, athlete.getClubId() == null ? "" : clubs.get(athlete.getClubId()));
-        addCellAlignRight(table, athlete.getTotalPoints() + "");
+        addCell(table, athlete.lastName());
+        addCell(table, athlete.firstName());
+        addCell(table, athlete.yearOfBirth() + "");
+        addCell(table, athlete.club());
+        addCellAlignRight(table, athlete.totalPoints() + "");
 
-        StringBuilder sb = new StringBuilder();
-        for (CompetitionRankingResult result : athlete.getResults()) {
-            sb.append(result.getEventAbbreviation());
-            sb.append(": ");
-            sb.append(result.getResult());
-            sb.append(" (");
-            sb.append(result.getPoints());
-            sb.append(") ");
+        if (athlete.results() != null) {
+            StringBuilder sb = new StringBuilder();
+            for (CompetitionRankingData.Category.Athlete.Result result : athlete.results()) {
+                sb.append(result.eventAbbreviation());
+                sb.append(": ");
+                sb.append(result.result());
+                sb.append(" (");
+                sb.append(result.points());
+                sb.append(") ");
+            }
+            addCell(table, "");
+            addResultsCell(table, sb.toString());
         }
-        addCell(table, "");
-        addResultsCell(table, sb.toString());
     }
 
 }

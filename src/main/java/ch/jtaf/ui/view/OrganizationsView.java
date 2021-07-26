@@ -1,9 +1,9 @@
 package ch.jtaf.ui.view;
 
 import ch.jtaf.db.tables.records.OrganizationRecord;
-import ch.jtaf.ui.security.OrganizationHolder;
 import ch.jtaf.ui.dialog.OrganizationDialog;
 import ch.jtaf.ui.layout.MainLayout;
+import ch.jtaf.ui.security.OrganizationHolder;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -19,13 +19,15 @@ import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.io.Serial;
+
 import static ch.jtaf.db.tables.Organization.ORGANIZATION;
 import static ch.jtaf.db.tables.OrganizationUser.ORGANIZATION_USER;
-import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
 
 @Route(layout = MainLayout.class)
 public class OrganizationsView extends VerticalLayout implements HasDynamicTitle {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final transient DSLContext dsl;
@@ -82,11 +84,9 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
 
     private void loadData() {
         var organizations = dsl
-            .select()
-            .from(ORGANIZATION)
-            .join(ORGANIZATION_USER).on(ORGANIZATION_USER.ORGANIZATION_ID.eq(ORGANIZATION.ID))
-            .join(SECURITY_USER).on(SECURITY_USER.ID.eq(ORGANIZATION_USER.USER_ID))
-            .where(SECURITY_USER.EMAIL.eq(SecurityContextHolder.getContext().getAuthentication().getName()))
+            .select(ORGANIZATION_USER.organization().fields())
+            .from(ORGANIZATION_USER)
+            .where(ORGANIZATION_USER.securityUser().EMAIL.eq(SecurityContextHolder.getContext().getAuthentication().getName()))
             .fetch().into(ORGANIZATION);
 
         grid.setItems(organizations);

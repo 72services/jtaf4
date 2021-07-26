@@ -18,9 +18,12 @@ import org.jooq.DSLContext;
 import org.jooq.UpdatableRecord;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.io.Serial;
+
 @CssImport("./styles/jtaf-dialog.css")
 public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public static final String FULLSCREEN = "fullscreen";
@@ -33,7 +36,7 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
     final FormLayout formLayout;
 
     private Callback afterSave;
-    private boolean initalized;
+    private boolean initialized;
 
     public EditDialog(String title) {
         getElement().getThemeList().add("jtaf-dialog");
@@ -96,9 +99,9 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
         binder.setBean((R) record);
         this.afterSave = afterSave;
 
-        if (!initalized) {
+        if (!initialized) {
             createForm();
-            initalized = true;
+            initialized = true;
         }
 
         super.open();

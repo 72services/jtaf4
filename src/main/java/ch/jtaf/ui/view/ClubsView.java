@@ -10,12 +10,15 @@ import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.SortField;
 
+import java.io.Serial;
+
 import static ch.jtaf.db.tables.Club.CLUB;
 import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
 
 @Route(layout = MainLayout.class)
 public class ClubsView extends ProtectedGridView<ClubRecord> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public ClubsView(DSLContext dsl) {

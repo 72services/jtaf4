@@ -32,6 +32,7 @@ import com.vaadin.flow.server.PWA;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.PostConstruct;
+import java.io.Serial;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,6 +41,7 @@ import java.util.Map;
 @PWA(name = "JTAF 4", shortName = "JTAF 4", description = "JTAF - Track and Field")
 public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShellConfigurator {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private static final String LOGO_SIZE = "50px";

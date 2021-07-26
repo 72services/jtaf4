@@ -29,11 +29,12 @@ public final class SecurityContext {
     }
 
     /**
-     * Gets the user name of the currently signed in user.
+     * Gets the username of the currently signed-in user.
      *
-     * @return the user name of the current user or <code>null</code> if the user
+     * @return the username of the current user or <code>null</code> if the user
      * has not signed in
      */
+    @SuppressWarnings("unused")
     public static String getUsername() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {

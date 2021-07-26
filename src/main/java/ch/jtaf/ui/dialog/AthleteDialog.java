@@ -15,6 +15,7 @@ import com.vaadin.flow.data.converter.Converter;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import org.jooq.DSLContext;
 
+import java.io.Serial;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,7 @@ import static ch.jtaf.db.tables.Club.CLUB;
 
 public class AthleteDialog extends EditDialog<AthleteRecord> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private Map<Long, ClubRecord> clubRecordMap = new HashMap<>();

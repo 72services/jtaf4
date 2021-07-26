@@ -23,3 +23,4 @@ webpack.generated.js
 /tsconfig.json
 /types.d.ts
 /.npmrc
+/code-inspection.log

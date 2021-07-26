@@ -24,18 +24,14 @@ public class GridBuilder {
     private GridBuilder() {
     }
 
-    public static <R extends UpdatableRecord<R>>
-    void addActionColumnAndSetSelectionListener(Grid<R> grid, EditDialog<R> dialog, Callback afterSave, Supplier<R> onNewRecord) {
+    public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(Grid<R> grid, EditDialog<R> dialog,
+                                                                                             Callback afterSave, Supplier<R> onNewRecord) {
         addActionColumnAndSetSelectionListener(grid, dialog, afterSave, onNewRecord, null, null);
     }
 
-    public static <R extends UpdatableRecord<R>>
-    void addActionColumnAndSetSelectionListener(Grid<R> grid, EditDialog<R> dialog, Callback afterSave, Supplier<R> onNewRecord, Consumer<R> insteadOfDelete) {
-        addActionColumnAndSetSelectionListener(grid, dialog, afterSave, onNewRecord, null, insteadOfDelete);
-    }
-
-    public static <R extends UpdatableRecord<R>>
-    void addActionColumnAndSetSelectionListener(Grid<R> grid, EditDialog<R> dialog, Callback afterSave, Supplier<R> onNewRecord, String insteadOfDeleteTitle, Consumer<R> insteadOfDelete) {
+    public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(Grid<R> grid, EditDialog<R> dialog,
+                                                                                             Callback afterSave, Supplier<R> onNewRecord,
+                                                                                             String insteadOfDeleteTitle, Consumer<R> insteadOfDelete) {
         Button buttonAdd = new Button(grid.getTranslation("Add"));
         buttonAdd.addClickListener(event -> dialog.open(onNewRecord.get(), afterSave));
         grid.addComponentColumn(record -> {

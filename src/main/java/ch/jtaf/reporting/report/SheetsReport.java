@@ -62,10 +62,10 @@ public class SheetsReport extends AbstractReport {
     }
 
     public byte[] create() {
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             float oneCm = cmToPixel(1f);
             document = new Document(A5, oneCm, oneCm, cmToPixel(4.5f), oneCm);
-            pdfWriter = PdfWriter.getInstance(document, baos);
+            pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
             document.open();
             boolean first = true;
             int number = 1;
@@ -83,7 +83,7 @@ public class SheetsReport extends AbstractReport {
             }
             document.close();
             pdfWriter.flush();
-            return baos.toByteArray();
+            return byteArrayOutputStream.toByteArray();
         } catch (DocumentException | IOException e) {
             LOGGER.error(e.getMessage(), e);
             return new byte[0];
@@ -106,7 +106,7 @@ public class SheetsReport extends AbstractReport {
     private void createCategory(NumbersAndSheetsAthlete athlete) {
         PdfPTable table = new PdfPTable(1);
         table.setWidthPercentage(100);
-        addCategoryCell(table, athlete.getCategory());
+        addCategoryCell(table, athlete.category());
 
         Rectangle page = document.getPageSize();
         table.setTotalWidth(page.getWidth() - document.leftMargin() - document.rightMargin());
@@ -118,36 +118,36 @@ public class SheetsReport extends AbstractReport {
         table.setWidthPercentage(100);
         table.setSpacingBefore(cmToPixel(1f));
 
-        if (athlete.getId() != null) {
+        if (athlete.id() != null) {
             addInfoCell(table, "" + number);
-            addCell(table, athlete.getId().toString());
+            addCell(table, athlete.id().toString());
         } else {
             addCell(table, " ");
             addCell(table, " ");
         }
-        if (athlete.getLastName() == null) {
+        if (athlete.lastName() == null) {
             addInfoCellWithBorder(table, messages.getString("Last.Name"));
         } else {
-            addInfoCell(table, athlete.getLastName());
+            addInfoCell(table, athlete.lastName());
         }
-        if (athlete.getFirstName() == null) {
+        if (athlete.firstName() == null) {
             addInfoCellWithBorder(table, messages.getString("First.Name"));
         } else {
-            addInfoCell(table, athlete.getFirstName());
+            addInfoCell(table, athlete.firstName());
         }
-        if (athlete.getYearOfBirth() == 0) {
+        if (athlete.yearOfBirth() == null) {
             addInfoCellWithBorder(table, messages.getString("Year"));
         } else {
-            addInfoCell(table, athlete.getYearOfBirth() + "");
+            addInfoCell(table, athlete.yearOfBirth() + "");
         }
-        if (athlete.getClub() == null) {
-            if (athlete.getId() == null) {
+        if (athlete.club() == null) {
+            if (athlete.id() == null) {
                 addInfoCellWithBorder(table, messages.getString("Club"));
             } else {
                 addInfoCell(table, "");
             }
         } else {
-            addInfoCell(table, athlete.getClub());
+            addInfoCell(table, athlete.club());
         }
 
         document.add(table);
@@ -159,8 +159,7 @@ public class SheetsReport extends AbstractReport {
         table.setSpacingBefore(cmToPixel(0.5f));
         table.setSpacingAfter(cmToPixel(0.5f));
 
-        addCompetitionCell(table, competition == null ? ""
-            : competition.getName() + " " + DATE_TIME_FORMATTER.format(competition.getCompetitionDate()));
+        addCompetitionCell(table, competition == null ? "" : competition.name() + " " + DATE_TIME_FORMATTER.format(competition.competitionDate()));
 
         document.add(table);
     }
@@ -171,14 +170,14 @@ public class SheetsReport extends AbstractReport {
         table.setWidthPercentage(100);
         table.setSpacingBefore(cmToPixel(1f));
 
-        for (var event : athlete.getEvents()) {
-            if (event.getType().equals(EventType.JUMP_THROW.name())) {
-                addInfoCell(table, event.getName());
+        for (var event : athlete.events()) {
+            if (event.type().equals(EventType.JUMP_THROW.name())) {
+                addInfoCell(table, event.name());
                 addInfoCellWithBorder(table, "");
                 addInfoCellWithBorder(table, "");
                 addInfoCellWithBorder(table, "");
             } else {
-                addInfoCellWithColspan(table, event.getName(), 3);
+                addInfoCellWithColspan(table, event.name(), 3);
                 addInfoCellWithBorder(table, "");
             }
         }
@@ -209,7 +208,7 @@ public class SheetsReport extends AbstractReport {
         table.addCell(cell);
     }
 
-    private void addInfoCellWithColspan(PdfPTable table, String text, int colspan) {
+    private void addInfoCellWithColspan(PdfPTable table, String text, @SuppressWarnings("SameParameterValue") int colspan) {
         PdfPCell cell = new PdfPCell(
             new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE_TEXT)));
         cell.setBorder(0);

@@ -8,8 +8,11 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.HasDynamicTitle;
 import org.jooq.DSLContext;
 
+import java.io.Serial;
+
 public abstract class ProtectedView extends VerticalLayout implements BeforeEnterObserver, HasDynamicTitle {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     final transient DSLContext dsl;

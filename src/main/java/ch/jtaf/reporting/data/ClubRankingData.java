@@ -1,30 +1,16 @@
 package ch.jtaf.reporting.data;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.List;
 
-public class ClubRankingData {
+public record ClubRankingData(String seriesName, List<Result> results) {
 
-    private final String seriesName;
-
-    private final List<ClubResultData> results = new ArrayList<>();
-
-    public ClubRankingData(String seriesName) {
-        this.seriesName = seriesName;
-    }
-
-    public List<ClubResultData> getResults() {
-        results.sort((o1, o2) -> o2.getPoints().compareTo(o1.getPoints()));
-
-        int rank = 0;
-        for (ClubResultData result : results) {
-            result.setRank(++rank);
-        }
-
+    public List<Result> sortedResults() {
+        results.sort((o1, o2) -> o2.points().compareTo(o1.points()));
         return results;
     }
 
-    public String getSeriesName() {
-        return seriesName;
+    public static record Result(String club, BigDecimal points) {
     }
+
 }
