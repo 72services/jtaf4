@@ -3,8 +3,10 @@ package ch.jtaf.service;
 import ch.jtaf.reporting.data.CompetitionRankingData;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-class CompetitionRankingServiceTest extends AbstractTestcontainersTest {
+@SpringBootTest
+class CompetitionRankingServiceTest {
 
     @Autowired
     private CompetitionRankingService competitionRankingService;
