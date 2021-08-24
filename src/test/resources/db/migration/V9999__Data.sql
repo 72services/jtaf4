@@ -231,6 +231,8 @@ INSERT INTO athlete (id, first_name, last_name, gender, year_of_birth, club_id, 
 INSERT INTO athlete (id, first_name, last_name, gender, year_of_birth, club_id, organization_id) VALUES(232, 'Nico', 'Schneider', 'M', 2015, NULL, 2);
 INSERT INTO athlete (id, first_name, last_name, gender, year_of_birth, club_id, organization_id) VALUES(233, 'Ryan', 'Rybarczyk', 'M', 2014, NULL, 2);
 
+ALTER SEQUENCE athlete_seq RESTART WITH 234;
+
 INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(1, 'A', 'Knaben', '0', 1900, 2002, 1);
 INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(2, 'B', 'Knaben', '0', 2003, 2004, 1);
 INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(3, 'C', 'Knaben', '0', 2005, 2006, 1);
@@ -279,6 +281,8 @@ INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series
 INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(46, 'I', 'Mädchen', '1', 2010, 2011, 4);
 INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(47, 'K', 'Mädchen', '1', 2012, 2013, 4);
 INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(48, 'K Mini', 'Mädchen', '1', 2014, 9999, 4);
+
+ALTER SEQUENCE category_seq RESTART WITH 49;
 
 INSERT INTO category_athlete (category_id, athlete_id) VALUES(12, 1);
 INSERT INTO category_athlete (category_id, athlete_id) VALUES(11, 2);
@@ -774,12 +778,16 @@ INSERT INTO club (id, abbreviation, name, organization_id) VALUES(2, 'TVT', 'Twa
 INSERT INTO club (id, abbreviation, name, organization_id) VALUES(3, 'TVLL', 'Le Landeron', 1);
 INSERT INTO club (id, abbreviation, name, organization_id) VALUES(4, 'TVN', 'Nods', 1);
 
+ALTER SEQUENCE club_seq RESTART WITH 5;
+
 INSERT INTO competition (id, name, competition_date, always_first_three_medals, medal_percentage, locked, series_id) VALUES(1, '1. CIS Twann', '2018-05-05', true, 0, false, 1);
 INSERT INTO competition (id, name, competition_date, always_first_three_medals, medal_percentage, locked, series_id) VALUES(2, '2. CIS Erlach', '2018-05-26', true, 0, false, 1);
 INSERT INTO competition (id, name, competition_date, always_first_three_medals, medal_percentage, locked, series_id) VALUES(3, '38. Jugendmeisterschaft', '2018-09-01', true, 0, false, 2);
 INSERT INTO competition (id, name, competition_date, always_first_three_medals, medal_percentage, locked, series_id) VALUES(4, '1. CIS Twann', '2019-05-04', true, 0, false, 3);
 INSERT INTO competition (id, name, competition_date, always_first_three_medals, medal_percentage, locked, series_id) VALUES(5, '2. CIS Erlach', '2019-05-25', true, 0, false, 3);
 INSERT INTO competition (id, name, competition_date, always_first_three_medals, medal_percentage, locked, series_id) VALUES(6, '39. Jugendmeisterschaft', '2019-08-31', true, 0, false, 4);
+
+ALTER SEQUENCE competition_seq RESTART WITH 7;
 
 INSERT INTO event (id, abbreviation, name, gender, event_type, a, b, c, organization_id) VALUES(1, '60', '60 m', 'M', 'RUN', 6.30895, 1460, 2.5, 1);
 INSERT INTO event (id, abbreviation, name, gender, event_type, a, b, c, organization_id) VALUES(2, '60', '60 m', 'F', 'RUN', 7.48676, 1460, 2.5, 1);
@@ -815,8 +823,12 @@ INSERT INTO event (id, abbreviation, name, gender, event_type, a, b, c, organiza
 INSERT INTO event (id, abbreviation, name, gender, event_type, a, b, c, organization_id) VALUES(32, 'ballmini', 'Ball', 'M', 'JUMP_THROW', 19.191528, 2, 0.9, 2);
 INSERT INTO event (id, abbreviation, name, gender, event_type, a, b, c, organization_id) VALUES(33, 'ballmini', 'Ball', 'F', 'JUMP_THROW', 24.63917, 2, 0.9, 2);
 
+ALTER SEQUENCE event_seq RESTART WITH 34;
+
 INSERT INTO organization (id, organization_key, name, owner) VALUES(1, 'CIS', 'Concours InterSection', 'simon@martinelli.ch');
 INSERT INTO organization (id, organization_key, name, owner) VALUES(2, 'TVE', 'Turnverein Erlach', 'simon@martinelli.ch');
+
+ALTER SEQUENCE organization_seq RESTART WITH 3;
 
 INSERT INTO result (id, position, result, points, athlete_id, category_id, competition_id, event_id) VALUES(1, 0, '', 0, 34, 1, 1, 9);
 INSERT INTO result (id, position, result, points, athlete_id, category_id, competition_id, event_id) VALUES(2, 1, '', 0, 34, 1, 1, 16);
@@ -2260,15 +2272,23 @@ INSERT INTO result (id, position, result, points, athlete_id, category_id, compe
 INSERT INTO result (id, position, result, points, athlete_id, category_id, competition_id, event_id) VALUES(1485, 1, '2.56', 231, 227, 46, 6, 27);
 INSERT INTO result (id, position, result, points, athlete_id, category_id, competition_id, event_id) VALUES(1486, 2, '10.96', 123, 227, 46, 6, 23);
 
+ALTER SEQUENCE result_seq RESTART WITH 1487;
+
 INSERT INTO security_group (id, name) VALUES(2, 'ACTUATOR');
 INSERT INTO security_group (id, name) VALUES(1, 'ADMIN');
 
+ALTER SEQUENCE security_group_seq RESTART WITH 3;
+
 INSERT INTO security_user (id, first_name, last_name, email, secret, confirmation_id, confirmed) VALUES(2, 'Simon', 'Martinelli', 'simon@martinelli.ch', '$2b$10$JI.bJV.JL4yJiQmfkug/ROOJt4wY4rJwikcfXjITkFeV2CTLxo4Jm', '', true);
+
+ALTER SEQUENCE security_user_seq RESTART WITH 3;
 
 INSERT INTO series (id, name, logo, hidden, locked, organization_id) VALUES(1, 'CIS 2018', null, false, false, 1);
 INSERT INTO series (id, name, logo, hidden, locked, organization_id) VALUES(2, 'Jugendmeisterschaft 2018', null, false, false, 2);
 INSERT INTO series (id, name, logo, hidden, locked, organization_id) VALUES(3, 'CIS 2019', null, false, false, 1);
 INSERT INTO series (id, name, logo, hidden, locked, organization_id) VALUES(4, 'Jugendmeisterschaft 2019', null, false, false, 2);
+
+ALTER SEQUENCE series_seq RESTART WITH 5;
 
 INSERT INTO user_group (user_id, group_id) VALUES(2, 1);
 INSERT INTO user_group (user_id, group_id) VALUES(2, 2);

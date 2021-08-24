@@ -24,3 +24,5 @@ webpack.generated.js
 /types.d.ts
 /.npmrc
 /code-inspection.log
+/.bashrc
+/.bashrc.swp

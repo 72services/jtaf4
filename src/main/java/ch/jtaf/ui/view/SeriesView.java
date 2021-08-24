@@ -11,6 +11,7 @@ import ch.jtaf.ui.dialog.CategoryDialog;
 import ch.jtaf.ui.dialog.CompetitionDialog;
 import ch.jtaf.ui.dialog.SearchAthleteDialog;
 import ch.jtaf.ui.layout.MainLayout;
+import ch.jtaf.ui.security.OrganizationHolder;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -176,6 +177,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         if (parameter == null) {
+            organizationRecord = OrganizationHolder.getOrganization();
+
             seriesRecord = SERIES.newRecord();
             seriesRecord.setOrganizationId(organizationRecord.getId());
         } else {
@@ -200,7 +203,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         competitionsGrid.addColumn(new ComponentRenderer<>(competition -> {
             Anchor sheetsOrderedByAthlete = new Anchor(new StreamResource("sheets_orderby_athlete" + competition.getId() + ".pdf",
                 () -> {
-                    byte[] pdf = numberAndSheetsService.createSheets(competition.getId(),
+                    byte[] pdf = numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(),
                         CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Sheets"));
@@ -208,7 +211,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
             Anchor sheetsOrderedByClub = new Anchor(new StreamResource("sheets_orderby_club" + competition.getId() + ".pdf",
                 () -> {
-                    byte[] pdf = numberAndSheetsService.createSheets(competition.getId(),
+                    byte[] pdf = numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(),
                         CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Ordered.by.club"));
@@ -216,7 +219,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
             Anchor numbersOrderedByAthlete = new Anchor(new StreamResource("numbers_orderby_athlete" + competition.getId() + ".pdf",
                 () -> {
-                    byte[] pdf = numberAndSheetsService.createNumbers(competition.getId(),
+                    byte[] pdf = numberAndSheetsService.createNumbers(competition.getSeriesId(),
                         CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Numbers"));
@@ -224,7 +227,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
             Anchor numbersOrderedByClub = new Anchor(new StreamResource("numbers_orderby_club" + competition.getId() + ".pdf",
                 () -> {
-                    byte[] pdf = numberAndSheetsService.createNumbers(competition.getId(),
+                    byte[] pdf = numberAndSheetsService.createNumbers(competition.getSeriesId(),
                         CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Ordered.by.club"));
@@ -235,6 +238,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
         addActionColumnAndSetSelectionListener(competitionsGrid, dialog, this::refreshAll, () -> {
             CompetitionRecord newRecord = COMPETITION.newRecord();
+            newRecord.setMedalPercentage(0);
             newRecord.setSeriesId(seriesRecord.getId());
             return newRecord;
         });
