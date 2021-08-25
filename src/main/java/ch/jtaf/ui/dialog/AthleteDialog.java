@@ -5,6 +5,7 @@ import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.model.Gender;
+import ch.jtaf.ui.converter.JtafStringToIntegerConverter;
 import ch.jtaf.ui.security.OrganizationHolder;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.select.Select;
@@ -64,7 +65,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
         lastName.setRequiredIndicatorVisible(true);
 
         binder.forField(yearOfBirth)
-            .withConverter(new StringToIntegerConverter(getTranslation("Must.be.a.number")))
+            .withConverter(new JtafStringToIntegerConverter(getTranslation("Must.be.a.number")))
             .withNullRepresentation(0)
             .bind(AthleteRecord::getYearOfBirth, AthleteRecord::setYearOfBirth);
 
@@ -92,7 +93,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
         year.setRequiredIndicatorVisible(true);
 
         binder.forField(year)
-            .withConverter(new StringToIntegerConverter(getTranslation("Must.be.a.number")))
+            .withConverter(new JtafStringToIntegerConverter(getTranslation("Must.be.a.number")))
             .withNullRepresentation(0)
             .bind(AthleteRecord::getYearOfBirth, AthleteRecord::setYearOfBirth);
 

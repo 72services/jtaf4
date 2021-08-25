@@ -1,6 +1,7 @@
 package ch.jtaf.ui.dialog;
 
 import ch.jtaf.db.tables.records.CategoryRecord;
+import ch.jtaf.ui.converter.JtafStringToIntegerConverter;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.select.Select;
@@ -49,7 +50,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
         yearFrom.setRequiredIndicatorVisible(true);
 
         binder.forField(yearFrom)
-            .withConverter(new StringToIntegerConverter("May.not.be.empty"))
+            .withConverter(new JtafStringToIntegerConverter("May.not.be.empty"))
             .withNullRepresentation(-1)
             .bind(CategoryRecord::getYearFrom, CategoryRecord::setYearFrom);
 
@@ -57,7 +58,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
         yearTo.setRequiredIndicatorVisible(true);
 
         binder.forField(yearTo)
-            .withConverter(new StringToIntegerConverter("May.not.be.empty"))
+            .withConverter(new JtafStringToIntegerConverter("May.not.be.empty"))
             .withNullRepresentation(-1)
             .bind(CategoryRecord::getYearTo, CategoryRecord::setYearTo);
 
