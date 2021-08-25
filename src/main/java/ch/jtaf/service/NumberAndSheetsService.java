@@ -1,6 +1,5 @@
 package ch.jtaf.service;
 
-import ch.jtaf.db.tables.Athlete;
 import ch.jtaf.reporting.data.NumbersAndSheetsAthlete;
 import ch.jtaf.reporting.data.NumbersAndSheetsCompetition;
 import ch.jtaf.reporting.report.NumbersReport;

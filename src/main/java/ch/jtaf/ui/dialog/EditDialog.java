@@ -1,6 +1,5 @@
 package ch.jtaf.ui.dialog;
 
-import ch.jtaf.context.ApplicationContextHolder;
 import ch.jtaf.ui.function.Callback;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;

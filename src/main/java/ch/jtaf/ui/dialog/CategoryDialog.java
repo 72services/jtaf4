@@ -1,46 +1,31 @@
 package ch.jtaf.ui.dialog;
 
-import ch.jtaf.context.ApplicationContextHolder;
-import ch.jtaf.db.tables.CategoryEvent;
-import ch.jtaf.db.tables.Event;
-import ch.jtaf.db.tables.records.CategoryEventRecord;
 import ch.jtaf.db.tables.records.CategoryRecord;
-import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.model.CategoryEventVO;
 import ch.jtaf.model.Gender;
 import ch.jtaf.ui.converter.JtafStringToIntegerConverter;
 import ch.jtaf.ui.function.Callback;
 import ch.jtaf.ui.validator.NotEmptyValidator;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.converter.StringToIntegerConverter;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.server.StreamResource;
 import org.jooq.DSLContext;
 import org.jooq.UpdatableRecord;
 import org.springframework.transaction.support.TransactionTemplate;
-import org.springframework.web.server.adapter.WebHttpHandlerBuilder;
 
-import java.io.ByteArrayInputStream;
 import java.io.Serial;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static ch.jtaf.context.ApplicationContextHolder.getBean;
-import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryEvent.CATEGORY_EVENT;
 import static ch.jtaf.db.tables.Event.EVENT;
-import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
 
 @SuppressWarnings("DuplicatedCode")
 public class CategoryDialog extends EditDialog<CategoryRecord> {

@@ -76,7 +76,7 @@ public class SearchAthleteDialog extends Dialog {
                 ATHLETE.FIRST_NAME.asc()}).getDataProvider();
 
         Grid<AthleteRecord> grid = new Grid<>();
-        grid.setDataProvider(dataProvider);
+        grid.setItems(dataProvider);
         grid.getStyle().set("height", "calc(100% - 300px");
 
         grid.addColumn(AthleteRecord::getLastName).setHeader(getTranslation("Last.Name")).setSortable(true);

@@ -1,6 +1,5 @@
 package ch.jtaf.ui.dialog;
 
-import ch.jtaf.context.ApplicationContextHolder;
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.db.tables.records.OrganizationRecord;
@@ -13,7 +12,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Result;
 import com.vaadin.flow.data.binder.ValueContext;
 import com.vaadin.flow.data.converter.Converter;
-import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import org.jooq.DSLContext;
 
 import java.io.Serial;

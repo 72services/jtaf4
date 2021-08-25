@@ -18,7 +18,6 @@ import org.jooq.DSLContext;
 import org.jooq.SortField;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import java.io.Serial;
 

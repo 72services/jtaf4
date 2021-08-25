@@ -1,6 +1,5 @@
 package ch.jtaf.ui.view;
 
-import ch.jtaf.context.ApplicationContextHolder;
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.CategoryAthleteRecord;
 import ch.jtaf.db.tables.records.CategoryRecord;
@@ -46,11 +45,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static ch.jtaf.context.ApplicationContextHolder.getBean;
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
-import static ch.jtaf.db.tables.CategoryEvent.CATEGORY_EVENT;
 import static ch.jtaf.db.tables.Club.CLUB;
 import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Series.SERIES;
@@ -113,12 +110,12 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
         Button save = new Button(getTranslation("Save"));
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        save.addClickListener(event -> {
+        save.addClickListener(event ->
             transactionTemplate.executeWithoutResult(transactionStatus -> {
                 dsl.attach(binder.getBean());
                 binder.getBean().store();
-            });
-        });
+            })
+        );
         add(save);
 
         sectionTabs.setWidthFull();
