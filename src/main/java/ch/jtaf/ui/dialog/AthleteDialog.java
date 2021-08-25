@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static ch.jtaf.context.ApplicationContextHolder.getBean;
 import static ch.jtaf.db.tables.Club.CLUB;
 
 public class AthleteDialog extends EditDialog<AthleteRecord> {
@@ -106,8 +107,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
         if (organizationRecord == null) {
             return Collections.emptyList();
         } else {
-            DSLContext dsl = ApplicationContextHolder.getBean(DSLContext.class);
-            var clubs = dsl.selectFrom(CLUB).where(CLUB.ORGANIZATION_ID.eq(organizationRecord.getId())).fetch();
+            var clubs = getBean(DSLContext.class).selectFrom(CLUB).where(CLUB.ORGANIZATION_ID.eq(organizationRecord.getId())).fetch();
             clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
             return clubs;
         }

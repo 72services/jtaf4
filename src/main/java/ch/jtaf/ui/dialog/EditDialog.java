@@ -20,6 +20,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.io.Serial;
 
+import static ch.jtaf.context.ApplicationContextHolder.getBean;
+
 @CssImport("./styles/jtaf-dialog.css")
 public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
 
@@ -67,10 +69,8 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
         Button save = new Button(getTranslation("Save"));
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         save.addClickListener(event -> {
-            DSLContext dsl = ApplicationContextHolder.getBean(DSLContext.class);
-            TransactionTemplate transactionTemplate = ApplicationContextHolder.getBean(TransactionTemplate.class);
-            transactionTemplate.executeWithoutResult((transactionStatus) -> {
-                dsl.attach(binder.getBean());
+            getBean(TransactionTemplate.class).executeWithoutResult((transactionStatus) -> {
+                getBean(DSLContext.class).attach(binder.getBean());
                 binder.getBean().store();
 
                 if (afterSave != null) {

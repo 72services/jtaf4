@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static ch.jtaf.context.ApplicationContextHolder.getBean;
 import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryEvent.CATEGORY_EVENT;
 import static ch.jtaf.db.tables.Event.EVENT;
@@ -113,9 +114,8 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
 
     private List<CategoryEventVO> getCategoryEvents() {
         if (binder.getBean() != null) {
-            DSLContext dsl = ApplicationContextHolder.getBean(DSLContext.class);
-
-            return dsl.select(EVENT.ABBREVIATION, EVENT.NAME, EVENT.GENDER, EVENT.EVENT_TYPE, EVENT.A, EVENT.B, EVENT.C, CATEGORY_EVENT.POSITION)
+            return getBean(DSLContext.class)
+                .select(EVENT.ABBREVIATION, EVENT.NAME, EVENT.GENDER, EVENT.EVENT_TYPE, EVENT.A, EVENT.B, EVENT.C, CATEGORY_EVENT.POSITION)
                 .from(CATEGORY_EVENT)
                 .join(EVENT).on(EVENT.ID.eq(CATEGORY_EVENT.EVENT_ID))
                 .where(CATEGORY_EVENT.CATEGORY_ID.eq(binder.getBean().getId()))
