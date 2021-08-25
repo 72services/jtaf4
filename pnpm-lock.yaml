@@ -1170,7 +1170,7 @@ packages:
       babel-plugin-polyfill-corejs2: 0.2.2_@babel+core@7.15.0
       babel-plugin-polyfill-corejs3: 0.2.4_@babel+core@7.15.0
       babel-plugin-polyfill-regenerator: 0.2.2_@babel+core@7.15.0
-      core-js-compat: 3.16.2
+      core-js-compat: 3.16.3
       semver: 6.3.0
     dev: true
     engines:
@@ -2667,7 +2667,7 @@ packages:
     dependencies:
       '@babel/core': 7.15.0
       '@babel/helper-define-polyfill-provider': 0.2.3_@babel+core@7.15.0
-      core-js-compat: 3.16.2
+      core-js-compat: 3.16.3
     dev: true
     peerDependencies:
       '@babel/core': ^7.0.0-0
@@ -3157,7 +3157,7 @@ packages:
   /browserslist/3.2.8:
     dependencies:
       caniuse-lite: 1.0.30001251
-      electron-to-chromium: 1.3.816
+      electron-to-chromium: 1.3.817
     dev: true
     hasBin: true
     resolution:
@@ -3166,7 +3166,7 @@ packages:
     dependencies:
       caniuse-lite: 1.0.30001251
       colorette: 1.3.0
-      electron-to-chromium: 1.3.816
+      electron-to-chromium: 1.3.817
       escalade: 3.1.1
       node-releases: 1.1.75
     dev: true
@@ -3603,13 +3603,13 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-Z29us8OZl8LuGsOpJP1hJHSPV40=
-  /core-js-compat/3.16.2:
+  /core-js-compat/3.16.3:
     dependencies:
       browserslist: 4.16.8
       semver: 7.0.0
     dev: true
     resolution:
-      integrity: sha512-4lUshXtBXsdmp8cDWh6KKiHUg40AjiuPD3bOWkNVsr1xkAhpUqCjaZ8lB1bKx9Gb5fXcbRbFJ4f4qpRIRTuJqQ==
+      integrity: sha512-A/OtSfSJQKLAFRVd4V0m6Sep9lPdjD8bpN8v3tCCGwE0Tmh0hOiVDm9tw6mXmWOKOSZIyr3EkywPo84cJjGvIQ==
   /core-js/2.6.12:
     deprecated: core-js@<3.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Please, upgrade your dependencies to the actual version of core-js.
     dev: true
@@ -3996,10 +3996,10 @@ packages:
     requiresBuild: true
     resolution:
       integrity: sha512-7vmuyh5+kuUyJKePhQfRQBhXV5Ce+RnaeeQArKu1EAMpL3WbgMt5WG6uQZpEVvYSSsxMXRKOewtDk9RaTKXRlA==
-  /electron-to-chromium/1.3.816:
+  /electron-to-chromium/1.3.817:
     dev: true
     resolution:
-      integrity: sha512-/AvJPIJldO0NkwkfpUD7u1e4YEGRFBQpFuvl9oGCcVgWOObsZB1loxVGeVUJB9kmvfsBUUChPYdgRzx6+AKNyg==
+      integrity: sha512-Vw0Faepf2Id9Kf2e97M/c99qf168xg86JLKDxivvlpBQ9KDtjSeX0v+TiuSE25PqeQfTz+NJs375b64ca3XOIQ==
   /elliptic/6.5.4:
     dependencies:
       bn.js: 4.12.0
@@ -6855,7 +6855,7 @@ packages:
       jest-worker: 26.6.2
       rollup: 2.56.3
       serialize-javascript: 4.0.0
-      terser: 5.7.1
+      terser: 5.7.2
     dev: true
     peerDependencies:
       rollup: ^2.0.0
@@ -7476,7 +7476,7 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-EAPipTNeWsb/3wLPeup1tVPaXfIaU68xMnVdPafIL1TV05OhASArYyIfFvnvJCNrR2NIOvDVNNTFRa+Re2MWyw==
-  /terser/5.7.1:
+  /terser/5.7.2:
     dependencies:
       commander: 2.20.3
       source-map: 0.7.3
@@ -7486,7 +7486,7 @@ packages:
       node: '>=10'
     hasBin: true
     resolution:
-      integrity: sha512-b3e+d5JbHAe/JSjwsC3Zn55wsBIM7AsHLjKxT31kGCldgbpFePaFo+PiddtO6uwRZWRw7sPXmAN8dTW61xmnSg==
+      integrity: sha512-0Omye+RD4X7X69O0eql3lC4Heh/5iLj3ggxR/B5ketZLOtLiOqukUgjw3q4PDnNQbsrkKr3UMypqStQG3XKRvw==
   /through2/2.0.5:
     dependencies:
       readable-stream: 2.3.7
