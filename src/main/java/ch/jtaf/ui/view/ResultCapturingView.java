@@ -94,7 +94,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
         grid.addColumn(record -> record.get(ATHLETE.ID)).setHeader("ID").setSortable(true);
         grid.addColumn(record -> record.get(ATHLETE.LAST_NAME)).setHeader(getTranslation("Last.Name")).setSortable(true);
         grid.addColumn(record -> record.get(ATHLETE.FIRST_NAME)).setHeader(getTranslation("First.Name")).setSortable(true);
-        grid.setDataProvider(dataProvider);
+        grid.setItems(dataProvider);
         grid.setHeight("200px");
         add(grid);
 

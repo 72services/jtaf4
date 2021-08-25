@@ -2,6 +2,7 @@ package ch.jtaf.ui.dialog;
 
 import ch.jtaf.db.tables.records.CompetitionRecord;
 import ch.jtaf.ui.validator.NotEmptyValidator;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.textfield.TextField;
 
@@ -30,6 +31,11 @@ public class CompetitionDialog extends EditDialog<CompetitionRecord> {
 
         binder.forField(date)
             .bind(CompetitionRecord::getCompetitionDate, CompetitionRecord::setCompetitionDate);
+
+        Checkbox alwaysFirstThreeMedals = new Checkbox(getTranslation("Always.first.three.medals"));
+
+        binder.forField(alwaysFirstThreeMedals)
+            .bind(CompetitionRecord::getAlwaysFirstThreeMedals, CompetitionRecord::setAlwaysFirstThreeMedals);
 
         formLayout.add(name, date);
     }

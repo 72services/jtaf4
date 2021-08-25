@@ -231,54 +231,58 @@ INSERT INTO athlete (id, first_name, last_name, gender, year_of_birth, club_id, 
 INSERT INTO athlete (id, first_name, last_name, gender, year_of_birth, club_id, organization_id) VALUES(232, 'Nico', 'Schneider', 'M', 2015, NULL, 2);
 INSERT INTO athlete (id, first_name, last_name, gender, year_of_birth, club_id, organization_id) VALUES(233, 'Ryan', 'Rybarczyk', 'M', 2014, NULL, 2);
 
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(1, 'A', 'Knaben', '0', 1900, 2002, 1);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(2, 'B', 'Knaben', '0', 2003, 2004, 1);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(3, 'C', 'Knaben', '0', 2005, 2006, 1);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(4, 'D', 'Knaben', '0', 2007, 2008, 1);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(5, 'E', 'Knaben', '0', 2009, 2010, 1);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(6, 'F', 'Knaben', '0', 2011, 9999, 1);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(7, 'G', 'Mädchen', '1', 1900, 2002, 1);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(8, 'H', 'Mädchen', '1', 2003, 2004, 1);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(9, 'I', 'Mädchen', '1', 2005, 2006, 1);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(10, 'K', 'Mädchen', '1', 2007, 2008, 1);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(11, 'L', 'Mädchen', '1', 2009, 2010, 1);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(12, 'M', 'Mädchen', '1', 2011, 9999, 1);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(13, 'A', 'Knaben', '0', 1900, 2004, 2);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(14, 'B', 'Knaben', '0', 2005, 2006, 2);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(15, 'C', 'Knaben', '0', 2007, 2008, 2);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(16, 'D', 'Knaben', '0', 2009, 2010, 2);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(17, 'E', 'Knaben', '0', 2011, 2012, 2);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(18, 'E Mini', 'Knaben', '0', 2013, 9999, 2);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(19, 'F', 'Mädchen', '1', 1900, 2004, 2);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(20, 'G', 'Mädchen', '1', 2005, 2006, 2);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(21, 'H', 'Mädchen', '1', 2007, 2008, 2);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(22, 'I', 'Mädchen', '1', 2009, 2010, 2);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(23, 'K', 'Mädchen', '1', 2011, 2012, 2);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(24, 'K Mini', 'Mädchen', '1', 2013, 9999, 2);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(25, 'A', 'Knaben', '0', 1900, 2003, 3);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(26, 'B', 'Knaben', '0', 2004, 2005, 3);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(27, 'C', 'Knaben', '0', 2006, 2007, 3);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(28, 'D', 'Knaben', '0', 2008, 2009, 3);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(29, 'E', 'Knaben', '0', 2010, 2011, 3);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(30, 'F', 'Knaben', '0', 2012, 9999, 3);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(31, 'G', 'Mädchen', '1', 1900, 2003, 3);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(32, 'H', 'Mädchen', '1', 2004, 2005, 3);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(33, 'I', 'Mädchen', '1', 2006, 2007, 3);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(34, 'K', 'Mädchen', '1', 2008, 2009, 3);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(35, 'L', 'Mädchen', '1', 2010, 2011, 3);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(36, 'M', 'Mädchen', '1', 2012, 9999, 3);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(37, 'A', 'Knaben', '0', 1900, 2005, 4);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(38, 'B', 'Knaben', '0', 2006, 2007, 4);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(39, 'C', 'Knaben', '0', 2008, 2009, 4);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(40, 'D', 'Knaben', '0', 2010, 2011, 4);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(41, 'E', 'Knaben', '0', 2012, 2013, 4);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(42, 'E Mini', 'Knaben', '0', 2014, 9999, 4);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(43, 'F', 'Mädchen', '1', 1900, 2005, 4);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(44, 'G', 'Mädchen', '1', 2006, 2007, 4);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(45, 'H', 'Mädchen', '1', 2008, 2009, 4);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(46, 'I', 'Mädchen', '1', 2010, 2011, 4);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(47, 'K', 'Mädchen', '1', 2012, 2013, 4);
-INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(48, 'K Mini', 'Mädchen', '1', 2014, 9999, 4);
+ALTER SEQUENCE athlete_seq RESTART WITH 234;
+
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(1, 'A', 'Knaben', 'M', 1900, 2002, 1);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(2, 'B', 'Knaben', 'M', 2003, 2004, 1);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(3, 'C', 'Knaben', 'M', 2005, 2006, 1);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(4, 'D', 'Knaben', 'M', 2007, 2008, 1);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(5, 'E', 'Knaben', 'M', 2009, 2010, 1);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(6, 'F', 'Knaben', 'M', 2011, 9999, 1);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(7, 'G', 'Mädchen', 'F', 1900, 2002, 1);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(8, 'H', 'Mädchen', 'F', 2003, 2004, 1);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(9, 'I', 'Mädchen', 'F', 2005, 2006, 1);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(10, 'K', 'Mädchen', 'F', 2007, 2008, 1);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(11, 'L', 'Mädchen', 'F', 2009, 2010, 1);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(12, 'M', 'Mädchen', 'F', 2011, 9999, 1);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(13, 'A', 'Knaben', 'M', 1900, 2004, 2);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(14, 'B', 'Knaben', 'M', 2005, 2006, 2);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(15, 'C', 'Knaben', 'M', 2007, 2008, 2);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(16, 'D', 'Knaben', 'M', 2009, 2010, 2);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(17, 'E', 'Knaben', 'M', 2011, 2012, 2);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(18, 'E Mini', 'Knaben', 'M', 2013, 9999, 2);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(19, 'F', 'Mädchen', 'F', 1900, 2004, 2);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(20, 'G', 'Mädchen', 'F', 2005, 2006, 2);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(21, 'H', 'Mädchen', 'F', 2007, 2008, 2);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(22, 'I', 'Mädchen', 'F', 2009, 2010, 2);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(23, 'K', 'Mädchen', 'F', 2011, 2012, 2);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(24, 'K Mini', 'Mädchen', 'F', 2013, 9999, 2);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(25, 'A', 'Knaben', 'M', 1900, 2003, 3);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(26, 'B', 'Knaben', 'M', 2004, 2005, 3);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(27, 'C', 'Knaben', 'M', 2006, 2007, 3);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(28, 'D', 'Knaben', 'M', 2008, 2009, 3);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(29, 'E', 'Knaben', 'M', 2010, 2011, 3);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(30, 'F', 'Knaben', 'M', 2012, 9999, 3);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(31, 'G', 'Mädchen', 'F', 1900, 2003, 3);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(32, 'H', 'Mädchen', 'F', 2004, 2005, 3);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(33, 'I', 'Mädchen', 'F', 2006, 2007, 3);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(34, 'K', 'Mädchen', 'F', 2008, 2009, 3);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(35, 'L', 'Mädchen', 'F', 2010, 2011, 3);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(36, 'M', 'Mädchen', 'F', 2012, 9999, 3);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(37, 'A', 'Knaben', 'M', 1900, 2005, 4);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(38, 'B', 'Knaben', 'M', 2006, 2007, 4);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(39, 'C', 'Knaben', 'M', 2008, 2009, 4);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(40, 'D', 'Knaben', 'M', 2010, 2011, 4);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(41, 'E', 'Knaben', 'M', 2012, 2013, 4);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(42, 'E Mini', 'Knaben', 'M', 2014, 9999, 4);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(43, 'F', 'Mädchen', 'F', 1900, 2005, 4);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(44, 'G', 'Mädchen', 'F', 2006, 2007, 4);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(45, 'H', 'Mädchen', 'F', 2008, 2009, 4);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(46, 'I', 'Mädchen', 'F', 2010, 2011, 4);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(47, 'K', 'Mädchen', 'F', 2012, 2013, 4);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(48, 'K Mini', 'Mädchen', 'F', 2014, 9999, 4);
+
+ALTER SEQUENCE category_seq RESTART WITH 49;
 
 INSERT INTO category_athlete (category_id, athlete_id) VALUES(12, 1);
 INSERT INTO category_athlete (category_id, athlete_id) VALUES(11, 2);
@@ -774,12 +778,16 @@ INSERT INTO club (id, abbreviation, name, organization_id) VALUES(2, 'TVT', 'Twa
 INSERT INTO club (id, abbreviation, name, organization_id) VALUES(3, 'TVLL', 'Le Landeron', 1);
 INSERT INTO club (id, abbreviation, name, organization_id) VALUES(4, 'TVN', 'Nods', 1);
 
+ALTER SEQUENCE club_seq RESTART WITH 5;
+
 INSERT INTO competition (id, name, competition_date, always_first_three_medals, medal_percentage, locked, series_id) VALUES(1, '1. CIS Twann', '2018-05-05', true, 0, false, 1);
 INSERT INTO competition (id, name, competition_date, always_first_three_medals, medal_percentage, locked, series_id) VALUES(2, '2. CIS Erlach', '2018-05-26', true, 0, false, 1);
 INSERT INTO competition (id, name, competition_date, always_first_three_medals, medal_percentage, locked, series_id) VALUES(3, '38. Jugendmeisterschaft', '2018-09-01', true, 0, false, 2);
 INSERT INTO competition (id, name, competition_date, always_first_three_medals, medal_percentage, locked, series_id) VALUES(4, '1. CIS Twann', '2019-05-04', true, 0, false, 3);
 INSERT INTO competition (id, name, competition_date, always_first_three_medals, medal_percentage, locked, series_id) VALUES(5, '2. CIS Erlach', '2019-05-25', true, 0, false, 3);
 INSERT INTO competition (id, name, competition_date, always_first_three_medals, medal_percentage, locked, series_id) VALUES(6, '39. Jugendmeisterschaft', '2019-08-31', true, 0, false, 4);
+
+ALTER SEQUENCE competition_seq RESTART WITH 7;
 
 INSERT INTO event (id, abbreviation, name, gender, event_type, a, b, c, organization_id) VALUES(1, '60', '60 m', 'M', 'RUN', 6.30895, 1460, 2.5, 1);
 INSERT INTO event (id, abbreviation, name, gender, event_type, a, b, c, organization_id) VALUES(2, '60', '60 m', 'F', 'RUN', 7.48676, 1460, 2.5, 1);
@@ -815,8 +823,12 @@ INSERT INTO event (id, abbreviation, name, gender, event_type, a, b, c, organiza
 INSERT INTO event (id, abbreviation, name, gender, event_type, a, b, c, organization_id) VALUES(32, 'ballmini', 'Ball', 'M', 'JUMP_THROW', 19.191528, 2, 0.9, 2);
 INSERT INTO event (id, abbreviation, name, gender, event_type, a, b, c, organization_id) VALUES(33, 'ballmini', 'Ball', 'F', 'JUMP_THROW', 24.63917, 2, 0.9, 2);
 
+ALTER SEQUENCE event_seq RESTART WITH 34;
+
 INSERT INTO organization (id, organization_key, name, owner) VALUES(1, 'CIS', 'Concours InterSection', 'simon@martinelli.ch');
 INSERT INTO organization (id, organization_key, name, owner) VALUES(2, 'TVE', 'Turnverein Erlach', 'simon@martinelli.ch');
+
+ALTER SEQUENCE organization_seq RESTART WITH 3;
 
 INSERT INTO result (id, position, result, points, athlete_id, category_id, competition_id, event_id) VALUES(1, 0, '', 0, 34, 1, 1, 9);
 INSERT INTO result (id, position, result, points, athlete_id, category_id, competition_id, event_id) VALUES(2, 1, '', 0, 34, 1, 1, 16);
@@ -2260,15 +2272,23 @@ INSERT INTO result (id, position, result, points, athlete_id, category_id, compe
 INSERT INTO result (id, position, result, points, athlete_id, category_id, competition_id, event_id) VALUES(1485, 1, '2.56', 231, 227, 46, 6, 27);
 INSERT INTO result (id, position, result, points, athlete_id, category_id, competition_id, event_id) VALUES(1486, 2, '10.96', 123, 227, 46, 6, 23);
 
+ALTER SEQUENCE result_seq RESTART WITH 1487;
+
 INSERT INTO security_group (id, name) VALUES(2, 'ACTUATOR');
 INSERT INTO security_group (id, name) VALUES(1, 'ADMIN');
 
+ALTER SEQUENCE security_group_seq RESTART WITH 3;
+
 INSERT INTO security_user (id, first_name, last_name, email, secret, confirmation_id, confirmed) VALUES(2, 'Simon', 'Martinelli', 'simon@martinelli.ch', '$2b$10$JI.bJV.JL4yJiQmfkug/ROOJt4wY4rJwikcfXjITkFeV2CTLxo4Jm', '', true);
+
+ALTER SEQUENCE security_user_seq RESTART WITH 3;
 
 INSERT INTO series (id, name, logo, hidden, locked, organization_id) VALUES(1, 'CIS 2018', null, false, false, 1);
 INSERT INTO series (id, name, logo, hidden, locked, organization_id) VALUES(2, 'Jugendmeisterschaft 2018', null, false, false, 2);
 INSERT INTO series (id, name, logo, hidden, locked, organization_id) VALUES(3, 'CIS 2019', null, false, false, 1);
 INSERT INTO series (id, name, logo, hidden, locked, organization_id) VALUES(4, 'Jugendmeisterschaft 2019', null, false, false, 2);
+
+ALTER SEQUENCE series_seq RESTART WITH 5;
 
 INSERT INTO user_group (user_id, group_id) VALUES(2, 1);
 INSERT INTO user_group (user_id, group_id) VALUES(2, 2);

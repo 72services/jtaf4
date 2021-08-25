@@ -7,6 +7,7 @@ import ch.jtaf.ui.security.OrganizationHolder;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
@@ -61,12 +62,20 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
             Button delete = new Button(getTranslation("Delete"));
             delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
             delete.addClickListener(event -> {
-                try {
-                    dsl.attach(organizationRecord);
-                    organizationRecord.delete();
-                } catch (DataAccessException e) {
-                    Notification.show(e.getMessage());
-                }
+                ConfirmDialog confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
+                    getTranslation("Are.you.sure"),
+                    getTranslation("Delete"), e -> {
+                    try {
+                        dsl.attach(organizationRecord);
+                        organizationRecord.delete();
+                    } catch (DataAccessException ex) {
+                        Notification.show(ex.getMessage());
+                    }
+                },
+                    getTranslation("Cancel"), e -> {
+                });
+                confirmDialog.setConfirmButtonTheme("error primary");
+                confirmDialog.open();
             });
 
             HorizontalLayout horizontalLayout = new HorizontalLayout(select, delete);

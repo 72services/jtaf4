@@ -26,7 +26,7 @@ public abstract class ProtectedGridView<R extends Record> extends ProtectedView 
 
         grid = new Grid<>();
         grid.setHeightFull();
-        grid.setDataProvider(dataProvider);
+        grid.setItems(dataProvider);
 
         setHeightFull();
     }
