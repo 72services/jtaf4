@@ -1,5 +1,6 @@
 package ch.jtaf.ui.view;
 
+import ch.jtaf.db.tables.Series;
 import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.db.tables.records.ResultRecord;
 import ch.jtaf.model.EventType;
@@ -35,6 +36,8 @@ import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
 import static ch.jtaf.db.tables.CategoryEvent.CATEGORY_EVENT;
 import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Result.RESULT;
+import static ch.jtaf.db.tables.Series.SERIES;
+import static org.jooq.impl.DSL.upper;
 
 @Route(layout = MainLayout.class)
 public class ResultCapturingView extends VerticalLayout implements HasDynamicTitle, HasUrlParameter<String> {
@@ -55,14 +58,17 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
             query -> {
                 Result<Record4<Long, String, String, Long>> records = dsl
                     .select(
-                        CATEGORY_ATHLETE.athlete().ID,
-                        CATEGORY_ATHLETE.athlete().LAST_NAME,
-                        CATEGORY_ATHLETE.athlete().FIRST_NAME,
-                        CATEGORY_ATHLETE.category().ID)
-                    .from(CATEGORY_ATHLETE)
+                        ATHLETE.ID,
+                        ATHLETE.LAST_NAME,
+                        ATHLETE.FIRST_NAME,
+                        CATEGORY.ID)
+                    .from(ATHLETE)
+                    .join(CATEGORY_ATHLETE).on(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
+                    .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
+                    .join(COMPETITION).on(COMPETITION.SERIES_ID.eq(CATEGORY.SERIES_ID))
                     .where(COMPETITION.ID.eq(competitionId).and(createCondition(query)))
-                    .and(CATEGORY_ATHLETE.category().SERIES_ID.eq(COMPETITION.SERIES_ID))
-                    .orderBy(CATEGORY_ATHLETE.athlete().LAST_NAME, CATEGORY_ATHLETE.athlete().FIRST_NAME)
+                    .and(CATEGORY.SERIES_ID.eq(COMPETITION.SERIES_ID))
+                    .orderBy(ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME)
                     .offset(query.getOffset()).limit(query.getLimit())
                     .fetch();
                 if (records.size() == 1) {
@@ -76,9 +82,12 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
             query -> {
                 var count = dsl
                     .selectCount()
-                    .from(CATEGORY_ATHLETE)
+                    .from(ATHLETE)
+                    .join(CATEGORY_ATHLETE).on(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
+                    .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
+                    .join(COMPETITION).on(COMPETITION.SERIES_ID.eq(CATEGORY.SERIES_ID))
                     .where(COMPETITION.ID.eq(competitionId).and(createCondition(query)))
-                    .and(CATEGORY_ATHLETE.category().SERIES_ID.eq(COMPETITION.SERIES_ID))
+                    .and(CATEGORY.SERIES_ID.eq(COMPETITION.SERIES_ID))
                     .fetchOneInto(Integer.class);
                 return count != null ? count : 0;
             },
@@ -162,8 +171,8 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
             if (StringUtils.isNumeric(filterString)) {
                 return ATHLETE.ID.eq(Long.valueOf(filterString));
             } else {
-                return ATHLETE.LAST_NAME.like(filterString + "%")
-                    .or(ATHLETE.FIRST_NAME.like(filterString + "%"));
+                return upper(ATHLETE.LAST_NAME).like(filterString.toUpperCase() + "%")
+                    .or(upper(ATHLETE.FIRST_NAME).like(filterString.toUpperCase() + "%"));
             }
         } else {
             return DSL.condition("1 = 2");
