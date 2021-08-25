@@ -22,7 +22,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Record4;
-import org.jooq.Result;
 import org.jooq.impl.DSL;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -54,7 +53,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
         CallbackDataProvider<Record4<Long, String, String, Long>, String> callbackDataProvider = new CallbackDataProvider<>(
             query -> {
-                Result<Record4<Long, String, String, Long>> records = dsl
+                var records = dsl
                     .select(
                         ATHLETE.ID,
                         ATHLETE.LAST_NAME,
