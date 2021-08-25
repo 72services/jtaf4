@@ -12,8 +12,13 @@ import ch.jtaf.ui.converter.JtafStringToIntegerConverter;
 import ch.jtaf.ui.function.Callback;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
+import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
@@ -22,6 +27,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.server.StreamResource;
 import org.jooq.DSLContext;
 import org.jooq.UpdatableRecord;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.server.adapter.WebHttpHandlerBuilder;
 
 import java.io.ByteArrayInputStream;
@@ -100,7 +106,24 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
         categoryEventsGrid.addColumn(CategoryEventVO::C).setHeader("C");
         categoryEventsGrid.addColumn(CategoryEventVO::position).setHeader(getTranslation("Position"));
 
-        setWidth("1000px");
+        Button addEvent = new Button(getTranslation("Add.Event"));
+        addEvent.addClickListener(event -> {
+            // TODO EventSearchDialog
+        });
+
+        categoryEventsGrid.addComponentColumn(record -> {
+            Button remove = new Button(getTranslation("Remove"));
+            remove.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            remove.addClickListener(event ->
+                getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> removeEventFromCategory(record)));
+
+            HorizontalLayout horizontalLayout = new HorizontalLayout(remove);
+            horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+            return horizontalLayout;
+        }).setTextAlign(ColumnTextAlign.END).setHeader(addEvent);
+
+
+        setWidth("1600px");
 
         add(categoryEventsGrid);
     }
@@ -115,7 +138,8 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
     private List<CategoryEventVO> getCategoryEvents() {
         if (binder.getBean() != null) {
             return getBean(DSLContext.class)
-                .select(EVENT.ABBREVIATION, EVENT.NAME, EVENT.GENDER, EVENT.EVENT_TYPE, EVENT.A, EVENT.B, EVENT.C, CATEGORY_EVENT.POSITION)
+                .select(EVENT.ABBREVIATION, EVENT.NAME, EVENT.GENDER, EVENT.EVENT_TYPE, EVENT.A, EVENT.B, EVENT.C, CATEGORY_EVENT.POSITION,
+                    CATEGORY_EVENT.CATEGORY_ID, CATEGORY_EVENT.EVENT_ID)
                 .from(CATEGORY_EVENT)
                 .join(EVENT).on(EVENT.ID.eq(CATEGORY_EVENT.EVENT_ID))
                 .where(CATEGORY_EVENT.CATEGORY_ID.eq(binder.getBean().getId()))
@@ -124,5 +148,21 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
         } else {
             return Collections.emptyList();
         }
+    }
+
+    private void removeEventFromCategory(CategoryEventVO record) {
+        ConfirmDialog confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
+            getTranslation("Are.you.sure"),
+            getTranslation("Remove"), event ->
+            getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus ->
+                getBean(DSLContext.class)
+                    .deleteFrom(CATEGORY_EVENT)
+                    .where(CATEGORY_EVENT.CATEGORY_ID.eq(record.categoryId()))
+                    .and(CATEGORY_EVENT.EVENT_ID.eq(record.eventId()))
+                    .execute()),
+            getTranslation("Cancel"), event -> {
+        });
+        confirmDialog.setConfirmButtonTheme("error primary");
+        confirmDialog.open();
     }
 }

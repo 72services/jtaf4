@@ -17,6 +17,7 @@ import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
@@ -49,6 +50,7 @@ import static ch.jtaf.context.ApplicationContextHolder.getBean;
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
+import static ch.jtaf.db.tables.CategoryEvent.CATEGORY_EVENT;
 import static ch.jtaf.db.tables.Club.CLUB;
 import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Series.SERIES;
@@ -283,17 +285,24 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         athletesGrid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
             : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club"));
 
-        Button assign = new Button(athletesGrid.getTranslation("Assign.Athlete"));
+        Button assign = new Button(getTranslation("Assign.Athlete"));
         assign.addClickListener(event -> {
             SearchAthleteDialog dialog = new SearchAthleteDialog(dsl, organizationRecord, this::onAthleteSelect);
             dialog.open();
         });
 
         athletesGrid.addComponentColumn(record -> {
-            Button remove = new Button(athletesGrid.getTranslation("Remove"));
+            Button remove = new Button(getTranslation("Remove"));
             remove.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            remove.addClickListener(event ->
-                getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> removeAthleteFromSeries(record)));
+            remove.addClickListener(event -> {
+                ConfirmDialog confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
+                    getTranslation("Are.you.sure"),
+                    getTranslation("Remove"), e -> removeAthleteFromSeries(record),
+                    getTranslation("Cancel"), e -> {
+                });
+                confirmDialog.setConfirmButtonTheme("error primary");
+                confirmDialog.open();
+            });
 
             HorizontalLayout horizontalLayout = new HorizontalLayout(remove);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);

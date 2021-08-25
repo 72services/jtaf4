@@ -7,6 +7,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
@@ -17,6 +18,7 @@ import org.jooq.DSLContext;
 import org.jooq.SortField;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.io.Serial;
 
@@ -67,12 +69,20 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
             Button delete = new Button(getTranslation("Delete"));
             delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
             delete.addClickListener(event -> {
-                try {
-                    dsl.attach(seriesRecord);
-                    seriesRecord.delete();
-                } catch (DataAccessException e) {
-                    Notification.show(e.getMessage());
-                }
+                ConfirmDialog confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
+                    getTranslation("Are.you.sure"),
+                    getTranslation("Delete"), e -> {
+                    try {
+                        dsl.attach(seriesRecord);
+                        seriesRecord.delete();
+                    } catch (DataAccessException ex) {
+                        Notification.show(ex.getMessage());
+                    }
+                },
+                    getTranslation("Cancel"), e -> {
+                });
+                confirmDialog.setConfirmButtonTheme("error primary");
+                confirmDialog.open();
             });
 
             HorizontalLayout horizontalLayout = new HorizontalLayout(delete);
