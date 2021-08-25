@@ -38,8 +38,8 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
 
         Select<String> gender = new Select<>();
         gender.setLabel(getTranslation("Gender"));
-        gender.setItems(List.of("0", "1"));
-        gender.setValue("0");
+        gender.setItems(List.of("M", "F"));
+        gender.setValue("M");
         gender.setRequiredIndicatorVisible(true);
 
         binder.forField(gender)
