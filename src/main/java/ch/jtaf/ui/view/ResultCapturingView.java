@@ -1,6 +1,5 @@
 package ch.jtaf.ui.view;
 
-import ch.jtaf.db.tables.Series;
 import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.db.tables.records.ResultRecord;
 import ch.jtaf.model.EventType;
@@ -36,7 +35,6 @@ import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
 import static ch.jtaf.db.tables.CategoryEvent.CATEGORY_EVENT;
 import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Result.RESULT;
-import static ch.jtaf.db.tables.Series.SERIES;
 import static org.jooq.impl.DSL.upper;
 
 @Route(layout = MainLayout.class)
