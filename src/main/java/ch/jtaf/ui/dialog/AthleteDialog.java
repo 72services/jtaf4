@@ -65,6 +65,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
 
         binder.forField(yearOfBirth)
             .withConverter(new StringToIntegerConverter(getTranslation("Must.be.a.number")))
+            .withNullRepresentation(0)
             .bind(AthleteRecord::getYearOfBirth, AthleteRecord::setYearOfBirth);
 
         Select<ClubRecord> club = new Select<>();
@@ -92,6 +93,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
 
         binder.forField(year)
             .withConverter(new StringToIntegerConverter(getTranslation("Must.be.a.number")))
+            .withNullRepresentation(0)
             .bind(AthleteRecord::getYearOfBirth, AthleteRecord::setYearOfBirth);
 
         formLayout.add(lastName, firstName, gender, year, club);

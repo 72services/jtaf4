@@ -2,6 +2,7 @@ package ch.jtaf.ui.view;
 
 import ch.jtaf.context.ApplicationContextHolder;
 import ch.jtaf.db.tables.records.AthleteRecord;
+import ch.jtaf.db.tables.records.CategoryAthleteRecord;
 import ch.jtaf.db.tables.records.CategoryRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.db.tables.records.CompetitionRecord;
@@ -62,6 +63,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
     private static final String BLANK = "_blank";
 
     private final transient NumberAndSheetsService numberAndSheetsService;
+    private final TransactionTemplate transactionTemplate;
 
     private SeriesRecord seriesRecord;
 
@@ -75,8 +77,9 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
     private Map<Long, ClubRecord> clubRecordMap;
 
-    public SeriesView(DSLContext dsl, NumberAndSheetsService numberAndSheetsService) {
+    public SeriesView(DSLContext dsl, TransactionTemplate transactionTemplate, NumberAndSheetsService numberAndSheetsService) {
         super(dsl);
+        this.transactionTemplate = transactionTemplate;
         this.numberAndSheetsService = numberAndSheetsService;
 
         H3 h3Title = new H3(getTranslation("Series"));
@@ -109,7 +112,6 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         Button save = new Button(getTranslation("Save"));
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         save.addClickListener(event -> {
-            TransactionTemplate transactionTemplate = ApplicationContextHolder.getBean(TransactionTemplate.class);
             transactionTemplate.executeWithoutResult(transactionStatus -> {
                 dsl.attach(binder.getBean());
                 binder.getBean().store();
@@ -300,6 +302,23 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
     }
 
     private void onAthleteSelect(AthleteRecord athleteRecord) {
+        transactionTemplate.executeWithoutResult(transactionStatus -> {
+            Long categoryId = dsl
+                .select(CATEGORY.ID)
+                .from(CATEGORY)
+                .where(CATEGORY.SERIES_ID.eq(seriesRecord.getId()))
+                .and(CATEGORY.GENDER.eq(athleteRecord.getGender()))
+                .and(CATEGORY.YEAR_FROM.le(athleteRecord.getYearOfBirth()))
+                .and(CATEGORY.YEAR_TO.ge(athleteRecord.getYearOfBirth()))
+                .fetchOneInto(Long.class);
+
+            CategoryAthleteRecord categoryAthleteRecord = CATEGORY_ATHLETE.newRecord();
+            categoryAthleteRecord.setAthleteId(athleteRecord.getId());
+            categoryAthleteRecord.setCategoryId(categoryId);
+            categoryAthleteRecord.attach(dsl.configuration());
+            categoryAthleteRecord.store();
+        });
+
         refreshAll();
     }
 
