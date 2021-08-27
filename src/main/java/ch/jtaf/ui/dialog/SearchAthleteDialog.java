@@ -2,8 +2,6 @@ package ch.jtaf.ui.dialog;
 
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
-import ch.jtaf.db.tables.records.OrganizationRecord;
-import ch.jtaf.ui.component.JooqDataProviderProducer;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -12,11 +10,16 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.provider.CallbackDataProvider;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
+import com.vaadin.flow.data.provider.DataProvider;
+import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.theme.lumo.Lumo;
+import org.apache.commons.lang3.StringUtils;
+import org.jooq.Condition;
 import org.jooq.DSLContext;
-import org.jooq.SortField;
+import org.jooq.impl.DSL;
 
 import java.io.Serial;
 import java.util.Map;
@@ -24,8 +27,11 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
+import static ch.jtaf.db.tables.Category.CATEGORY;
+import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
 import static ch.jtaf.db.tables.Club.CLUB;
 import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
+import static org.jooq.impl.DSL.upper;
 
 public class SearchAthleteDialog extends Dialog {
 
@@ -41,8 +47,7 @@ public class SearchAthleteDialog extends Dialog {
     private final Map<Long, ClubRecord> clubRecordMap;
     private final ConfigurableFilterDataProvider<AthleteRecord, Void, String> dataProvider;
 
-    public SearchAthleteDialog(DSLContext dsl, OrganizationRecord organizationRecord,
-                               Consumer<AthleteRecord> onSelect) {
+    public SearchAthleteDialog(DSLContext dsl, Long organizationId, Long seriesId, Consumer<AthleteRecord> onSelect) {
         getElement().getThemeList().add("jtaf-dialog");
         getElement().setAttribute("aria-labelledby", "dialog-title");
 
@@ -67,13 +72,41 @@ public class SearchAthleteDialog extends Dialog {
         TextField filter = new TextField(getTranslation("Filter"));
         filter.setValueChangeMode(ValueChangeMode.EAGER);
 
-        var clubs = dsl.selectFrom(CLUB).where(CLUB.ORGANIZATION_ID.eq(organizationRecord.getId())).fetch();
+        var clubs = dsl.selectFrom(CLUB).where(CLUB.ORGANIZATION_ID.eq(organizationId)).fetch();
         clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
 
-        dataProvider = new JooqDataProviderProducer<>(dsl, ATHLETE,
-            () -> ATHLETE.ORGANIZATION_ID.eq(organizationRecord.getId()),
-            () -> new SortField<?>[]{ATHLETE.GENDER.asc(), ATHLETE.YEAR_OF_BIRTH.asc(), ATHLETE.LAST_NAME.asc(),
-                ATHLETE.FIRST_NAME.asc()}).getDataProvider();
+        CallbackDataProvider<AthleteRecord, String> callbackDataProvider = DataProvider.fromFilteringCallbacks(
+            query -> dsl
+                .select(ATHLETE.fields())
+                .from(ATHLETE)
+                .where(ATHLETE.ORGANIZATION_ID.eq(organizationId))
+                .and(ATHLETE.ID.notIn(dsl
+                    .select(CATEGORY_ATHLETE.ATHLETE_ID)
+                    .from(CATEGORY_ATHLETE)
+                    .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
+                    .where(CATEGORY.SERIES_ID.eq(seriesId))
+                ))
+                .and(createCondition(query))
+                .orderBy(ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME)
+                .offset(query.getOffset()).limit(query.getLimit())
+                .fetchStreamInto(ATHLETE),
+            query -> {
+                var count = dsl
+                    .selectCount()
+                    .from(ATHLETE)
+                    .where(ATHLETE.ORGANIZATION_ID.eq(organizationId))
+                    .and(ATHLETE.ID.notIn(dsl
+                        .select(CATEGORY_ATHLETE.ATHLETE_ID)
+                        .from(CATEGORY_ATHLETE)
+                        .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
+                        .where(CATEGORY.SERIES_ID.eq(seriesId))
+                    ))
+                    .and(createCondition(query))
+                    .fetchOneInto(Integer.class);
+                return count != null ? count : 0;
+            });
+
+        dataProvider = callbackDataProvider.withConfigurableFilter();
 
         Grid<AthleteRecord> grid = new Grid<>();
         grid.setItems(dataProvider);
@@ -88,7 +121,7 @@ public class SearchAthleteDialog extends Dialog {
 
         addActionColumnAndSetSelectionListener(grid, dialog, dataProvider::refreshAll, () -> {
             AthleteRecord newRecord = ATHLETE.newRecord();
-            newRecord.setOrganizationId(organizationRecord.getId());
+            newRecord.setOrganizationId(organizationId);
             return newRecord;
         }, getTranslation("Assign.Athlete"), athleteRecord -> {
             onSelect.accept(athleteRecord);
@@ -123,6 +156,20 @@ public class SearchAthleteDialog extends Dialog {
             content.setVisible(true);
         }
         isFullScreen = !isFullScreen;
+    }
+
+    private Condition createCondition(Query<?, ?> query) {
+        if (query.getFilter().isPresent()) {
+            String filterString = (String) query.getFilter().get();
+            if (StringUtils.isNumeric(filterString)) {
+                return ATHLETE.ID.eq(Long.valueOf(filterString));
+            } else {
+                return upper(ATHLETE.LAST_NAME).like(filterString.toUpperCase() + "%")
+                    .or(upper(ATHLETE.FIRST_NAME).like(filterString.toUpperCase() + "%"));
+            }
+        } else {
+            return DSL.condition("1 = 2");
+        }
     }
 
 }
