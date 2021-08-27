@@ -174,6 +174,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
         });
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private Condition createCondition(Query<?, ?> query) {
         if (query.getFilter().isPresent()) {
             String filterString = (String) query.getFilter().get();
