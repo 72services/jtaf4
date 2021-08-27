@@ -39,27 +39,27 @@ public class GridBuilder {
             Button delete = new Button(insteadOfDeleteTitle != null ? insteadOfDeleteTitle : grid.getTranslation("Delete"));
             delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
             delete.addClickListener(event -> {
-                ConfirmDialog confirmDialog = new ConfirmDialog(grid.getTranslation("Confirm"),
-                    grid.getTranslation("Are.you.sure"),
-                    grid.getTranslation("Delete"), e ->
-                    getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> {
-                        try {
-                            if (insteadOfDelete != null) {
-                                insteadOfDelete.accept(record);
-                            } else {
+                if (insteadOfDelete != null) {
+                    getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> insteadOfDelete.accept(record));
+                } else {
+                    ConfirmDialog confirmDialog = new ConfirmDialog(grid.getTranslation("Confirm"),
+                        grid.getTranslation("Are.you.sure"),
+                        grid.getTranslation("Delete"), e ->
+                        getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> {
+                            try {
                                 getBean(DSLContext.class).attach(record);
                                 record.delete();
+                            } catch (DataAccessException ex) {
+                                Notification.show(ex.getMessage());
                             }
-                        } catch (DataAccessException ex) {
-                            Notification.show(ex.getMessage());
-                        }
-                    }),
-                    grid.getTranslation("Cancel"), e -> {
-                });
-                confirmDialog.setConfirmButtonTheme("error primary");
-                confirmDialog.open();
-
+                        }),
+                        grid.getTranslation("Cancel"), e -> {
+                    });
+                    confirmDialog.setConfirmButtonTheme("error primary");
+                    confirmDialog.open();
+                }
             });
+
             HorizontalLayout horizontalLayout = new HorizontalLayout(delete);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
             return horizontalLayout;

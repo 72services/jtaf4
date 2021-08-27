@@ -122,6 +122,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                 form.add(formLayout);
 
                 boolean first = true;
+                int position = 0;
                 for (EventRecord eventRecord : events) {
                     ResultRecord resultRecord = dsl
                         .selectFrom(RESULT)
@@ -132,31 +133,42 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                         .fetchOne();
 
                     TextField result = new TextField(eventRecord.getName());
+                    formLayout.add(result);
+
+                    if (first) {
+                        this.resultTextField = result;
+                        first = false;
+                    }
+
+                    TextField points = new TextField();
+                    points.setReadOnly(true);
+                    points.setEnabled(false);
+                    formLayout.add(points);
+
                     if (resultRecord != null) {
                         result.setValue(resultRecord.getResult());
-                        formLayout.add(result);
-
-                        if (first) {
-                            this.resultTextField = result;
-                            first = false;
-                        }
-
-                        TextField points = new TextField();
-                        points.setReadOnly(true);
-                        points.setEnabled(false);
                         points.setValue(resultRecord.getPoints() == null ? "" : resultRecord.getPoints().toString());
-                        formLayout.add(points);
-
-                        result.addValueChangeListener(ve ->
-                            transactionTemplate.executeWithoutResult(ts -> {
-                                String resultValue = ve.getValue();
-                                resultRecord.setResult(resultValue);
-                                resultRecord.setPoints(calculatePoints(eventRecord, resultValue));
-                                points.setValue(resultRecord.getPoints() == null ? "" : resultRecord.getPoints().toString());
-
-                                resultRecord.store();
-                            }));
+                    } else {
+                        resultRecord = RESULT.newRecord();
+                        resultRecord.setPosition(position);
+                        resultRecord.setEventId(eventRecord.getId());
+                        resultRecord.setAthleteId(event.getValue().get(ATHLETE.ID));
+                        resultRecord.setCategoryId(event.getValue().get(CATEGORY.ID));
+                        resultRecord.setCompetitionId(competitionId);
                     }
+
+                    ResultRecord finalResultRecord = resultRecord;
+                    result.addValueChangeListener(ve ->
+                        transactionTemplate.executeWithoutResult(ts -> {
+                            String resultValue = ve.getValue();
+                            finalResultRecord.setResult(resultValue);
+                            finalResultRecord.setPoints(calculatePoints(eventRecord, resultValue));
+                            points.setValue(finalResultRecord.getPoints() == null ? "" : finalResultRecord.getPoints().toString());
+
+                            dsl.attach(finalResultRecord);
+                            finalResultRecord.store();
+                        }));
+                    position++;
                 }
             }
         });
