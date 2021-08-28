@@ -61,14 +61,16 @@ public class CompetitionRankingReport extends RankingReport {
 
             int rank = 1;
             for (CompetitionRankingData.Category.Athlete athlete : category.sortedAthletes()) {
-                if (numberOfRows > 23) {
-                    document.add(table);
-                    table = createAthletesTable();
-                    document.newPage();
+                if (!athlete.results().isEmpty()) {
+                    if (numberOfRows > 23) {
+                        document.add(table);
+                        table = createAthletesTable();
+                        document.newPage();
+                    }
+                    createAthleteRow(table, rank, athlete, calculateNumberOfMedals(category));
+                    rank++;
+                    numberOfRows += 1;
                 }
-                createAthleteRow(table, rank, athlete, calculateNumberOfMedals(category));
-                rank++;
-                numberOfRows += 1;
             }
             document.add(table);
         }

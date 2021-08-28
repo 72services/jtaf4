@@ -46,13 +46,15 @@ public class DiplomaReport extends AbstractReport {
             for (var category : ranking.categories()) {
                 int rank = 1;
                 for (var athlete : category.sortedAthletes()) {
-                    createTitle();
-                    createLogo();
-                    createCompetitionInfo();
-                    createAthleteInfo(athlete, category, rank);
+                    if (!athlete.results().isEmpty()) {
+                        createTitle();
+                        createLogo();
+                        createCompetitionInfo();
+                        createAthleteInfo(athlete, category, rank);
 
-                    rank++;
-                    document.newPage();
+                        rank++;
+                        document.newPage();
+                    }
                 }
             }
 
