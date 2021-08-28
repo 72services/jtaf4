@@ -71,6 +71,7 @@ public class SearchAthleteDialog extends Dialog {
 
         TextField filter = new TextField(getTranslation("Filter"));
         filter.setValueChangeMode(ValueChangeMode.EAGER);
+        filter.focus();
 
         var clubs = dsl.selectFrom(CLUB).where(CLUB.ORGANIZATION_ID.eq(organizationId)).fetch();
         clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
