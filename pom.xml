@@ -238,7 +238,6 @@
                                     .withUsername("${db.username}")
                                     .withDatabaseName("jtaf4")
                                     .withPassword("${db.password}");
-
                                 db.start();
                                 project.properties.setProperty('db.url', db.getJdbcUrl());
                             </source>
