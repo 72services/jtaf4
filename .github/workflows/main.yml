@@ -29,6 +29,13 @@ jobs:
                 with:
                     java-version: '16'
                     distribution: 'adopt'
+            -   name: Cache local Maven repository
+                uses: actions/cache@v2
+                with:
+                    path: ~/.m2/repository
+                    key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+                    restore-keys: |
+                        ${{ runner.os }}-maven-
             # Runs a single command using the runners shell
             -   name: Maven build
                 run: mvn test
