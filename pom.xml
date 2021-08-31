@@ -61,6 +61,10 @@
 
         <drivers.dir>${project.basedir}/drivers</drivers.dir>
         <drivers.downloader.phase>pre-integration-test</drivers.downloader.phase>
+
+        <db.username>jtaf4</db.username>
+        <db.password>jtaf420</db.password>
+        <db.driver>org.postgresql.Driver</db.driver>
     </properties>
 
     <dependencyManagement>
@@ -197,88 +201,8 @@
     </dependencies>
 
     <build>
-        <defaultGoal>spring-boot:run</defaultGoal>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <!-- Clean build and startup time for Vaadin apps sometimes may exceed
-                    the default Spring Boot's 30sec timeout. -->
-                <configuration>
-                    <wait>500</wait>
-                    <maxAttempts>240</maxAttempts>
-                </configuration>
-            </plugin>
-            <!-- Take care of synchronizing java dependencies and imports in package.json
-                and main.js files. It also creates webpack.config.js if not exists yet. -->
-            <plugin>
-                <groupId>com.vaadin</groupId>
-                <artifactId>vaadin-maven-plugin</artifactId>
-                <version>${vaadin.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>prepare-frontend</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.jooq</groupId>
-                <artifactId>jooq-codegen-maven</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <generator>
-                        <database>
-                            <name>org.jooq.meta.extensions.ddl.DDLDatabase</name>
-                            <properties>
-                                <property>
-                                    <key>scripts</key>
-                                    <value>src/main/resources/db/migration/*.sql</value>
-                                </property>
-                                <property>
-                                    <key>sort</key>
-                                    <value>semantic</value>
-                                </property>
-                            </properties>
-                            <inputSchema>PUBLIC</inputSchema>
-                        </database>
-                        <generate>
-                            <validationAnnotations>true</validationAnnotations>
-                            <javaTimeTypes>true</javaTimeTypes>
-                        </generate>
-                        <target>
-                            <packageName>ch.jtaf.db</packageName>
-                            <directory>target/generated-sources/jooq</directory>
-                        </target>
-                    </generator>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.jooq</groupId>
-                        <artifactId>jooq-meta-extensions</artifactId>
-                        <version>${jooq.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            <!-- Also remove Vaadin generated content -->
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>3.1.0</version>
@@ -297,6 +221,130 @@
                     </filesets>
                 </configuration>
             </plugin>
+            <!-- Start Testcontainer -->
+            <plugin>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>groovy-maven-plugin</artifactId>
+                <version>2.1.1</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <source>
+                                db = new org.testcontainers.containers.PostgreSQLContainer("postgres:12.7")
+                                    .withUsername("${db.username}")
+                                    .withDatabaseName("jtaf4")
+                                    .withPassword("${db.password}");
+
+                                db.start();
+                                project.properties.setProperty('db.url', db.getJdbcUrl());
+                            </source>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.testcontainers</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>1.15.2</version>
+                    </dependency>
+                    <!-- Junit seems to be a transitive dependency of testcontainers? -->
+                    <dependency>
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                        <version>4.13.1</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <!-- Migrate schema -->
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>7.14.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>migrate</goal>
+                        </goals>
+                        <configuration>
+                            <url>${db.url}</url>
+                            <user>${db.username}</user>
+                            <password>${db.password}</password>
+                            <locations>
+                                <location>filesystem:src/main/resources/db/migration</location>
+                            </locations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Generate jOOQ code -->
+            <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jdbc>
+                        <driver>${db.driver}</driver>
+                        <url>${db.url}</url>
+                        <user>${db.username}</user>
+                        <password>${db.password}</password>
+                    </jdbc>
+                    <generator>
+                        <database>
+                            <inputSchema>public</inputSchema>
+                        </database>
+                        <target>
+                            <packageName>ch.jtaf.db</packageName>
+                        </target>
+                    </generator>
+                </configuration>
+            </plugin>
+            <!-- Take care of synchronizing java dependencies and imports in package.json and main.js files. It also creates webpack.config.js if not exists yet. -->
+            <plugin>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-maven-plugin</artifactId>
+                <version>${vaadin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-frontend</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Reuse Testcontainer in tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <spring.datasource.url>${db.url}</spring.datasource.url>
+                        <spring.datasource..username>${db.username}</spring.datasource..username>
+                        <spring.datasource..password>${db.password}</spring.datasource..password>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <!-- Spring Boot configuration -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <!-- Clean build and startup time for Vaadin apps sometimes may exceed the default Spring Boot's 30sec timeout. -->
+                <configuration>
+                    <wait>500</wait>
+                    <maxAttempts>240</maxAttempts>
+                </configuration>
+            </plugin>
+            <!-- Gitflow -->
             <plugin>
                 <groupId>com.amashchenko.maven.plugin</groupId>
                 <artifactId>gitflow-maven-plugin</artifactId>
@@ -346,6 +394,7 @@
             </build>
         </profile>
         <profile>
+            <!-- Production mode is activated using -Pintegration-tests -->
             <id>integration-tests</id>
             <build>
                 <plugins>
@@ -423,8 +472,7 @@
     </profiles>
 
     <repositories>
-        <!-- The order of definitions matters. Explicitly defining central here
-            to make sure it has the highest priority. -->
+        <!-- The order of definitions matters. Explicitly defining central here to make sure it has the highest priority. -->
         <!-- Main Maven repository -->
         <repository>
             <id>central</id>
