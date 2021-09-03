@@ -1,14 +1,15 @@
 @import url('./main-layout.css');
 @import url('./jtaf-dialog.css');
+@import url('./views/dashboard-view.css');
 @import url('lumo-css-framework/all-classes.css');
 @import url('line-awesome/dist/line-awesome/css/line-awesome.min.css');
 
 html {
     --lumo-border-radius: calc(var(--lumo-size-m) / 2);
-    --lumo-primary-text-color: #fea20f;
+    --lumo-primary-text-color: #ffb319;
     --lumo-primary-color-50pct: rgba(254, 162, 15, 0.5);
     --lumo-primary-color-10pct: rgba(254, 162, 15, 0.1);
-    --lumo-primary-color: #fea20f;
+    --lumo-primary-color: #ffb319;
     --lumo-success-text-color: #1da834;
     --lumo-success-color-50pct: rgba(113, 228, 174, 0.5);
     --lumo-success-color-10pct: rgba(113, 228, 174, 0.1);
@@ -27,6 +28,11 @@ html {
 }
 
 vaadin-grid {
+    border-width: 0;
     border-radius: 1em;
     overflow: hidden;
+}
+
+vaadin-button {
+    cursor: pointer;
 }

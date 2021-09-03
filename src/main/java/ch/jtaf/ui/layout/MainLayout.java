@@ -11,8 +11,10 @@ import ch.jtaf.ui.view.OrganizationsView;
 import ch.jtaf.ui.view.SeriesListView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Html;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
@@ -47,8 +49,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
     private static final long serialVersionUID = 1L;
 
     private final Div version = new Div();
-    private RouterLink login;
-    private Anchor logout;
+    private Button login;
+    private Button logout;
 
     @Value("${application.version}")
     private String applicationVersion;
@@ -85,10 +87,13 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
         Anchor about = new Anchor("https://github.com/72services/jtaf4", "About");
         about.setTarget("_blank");
 
-        login = new RouterLink("Login", OrganizationsView.class);
+        login = new Button("Login", e -> UI.getCurrent().navigate(OrganizationsView.class));
         login.setVisible(false);
 
-        logout = new Anchor("/logout", "Logout");
+        logout = new Button("Logout", e -> {
+            UI.getCurrent().getSession().close();
+            UI.getCurrent().getPage().setLocation("/logout");
+        });
 
         info.add(about, version, login, logout);
 
