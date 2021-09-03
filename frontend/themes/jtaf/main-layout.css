@@ -15,6 +15,10 @@ footer {
     background-color: var(--lumo-primary-color);
 }
 
+vaadin-drawer-toggle {
+    color: var(--lumo-primary-color) !important;
+}
+
 [slot='drawer'] {
     background-image: linear-gradient(0deg, white, white);
     border-right-width: 0;
