@@ -8,7 +8,6 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
@@ -49,8 +48,6 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
     private long competitionId;
 
     public ResultCapturingView(DSLContext dsl, TransactionTemplate transactionTemplate) {
-        add(new H1(getTranslation("Enter.Results")));
-
         CallbackDataProvider<Record4<Long, String, String, Long>, String> callbackDataProvider = new CallbackDataProvider<>(
             query -> {
                 var records = dsl
@@ -191,7 +188,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
     @Override
     public String getPageTitle() {
-        return "JTAF - " + getTranslation("Enter.Results");
+        return getTranslation("Enter.Results");
     }
 
     @Override

@@ -3,7 +3,6 @@ package ch.jtaf.ui.view;
 import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.ui.dialog.EventDialog;
 import ch.jtaf.ui.layout.MainLayout;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.router.Route;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -24,8 +23,6 @@ public class EventsView extends ProtectedGridView<EventRecord> {
         super(dsl, EVENT);
 
         setHeightFull();
-
-        add(new H1(getTranslation("Events")));
 
         EventDialog dialog = new EventDialog(getTranslation("Event"));
 
@@ -48,7 +45,7 @@ public class EventsView extends ProtectedGridView<EventRecord> {
 
     @Override
     public String getPageTitle() {
-        return "JTAF - " + getTranslation("Events");
+        return getTranslation("Events");
     }
 
     @Override

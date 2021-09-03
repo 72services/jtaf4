@@ -6,7 +6,6 @@ import ch.jtaf.ui.layout.MainLayout;
 import ch.jtaf.ui.security.SecurityContext;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
@@ -33,8 +32,6 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
     private static final long serialVersionUID = 1L;
 
     public DashboardView(DSLContext dsl, SeriesRankingService seriesRankingService, CompetitionRankingService competitionRankingService) {
-        add(new H1(getTranslation("Dashboard")));
-
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setWidthFull();
         add(verticalLayout);
@@ -126,6 +123,6 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 
     @Override
     public String getPageTitle() {
-        return "JTAF - " + getTranslation("Dashboard");
+        return getTranslation("Dashboard");
     }
 }

@@ -13,98 +13,68 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
-import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Footer;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.html.Nav;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.page.AppShellConfigurator;
-import com.vaadin.flow.component.tabs.Tab;
-import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
+import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
+import com.vaadin.flow.theme.Theme;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.PostConstruct;
 import java.io.Serial;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-@CssImport(value = "./styles/dialog-overlay.css", themeFor = "vaadin-dialog-overlay")
-@CssImport("./styles/jtaf.css")
+@Theme("jtaf")
 @PWA(name = "JTAF 4", shortName = "JTAF 4", description = "JTAF - Track and Field")
 public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShellConfigurator {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private static final String LOGO_SIZE = "50px";
-    private static final String NAVIGATION_ICON = "navigation-icon";
-
-    private final Tabs tabsMainMenu = new Tabs();
-    private final Map<Class<? extends Component>, Tab> navigationTargetToTab = new HashMap<>();
-
     private final Div version = new Div();
-    private final RouterLink login;
-    private final Anchor logout;
+    private RouterLink login;
+    private Anchor logout;
 
     @Value("${application.version}")
     private String applicationVersion;
 
-    private Tab tabSeries;
-    private Tab tabEvents;
-    private Tab tabClubs;
-    private Tab tabAthletes;
+    private H1 viewTitle;
+
     private RouterLink seriesLink;
+    private RouterLink eventsLink;
+    private RouterLink clubsLink;
+    private RouterLink athletesLink;
 
     public MainLayout() {
-        addMainMenu();
+        setPrimarySection(Section.DRAWER);
+        addToNavbar(true, createHeaderContent());
+        addToDrawer(createDrawerContent());
+    }
 
-        tabsMainMenu.setOrientation(Tabs.Orientation.VERTICAL);
-        tabsMainMenu.setHeightFull();
+    private Component createHeaderContent() {
+        DrawerToggle toggle = new DrawerToggle();
+        toggle.addClassName("text-secondary");
+        toggle.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        toggle.getElement().setAttribute("aria-label", "Menu toggle");
 
-        Div divFooter = new Div();
-        divFooter.setHeight("50px");
-        divFooter.getStyle().set("position", "absolute");
-        divFooter.getStyle().set("bottom", "20px");
-        divFooter.getStyle().set("left", "20px");
-
-        Html htmlByLink = new Html("<p>JTAF is Free and Open Source<br>by 72© Services LLC</p>");
-
-        Anchor byLink = new Anchor();
-        byLink.setWidth("300px");
-        byLink.getElement().getStyle().set("font-size", "small");
-        byLink.setHref("https://72.services");
-        byLink.setTarget("_blank");
-        byLink.add(htmlByLink);
-        divFooter.add(byLink);
-
-        Div divDrawer = new Div();
-        divDrawer.setHeight("95%");
-        divDrawer.add(tabsMainMenu);
-        divDrawer.add(divFooter);
-
-        addToDrawer(divDrawer);
-
-        addToNavbar(new DrawerToggle());
-
-        Image image = new Image("icons/icon.png", "JTAF");
-        image.setMinWidth(LOGO_SIZE);
-        image.setWidth(LOGO_SIZE);
-        image.setMinHeight(LOGO_SIZE);
-        image.setHeight(LOGO_SIZE);
-        addToNavbar(image);
-
-
-        H3 title = new H3("JTAF - Track and Field");
-        title.setWidth("320px");
-        addToNavbar(title);
+        viewTitle = new H1();
+        viewTitle.addClassNames("m-0", "text-l");
+        viewTitle.setWidth("300px");
 
         HorizontalLayout info = new HorizontalLayout();
         info.setWidthFull();
@@ -114,81 +84,109 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
 
         Anchor about = new Anchor("https://github.com/72services/jtaf4", "About");
         about.setTarget("_blank");
-        info.add(about);
-
-        info.add(version);
 
         login = new RouterLink("Login", OrganizationsView.class);
         login.setVisible(false);
 
         logout = new Anchor("/logout", "Logout");
 
-        info.add(login, logout);
+        info.add(about, version, login, logout);
 
-        addToNavbar(info);
+        Header header = new Header(toggle, viewTitle, info);
+        header.addClassNames("bg-base", "border-b", "border-contrast-10", "box-border", "flex", "h-xl", "items-center", "w-full");
+        return header;
     }
 
-    private void addMainMenu() {
-        Icon iconDashboard = new Icon(VaadinIcon.DASHBOARD);
-        iconDashboard.setClassName(NAVIGATION_ICON);
-        RouterLink dashboard = new RouterLink(getTranslation("Dashboard"), DashboardView.class);
-        dashboard.addComponentAsFirst(iconDashboard);
+    private Component createDrawerContent() {
+        Image logo = new Image("icons/logo.png", "JTAF");
 
-        Tab tabDashboard = new Tab(dashboard);
-        navigationTargetToTab.put(DashboardView.class, tabDashboard);
-        tabsMainMenu.add(tabDashboard);
+        com.vaadin.flow.component.html.Section section = new com.vaadin.flow.component.html.Section(logo, createNavigation(), createFooter());
+        section.addClassNames("flex", "flex-col", "items-stretch", "max-h-full", "min-h-full");
+        return section;
+    }
 
-        Icon iconOrganizations = new Icon(VaadinIcon.WORKPLACE);
-        iconOrganizations.setClassName(NAVIGATION_ICON);
-        RouterLink organizations = new RouterLink(getTranslation("My.Organizations"), OrganizationsView.class);
-        organizations.addComponentAsFirst(iconOrganizations);
+    private Nav createNavigation() {
+        Nav nav = new Nav();
+        nav.addClassNames("border-b", "border-contrast-10", "flex-grow", "overflow-auto");
+        nav.getElement().setAttribute("aria-labelledby", "views");
 
-        Tab tabOrganization = new Tab(organizations);
-        navigationTargetToTab.put(OrganizationsView.class, tabOrganization);
-        tabsMainMenu.add(tabOrganization);
+        H3 views = new H3("Views");
+        views.addClassNames("flex", "h-m", "items-center", "mx-m", "my-0", "text-s", "text-tertiary");
+        views.setId("views");
 
-        Tab tabEmpty = new Tab();
-        tabEmpty.setEnabled(false);
-        navigationTargetToTab.put(null, tabEmpty);
-        tabsMainMenu.add(tabEmpty);
+        for (RouterLink link : createLinks()) {
+            nav.add(link);
+        }
+        return nav;
+    }
 
-        seriesLink = new RouterLink("", SeriesListView.class);
-        seriesLink.getStyle().set("font-size", "20px");
+    private List<RouterLink> createLinks() {
+        List<RouterLink> links = new ArrayList<>();
 
-        tabSeries = new Tab(seriesLink);
-        tabSeries.setVisible(false);
-        navigationTargetToTab.put(SeriesListView.class, tabSeries);
-        tabsMainMenu.add(tabSeries);
+        links.add(createLink(new MenuItemInfo(getTranslation("Dashboard"), "la la-globe", DashboardView.class)));
+        links.add(createLink(new MenuItemInfo(getTranslation("My.Organizations"), "la la-file", OrganizationsView.class)));
 
-        Icon iconEvents = new Icon(VaadinIcon.LIST_OL);
-        iconEvents.setClassName(NAVIGATION_ICON);
-        RouterLink events = new RouterLink(getTranslation("Events"), EventsView.class);
-        events.addComponentAsFirst(iconEvents);
+        seriesLink = createLink(new MenuItemInfo("", "la la-file", SeriesListView.class));
+        links.add(seriesLink);
 
-        tabEvents = new Tab(events);
-        tabEvents.setVisible(false);
-        navigationTargetToTab.put(EventsView.class, tabEvents);
-        tabsMainMenu.add(tabEvents);
+        eventsLink = createLink(new MenuItemInfo(getTranslation("Events"), "la la-file", EventsView.class));
+        links.add(eventsLink);
 
-        Icon iconClubs = new Icon(VaadinIcon.GROUP);
-        iconClubs.setClassName(NAVIGATION_ICON);
-        RouterLink clubs = new RouterLink(getTranslation("Clubs"), ClubsView.class);
-        clubs.addComponentAsFirst(iconClubs);
+        clubsLink = createLink(new MenuItemInfo(getTranslation("Clubs"), "la la-file", ClubsView.class));
+        links.add(clubsLink);
 
-        tabClubs = new Tab(clubs);
-        tabClubs.setVisible(false);
-        navigationTargetToTab.put(ClubsView.class, tabClubs);
-        tabsMainMenu.add(tabClubs);
+        athletesLink = createLink(new MenuItemInfo(getTranslation("Athletes"), "la la-file", AthletesView.class));
+        links.add(athletesLink);
 
-        Icon iconAthletes = new Icon(VaadinIcon.FAMILY);
-        iconAthletes.setClassName(NAVIGATION_ICON);
-        RouterLink athletes = new RouterLink(getTranslation("Athletes"), AthletesView.class);
-        athletes.addComponentAsFirst(iconAthletes);
+        setVisibilityOfLinks(false);
 
-        tabAthletes = new Tab(athletes);
-        tabAthletes.setVisible(false);
-        navigationTargetToTab.put(AthletesView.class, tabAthletes);
-        tabsMainMenu.add(tabAthletes);
+        return links;
+    }
+
+    private static RouterLink createLink(MenuItemInfo menuItemInfo) {
+        RouterLink link = new RouterLink();
+        link.addClassNames("flex", "mx-s", "p-s", "relative", "text-secondary");
+        link.setRoute(menuItemInfo.getView());
+
+        Span icon = new Span();
+        icon.addClassNames("me-s", "text-l");
+        if (!menuItemInfo.getIconClass().isEmpty()) {
+            icon.addClassNames(menuItemInfo.getIconClass());
+        }
+
+        Span text = new Span(menuItemInfo.getText());
+        text.addClassNames("font-medium", "text-s");
+
+        link.add(icon, text);
+        return link;
+    }
+
+    private Footer createFooter() {
+        Footer layout = new Footer();
+        layout.addClassNames("flex", "items-center", "my-s", "px-m", "py-xs");
+
+        Html htmlByLink = new Html("<p style='color: white; text-align: center'>JTAF is Free and Open Source<br>by 72© Services LLC</p>");
+
+        Anchor byLink = new Anchor();
+        byLink.setWidth("300px");
+        byLink.getElement().getStyle().set("font-size", "small");
+        byLink.setHref("https://72.services");
+        byLink.setTarget("_blank");
+        byLink.add(htmlByLink);
+        layout.add(byLink);
+
+        return layout;
+    }
+
+    @Override
+    protected void afterNavigation() {
+        super.afterNavigation();
+        viewTitle.setText(getCurrentPageTitle());
+    }
+
+    private String getCurrentPageTitle() {
+        HasDynamicTitle title = (HasDynamicTitle) getContent();
+        return title == null ? "" : title.getPageTitle();
     }
 
     @PostConstruct
@@ -198,8 +196,6 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        tabsMainMenu.setSelectedTab(navigationTargetToTab.get(event.getNavigationTarget()));
-
         if (SecurityContext.isUserLoggedIn()) {
             login.setVisible(false);
             logout.setVisible(true);
@@ -207,21 +203,47 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
             OrganizationRecord organization = OrganizationHolder.getOrganization();
             if (organization != null) {
                 seriesLink.setText(organization.getOrganizationKey());
-                setSeriesTabsVisible(true);
+                setVisibilityOfLinks(true);
             }
         } else {
             login.setVisible(true);
             logout.setVisible(false);
 
             seriesLink.setText("");
-            setSeriesTabsVisible(false);
+            setVisibilityOfLinks(false);
         }
     }
 
-    private void setSeriesTabsVisible(boolean visible) {
-        tabSeries.setVisible(visible);
-        tabEvents.setVisible(visible);
-        tabClubs.setVisible(visible);
-        tabAthletes.setVisible(visible);
+    private void setVisibilityOfLinks(boolean visible) {
+        seriesLink.setVisible(visible);
+        eventsLink.setVisible(visible);
+        clubsLink.setVisible(visible);
+        athletesLink.setVisible(visible);
+    }
+
+    public static class MenuItemInfo {
+
+        private String text;
+        private String iconClass;
+        private Class<? extends Component> view;
+
+        public MenuItemInfo(String text, String iconClass, Class<? extends Component> view) {
+            this.text = text;
+            this.iconClass = iconClass;
+            this.view = view;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public String getIconClass() {
+            return iconClass;
+        }
+
+        public Class<? extends Component> getView() {
+            return view;
+        }
+
     }
 }

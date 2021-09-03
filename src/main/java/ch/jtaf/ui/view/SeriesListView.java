@@ -9,7 +9,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.Route;
@@ -34,8 +33,6 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
         super(dsl, SERIES);
 
         setHeightFull();
-
-        add(new H1(getTranslation("Series")));
 
         Button add = new Button(getTranslation("Add"));
         add.addClickListener(event -> UI.getCurrent().navigate(SeriesView.class));
@@ -97,7 +94,7 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
 
     @Override
     public String getPageTitle() {
-        return "JTAF - " + getTranslation("Series");
+        return getTranslation("Series");
     }
 
     @Override

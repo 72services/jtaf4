@@ -1,0 +1,3 @@
+:host(:not([dir="rtl"]):not([overlay])) [part="drawer"] {
+    border-right: 0 solid var(--lumo-contrast-10pct);
+}
