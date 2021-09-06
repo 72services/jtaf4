@@ -6,9 +6,9 @@
 
 html {
     --lumo-border-radius: calc(var(--lumo-size-m) / 2);
-    --lumo-primary-text-color: #ffb319;
-    --lumo-primary-color-50pct: rgba(254, 162, 15, 0.5);
-    --lumo-primary-color-10pct: rgba(254, 162, 15, 0.1);
+    --lumo-primary-text-color: rgb(255, 179, 25);
+    --lumo-primary-color-50pct: rgba(255, 179, 25, 0.5);
+    --lumo-primary-color-10pct: rgba(255, 179, 25, 0.1);
     --lumo-primary-color: #ffb319;
     --lumo-success-text-color: #1da834;
     --lumo-success-color-50pct: rgba(113, 228, 174, 0.5);
@@ -21,6 +21,8 @@ html {
     --lumo-error-contrast-color: #ff0000;
     --lumo-success-contrast-color: #1da834;
     --lumo-primary-contrast-color: #fff;
+
+    --lumo-font-family: Poppins, sans-serif;
 }
 
 .navigation-icon {

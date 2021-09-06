@@ -16,6 +16,7 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Footer;
@@ -43,6 +44,7 @@ import java.util.List;
 
 @Theme("jtaf")
 @PWA(name = "JTAF 4", shortName = "JTAF 4", description = "JTAF - Track and Field")
+@StyleSheet("https://fonts.googleapis.com/css2?family=Poppins")
 public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShellConfigurator {
 
     @Serial
