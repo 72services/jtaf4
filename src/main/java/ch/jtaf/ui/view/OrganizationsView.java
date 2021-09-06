@@ -10,7 +10,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -39,14 +38,13 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
 
         setHeightFull();
 
-        add(new H1(getTranslation("My.Organizations")));
-
         OrganizationDialog dialog = new OrganizationDialog(getTranslation("Organization"));
 
         Button add = new Button(getTranslation("Add"));
         add.addClickListener(event -> dialog.open(ORGANIZATION.newRecord(), this::loadData));
 
         grid = new Grid<>();
+        grid.getClassNames().add("rounded-corners");
         grid.setHeightFull();
 
         grid.addColumn(OrganizationRecord::getOrganizationKey).setHeader(getTranslation("Key")).setSortable(true);
@@ -54,13 +52,14 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
 
         grid.addComponentColumn(organizationRecord -> {
             Button select = new Button(getTranslation("Select"));
+            select.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             select.addClickListener(event -> {
                 OrganizationHolder.setOrganization(organizationRecord);
                 UI.getCurrent().navigate(SeriesListView.class);
             });
 
             Button delete = new Button(getTranslation("Delete"));
-            delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            delete.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
             delete.addClickListener(event -> {
                 ConfirmDialog confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
                     getTranslation("Are.you.sure"),
@@ -103,6 +102,6 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
 
     @Override
     public String getPageTitle() {
-        return "JTAF - " + getTranslation("Organizations");
+        return getTranslation("Organizations");
     }
 }

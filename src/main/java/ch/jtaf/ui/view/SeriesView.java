@@ -22,7 +22,6 @@ import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -80,10 +79,6 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         super(dsl);
         this.transactionTemplate = transactionTemplate;
         this.numberAndSheetsService = numberAndSheetsService;
-
-        H3 h3Title = new H3(getTranslation("Series"));
-        h3Title.getStyle().set("margin-top", "0px");
-        add(h3Title);
 
         FormLayout formLayout = new FormLayout();
         add(formLayout);
@@ -191,7 +186,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
     @Override
     public String getPageTitle() {
-        return "JTAF - " + getTranslation("Series");
+        return getTranslation("Series");
     }
 
     private void createCompetitionsSection() {
@@ -284,7 +279,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
         Button assign = new Button(getTranslation("Assign.Athlete"));
         assign.addClickListener(event -> {
-            SearchAthleteDialog dialog = new SearchAthleteDialog(dsl, organizationRecord, this::onAthleteSelect);
+            SearchAthleteDialog dialog = new SearchAthleteDialog(dsl, organizationRecord.getId(), seriesRecord.getId(), this::onAthleteSelect);
             dialog.open();
         });
 

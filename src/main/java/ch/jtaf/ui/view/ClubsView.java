@@ -4,7 +4,6 @@ import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.ui.dialog.ClubDialog;
 import ch.jtaf.ui.layout.MainLayout;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.router.Route;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -25,8 +24,6 @@ public class ClubsView extends ProtectedGridView<ClubRecord> {
         super(dsl, CLUB);
 
         setHeightFull();
-
-        add(new H1(getTranslation("Clubs")));
 
         ClubDialog dialog = new ClubDialog(getTranslation("Clubs"));
 
@@ -52,7 +49,7 @@ public class ClubsView extends ProtectedGridView<ClubRecord> {
 
     @Override
     public String getPageTitle() {
-        return "JTAF - " + getTranslation("Clubs");
+        return getTranslation("Clubs");
     }
 
     @Override

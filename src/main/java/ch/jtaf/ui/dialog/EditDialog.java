@@ -3,7 +3,6 @@ package ch.jtaf.ui.dialog;
 import ch.jtaf.ui.function.Callback;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
@@ -21,7 +20,6 @@ import java.io.Serial;
 
 import static ch.jtaf.context.ApplicationContextHolder.getBean;
 
-@CssImport("./styles/jtaf-dialog.css")
 public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
 
     @Serial

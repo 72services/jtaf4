@@ -40,6 +40,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
     public void createForm() {
         TextField lastName = new TextField(getTranslation("Last.Name"));
         lastName.setRequiredIndicatorVisible(true);
+        lastName.focus();
 
         binder.forField(lastName)
             .withValidator(new NotEmptyValidator(this))
@@ -70,7 +71,6 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
 
         Select<ClubRecord> club = new Select<>();
         club.setLabel(getTranslation("Club"));
-        club.setRequiredIndicatorVisible(true);
         club.setItemLabelGenerator(item -> item.getAbbreviation() + " " + item.getName());
         club.setItems(getClubs());
 
