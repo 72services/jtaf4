@@ -170,9 +170,9 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
 
     private Footer createFooter() {
         Footer layout = new Footer();
-        layout.addClassNames("flex", "items-center", "my-s", "px-m", "py-xs");
+        layout.addClassNames("flex", "my-s", "px-m", "py-xs");
 
-        Html htmlByLink = new Html("<p style='color: white; text-align: center'>JTAF is Free and Open Source<br>by 72© Services LLC</p>");
+        Html htmlByLink = new Html("<p style='color: var(--lumo-primary-color)'>Free and<br>Open Source<br>by 72© Services LLC</p>");
 
         Anchor byLink = new Anchor();
         byLink.setWidth("300px");
