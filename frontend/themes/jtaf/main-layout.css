@@ -12,8 +12,6 @@ nav {
 }
 
 footer {
-    background-color: var(--lumo-primary-color);
-    border-radius: 1em;
     overflow: hidden;
     margin-right: 20px;
     margin-left: 20px;
