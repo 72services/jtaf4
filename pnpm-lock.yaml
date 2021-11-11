@@ -50,7 +50,9 @@ dependencies:
   '@vaadin/vaadin-upload': 21.0.3
   '@vaadin/vaadin-virtual-list': 21.0.3
   construct-style-sheets-polyfill: 3.0.4
+  line-awesome: 1.3.0
   lit: 2.0.0
+  lumo-css-framework: 4.0.10
 devDependencies:
   '@types/validator': 13.1.0
   '@vaadin/application-theme-plugin': link:target/plugins/application-theme-plugin
@@ -5591,6 +5593,10 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-qsda+H8jTaUaN/x5vzW2rzc+8Rw4TAQ/4KjB46IwK5VH+IlVeeeje/EoZRpiXvIqjFgK84QffqPztGI3VBLG1A==
+  /line-awesome/1.3.0:
+    dev: false
+    resolution:
+      integrity: sha512-Y0YHksL37ixDsHz+ihCwOtF5jwJgCDxQ3q+zOVgaSW8VugHGTsZZXMacPYZB1/JULBi6BAuTCTek+4ZY/UIwcw==
   /lines-and-columns/1.1.6:
     dev: true
     resolution:
@@ -5714,6 +5720,10 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==
+  /lumo-css-framework/4.0.10:
+    dev: false
+    resolution:
+      integrity: sha512-T7gdmlHdbC5KJ8aKFKR1cnM63HD8y4NtDoZFbj1BtkO8qZoaNx838OVRgE4muN+U+C6z9epwdtyW9QrrTIdizg==
   /magic-string/0.25.7:
     dependencies:
       sourcemap-codec: 1.4.8
@@ -8473,9 +8483,11 @@ specifiers:
   fork-ts-checker-webpack-plugin: 6.2.1
   glob: 7.1.6
   html-webpack-plugin: 4.5.1
+  line-awesome: 1.3.0
   lit: 2.0.0
   lit-css-loader: 0.1.0
   loader-utils: 2.0.0
+  lumo-css-framework: ^4.0.10
   ts-loader: 8.0.12
   typescript: 4.3.3
   validator: 13.1.17
