@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest
 class CompetitionRankingServiceTest {
 
@@ -14,6 +16,7 @@ class CompetitionRankingServiceTest {
     @Test
     void getCompetitionRanking() {
         CompetitionRankingData competitionRanking = competitionRankingService.getCompetitionRanking(6L);
-        System.out.println(competitionRanking);
+
+        assertThat(competitionRanking.name()).isEqualTo("39. Jugendmeisterschaft");
     }
 }

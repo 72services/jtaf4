@@ -21,6 +21,7 @@ public class DashboardViewLoggedInTest extends AbstractAppTest {
     @Test
     void enter_results_is_enabled() {
         UI.getCurrent().getPage().reload();
+
         _assert(Button.class, 6, spec -> spec.withCaption("Enter Results"));
     }
 
