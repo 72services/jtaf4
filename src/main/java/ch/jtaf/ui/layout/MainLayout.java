@@ -77,6 +77,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
         toggle.getElement().setAttribute("aria-label", "Menu toggle");
 
         viewTitle = new H1();
+        viewTitle.setId("view-title");
         viewTitle.addClassNames("m-0", "text-l");
         viewTitle.setWidth("300px");
 
