@@ -1,7 +1,7 @@
 package ch.jtaf.ui.view;
 
-import ch.jtaf.context.ApplicationContextHolder;
 import ch.jtaf.db.tables.records.AthleteRecord;
+import ch.jtaf.db.tables.records.CategoryAthleteRecord;
 import ch.jtaf.db.tables.records.CategoryRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.db.tables.records.CompetitionRecord;
@@ -11,16 +11,17 @@ import ch.jtaf.ui.dialog.CategoryDialog;
 import ch.jtaf.ui.dialog.CompetitionDialog;
 import ch.jtaf.ui.dialog.SearchAthleteDialog;
 import ch.jtaf.ui.layout.MainLayout;
+import ch.jtaf.ui.security.OrganizationHolder;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -38,11 +39,11 @@ import org.jooq.UpdatableRecord;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.io.ByteArrayInputStream;
+import java.io.Serial;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static ch.jtaf.context.ApplicationContextHolder.getBean;
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
@@ -54,10 +55,13 @@ import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionLis
 @Route(layout = MainLayout.class)
 public class SeriesView extends ProtectedView implements HasUrlParameter<String> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
+
     private static final String BLANK = "_blank";
 
     private final transient NumberAndSheetsService numberAndSheetsService;
+    private final TransactionTemplate transactionTemplate;
 
     private SeriesRecord seriesRecord;
 
@@ -71,13 +75,10 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
     private Map<Long, ClubRecord> clubRecordMap;
 
-    public SeriesView(DSLContext dsl, NumberAndSheetsService numberAndSheetsService) {
+    public SeriesView(DSLContext dsl, TransactionTemplate transactionTemplate, NumberAndSheetsService numberAndSheetsService) {
         super(dsl);
+        this.transactionTemplate = transactionTemplate;
         this.numberAndSheetsService = numberAndSheetsService;
-
-        H3 h3Title = new H3(getTranslation("Series"));
-        h3Title.getStyle().set("margin-top", "0px");
-        add(h3Title);
 
         FormLayout formLayout = new FormLayout();
         add(formLayout);
@@ -104,13 +105,12 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
         Button save = new Button(getTranslation("Save"));
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        save.addClickListener(event -> {
-            TransactionTemplate transactionTemplate = ApplicationContextHolder.getBean(TransactionTemplate.class);
+        save.addClickListener(event ->
             transactionTemplate.executeWithoutResult(transactionStatus -> {
                 dsl.attach(binder.getBean());
                 binder.getBean().store();
-            });
-        });
+            })
+        );
         add(save);
 
         sectionTabs.setWidthFull();
@@ -162,12 +162,10 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
 
         var athleteRecords = dsl
-            .select()
-            .from(ATHLETE)
-            .join(CATEGORY_ATHLETE).on(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
-            .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
-            .where(CATEGORY.SERIES_ID.eq(seriesRecord.getId()))
-            .orderBy(CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME)
+            .select(CATEGORY_ATHLETE.athlete().fields())
+            .from(CATEGORY_ATHLETE)
+            .where(CATEGORY_ATHLETE.category().SERIES_ID.eq(seriesRecord.getId()))
+            .orderBy(CATEGORY_ATHLETE.category().ABBREVIATION, CATEGORY_ATHLETE.athlete().LAST_NAME, CATEGORY_ATHLETE.athlete().FIRST_NAME)
             .fetchInto(ATHLETE);
         athletesGrid.setItems(athleteRecords);
     }
@@ -175,6 +173,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         if (parameter == null) {
+            organizationRecord = OrganizationHolder.getOrganization();
+
             seriesRecord = SERIES.newRecord();
             seriesRecord.setOrganizationId(organizationRecord.getId());
         } else {
@@ -186,7 +186,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
     @Override
     public String getPageTitle() {
-        return "JTAF - " + getTranslation("Series");
+        return getTranslation("Series");
     }
 
     private void createCompetitionsSection() {
@@ -199,7 +199,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         competitionsGrid.addColumn(new ComponentRenderer<>(competition -> {
             Anchor sheetsOrderedByAthlete = new Anchor(new StreamResource("sheets_orderby_athlete" + competition.getId() + ".pdf",
                 () -> {
-                    byte[] pdf = numberAndSheetsService.createSheets(competition.getId(),
+                    byte[] pdf = numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(),
                         CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Sheets"));
@@ -207,7 +207,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
             Anchor sheetsOrderedByClub = new Anchor(new StreamResource("sheets_orderby_club" + competition.getId() + ".pdf",
                 () -> {
-                    byte[] pdf = numberAndSheetsService.createSheets(competition.getId(),
+                    byte[] pdf = numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(),
                         CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Ordered.by.club"));
@@ -215,7 +215,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
             Anchor numbersOrderedByAthlete = new Anchor(new StreamResource("numbers_orderby_athlete" + competition.getId() + ".pdf",
                 () -> {
-                    byte[] pdf = numberAndSheetsService.createNumbers(competition.getId(),
+                    byte[] pdf = numberAndSheetsService.createNumbers(competition.getSeriesId(),
                         CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Numbers"));
@@ -223,7 +223,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
             Anchor numbersOrderedByClub = new Anchor(new StreamResource("numbers_orderby_club" + competition.getId() + ".pdf",
                 () -> {
-                    byte[] pdf = numberAndSheetsService.createNumbers(competition.getId(),
+                    byte[] pdf = numberAndSheetsService.createNumbers(competition.getSeriesId(),
                         CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Ordered.by.club"));
@@ -234,6 +234,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
         addActionColumnAndSetSelectionListener(competitionsGrid, dialog, this::refreshAll, () -> {
             CompetitionRecord newRecord = COMPETITION.newRecord();
+            newRecord.setMedalPercentage(0);
             newRecord.setSeriesId(seriesRecord.getId());
             return newRecord;
         });
@@ -276,17 +277,24 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         athletesGrid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
             : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club"));
 
-        Button assign = new Button(athletesGrid.getTranslation("Assign.Athlete"));
+        Button assign = new Button(getTranslation("Assign.Athlete"));
         assign.addClickListener(event -> {
-            SearchAthleteDialog dialog = new SearchAthleteDialog(dsl, organizationRecord, this::onAthleteSelect);
+            SearchAthleteDialog dialog = new SearchAthleteDialog(dsl, organizationRecord.getId(), seriesRecord.getId(), this::onAthleteSelect);
             dialog.open();
         });
 
         athletesGrid.addComponentColumn(record -> {
-            Button remove = new Button(athletesGrid.getTranslation("Remove"));
+            Button remove = new Button(getTranslation("Remove"));
             remove.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            remove.addClickListener(event ->
-                getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> removeAtheleteFromSeries(record)));
+            remove.addClickListener(event -> {
+                ConfirmDialog confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
+                    getTranslation("Are.you.sure"),
+                    getTranslation("Remove"), e -> removeAthleteFromSeries(record),
+                    getTranslation("Cancel"), e -> {
+                });
+                confirmDialog.setConfirmButtonTheme("error primary");
+                confirmDialog.open();
+            });
 
             HorizontalLayout horizontalLayout = new HorizontalLayout(remove);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
@@ -295,16 +303,33 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
     }
 
     private void onAthleteSelect(AthleteRecord athleteRecord) {
+        transactionTemplate.executeWithoutResult(transactionStatus -> {
+            Long categoryId = dsl
+                .select(CATEGORY.ID)
+                .from(CATEGORY)
+                .where(CATEGORY.SERIES_ID.eq(seriesRecord.getId()))
+                .and(CATEGORY.GENDER.eq(athleteRecord.getGender()))
+                .and(CATEGORY.YEAR_FROM.le(athleteRecord.getYearOfBirth()))
+                .and(CATEGORY.YEAR_TO.ge(athleteRecord.getYearOfBirth()))
+                .fetchOneInto(Long.class);
+
+            CategoryAthleteRecord categoryAthleteRecord = CATEGORY_ATHLETE.newRecord();
+            categoryAthleteRecord.setAthleteId(athleteRecord.getId());
+            categoryAthleteRecord.setCategoryId(categoryId);
+            categoryAthleteRecord.attach(dsl.configuration());
+            categoryAthleteRecord.store();
+        });
+
         refreshAll();
     }
 
-    private void removeAtheleteFromSeries(UpdatableRecord<?> record) {
+    private void removeAthleteFromSeries(UpdatableRecord<?> record) {
         AthleteRecord athleteRecord = (AthleteRecord) record;
         dsl
             .deleteFrom(CATEGORY_ATHLETE)
             .where(CATEGORY_ATHLETE.ATHLETE_ID.eq(athleteRecord.getId()))
-            .and(CATEGORY_ATHLETE.CATEGORY_ID
-                .in(dsl.select(CATEGORY.ID).from(CATEGORY).where(CATEGORY.SERIES_ID.eq(seriesRecord.getId()))));
+            .and(CATEGORY_ATHLETE.CATEGORY_ID.in(dsl.select(CATEGORY.ID).from(CATEGORY).where(CATEGORY.SERIES_ID.eq(seriesRecord.getId()))))
+            .execute();
     }
 
 }

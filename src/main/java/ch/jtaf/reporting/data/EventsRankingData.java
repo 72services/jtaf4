@@ -1,30 +1,53 @@
 package ch.jtaf.reporting.data;
 
+import ch.jtaf.model.EventType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
-public class EventsRankingData {
+public record EventsRankingData(String name, LocalDate competitionDate, List<Event> events) {
 
-    private final String name;
-    private final LocalDate competitionDate;
+    public static record Event(String abbreviation, String gender, String eventType, List<Result> results) {
 
-    private final List<EventsRankingEvent> events = new ArrayList<>();
+        public List<Result> sortedResults() {
+            results.sort((o1, o2) -> {
+                if (eventType.equals(EventType.JUMP_THROW.name())) {
+                    // Higher results are better
+                    return Double.compare(o2.resultAsDouble(), o1.resultAsDouble());
+                } else {
+                    // Lower results are better
+                    return Double.compare(o1.resultAsDouble(), o2.resultAsDouble());
+                }
+            });
+            return results;
+        }
 
-    public EventsRankingData(String name, LocalDate competitionDate) {
-        this.name = name;
-        this.competitionDate = competitionDate;
+        public static record Result(String firstName, String lastName, int yearOfBirth, String category, String club, String result) {
+
+            private static final Logger LOGGER = LoggerFactory.getLogger(Result.class);
+
+            double resultAsDouble() {
+                try {
+                    if (result == null || result.length() == 0) {
+                        return 0.0d;
+                    } else {
+                        String[] parts = result.split("\\.");
+                        if (parts.length == 3) {
+                            return (Double.parseDouble(parts[0]) * 60) + Double.parseDouble(parts[1] + "." + parts[2]);
+                        } else {
+                            return Double.parseDouble(result);
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    LOGGER.error(e.getMessage(), e);
+                    return 0.0d;
+                }
+            }
+
+        }
+
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public LocalDate getCompetitionDate() {
-        return competitionDate;
-    }
-
-    public List<EventsRankingEvent> getEvents() {
-        return events;
-    }
 }

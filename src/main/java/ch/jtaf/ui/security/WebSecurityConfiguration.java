@@ -72,7 +72,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             // Public
             .antMatchers("/").permitAll()
 
-            // Allow all requests by logged in users.
+            // Allow all requests by logged-in users.
             .anyRequest().authenticated()
 
             // Configure the login page.
@@ -97,7 +97,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             // the standard favicon URI
             "/favicon.ico",
 
-            // the robots exclusion standard
+            // the robots' exclusion standard
             "/robots.txt",
 
             // web application manifest

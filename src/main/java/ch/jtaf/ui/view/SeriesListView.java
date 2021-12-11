@@ -7,8 +7,8 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.Route;
@@ -18,13 +18,15 @@ import org.jooq.SortField;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 
-import static ch.jtaf.db.tables.Category.CATEGORY;
+import java.io.Serial;
+
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
 import static ch.jtaf.db.tables.Series.SERIES;
 
 @Route(layout = MainLayout.class)
 public class SeriesListView extends ProtectedGridView<SeriesRecord> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public SeriesListView(DSLContext dsl) {
@@ -32,17 +34,18 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
 
         setHeightFull();
 
-        add(new H1(getTranslation("Series")));
-
         Button add = new Button(getTranslation("Add"));
         add.addClickListener(event -> UI.getCurrent().navigate(SeriesView.class));
 
         grid.addComponentColumn(LogoUtil::resizeLogo).setHeader(getTranslation("Logo"));
         grid.addColumn(SeriesRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
 
-        grid.addColumn(seriesRecord -> dsl.select(DSL.count(CATEGORY_ATHLETE.ATHLETE_ID)).from(CATEGORY_ATHLETE)
-            .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
-            .where(CATEGORY.SERIES_ID.eq(seriesRecord.getId())).fetchOneInto(Integer.class))
+        grid.addColumn(seriesRecord ->
+                dsl
+                    .select(DSL.count(CATEGORY_ATHLETE.ATHLETE_ID)).from(CATEGORY_ATHLETE)
+                    .where(CATEGORY_ATHLETE.category().SERIES_ID.eq(seriesRecord.getId()))
+                    .fetchOneInto(Integer.class)
+            )
             .setHeader(getTranslation("Number.of.Athletes"));
 
         grid.addComponentColumn(seriesRecord -> {
@@ -62,12 +65,20 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
             Button delete = new Button(getTranslation("Delete"));
             delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
             delete.addClickListener(event -> {
-                try {
-                    dsl.attach(seriesRecord);
-                    seriesRecord.delete();
-                } catch (DataAccessException e) {
-                    Notification.show(e.getMessage());
-                }
+                ConfirmDialog confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
+                    getTranslation("Are.you.sure"),
+                    getTranslation("Delete"), e -> {
+                    try {
+                        dsl.attach(seriesRecord);
+                        seriesRecord.delete();
+                    } catch (DataAccessException ex) {
+                        Notification.show(ex.getMessage());
+                    }
+                },
+                    getTranslation("Cancel"), e -> {
+                });
+                confirmDialog.setConfirmButtonTheme("error primary");
+                confirmDialog.open();
             });
 
             HorizontalLayout horizontalLayout = new HorizontalLayout(delete);
@@ -83,7 +94,7 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
 
     @Override
     public String getPageTitle() {
-        return "JTAF - " + getTranslation("Series");
+        return getTranslation("Series");
     }
 
     @Override

@@ -8,7 +8,6 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
@@ -22,10 +21,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Record4;
-import org.jooq.Result;
 import org.jooq.impl.DSL;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.io.Serial;
 import java.util.List;
 
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
@@ -33,12 +32,13 @@ import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
 import static ch.jtaf.db.tables.CategoryEvent.CATEGORY_EVENT;
 import static ch.jtaf.db.tables.Competition.COMPETITION;
-import static ch.jtaf.db.tables.Event.EVENT;
 import static ch.jtaf.db.tables.Result.RESULT;
+import static org.jooq.impl.DSL.upper;
 
 @Route(layout = MainLayout.class)
 public class ResultCapturingView extends VerticalLayout implements HasDynamicTitle, HasUrlParameter<String> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final Grid<Record4<Long, String, String, Long>> grid = new Grid<>();
@@ -48,17 +48,20 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
     private long competitionId;
 
     public ResultCapturingView(DSLContext dsl, TransactionTemplate transactionTemplate) {
-        add(new H1(getTranslation("Enter.Results")));
-
         CallbackDataProvider<Record4<Long, String, String, Long>, String> callbackDataProvider = new CallbackDataProvider<>(
             query -> {
-                Result<Record4<Long, String, String, Long>> records = dsl
-                    .select(ATHLETE.ID, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME, CATEGORY.ID)
+                var records = dsl
+                    .select(
+                        ATHLETE.ID,
+                        ATHLETE.LAST_NAME,
+                        ATHLETE.FIRST_NAME,
+                        CATEGORY.ID)
                     .from(ATHLETE)
                     .join(CATEGORY_ATHLETE).on(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
                     .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
                     .join(COMPETITION).on(COMPETITION.SERIES_ID.eq(CATEGORY.SERIES_ID))
                     .where(COMPETITION.ID.eq(competitionId).and(createCondition(query)))
+                    .and(CATEGORY.SERIES_ID.eq(COMPETITION.SERIES_ID))
                     .orderBy(ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME)
                     .offset(query.getOffset()).limit(query.getLimit())
                     .fetch();
@@ -70,14 +73,18 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                 }
                 return records.stream();
             },
-            query -> dsl
-                .selectCount()
-                .from(ATHLETE)
-                .join(CATEGORY_ATHLETE).on(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
-                .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
-                .join(COMPETITION).on(COMPETITION.SERIES_ID.eq(CATEGORY.SERIES_ID))
-                .where(COMPETITION.ID.eq(competitionId).and(createCondition(query)))
-                .fetchOneInto(Integer.class),
+            query -> {
+                var count = dsl
+                    .selectCount()
+                    .from(ATHLETE)
+                    .join(CATEGORY_ATHLETE).on(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
+                    .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
+                    .join(COMPETITION).on(COMPETITION.SERIES_ID.eq(CATEGORY.SERIES_ID))
+                    .where(COMPETITION.ID.eq(competitionId).and(createCondition(query)))
+                    .and(CATEGORY.SERIES_ID.eq(COMPETITION.SERIES_ID))
+                    .fetchOneInto(Integer.class);
+                return count != null ? count : 0;
+            },
             record -> record.get(ATHLETE.ID)
         );
         dataProvider = callbackDataProvider.withConfigurableFilter();
@@ -90,7 +97,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
         grid.addColumn(record -> record.get(ATHLETE.ID)).setHeader("ID").setSortable(true);
         grid.addColumn(record -> record.get(ATHLETE.LAST_NAME)).setHeader(getTranslation("Last.Name")).setSortable(true);
         grid.addColumn(record -> record.get(ATHLETE.FIRST_NAME)).setHeader(getTranslation("First.Name")).setSortable(true);
-        grid.setDataProvider(dataProvider);
+        grid.setItems(dataProvider);
         grid.setHeight("200px");
         add(grid);
 
@@ -102,9 +109,8 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
             if (event.getValue() != null) {
                 List<EventRecord> events = dsl
-                    .select()
-                    .from(EVENT)
-                    .join(CATEGORY_EVENT).on(CATEGORY_EVENT.EVENT_ID.eq(EVENT.ID))
+                    .select(CATEGORY_EVENT.event().fields())
+                    .from(CATEGORY_EVENT)
                     .where(CATEGORY_EVENT.CATEGORY_ID.eq(event.getValue().get(CATEGORY.ID)))
                     .orderBy(CATEGORY_EVENT.POSITION)
                     .fetchInto(EventRecord.class);
@@ -113,6 +119,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                 form.add(formLayout);
 
                 boolean first = true;
+                int position = 0;
                 for (EventRecord eventRecord : events) {
                     ResultRecord resultRecord = dsl
                         .selectFrom(RESULT)
@@ -123,7 +130,6 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                         .fetchOne();
 
                     TextField result = new TextField(eventRecord.getName());
-                    result.setValue(resultRecord.getResult());
                     formLayout.add(result);
 
                     if (first) {
@@ -134,31 +140,46 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                     TextField points = new TextField();
                     points.setReadOnly(true);
                     points.setEnabled(false);
-                    points.setValue(resultRecord.getPoints() == null ? "" : resultRecord.getPoints().toString());
                     formLayout.add(points);
 
+                    if (resultRecord != null) {
+                        result.setValue(resultRecord.getResult());
+                        points.setValue(resultRecord.getPoints() == null ? "" : resultRecord.getPoints().toString());
+                    } else {
+                        resultRecord = RESULT.newRecord();
+                        resultRecord.setPosition(position);
+                        resultRecord.setEventId(eventRecord.getId());
+                        resultRecord.setAthleteId(event.getValue().get(ATHLETE.ID));
+                        resultRecord.setCategoryId(event.getValue().get(CATEGORY.ID));
+                        resultRecord.setCompetitionId(competitionId);
+                    }
+
+                    ResultRecord finalResultRecord = resultRecord;
                     result.addValueChangeListener(ve ->
                         transactionTemplate.executeWithoutResult(ts -> {
                             String resultValue = ve.getValue();
-                            resultRecord.setResult(resultValue);
-                            resultRecord.setPoints(calculatePoints(eventRecord, resultValue));
-                            points.setValue(resultRecord.getPoints() == null ? "" : resultRecord.getPoints().toString());
+                            finalResultRecord.setResult(resultValue);
+                            finalResultRecord.setPoints(calculatePoints(eventRecord, resultValue));
+                            points.setValue(finalResultRecord.getPoints() == null ? "" : finalResultRecord.getPoints().toString());
 
-                            resultRecord.store();
+                            dsl.attach(finalResultRecord);
+                            finalResultRecord.store();
                         }));
+                    position++;
                 }
             }
         });
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private Condition createCondition(Query<?, ?> query) {
         if (query.getFilter().isPresent()) {
             String filterString = (String) query.getFilter().get();
             if (StringUtils.isNumeric(filterString)) {
                 return ATHLETE.ID.eq(Long.valueOf(filterString));
             } else {
-                return ATHLETE.LAST_NAME.like(filterString + "%")
-                    .or(ATHLETE.FIRST_NAME.like(filterString + "%"));
+                return upper(ATHLETE.LAST_NAME).like(filterString.toUpperCase() + "%")
+                    .or(upper(ATHLETE.FIRST_NAME).like(filterString.toUpperCase() + "%"));
             }
         } else {
             return DSL.condition("1 = 2");
@@ -167,7 +188,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
     @Override
     public String getPageTitle() {
-        return "JTAF - " + getTranslation("Enter.Results");
+        return getTranslation("Enter.Results");
     }
 
     @Override

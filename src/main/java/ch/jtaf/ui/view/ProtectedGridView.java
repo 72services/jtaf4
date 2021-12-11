@@ -9,23 +9,24 @@ import org.jooq.Record;
 import org.jooq.SortField;
 import org.jooq.Table;
 
+import java.io.Serial;
+
 public abstract class ProtectedGridView<R extends Record> extends ProtectedView {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
-    final Table<R> table;
     final ConfigurableFilterDataProvider<R, Void, String> dataProvider;
     final Grid<R> grid;
 
     public ProtectedGridView(DSLContext dsl, Table<R> table) {
         super(dsl);
-        this.table = table;
 
         dataProvider = new JooqDataProviderProducer<>(dsl, table, this::initialCondition, this::initialSort).getDataProvider();
 
         grid = new Grid<>();
         grid.setHeightFull();
-        grid.setDataProvider(dataProvider);
+        grid.setItems(dataProvider);
 
         setHeightFull();
     }

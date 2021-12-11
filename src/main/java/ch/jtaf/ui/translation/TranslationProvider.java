@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.io.Serial;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
@@ -14,6 +15,7 @@ import java.util.ResourceBundle;
 @Component
 public class TranslationProvider implements I18NProvider {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public static final String BUNDLE_PREFIX = "messages";

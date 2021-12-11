@@ -1,7 +1,6 @@
 package ch.jtaf.reporting.report;
 
 import ch.jtaf.reporting.data.ClubRankingData;
-import ch.jtaf.reporting.data.ClubResultData;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfPTable;
@@ -12,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Locale;
-import java.util.Map;
 
 import static com.lowagie.text.PageSize.A4;
 
@@ -23,20 +21,20 @@ public class ClubRankingReport extends RankingReport {
     private final ClubRankingData ranking;
     private Document document;
 
-    public ClubRankingReport(ClubRankingData ranking, Locale locale, Map<Long, String> clubs) {
-        super(locale, clubs);
+    public ClubRankingReport(ClubRankingData ranking, Locale locale) {
+        super(locale);
         this.ranking = ranking;
     }
 
     public byte[] create() {
         try {
-            try (var baos = new ByteArrayOutputStream()) {
+            try (var byteArrayOutputStream = new ByteArrayOutputStream()) {
                 var border = cmToPixel(1.5f);
                 document = new Document(A4, border, border, border, border);
 
-                var pdfWriter = PdfWriter.getInstance(document, baos);
+                var pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
                 pdfWriter.setPageEvent(
-                    new HeaderFooter(messages.getString("Club.Ranking"), ranking.getSeriesName(), ""));
+                    new HeaderFooter(messages.getString("Club.Ranking"), ranking.seriesName(), ""));
 
                 document.open();
 
@@ -45,7 +43,7 @@ public class ClubRankingReport extends RankingReport {
                 document.close();
 
                 pdfWriter.flush();
-                return baos.toByteArray();
+                return byteArrayOutputStream.toByteArray();
             }
         } catch (IOException | DocumentException e) {
             LOGGER.error(e.getMessage(), e);
@@ -58,15 +56,19 @@ public class ClubRankingReport extends RankingReport {
         table.setWidthPercentage(100f);
         table.setSpacingBefore(1f);
 
-        ranking.getResults().forEach(result -> createClubRow(table, result));
+        int rank = 1;
+        for (ClubRankingData.Result result : ranking.sortedResults()) {
+            createClubRow(table, result, rank);
+            rank++;
+        }
 
         document.add(table);
     }
 
-    private void createClubRow(PdfPTable table, ClubResultData clubResultData) {
-        addCell(table, clubResultData.getRank() + ".");
-        addCell(table, clubResultData.getClub());
-        addCellAlignRight(table, "" + clubResultData.getPoints());
+    private void createClubRow(PdfPTable table, ClubRankingData.Result result, int rank) {
+        addCell(table, rank + ".");
+        addCell(table, result.club());
+        addCellAlignRight(table, "" + result.points());
     }
 
 }

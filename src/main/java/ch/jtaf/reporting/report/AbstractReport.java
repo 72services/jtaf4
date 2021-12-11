@@ -33,11 +33,9 @@ public abstract class AbstractReport {
 
     int numberOfRows = 0;
 
-    final Locale locale;
     final ResourceBundle messages;
 
     AbstractReport(Locale locale) {
-        this.locale = locale;
         this.messages = ResourceBundle.getBundle("messages", locale);
     }
 

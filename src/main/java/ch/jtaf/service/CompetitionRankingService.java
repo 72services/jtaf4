@@ -1,36 +1,25 @@
 package ch.jtaf.service;
 
-import ch.jtaf.reporting.data.CompetitionRankingAthlete;
-import ch.jtaf.reporting.data.CompetitionRankingCategory;
 import ch.jtaf.reporting.data.CompetitionRankingData;
-import ch.jtaf.reporting.data.CompetitionRankingResult;
 import ch.jtaf.reporting.data.EventsRankingData;
-import ch.jtaf.reporting.data.EventsRankingEvent;
-import ch.jtaf.reporting.data.EventsRankingResult;
 import ch.jtaf.reporting.report.CompetitionRankingReport;
 import ch.jtaf.reporting.report.DiplomaReport;
 import ch.jtaf.reporting.report.EventsRankingReport;
 import org.jooq.DSLContext;
-import org.jooq.Record14;
-import org.jooq.Record9;
-import org.jooq.Result;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
-import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
-import static ch.jtaf.db.tables.CategoryEvent.CATEGORY_EVENT;
-import static ch.jtaf.db.tables.Club.CLUB;
 import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Event.EVENT;
 import static ch.jtaf.db.tables.Result.RESULT;
 import static ch.jtaf.db.tables.Series.SERIES;
-import static java.util.stream.Collectors.toMap;
+import static org.jooq.Records.mapping;
+import static org.jooq.impl.DSL.multiset;
+import static org.jooq.impl.DSL.select;
+import static org.jooq.impl.DSL.selectDistinct;
 
 @Service
 public class CompetitionRankingService {
@@ -42,7 +31,7 @@ public class CompetitionRankingService {
     }
 
     public byte[] getCompetitionRankingAsPdf(Long competitionId) {
-        return new CompetitionRankingReport(getCompetitionRanking(competitionId), new Locale("de", "CH"), getClubs()).create();
+        return new CompetitionRankingReport(getCompetitionRanking(competitionId), new Locale("de", "CH")).create();
     }
 
     public byte[] getDiplomasAsPdf(Long competitionId) {
@@ -50,150 +39,98 @@ public class CompetitionRankingService {
     }
 
     public byte[] getEventRankingAsPdf(Long competitionId) {
-        return new EventsRankingReport(getEventsRanking(competitionId), new Locale("de", "CH"), getClubs()).create();
+        return new EventsRankingReport(getEventsRanking(competitionId), new Locale("de", "CH")).create();
     }
 
     public CompetitionRankingData getCompetitionRanking(Long competitionId) {
-        var competition = dsl
-            .select(COMPETITION.NAME, COMPETITION.COMPETITION_DATE, COMPETITION.ALWAYS_FIRST_THREE_MEDALS, COMPETITION.MEDAL_PERCENTAGE)
+        return dsl
+            .select(
+                COMPETITION.NAME,
+                COMPETITION.COMPETITION_DATE,
+                COMPETITION.ALWAYS_FIRST_THREE_MEDALS,
+                COMPETITION.MEDAL_PERCENTAGE,
+                multiset(
+                    select(
+                        CATEGORY.ABBREVIATION,
+                        CATEGORY.NAME,
+                        CATEGORY.YEAR_FROM,
+                        CATEGORY.YEAR_TO,
+                        multiset(
+                            select(
+                                CATEGORY_ATHLETE.athlete().FIRST_NAME,
+                                CATEGORY_ATHLETE.athlete().LAST_NAME,
+                                CATEGORY_ATHLETE.athlete().YEAR_OF_BIRTH,
+                                CATEGORY_ATHLETE.athlete().club().NAME,
+                                multiset(
+                                    select(
+                                        RESULT.event().ABBREVIATION,
+                                        RESULT.RESULT_,
+                                        RESULT.POINTS,
+                                        RESULT.POSITION
+                                    )
+                                        .from(RESULT)
+                                        .where(RESULT.ATHLETE_ID.eq(CATEGORY_ATHLETE.athlete().ID))
+                                        .and(RESULT.COMPETITION_ID.eq(COMPETITION.ID))
+                                        .and(RESULT.CATEGORY_ID.eq(CATEGORY.ID))
+                                        .orderBy(RESULT.POSITION)
+                                ).convertFrom(r -> r.map(mapping(CompetitionRankingData.Category.Athlete.Result::new)))
+                            )
+                                .from(CATEGORY_ATHLETE)
+                                .where(CATEGORY_ATHLETE.CATEGORY_ID.eq(CATEGORY.ID))
+                        ).convertFrom(r -> r.map(mapping(CompetitionRankingData.Category.Athlete::new)))
+                    )
+                        .from(CATEGORY)
+                        .where(CATEGORY.SERIES_ID.eq(COMPETITION.SERIES_ID))
+                        .orderBy(CATEGORY.ABBREVIATION)
+                ).convertFrom(r -> r.map(mapping(CompetitionRankingData.Category::new)))
+            )
             .from(COMPETITION)
             .where(COMPETITION.ID.eq(competitionId))
-            .fetchOne();
-
-        var competitionRanking = new CompetitionRankingData(
-            competition.get(COMPETITION.NAME), competition.get(COMPETITION.COMPETITION_DATE),
-            competition.get(COMPETITION.ALWAYS_FIRST_THREE_MEDALS), competition.get(COMPETITION.MEDAL_PERCENTAGE));
-
-        var results = dsl.
-            selectDistinct(
-                CATEGORY.ID, CATEGORY.ABBREVIATION, CATEGORY.NAME, CATEGORY.YEAR_FROM, CATEGORY.YEAR_TO,
-                ATHLETE.ID, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME, ATHLETE.YEAR_OF_BIRTH,
-                ATHLETE.CLUB_ID,
-                EVENT.ABBREVIATION,
-                RESULT.RESULT_,
-                RESULT.POINTS,
-                RESULT.POSITION
-            )
-            .from(COMPETITION, CATEGORY, CATEGORY_ATHLETE, ATHLETE, CATEGORY_EVENT, EVENT, RESULT)
-            .where(COMPETITION.ID.eq(competitionId))
-            .and(CATEGORY.SERIES_ID.eq(COMPETITION.SERIES_ID))
-            .and(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
-            .and(CATEGORY_ATHLETE.CATEGORY_ID.eq(CATEGORY.ID))
-            .and(CATEGORY.ID.eq(CATEGORY_EVENT.CATEGORY_ID))
-            .and(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
-            .and(CATEGORY_EVENT.EVENT_ID.eq(EVENT.ID))
-            .and(RESULT.COMPETITION_ID.eq(COMPETITION.ID))
-            .and(RESULT.CATEGORY_ID.eq(CATEGORY.ID))
-            .and(RESULT.ATHLETE_ID.eq(ATHLETE.ID))
-            .and(EVENT.ID.eq(RESULT.EVENT_ID))
-            .orderBy(CATEGORY.ABBREVIATION, ATHLETE.ID)
-            .fetch();
-
-        competitionRanking.getCategories().addAll(getCategories(results));
-
-        return competitionRanking;
+            .fetchOne(mapping(CompetitionRankingData::new));
     }
 
     public EventsRankingData getEventsRanking(Long competitionId) {
-        var competition = dsl
-            .select(COMPETITION.NAME, COMPETITION.COMPETITION_DATE)
+        return dsl
+            .select(
+                COMPETITION.NAME,
+                COMPETITION.COMPETITION_DATE,
+                multiset(
+                    select(
+                        EVENT.ABBREVIATION,
+                        EVENT.GENDER,
+                        EVENT.EVENT_TYPE,
+                        multiset(
+                            selectDistinct(
+                                RESULT.athlete().LAST_NAME,
+                                RESULT.athlete().FIRST_NAME,
+                                RESULT.athlete().YEAR_OF_BIRTH,
+                                RESULT.category().ABBREVIATION,
+                                RESULT.athlete().club().NAME,
+                                RESULT.RESULT_)
+                                .from(RESULT)
+                                .where(RESULT.category().SERIES_ID.eq(COMPETITION.SERIES_ID))
+                                .and(RESULT.event().ID.eq(EVENT.ID))
+                                .and(RESULT.RESULT_.isNotNull())
+                        ).convertFrom(r -> r.map(mapping(EventsRankingData.Event.Result::new))))
+                        .from(EVENT)
+                        .where(EVENT.ORGANIZATION_ID.eq(COMPETITION.series().ORGANIZATION_ID))
+                        .orderBy(EVENT.ABBREVIATION, EVENT.GENDER))
+                    .convertFrom(r -> r.map(mapping(EventsRankingData.Event::new))))
             .from(COMPETITION)
             .where(COMPETITION.ID.eq(competitionId))
-            .fetchOne();
-
-        var eventsRanking = new EventsRankingData(competition.get(COMPETITION.NAME), competition.get(COMPETITION.COMPETITION_DATE));
-
-        var results = dsl.
-            selectDistinct(
-                ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME, ATHLETE.YEAR_OF_BIRTH,
-                CATEGORY.ABBREVIATION,
-                ATHLETE.CLUB_ID,
-                EVENT.ABBREVIATION, EVENT.GENDER, EVENT.EVENT_TYPE,
-                RESULT.RESULT_
-            )
-            .from(COMPETITION, CATEGORY, CATEGORY_ATHLETE, ATHLETE, CATEGORY_EVENT, EVENT, RESULT)
-            .where(COMPETITION.ID.eq(competitionId))
-            .and(CATEGORY.SERIES_ID.eq(COMPETITION.SERIES_ID))
-            .and(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
-            .and(CATEGORY_ATHLETE.CATEGORY_ID.eq(CATEGORY.ID))
-            .and(CATEGORY.ID.eq(CATEGORY_EVENT.CATEGORY_ID))
-            .and(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
-            .and(CATEGORY_EVENT.EVENT_ID.eq(EVENT.ID))
-            .and(RESULT.COMPETITION_ID.eq(COMPETITION.ID))
-            .and(RESULT.CATEGORY_ID.eq(CATEGORY.ID))
-            .and(RESULT.ATHLETE_ID.eq(ATHLETE.ID))
-            .and(EVENT.ID.eq(RESULT.EVENT_ID))
-            .orderBy(EVENT.ABBREVIATION, EVENT.GENDER)
-            .fetch();
-
-        eventsRanking.getEvents().addAll(getEvents(results));
-
-        return eventsRanking;
-    }
-
-    private List<CompetitionRankingCategory> getCategories(Result<Record14<Long, String, String, Integer, Integer, Long, String, String, Integer, Long, String, String, Integer, Integer>> results) {
-        List<CompetitionRankingCategory> categories = new ArrayList<>();
-
-        CompetitionRankingCategory category = null;
-        CompetitionRankingAthlete athlete = null;
-
-        for (var result : results) {
-            if (category == null || !category.getId().equals(result.get(CATEGORY.ID))) {
-                category = new CompetitionRankingCategory(result.get(CATEGORY.ID), result.get(CATEGORY.ABBREVIATION),
-                    result.get(CATEGORY.NAME), result.get(CATEGORY.YEAR_FROM), result.get(CATEGORY.YEAR_TO));
-                categories.add(category);
-            }
-
-            if (athlete == null || !athlete.getId().equals(result.get(ATHLETE.ID))) {
-                athlete = new CompetitionRankingAthlete(result.get(ATHLETE.ID), result.get(ATHLETE.FIRST_NAME),
-                    result.get(ATHLETE.LAST_NAME), result.get(ATHLETE.YEAR_OF_BIRTH), result.get(ATHLETE.CLUB_ID));
-                category.addAthlete(athlete);
-            }
-
-            CompetitionRankingResult competitionRankingResult = new CompetitionRankingResult(result.get(EVENT.ABBREVIATION),
-                result.get(RESULT.RESULT_), result.get(RESULT.POINTS), result.get(RESULT.POSITION));
-            athlete.addResult(competitionRankingResult);
-        }
-
-        return categories;
+            .fetchOne(mapping(EventsRankingData::new));
     }
 
     private byte[] getLogo(Long competitionId) {
         var logoRecord = dsl
-            .select(SERIES.LOGO)
-            .from(SERIES)
-            .join(COMPETITION).on(COMPETITION.SERIES_ID.eq(SERIES.ID))
+            .select(COMPETITION.series().LOGO)
+            .from(COMPETITION)
             .where(COMPETITION.ID.eq(competitionId))
             .fetchOne();
-        return logoRecord.get(SERIES.LOGO);
-    }
-
-    private List<EventsRankingEvent> getEvents(Result<Record9<String, String, Integer, String, Long, String, String, String, String>> records) {
-        List<EventsRankingEvent> events = new ArrayList<>();
-
-        EventsRankingEvent event = null;
-
-        for (var record : records) {
-            if (event == null
-                || (!event.getAbbreviation().equals(record.get(EVENT.ABBREVIATION))
-                && !event.getAbbreviation().equals(record.get(EVENT.GENDER)))) {
-                event = new EventsRankingEvent(record.get(EVENT.ABBREVIATION), record.get(EVENT.GENDER));
-                events.add(event);
-            }
-            EventsRankingResult result = new EventsRankingResult(record.get(ATHLETE.FIRST_NAME), record.get(ATHLETE.LAST_NAME),
-                record.get(ATHLETE.YEAR_OF_BIRTH), record.get(CATEGORY.ABBREVIATION), record.get(ATHLETE.CLUB_ID),
-                record.get(EVENT.ABBREVIATION), record.get(EVENT.EVENT_TYPE), record.get(RESULT.RESULT_));
-            event.getResults().add(result);
+        if (logoRecord != null) {
+            return logoRecord.get(SERIES.LOGO);
+        } else {
+            return new byte[0];
         }
-
-        return events;
-    }
-
-    private Map<Long, String> getClubs() {
-        return dsl.
-            select(CLUB.ID, CLUB.ABBREVIATION)
-            .from(CLUB)
-            .stream()
-            .collect(toMap(club -> club.get(CLUB.ID), club -> club.get(CLUB.ABBREVIATION)));
     }
 }

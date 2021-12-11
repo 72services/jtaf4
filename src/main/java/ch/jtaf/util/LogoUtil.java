@@ -17,17 +17,19 @@ public class LogoUtil {
     public static Image resizeLogo(SeriesRecord series) {
         Image logo = new Image();
 
-        try {
-            BufferedImage image = ImageIO.read(new ByteArrayInputStream(series.getLogo()));
-            double width = image.getWidth(null);
-            double height = image.getHeight(null);
-            double ratio = width / height;
+        if (series.getLogo() != null) {
+            try {
+                BufferedImage image = ImageIO.read(new ByteArrayInputStream(series.getLogo()));
+                double width = image.getWidth(null);
+                double height = image.getHeight(null);
+                double ratio = width / height;
 
-            logo.setSrc(new StreamResource("logo", () -> new ByteArrayInputStream(series.getLogo())));
-            logo.setHeight("60px");
-            logo.setWidth(60 * ratio + "px");
-        } catch (IOException e) {
-            // Ignore
+                logo.setSrc(new StreamResource("logo", () -> new ByteArrayInputStream(series.getLogo())));
+                logo.setHeight("60px");
+                logo.setWidth(60 * ratio + "px");
+            } catch (IOException e) {
+                // Ignore
+            }
         }
         return logo;
     }

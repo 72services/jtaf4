@@ -1,10 +1,10 @@
 package ch.jtaf.ui.dialog;
 
-import ch.jtaf.context.ApplicationContextHolder;
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.model.Gender;
+import ch.jtaf.ui.converter.JtafStringToIntegerConverter;
 import ch.jtaf.ui.security.OrganizationHolder;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.select.Select;
@@ -12,19 +12,21 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Result;
 import com.vaadin.flow.data.binder.ValueContext;
 import com.vaadin.flow.data.converter.Converter;
-import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import org.jooq.DSLContext;
 
+import java.io.Serial;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static ch.jtaf.context.ApplicationContextHolder.getBean;
 import static ch.jtaf.db.tables.Club.CLUB;
 
 public class AthleteDialog extends EditDialog<AthleteRecord> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private Map<Long, ClubRecord> clubRecordMap = new HashMap<>();
@@ -38,6 +40,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
     public void createForm() {
         TextField lastName = new TextField(getTranslation("Last.Name"));
         lastName.setRequiredIndicatorVisible(true);
+        lastName.focus();
 
         binder.forField(lastName)
             .withValidator(new NotEmptyValidator(this))
@@ -62,12 +65,12 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
         lastName.setRequiredIndicatorVisible(true);
 
         binder.forField(yearOfBirth)
-            .withConverter(new StringToIntegerConverter(getTranslation("Must.be.a.number")))
+            .withConverter(new JtafStringToIntegerConverter(getTranslation("Must.be.a.number")))
+            .withNullRepresentation(0)
             .bind(AthleteRecord::getYearOfBirth, AthleteRecord::setYearOfBirth);
 
         Select<ClubRecord> club = new Select<>();
         club.setLabel(getTranslation("Club"));
-        club.setRequiredIndicatorVisible(true);
         club.setItemLabelGenerator(item -> item.getAbbreviation() + " " + item.getName());
         club.setItems(getClubs());
 
@@ -89,7 +92,8 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
         year.setRequiredIndicatorVisible(true);
 
         binder.forField(year)
-            .withConverter(new StringToIntegerConverter(getTranslation("Must.be.a.number")))
+            .withConverter(new JtafStringToIntegerConverter(getTranslation("Must.be.a.number")))
+            .withNullRepresentation(0)
             .bind(AthleteRecord::getYearOfBirth, AthleteRecord::setYearOfBirth);
 
         formLayout.add(lastName, firstName, gender, year, club);
@@ -101,8 +105,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
         if (organizationRecord == null) {
             return Collections.emptyList();
         } else {
-            DSLContext dsl = ApplicationContextHolder.getBean(DSLContext.class);
-            var clubs = dsl.selectFrom(CLUB).where(CLUB.ORGANIZATION_ID.eq(organizationRecord.getId())).fetch();
+            var clubs = getBean(DSLContext.class).selectFrom(CLUB).where(CLUB.ORGANIZATION_ID.eq(organizationRecord.getId())).fetch();
             clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
             return clubs;
         }

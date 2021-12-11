@@ -1,29 +1,33 @@
 package ch.jtaf.reporting.data;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.List;
 
-public class SeriesRankingData {
+import static java.lang.Integer.compare;
+import static java.util.stream.Collectors.toList;
 
-    private final String name;
-    private final int numberOfCompetitions;
+public record SeriesRankingData(String name, int numberOfCompetitions, List<Category> categories) {
 
-    private final List<SeriesRankingCategory> categories = new ArrayList<>();
+    public static record Category(String abbreviation, String name, int yearFrom, int yearTo, List<Athlete> athletes) {
 
-    public SeriesRankingData(String name, int numberOfCompetitions) {
-        this.name = name;
-        this.numberOfCompetitions = numberOfCompetitions;
+        public List<Athlete> getFilteredAndSortedAthletes(int numberOfCompetitions) {
+            return athletes.stream()
+                .filter(athlete -> athlete.results != null && athlete.results().size() == numberOfCompetitions)
+                .sorted((o1, o2) -> compare(o2.totalPoints(), o1.totalPoints()))
+                .collect(toList());
+        }
+
+        public static record Athlete(String firstName, String lastName, int yearOfBirth, String club, List<Result> results) {
+
+            public int totalPoints() {
+                return results.stream().map(Result::points).mapToInt(BigDecimal::intValue).sum();
+            }
+
+            public static record Result(String competitionName, BigDecimal points) {
+            }
+
+        }
+
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public int getNumberOfCompetitions() {
-        return numberOfCompetitions;
-    }
-
-    public List<SeriesRankingCategory> getCategories() {
-        return categories;
-    }
 }

@@ -1,0 +1,35 @@
+.dashboard {
+    width: calc(100% - 40px) !important;
+
+    background-color: white;
+    margin: 20px;
+    border-radius: 1em;
+    overflow: hidden;
+}
+
+.series-layout {
+    width: 100%;
+    height: 80px;
+
+    border-top-width: 1px;
+    border-top-color: lightgray;
+    border-top-style: solid;
+
+    border-bottom-width: 3px;
+    border-bottom-color: var(--lumo-primary-color);
+    border-bottom-style: solid;
+
+    overflow: hidden;
+}
+
+.series-layout p {
+    font-weight: bold;
+}
+
+.competition-layout {
+    /* border-bottom: 1px solid lightgray; */
+}
+
+.button-div {
+    width: 250px;
+}

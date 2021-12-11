@@ -18,3 +18,12 @@ webpack.generated.js
 /package.json
 /package-lock.json
 /webpack.config.js
+/frontend/generated/
+/pnpmfile.js
+/tsconfig.json
+/types.d.ts
+/.npmrc
+/code-inspection.log
+/.bashrc
+/.bashrc.swp
+/.pnpm-debug.log

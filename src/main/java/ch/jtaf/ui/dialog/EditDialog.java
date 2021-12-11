@@ -1,10 +1,8 @@
 package ch.jtaf.ui.dialog;
 
-import ch.jtaf.context.ApplicationContextHolder;
 import ch.jtaf.ui.function.Callback;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
@@ -18,9 +16,13 @@ import org.jooq.DSLContext;
 import org.jooq.UpdatableRecord;
 import org.springframework.transaction.support.TransactionTemplate;
 
-@CssImport("./styles/jtaf-dialog.css")
+import java.io.Serial;
+
+import static ch.jtaf.context.ApplicationContextHolder.getBean;
+
 public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public static final String FULLSCREEN = "fullscreen";
@@ -33,7 +35,7 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
     final FormLayout formLayout;
 
     private Callback afterSave;
-    private boolean initalized;
+    private boolean initialized;
 
     public EditDialog(String title) {
         getElement().getThemeList().add("jtaf-dialog");
@@ -64,10 +66,8 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
         Button save = new Button(getTranslation("Save"));
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         save.addClickListener(event -> {
-            DSLContext dsl = ApplicationContextHolder.getBean(DSLContext.class);
-            TransactionTemplate transactionTemplate = ApplicationContextHolder.getBean(TransactionTemplate.class);
-            transactionTemplate.executeWithoutResult((transactionStatus) -> {
-                dsl.attach(binder.getBean());
+            getBean(TransactionTemplate.class).executeWithoutResult((transactionStatus) -> {
+                getBean(DSLContext.class).attach(binder.getBean());
                 binder.getBean().store();
 
                 if (afterSave != null) {
@@ -96,9 +96,9 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
         binder.setBean((R) record);
         this.afterSave = afterSave;
 
-        if (!initalized) {
+        if (!initialized) {
             createForm();
-            initalized = true;
+            initialized = true;
         }
 
         super.open();

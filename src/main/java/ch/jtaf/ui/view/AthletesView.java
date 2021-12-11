@@ -4,7 +4,6 @@ import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.ui.dialog.AthleteDialog;
 import ch.jtaf.ui.layout.MainLayout;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
@@ -12,6 +11,7 @@ import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.SortField;
 
+import java.io.Serial;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,6 +23,7 @@ import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionLis
 @Route(layout = MainLayout.class)
 public class AthletesView extends ProtectedGridView<AthleteRecord> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private Map<Long, ClubRecord> clubRecordMap = new HashMap<>();
@@ -31,8 +32,6 @@ public class AthletesView extends ProtectedGridView<AthleteRecord> {
         super(dsl, ATHLETE);
 
         setHeightFull();
-
-        add(new H1(getTranslation("Athletes")));
 
         AthleteDialog dialog = new AthleteDialog(getTranslation("Athlete"));
 
@@ -69,7 +68,7 @@ public class AthletesView extends ProtectedGridView<AthleteRecord> {
 
     @Override
     public String getPageTitle() {
-        return "JTAF - " + getTranslation("Athletes");
+        return getTranslation("Athletes");
     }
 
     @Override
