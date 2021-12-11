@@ -24,13 +24,16 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 @SpringBootTest
 @DirtiesContext
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public abstract class AbstractAppTest {
+
     private static Routes routes;
+
+    @Autowired
+    protected ApplicationContext ctx;
 
     @BeforeAll
     public static void discoverRoutes() {
@@ -38,8 +41,18 @@ public abstract class AbstractAppTest {
         routes = new Routes().autoDiscoverViews("ch.jtaf.ui");
     }
 
-    @Autowired
-    protected ApplicationContext ctx;
+    @BeforeEach
+    public void setup() {
+        final Function0<UI> uiFactory = UI::new;
+        final SpringServlet servlet = new MockSpringServlet(routes, ctx, uiFactory);
+        MockVaadin.setup(uiFactory, servlet);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        logout();
+        MockVaadin.tearDown();
+    }
 
     protected void login(String user, String pass, final List<String> roles) {
         // taken from https://www.baeldung.com/manually-set-user-authentication-spring-security
@@ -63,23 +76,6 @@ public abstract class AbstractAppTest {
             request.setUserPrincipalInt(null);
             request.setUserInRole((principal, role) -> false);
         }
-    }
-
-    @BeforeEach
-    public void setup() {
-        final Function0<UI> uiFactory = UI::new;
-        final SpringServlet servlet = new MockSpringServlet(routes, ctx, uiFactory);
-        MockVaadin.setup(uiFactory, servlet);
-    }
-
-    @AfterEach
-    public void tearDown() {
-        MockVaadin.tearDown();
-    }
-
-    @AfterEach
-    public void performLogout() {
-        logout();
     }
 }
 

@@ -159,6 +159,7 @@ public class SearchAthleteDialog extends Dialog {
         isFullScreen = !isFullScreen;
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private Condition createCondition(Query<?, ?> query) {
         if (query.getFilter().isPresent()) {
             String filterString = (String) query.getFilter().get();

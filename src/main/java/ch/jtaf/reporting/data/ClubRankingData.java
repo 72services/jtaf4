@@ -10,7 +10,7 @@ public record ClubRankingData(String seriesName, List<Result> results) {
         return results;
     }
 
-    public static record Result(String club, BigDecimal points) {
+    public record Result(String club, BigDecimal points) {
     }
 
 }

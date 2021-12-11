@@ -154,15 +154,15 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
     private static RouterLink createLink(MenuItemInfo menuItemInfo) {
         RouterLink link = new RouterLink();
         link.addClassNames("flex", "mx-s", "p-s", "relative", "text-secondary");
-        link.setRoute(menuItemInfo.getView());
+        link.setRoute(menuItemInfo.view());
 
         Span icon = new Span();
         icon.addClassNames("me-s", "text-l");
-        if (!menuItemInfo.getIconClass().isEmpty()) {
-            icon.addClassNames(menuItemInfo.getIconClass());
+        if (!menuItemInfo.iconClass().isEmpty()) {
+            icon.addClassNames(menuItemInfo.iconClass());
         }
 
-        Span text = new Span(menuItemInfo.getText());
+        Span text = new Span(menuItemInfo.text());
         text.addClassNames("font-medium", "text-s");
 
         link.add(icon, text);
@@ -229,29 +229,6 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
         athletesLink.setVisible(visible);
     }
 
-    public static class MenuItemInfo {
-
-        private String text;
-        private String iconClass;
-        private Class<? extends Component> view;
-
-        public MenuItemInfo(String text, String iconClass, Class<? extends Component> view) {
-            this.text = text;
-            this.iconClass = iconClass;
-            this.view = view;
-        }
-
-        public String getText() {
-            return text;
-        }
-
-        public String getIconClass() {
-            return iconClass;
-        }
-
-        public Class<? extends Component> getView() {
-            return view;
-        }
-
+    public record MenuItemInfo(String text, String iconClass, Class<? extends Component> view) {
     }
 }

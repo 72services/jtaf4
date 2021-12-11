@@ -21,6 +21,7 @@ import static org.jooq.impl.DSL.multiset;
 import static org.jooq.impl.DSL.select;
 import static org.jooq.impl.DSL.selectDistinct;
 
+@SuppressWarnings("ClassCanBeRecord")
 @Service
 public class CompetitionRankingService {
 
@@ -65,8 +66,7 @@ public class CompetitionRankingService {
                                     select(
                                         RESULT.event().ABBREVIATION,
                                         RESULT.RESULT_,
-                                        RESULT.POINTS,
-                                        RESULT.POSITION
+                                        RESULT.POINTS
                                     )
                                         .from(RESULT)
                                         .where(RESULT.ATHLETE_ID.eq(CATEGORY_ATHLETE.athlete().ID))

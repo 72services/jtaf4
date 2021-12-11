@@ -35,7 +35,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private Anchor downloadWidget;
+    private final Anchor downloadWidget;
 
     public DashboardView(DSLContext dsl, SeriesRankingService seriesRankingService, CompetitionRankingService competitionRankingService) {
         downloadWidget = new Anchor();
@@ -163,9 +163,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 
                             Button enterResults = new Button(getTranslation("Enter.Results"), new Icon(VaadinIcon.KEYBOARD));
                             enterResults.addThemeVariants(ButtonVariant.LUMO_ERROR);
-                            enterResults.addClickListener(event -> {
-                                UI.getCurrent().navigate(ResultCapturingView.class, competition.getId().toString());
-                            });
+                            enterResults.addClickListener(event -> UI.getCurrent().navigate(ResultCapturingView.class, competition.getId().toString()));
                             Div enterResultsDiv = new Div(enterResults);
                             enterResultsDiv.getClassNames().add("button-div");
                             links.add(enterResultsDiv);

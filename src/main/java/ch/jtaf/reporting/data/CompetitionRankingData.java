@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 public record CompetitionRankingData(String name, LocalDate competitionDate, boolean alwaysFirstThreeMedals, int medalPercentage,
                                      List<Category> categories) {
 
-    public static record Category(String abbreviation, String name, int yearFrom, int yearTo, List<Athlete> athletes) {
+    public record Category(String abbreviation, String name, int yearFrom, int yearTo, List<Athlete> athletes) {
 
         public List<Athlete> sortedAthletes() {
             return athletes.stream()
@@ -15,7 +15,7 @@ public record CompetitionRankingData(String name, LocalDate competitionDate, boo
                 .sorted((o1, o2) -> Integer.compare(o2.totalPoints(), o1.totalPoints())).collect(Collectors.toList());
         }
 
-        public static record Athlete(String firstName, String lastName, int yearOfBirth, String club, List<Result> results) {
+        public record Athlete(String firstName, String lastName, int yearOfBirth, String club, List<Result> results) {
 
             public int totalPoints() {
                 if (results == null) {
@@ -25,7 +25,7 @@ public record CompetitionRankingData(String name, LocalDate competitionDate, boo
                 }
             }
 
-            public static record Result(String eventAbbreviation, String result, int points, int position) {
+            public record Result(String eventAbbreviation, String result, int points) {
             }
 
         }
