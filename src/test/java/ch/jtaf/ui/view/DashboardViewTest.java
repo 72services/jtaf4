@@ -1,6 +1,6 @@
 package ch.jtaf.ui.view;
 
-import ch.jtaf.ui.AbstractAppTest;
+import ch.jtaf.ui.KaribuTest;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,7 @@ import static com.github.mvysny.kaributesting.v10.LocatorJ._assert;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DashboardViewTest extends AbstractAppTest {
+public class DashboardViewTest extends KaribuTest {
 
     @Test
     void title_is_present() {
