@@ -8,8 +8,10 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.HasDynamicTitle;
 import org.jooq.DSLContext;
 
+import javax.annotation.security.RolesAllowed;
 import java.io.Serial;
 
+@RolesAllowed({"USER", "ADMIN"})
 public abstract class ProtectedView extends VerticalLayout implements BeforeEnterObserver, HasDynamicTitle {
 
     @Serial

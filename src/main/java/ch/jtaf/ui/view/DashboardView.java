@@ -19,6 +19,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 
@@ -29,6 +30,7 @@ import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Series.SERIES;
 import static ch.jtaf.ui.util.LogoUtil.resizeLogo;
 
+@AnonymousAllowed
 @Route(value = "", layout = MainLayout.class)
 public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 

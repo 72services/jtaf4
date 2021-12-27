@@ -1,19 +1,16 @@
 package ch.jtaf.ui.security;
 
-import ch.jtaf.ui.component.RouteNotFoundError;
-import ch.jtaf.ui.view.DashboardView;
-import ch.jtaf.ui.view.LoginView;
-import ch.jtaf.ui.view.RegisterView;
 import com.vaadin.flow.server.HandlerHelper;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.shared.ApplicationConstants;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
@@ -55,13 +52,8 @@ public final class SecurityContext {
      * @return true if access is granted, false otherwise.
      */
     public static boolean isAccessGranted(Class<?> securedClass) {
-        final boolean publicView = LoginView.class.equals(securedClass)
-            || DashboardView.class.equals(securedClass)
-            || RegisterView.class.equals(securedClass)
-            || RouteNotFoundError.class.equals(securedClass);
-
-        // Always allow access to public views
-        if (publicView) {
+        AnonymousAllowed anonymousAllowed = AnnotationUtils.findAnnotation(securedClass, AnonymousAllowed.class);
+        if (anonymousAllowed != null) {
             return true;
         }
 
@@ -73,13 +65,14 @@ public final class SecurityContext {
         }
 
         // Allow if no roles are required.
-        Secured secured = AnnotationUtils.findAnnotation(securedClass, Secured.class);
-        if (secured == null) {
+        RolesAllowed rolesAllowed = AnnotationUtils.findAnnotation(securedClass, RolesAllowed.class);
+        if (rolesAllowed == null) {
             return true;
         }
 
-        List<String> allowedRoles = Arrays.asList(secured.value());
-        return userAuthentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+        List<String> allowedRoles = Arrays.asList(rolesAllowed.value());
+        return userAuthentication.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
             .anyMatch(allowedRoles::contains);
     }
 

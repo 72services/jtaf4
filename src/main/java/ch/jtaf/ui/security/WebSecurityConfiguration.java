@@ -66,8 +66,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             // Allow all flow internal requests.
             .requestMatchers(SecurityContext::isFrameworkInternalRequest).permitAll()
 
-            // Dashboard, Registration, Health Check are public
-            .antMatchers("/", "register", "/actuator/health").permitAll()
+            // Dashboard, Registration, Confirmation, Health Check are public
+            .antMatchers("/", "register", "confirm", "/actuator/health").permitAll()
 
             // Allow all requests by logged-in users.
             .anyRequest().authenticated()
@@ -116,6 +116,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/h2-console/**",
 
             // (production mode) static resources
-            "/frontend-es5/**", "/frontend-es6/**");
+            "/frontend-es5/**", "/frontend-es6/**",
+
+            // Actuator Health
+            "/actuator/health");
     }
 }

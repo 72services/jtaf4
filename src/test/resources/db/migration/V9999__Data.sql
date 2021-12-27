@@ -2274,8 +2274,9 @@ INSERT INTO result (id, position, result, points, athlete_id, category_id, compe
 
 ALTER SEQUENCE result_seq RESTART WITH 1487;
 
-INSERT INTO security_group (id, name) VALUES(2, 'ACTUATOR');
 INSERT INTO security_group (id, name) VALUES(1, 'ADMIN');
+INSERT INTO security_group (id, name) VALUES(2, 'ACTUATOR');
+INSERT INTO security_group (id, name) VALUES(3, 'USER');
 
 ALTER SEQUENCE security_group_seq RESTART WITH 3;
 
