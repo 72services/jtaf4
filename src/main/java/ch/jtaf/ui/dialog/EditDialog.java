@@ -34,7 +34,7 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
     final Binder<R> binder;
     final FormLayout formLayout;
 
-    private Callback afterSave;
+    private transient Callback afterSave;
     private boolean initialized;
 
     protected EditDialog(String title) {

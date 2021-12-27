@@ -53,7 +53,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
 
     private static final String LA_LA_FILE = "la la-file";
 
-    private final OrganizationProvider organizationProvider;
+    private final transient OrganizationProvider organizationProvider;
     private final String applicationVersion;
 
     private final Div version = new Div();
