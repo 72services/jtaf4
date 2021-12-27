@@ -45,3 +45,6 @@ jobs:
             # Runs a single command using the runners shell
             -   name: Maven build
                 run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=72services_jtaf4
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
