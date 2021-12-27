@@ -5,7 +5,7 @@ import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.model.Gender;
 import ch.jtaf.ui.converter.JtafStringToIntegerConverter;
-import ch.jtaf.ui.security.OrganizationHolder;
+import ch.jtaf.ui.security.OrganizationProvider;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
@@ -100,7 +100,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
     }
 
     private List<ClubRecord> getClubs() {
-        OrganizationRecord organizationRecord = getBean(OrganizationHolder.class).getOrganization();
+        OrganizationRecord organizationRecord = getBean(OrganizationProvider.class).getOrganization();
 
         if (organizationRecord == null) {
             return Collections.emptyList();

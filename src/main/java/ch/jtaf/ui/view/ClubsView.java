@@ -3,7 +3,7 @@ package ch.jtaf.ui.view;
 import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.ui.dialog.ClubDialog;
 import ch.jtaf.ui.layout.MainLayout;
-import ch.jtaf.ui.security.OrganizationHolder;
+import ch.jtaf.ui.security.OrganizationProvider;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.router.Route;
 import org.jooq.Condition;
@@ -21,8 +21,8 @@ public class ClubsView extends ProtectedGridView<ClubRecord> {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public ClubsView(DSLContext dsl, OrganizationHolder organizationHolder) {
-        super(dsl, organizationHolder, CLUB);
+    public ClubsView(DSLContext dsl, OrganizationProvider organizationProvider) {
+        super(dsl, organizationProvider, CLUB);
 
         setHeightFull();
 

@@ -27,3 +27,4 @@ webpack.generated.js
 /.bashrc
 /.bashrc.swp
 /.pnpm-debug.log
+/pnpm-lock.yaml

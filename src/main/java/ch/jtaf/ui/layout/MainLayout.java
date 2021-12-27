@@ -1,7 +1,7 @@
 package ch.jtaf.ui.layout;
 
 import ch.jtaf.db.tables.records.OrganizationRecord;
-import ch.jtaf.ui.security.OrganizationHolder;
+import ch.jtaf.ui.security.OrganizationProvider;
 import ch.jtaf.ui.security.SecurityContext;
 import ch.jtaf.ui.view.AthletesView;
 import ch.jtaf.ui.view.ClubsView;
@@ -50,7 +50,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private final OrganizationHolder organizationHolder;
+    private final OrganizationProvider organizationProvider;
     private final String applicationVersion;
 
     private final Div version = new Div();
@@ -64,8 +64,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
     private RouterLink clubsLink;
     private RouterLink athletesLink;
 
-    public MainLayout(OrganizationHolder organizationHolder, @Value("${application.version}") String applicationVersion) {
-        this.organizationHolder = organizationHolder;
+    public MainLayout(OrganizationProvider organizationProvider, @Value("${application.version}") String applicationVersion) {
+        this.organizationProvider = organizationProvider;
         this.applicationVersion = applicationVersion;
 
         setPrimarySection(Section.DRAWER);
@@ -211,7 +211,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
             login.setVisible(false);
             logout.setVisible(true);
 
-            OrganizationRecord organization = organizationHolder.getOrganization();
+            OrganizationRecord organization = organizationProvider.getOrganization();
             if (organization != null) {
                 seriesLink.setText(organization.getOrganizationKey());
                 setVisibilityOfLinks(true);

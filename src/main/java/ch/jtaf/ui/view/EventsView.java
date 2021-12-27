@@ -3,7 +3,7 @@ package ch.jtaf.ui.view;
 import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.ui.dialog.EventDialog;
 import ch.jtaf.ui.layout.MainLayout;
-import ch.jtaf.ui.security.OrganizationHolder;
+import ch.jtaf.ui.security.OrganizationProvider;
 import com.vaadin.flow.router.Route;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -20,8 +20,8 @@ public class EventsView extends ProtectedGridView<EventRecord> {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public EventsView(DSLContext dsl, OrganizationHolder organizationHolder) {
-        super(dsl, organizationHolder, EVENT);
+    public EventsView(DSLContext dsl, OrganizationProvider organizationProvider) {
+        super(dsl, organizationProvider, EVENT);
 
         setHeightFull();
 

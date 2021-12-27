@@ -11,7 +11,7 @@ import ch.jtaf.ui.dialog.CategoryDialog;
 import ch.jtaf.ui.dialog.CompetitionDialog;
 import ch.jtaf.ui.dialog.SearchAthleteDialog;
 import ch.jtaf.ui.layout.MainLayout;
-import ch.jtaf.ui.security.OrganizationHolder;
+import ch.jtaf.ui.security.OrganizationProvider;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -75,8 +75,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
     private Map<Long, ClubRecord> clubRecordMap;
 
-    public SeriesView(DSLContext dsl, TransactionTemplate transactionTemplate, NumberAndSheetsService numberAndSheetsService, OrganizationHolder organizationHolder) {
-        super(dsl, organizationHolder);
+    public SeriesView(DSLContext dsl, TransactionTemplate transactionTemplate, NumberAndSheetsService numberAndSheetsService, OrganizationProvider organizationProvider) {
+        super(dsl, organizationProvider);
         this.transactionTemplate = transactionTemplate;
         this.numberAndSheetsService = numberAndSheetsService;
 
@@ -173,7 +173,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         if (parameter == null) {
-            organizationRecord = organizationHolder.getOrganization();
+            organizationRecord = organizationProvider.getOrganization();
 
             seriesRecord = SERIES.newRecord();
             seriesRecord.setOrganizationId(organizationRecord.getId());

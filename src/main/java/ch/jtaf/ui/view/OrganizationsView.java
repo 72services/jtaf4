@@ -3,7 +3,7 @@ package ch.jtaf.ui.view;
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.ui.dialog.OrganizationDialog;
 import ch.jtaf.ui.layout.MainLayout;
-import ch.jtaf.ui.security.OrganizationHolder;
+import ch.jtaf.ui.security.OrganizationProvider;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -33,7 +33,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
     private final transient DSLContext dsl;
     private final Grid<OrganizationRecord> grid;
 
-    public OrganizationsView(DSLContext dsl, OrganizationHolder organizationHolder) {
+    public OrganizationsView(DSLContext dsl, OrganizationProvider organizationProvider) {
         this.dsl = dsl;
 
         setHeightFull();
@@ -54,7 +54,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
             Button select = new Button(getTranslation("Select"));
             select.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             select.addClickListener(event -> {
-                organizationHolder.setOrganization(organizationRecord);
+                organizationProvider.setOrganization(organizationRecord);
                 UI.getCurrent().navigate(SeriesListView.class);
             });
 
