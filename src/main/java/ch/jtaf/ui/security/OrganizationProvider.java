@@ -50,12 +50,7 @@ public class OrganizationProvider {
                     .filter(cookie -> cookie.getName().equals(JTAF_ORGANIZATION_ID))
                     .findFirst()
                     .map(Cookie::getValue)
-                    .ifPresent(s -> {
-                        organization = dsl
-                            .selectFrom(ORGANIZATION)
-                            .where(ORGANIZATION.ID.eq(Long.parseLong(s)))
-                            .fetchOne();
-                    });
+                    .ifPresent(s -> organization = dsl.selectFrom(ORGANIZATION).where(ORGANIZATION.ID.eq(Long.parseLong(s))).fetchOne());
             }
         }
     }
