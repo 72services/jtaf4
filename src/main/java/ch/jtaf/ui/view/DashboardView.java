@@ -35,6 +35,8 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    private static final String BUTTON_DIV = "button-div";
+
     private final Anchor downloadWidget;
 
     public DashboardView(DSLContext dsl, SeriesRankingService seriesRankingService, CompetitionRankingService competitionRankingService) {
@@ -81,7 +83,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                     download(streamResource);
                 });
                 Div seriesRankingDiv = new Div(seriesRanking);
-                seriesRankingDiv.getClassNames().add("button-div");
+                seriesRankingDiv.getClassNames().add(BUTTON_DIV);
                 buttonLayout.add(seriesRankingDiv);
 
                 Button clubRanking = new Button(getTranslation("Club.Ranking"), new Icon(VaadinIcon.FILE));
@@ -95,7 +97,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                     download(streamResource);
                 });
                 Div clubRankingDiv = new Div(clubRanking);
-                clubRankingDiv.getClassNames().add("button-div");
+                clubRankingDiv.getClassNames().add(BUTTON_DIV);
                 buttonLayout.add(clubRankingDiv);
 
                 dsl.selectFrom(COMPETITION)
@@ -129,7 +131,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                             download(streamResource);
                         });
                         Div competitionRankingDiv = new Div(competitionRanking);
-                        competitionRankingDiv.getClassNames().add("button-div");
+                        competitionRankingDiv.getClassNames().add(BUTTON_DIV);
                         links.add(competitionRankingDiv);
 
                         if (SecurityContext.isUserLoggedIn()) {
@@ -144,7 +146,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                                 download(streamResource);
                             });
                             Div diplomaDiv = new Div(diploma);
-                            diplomaDiv.getClassNames().add("button-div");
+                            diplomaDiv.getClassNames().add(BUTTON_DIV);
                             links.add(diplomaDiv);
 
                             Button eventRanking = new Button(getTranslation("Event.Ranking"), new Icon(VaadinIcon.FILE));
@@ -158,14 +160,14 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                                 download(streamResource);
                             });
                             Div eventRankingDiv = new Div(eventRanking);
-                            eventRankingDiv.getClassNames().add("button-div");
+                            eventRankingDiv.getClassNames().add(BUTTON_DIV);
                             links.add(eventRankingDiv);
 
                             Button enterResults = new Button(getTranslation("Enter.Results"), new Icon(VaadinIcon.KEYBOARD));
                             enterResults.addThemeVariants(ButtonVariant.LUMO_ERROR);
                             enterResults.addClickListener(event -> UI.getCurrent().navigate(ResultCapturingView.class, competition.getId().toString()));
                             Div enterResultsDiv = new Div(enterResults);
-                            enterResultsDiv.getClassNames().add("button-div");
+                            enterResultsDiv.getClassNames().add(BUTTON_DIV);
                             links.add(enterResultsDiv);
                         }
                     });

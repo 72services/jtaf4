@@ -10,7 +10,7 @@ import java.util.Locale;
 
 import static com.github.mvysny.kaributesting.v10.LocatorJ._assert;
 
-public class DashboardViewLoggedInTest extends KaribuTest {
+class DashboardViewLoggedInTest extends KaribuTest {
 
     @Test
     @WithMockUser(value = "simon@martinelli.ch", roles = "ADMIN")

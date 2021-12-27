@@ -96,11 +96,11 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
             // TODO EventSearchDialog
         });
 
-        categoryEventsGrid.addComponentColumn(record -> {
+        categoryEventsGrid.addComponentColumn(categoryRecord -> {
             Button remove = new Button(getTranslation("Remove"));
             remove.addThemeVariants(ButtonVariant.LUMO_ERROR);
             remove.addClickListener(event ->
-                getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> removeEventFromCategory(record)));
+                getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> removeEventFromCategory(categoryRecord)));
 
             HorizontalLayout horizontalLayout = new HorizontalLayout(remove);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
@@ -114,8 +114,8 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
     }
 
     @Override
-    public void open(UpdatableRecord<?> record, Callback afterSave) {
-        super.open(record, afterSave);
+    public void open(UpdatableRecord<?> updatableRecord, Callback afterSave) {
+        super.open(updatableRecord, afterSave);
 
         categoryEventsGrid.setItems(getCategoryEvents());
     }
@@ -135,15 +135,15 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
         }
     }
 
-    private void removeEventFromCategory(CategoryEventVO record) {
+    private void removeEventFromCategory(CategoryEventVO categoryEventVO) {
         ConfirmDialog confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
             getTranslation("Are.you.sure"),
             getTranslation("Remove"), event ->
             getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus ->
                 getBean(DSLContext.class)
                     .deleteFrom(CATEGORY_EVENT)
-                    .where(CATEGORY_EVENT.CATEGORY_ID.eq(record.categoryId()))
-                    .and(CATEGORY_EVENT.EVENT_ID.eq(record.eventId()))
+                    .where(CATEGORY_EVENT.CATEGORY_ID.eq(categoryEventVO.categoryId()))
+                    .and(CATEGORY_EVENT.EVENT_ID.eq(categoryEventVO.eventId()))
                     .execute()),
             getTranslation("Cancel"), event -> {
         });

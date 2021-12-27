@@ -37,7 +37,7 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
     private Callback afterSave;
     private boolean initialized;
 
-    public EditDialog(String title) {
+    protected EditDialog(String title) {
         getElement().getThemeList().add("jtaf-dialog");
         getElement().setAttribute("aria-labelledby", "dialog-title");
 
@@ -66,7 +66,7 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
         Button save = new Button(getTranslation("Save"));
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         save.addClickListener(event -> {
-            getBean(TransactionTemplate.class).executeWithoutResult((transactionStatus) -> {
+            getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> {
                 getBean(DSLContext.class).attach(binder.getBean());
                 binder.getBean().store();
 
@@ -92,8 +92,8 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
     public abstract void createForm();
 
     @SuppressWarnings("unchecked")
-    public void open(UpdatableRecord<?> record, Callback afterSave) {
-        binder.setBean((R) record);
+    public void open(UpdatableRecord<?> updatableRecord, Callback afterSave) {
+        binder.setBean((R) updatableRecord);
         this.afterSave = afterSave;
 
         if (!initialized) {

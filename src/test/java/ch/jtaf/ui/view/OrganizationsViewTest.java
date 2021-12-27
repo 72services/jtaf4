@@ -9,7 +9,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class OrganizationsViewTest extends KaribuTest {
+class OrganizationsViewTest extends KaribuTest {
 
     @WithMockUser(value = "simon@martinelli.ch", roles = "ADMIN")
     @Test

@@ -20,7 +20,7 @@ public abstract class ProtectedGridView<R extends Record> extends ProtectedView 
     final ConfigurableFilterDataProvider<R, Void, String> dataProvider;
     final Grid<R> grid;
 
-    public ProtectedGridView(DSLContext dsl, OrganizationProvider organizationProvider, Table<R> table) {
+    protected ProtectedGridView(DSLContext dsl, OrganizationProvider organizationProvider, Table<R> table) {
         super(dsl, organizationProvider);
 
         dataProvider = new JooqDataProviderProducer<>(dsl, table, this::initialCondition, this::initialSort).getDataProvider();

@@ -9,7 +9,7 @@ import static com.github.mvysny.kaributesting.v10.LocatorJ._assert;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DashboardViewTest extends KaribuTest {
+class DashboardViewTest extends KaribuTest {
 
     @Test
     void title_is_present() {

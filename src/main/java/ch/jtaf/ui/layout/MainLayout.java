@@ -51,6 +51,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
     @Serial
     private static final long serialVersionUID = 1L;
 
+    private static final String LA_LA_FILE = "la la-file";
+
     private final OrganizationProvider organizationProvider;
     private final String applicationVersion;
 
@@ -139,18 +141,18 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
         List<RouterLink> links = new ArrayList<>();
 
         links.add(createLink(new MenuItemInfo(getTranslation("Dashboard"), "la la-globe", DashboardView.class)));
-        links.add(createLink(new MenuItemInfo(getTranslation("My.Organizations"), "la la-file", OrganizationsView.class)));
+        links.add(createLink(new MenuItemInfo(getTranslation("My.Organizations"), LA_LA_FILE, OrganizationsView.class)));
 
-        seriesLink = createLink(new MenuItemInfo("", "la la-file", SeriesListView.class));
+        seriesLink = createLink(new MenuItemInfo("", LA_LA_FILE, SeriesListView.class));
         links.add(seriesLink);
 
-        eventsLink = createLink(new MenuItemInfo(getTranslation("Events"), "la la-file", EventsView.class));
+        eventsLink = createLink(new MenuItemInfo(getTranslation("Events"), LA_LA_FILE, EventsView.class));
         links.add(eventsLink);
 
-        clubsLink = createLink(new MenuItemInfo(getTranslation("Clubs"), "la la-file", ClubsView.class));
+        clubsLink = createLink(new MenuItemInfo(getTranslation("Clubs"), LA_LA_FILE, ClubsView.class));
         links.add(clubsLink);
 
-        athletesLink = createLink(new MenuItemInfo(getTranslation("Athletes"), "la la-file", AthletesView.class));
+        athletesLink = createLink(new MenuItemInfo(getTranslation("Athletes"), LA_LA_FILE, AthletesView.class));
         links.add(athletesLink);
 
         setVisibilityOfLinks(false);

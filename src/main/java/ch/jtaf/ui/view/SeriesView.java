@@ -323,8 +323,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         refreshAll();
     }
 
-    private void removeAthleteFromSeries(UpdatableRecord<?> record) {
-        AthleteRecord athleteRecord = (AthleteRecord) record;
+    private void removeAthleteFromSeries(UpdatableRecord<?> updatableRecord) {
+        AthleteRecord athleteRecord = (AthleteRecord) updatableRecord;
         dsl
             .deleteFrom(CATEGORY_ATHLETE)
             .where(CATEGORY_ATHLETE.ATHLETE_ID.eq(athleteRecord.getId()))

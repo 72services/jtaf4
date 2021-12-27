@@ -11,6 +11,7 @@ public class JtafStringToIntegerConverter extends StringToIntegerConverter {
         super(errorMessage);
     }
 
+    @Override
     protected java.text.NumberFormat getFormat(Locale locale) {
         NumberFormat format = super.getFormat(locale);
         format.setGroupingUsed(false);
