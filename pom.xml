@@ -65,6 +65,9 @@
         <db.username>jtaf4</db.username>
         <db.password>jtaf420</db.password>
         <db.driver>org.postgresql.Driver</db.driver>
+
+        <sonar.organization>72services</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <dependencyManagement>
