@@ -35,7 +35,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
         super(title);
     }
 
-    @SuppressWarnings({"DuplicatedCode"})
+    @SuppressWarnings("DuplicatedCode")
     @Override
     public void createForm() {
         TextField lastName = new TextField(getTranslation("Last.Name"));

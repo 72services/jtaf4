@@ -6,7 +6,6 @@ import com.vaadin.flow.component.textfield.TextField;
 
 import java.io.Serial;
 
-@SuppressWarnings("DuplicatedCode")
 public class ClubDialog extends EditDialog<ClubRecord> {
 
     @Serial
@@ -16,6 +15,7 @@ public class ClubDialog extends EditDialog<ClubRecord> {
         super(title);
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Override
     public void createForm() {
         TextField abbreviation = new TextField(getTranslation("Abbreviation"));

@@ -27,7 +27,6 @@ import static ch.jtaf.context.ApplicationContextHolder.getBean;
 import static ch.jtaf.db.tables.CategoryEvent.CATEGORY_EVENT;
 import static ch.jtaf.db.tables.Event.EVENT;
 
-@SuppressWarnings("DuplicatedCode")
 public class CategoryDialog extends EditDialog<CategoryRecord> {
 
     @Serial
@@ -39,6 +38,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
         super(title);
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Override
     public void createForm() {
         TextField abbreviation = new TextField(getTranslation("Abbreviation"));

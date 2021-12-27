@@ -10,7 +10,6 @@ import com.vaadin.flow.data.converter.StringToDoubleConverter;
 
 import java.io.Serial;
 
-@SuppressWarnings("DuplicatedCode")
 public class EventDialog extends EditDialog<EventRecord> {
 
     @Serial
@@ -22,6 +21,7 @@ public class EventDialog extends EditDialog<EventRecord> {
         super(title);
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Override
     public void createForm() {
         TextField abbreviation = new TextField(getTranslation("Abbreviation"));
