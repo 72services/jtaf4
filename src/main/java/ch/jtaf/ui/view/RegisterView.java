@@ -3,8 +3,10 @@ package ch.jtaf.ui.view;
 import ch.jtaf.db.tables.records.SecurityUserRecord;
 import ch.jtaf.db.tables.records.UserGroupRecord;
 import ch.jtaf.ui.layout.MainLayout;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
@@ -20,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static ch.jtaf.db.tables.SecurityGroup.SECURITY_GROUP;
 
@@ -42,7 +45,8 @@ public class RegisterView extends VerticalLayout implements HasDynamicTitle {
         var password = new PasswordField(getTranslation("Password"));
         password.setRequired(true);
 
-        var register = new Button(getTranslation("Register"), e ->
+        var register = new Button(getTranslation("Register"), e -> {
+            AtomicBoolean ok = new AtomicBoolean(false);
             transactionTemplate.executeWithoutResult(transactionStatus -> {
                 var user = new SecurityUserRecord();
                 user.setFirstName(firstName.getValue());
@@ -75,7 +79,14 @@ public class RegisterView extends VerticalLayout implements HasDynamicTitle {
                     """.formatted(publicAddress, user.getConfirmationId())
                 );
                 mailSender.send(message);
-            }));
+
+                ok.set(true);
+            });
+            if (ok.get()) {
+                Notification.show(getTranslation("Email.sent"), 5000, Notification.Position.TOP_END);
+                UI.getCurrent().navigate(DashboardView.class);
+            }
+        });
 
         formLayout.add(firstName, lastName, email, password, register);
 
