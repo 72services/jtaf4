@@ -8,6 +8,7 @@ import ch.jtaf.ui.view.ClubsView;
 import ch.jtaf.ui.view.DashboardView;
 import ch.jtaf.ui.view.EventsView;
 import ch.jtaf.ui.view.OrganizationsView;
+import ch.jtaf.ui.view.RegisterView;
 import ch.jtaf.ui.view.SeriesListView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Html;
@@ -63,6 +64,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
     private RouterLink eventsLink;
     private RouterLink clubsLink;
     private RouterLink athletesLink;
+    private RouterLink register;
 
     public MainLayout(OrganizationProvider organizationProvider, @Value("${application.version}") String applicationVersion) {
         this.organizationProvider = organizationProvider;
@@ -93,6 +95,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
         Anchor about = new Anchor("https://github.com/72services/jtaf4", "About");
         about.setTarget("_blank");
 
+        register = new RouterLink(getTranslation("Register"), RegisterView.class);
+
         login = new Button("Login", e -> UI.getCurrent().navigate(OrganizationsView.class));
         login.setVisible(false);
 
@@ -101,7 +105,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
             UI.getCurrent().getPage().setLocation("/logout");
         });
 
-        info.add(about, version, login, logout);
+        info.add(about, version, register, login, logout);
 
         Header header = new Header(toggle, viewTitle, info);
         header.addClassNames("bg-base", "border-b", "border-contrast-10", "box-border", "flex", "h-xl", "items-center", "w-full");
@@ -208,6 +212,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         if (SecurityContext.isUserLoggedIn()) {
+            register.setVisible(false);
             login.setVisible(false);
             logout.setVisible(true);
 
@@ -217,6 +222,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
                 setVisibilityOfLinks(true);
             }
         } else {
+            register.setVisible(true);
             login.setVisible(true);
             logout.setVisible(false);
 

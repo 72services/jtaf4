@@ -3,6 +3,7 @@ package ch.jtaf.ui.security;
 import ch.jtaf.ui.component.RouteNotFoundError;
 import ch.jtaf.ui.view.DashboardView;
 import ch.jtaf.ui.view.LoginView;
+import ch.jtaf.ui.view.RegisterView;
 import com.vaadin.flow.server.HandlerHelper;
 import com.vaadin.flow.shared.ApplicationConstants;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -54,7 +55,9 @@ public final class SecurityContext {
      * @return true if access is granted, false otherwise.
      */
     public static boolean isAccessGranted(Class<?> securedClass) {
-        final boolean publicView = LoginView.class.equals(securedClass) || DashboardView.class.equals(securedClass)
+        final boolean publicView = LoginView.class.equals(securedClass)
+            || DashboardView.class.equals(securedClass)
+            || RegisterView.class.equals(securedClass)
             || RouteNotFoundError.class.equals(securedClass);
 
         // Always allow access to public views

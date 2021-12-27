@@ -23,6 +23,7 @@ import org.jooq.impl.DSL;
 
 import java.io.Serial;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -161,8 +162,9 @@ public class SearchAthleteDialog extends Dialog {
 
     @SuppressWarnings("DuplicatedCode")
     private Condition createCondition(Query<?, ?> query) {
-        if (query.getFilter().isPresent()) {
-            String filterString = (String) query.getFilter().get();
+        Optional<?> optionalFilter = query.getFilter();
+        if (optionalFilter.isPresent()) {
+            String filterString = (String) optionalFilter.get();
             if (StringUtils.isNumeric(filterString)) {
                 return ATHLETE.ID.eq(Long.valueOf(filterString));
             } else {

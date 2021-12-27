@@ -35,20 +35,20 @@ public class GridBuilder {
                                                                                              String insteadOfDeleteTitle, Consumer<R> insteadOfDelete) {
         Button buttonAdd = new Button(grid.getTranslation("Add"));
         buttonAdd.addClickListener(event -> dialog.open(onNewRecord.get(), afterSave));
-        grid.addComponentColumn(record -> {
+        grid.addComponentColumn(updatableRecord -> {
             Button delete = new Button(insteadOfDeleteTitle != null ? insteadOfDeleteTitle : grid.getTranslation("Delete"));
             delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
             delete.addClickListener(event -> {
                 if (insteadOfDelete != null) {
-                    getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> insteadOfDelete.accept(record));
+                    getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> insteadOfDelete.accept(updatableRecord));
                 } else {
                     ConfirmDialog confirmDialog = new ConfirmDialog(grid.getTranslation("Confirm"),
                         grid.getTranslation("Are.you.sure"),
                         grid.getTranslation("Delete"), e ->
                         getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> {
                             try {
-                                getBean(DSLContext.class).attach(record);
-                                record.delete();
+                                getBean(DSLContext.class).attach(updatableRecord);
+                                updatableRecord.delete();
                             } catch (DataAccessException ex) {
                                 Notification.show(ex.getMessage());
                             }
@@ -64,8 +64,8 @@ public class GridBuilder {
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
             return horizontalLayout;
         }).setTextAlign(ColumnTextAlign.END).setHeader(buttonAdd);
-        grid.addSelectionListener(event -> event.getFirstSelectedItem().ifPresent(
-            record -> dialog.open(record, afterSave)));
+        grid.addSelectionListener(event -> event.getFirstSelectedItem()
+            .ifPresent(updatableRecord -> dialog.open(updatableRecord, afterSave)));
     }
 
 }

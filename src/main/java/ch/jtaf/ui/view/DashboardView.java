@@ -27,7 +27,7 @@ import java.io.Serial;
 
 import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Series.SERIES;
-import static ch.jtaf.util.LogoUtil.resizeLogo;
+import static ch.jtaf.ui.util.LogoUtil.resizeLogo;
 
 @Route(value = "", layout = MainLayout.class)
 public class DashboardView extends VerticalLayout implements HasDynamicTitle {

@@ -26,6 +26,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.io.Serial;
 import java.util.List;
+import java.util.Optional;
 
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
@@ -85,7 +86,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                     .fetchOneInto(Integer.class);
                 return count != null ? count : 0;
             },
-            record -> record.get(ATHLETE.ID)
+            atheleteRecord -> atheleteRecord.get(ATHLETE.ID)
         );
         dataProvider = callbackDataProvider.withConfigurableFilter();
 
@@ -94,9 +95,9 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
         filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
         add(filter);
 
-        grid.addColumn(record -> record.get(ATHLETE.ID)).setHeader("ID").setSortable(true);
-        grid.addColumn(record -> record.get(ATHLETE.LAST_NAME)).setHeader(getTranslation("Last.Name")).setSortable(true);
-        grid.addColumn(record -> record.get(ATHLETE.FIRST_NAME)).setHeader(getTranslation("First.Name")).setSortable(true);
+        grid.addColumn(athleteRecord -> athleteRecord.get(ATHLETE.ID)).setHeader("ID").setSortable(true);
+        grid.addColumn(athleteRecord -> athleteRecord.get(ATHLETE.LAST_NAME)).setHeader(getTranslation("Last.Name")).setSortable(true);
+        grid.addColumn(athleteRecord -> athleteRecord.get(ATHLETE.FIRST_NAME)).setHeader(getTranslation("First.Name")).setSortable(true);
         grid.setItems(dataProvider);
         grid.setHeight("200px");
         add(grid);
@@ -173,8 +174,9 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
     @SuppressWarnings("DuplicatedCode")
     private Condition createCondition(Query<?, ?> query) {
-        if (query.getFilter().isPresent()) {
-            String filterString = (String) query.getFilter().get();
+        Optional<?> optionalFilter = query.getFilter();
+        if (optionalFilter.isPresent()) {
+            String filterString = (String) optionalFilter.get();
             if (StringUtils.isNumeric(filterString)) {
                 return ATHLETE.ID.eq(Long.valueOf(filterString));
             } else {

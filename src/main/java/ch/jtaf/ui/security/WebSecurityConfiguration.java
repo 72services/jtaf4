@@ -66,11 +66,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             // Allow all flow internal requests.
             .requestMatchers(SecurityContext::isFrameworkInternalRequest).permitAll()
 
-            // Health Check
-            .antMatchers("/actuator/health").permitAll()
-
-            // Public
-            .antMatchers("/").permitAll()
+            // Dashboard, Registration, Health Check are public
+            .antMatchers("/", "register", "/actuator/health").permitAll()
 
             // Allow all requests by logged-in users.
             .anyRequest().authenticated()

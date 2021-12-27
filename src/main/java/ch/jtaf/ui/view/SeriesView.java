@@ -283,13 +283,13 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
             dialog.open();
         });
 
-        athletesGrid.addComponentColumn(record -> {
+        athletesGrid.addComponentColumn(athleteRecord -> {
             Button remove = new Button(getTranslation("Remove"));
             remove.addThemeVariants(ButtonVariant.LUMO_ERROR);
             remove.addClickListener(event -> {
                 ConfirmDialog confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
                     getTranslation("Are.you.sure"),
-                    getTranslation("Remove"), e -> removeAthleteFromSeries(record),
+                    getTranslation("Remove"), e -> removeAthleteFromSeries(athleteRecord),
                     getTranslation("Cancel"), e -> {
                 });
                 confirmDialog.setConfirmButtonTheme("error primary");

@@ -2,7 +2,6 @@ package ch.jtaf.reporting.data;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public record CompetitionRankingData(String name, LocalDate competitionDate, boolean alwaysFirstThreeMedals, int medalPercentage,
                                      List<Category> categories) {
@@ -12,7 +11,8 @@ public record CompetitionRankingData(String name, LocalDate competitionDate, boo
         public List<Athlete> sortedAthletes() {
             return athletes.stream()
                 .filter(athlete -> !athlete.results.isEmpty())
-                .sorted((o1, o2) -> Integer.compare(o2.totalPoints(), o1.totalPoints())).collect(Collectors.toList());
+                .sorted((o1, o2) -> Integer.compare(o2.totalPoints(), o1.totalPoints()))
+                .toList();
         }
 
         public record Athlete(String firstName, String lastName, int yearOfBirth, String club, List<Result> results) {
