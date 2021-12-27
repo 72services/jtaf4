@@ -50,12 +50,12 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
     @Serial
     private static final long serialVersionUID = 1L;
 
+    private final OrganizationHolder organizationHolder;
+    private final String applicationVersion;
+
     private final Div version = new Div();
     private Button login;
     private Button logout;
-
-    @Value("${application.version}")
-    private String applicationVersion;
 
     private H1 viewTitle;
 
@@ -64,7 +64,10 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
     private RouterLink clubsLink;
     private RouterLink athletesLink;
 
-    public MainLayout() {
+    public MainLayout(OrganizationHolder organizationHolder, @Value("${application.version}") String applicationVersion) {
+        this.organizationHolder = organizationHolder;
+        this.applicationVersion = applicationVersion;
+
         setPrimarySection(Section.DRAWER);
         addToNavbar(true, createHeaderContent());
         addToDrawer(createDrawerContent());
@@ -208,7 +211,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
             login.setVisible(false);
             logout.setVisible(true);
 
-            OrganizationRecord organization = OrganizationHolder.getOrganization();
+            OrganizationRecord organization = organizationHolder.getOrganization();
             if (organization != null) {
                 seriesLink.setText(organization.getOrganizationKey());
                 setVisibilityOfLinks(true);

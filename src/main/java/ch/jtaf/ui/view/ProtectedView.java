@@ -16,18 +16,20 @@ public abstract class ProtectedView extends VerticalLayout implements BeforeEnte
     private static final long serialVersionUID = 1L;
 
     final transient DSLContext dsl;
+    final transient OrganizationHolder organizationHolder;
 
     OrganizationRecord organizationRecord;
 
-    ProtectedView(DSLContext dsl) {
+    ProtectedView(DSLContext dsl, OrganizationHolder organizationHolder) {
         this.dsl = dsl;
+        this.organizationHolder = organizationHolder;
 
         setHeightFull();
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        organizationRecord = OrganizationHolder.getOrganization();
+        organizationRecord = organizationHolder.getOrganization();
 
         if (organizationRecord == null) {
             event.rerouteTo(OrganizationsView.class);

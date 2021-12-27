@@ -100,7 +100,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
     }
 
     private List<ClubRecord> getClubs() {
-        OrganizationRecord organizationRecord = OrganizationHolder.getOrganization();
+        OrganizationRecord organizationRecord = getBean(OrganizationHolder.class).getOrganization();
 
         if (organizationRecord == null) {
             return Collections.emptyList();

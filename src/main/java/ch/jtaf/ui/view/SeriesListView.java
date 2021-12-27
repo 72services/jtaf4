@@ -2,6 +2,7 @@ package ch.jtaf.ui.view;
 
 import ch.jtaf.db.tables.records.SeriesRecord;
 import ch.jtaf.ui.layout.MainLayout;
+import ch.jtaf.ui.security.OrganizationHolder;
 import ch.jtaf.util.LogoUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -29,8 +30,8 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public SeriesListView(DSLContext dsl) {
-        super(dsl, SERIES);
+    public SeriesListView(DSLContext dsl, OrganizationHolder organizationHolder) {
+        super(dsl, organizationHolder, SERIES);
 
         setHeightFull();
 

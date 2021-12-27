@@ -4,6 +4,7 @@ import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.ui.dialog.AthleteDialog;
 import ch.jtaf.ui.layout.MainLayout;
+import ch.jtaf.ui.security.OrganizationHolder;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
@@ -28,8 +29,8 @@ public class AthletesView extends ProtectedGridView<AthleteRecord> {
 
     private Map<Long, ClubRecord> clubRecordMap = new HashMap<>();
 
-    public AthletesView(DSLContext dsl) {
-        super(dsl, ATHLETE);
+    public AthletesView(DSLContext dsl, OrganizationHolder organizationHolder) {
+        super(dsl, organizationHolder, ATHLETE);
 
         setHeightFull();
 

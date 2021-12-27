@@ -33,7 +33,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
     private final transient DSLContext dsl;
     private final Grid<OrganizationRecord> grid;
 
-    public OrganizationsView(DSLContext dsl) {
+    public OrganizationsView(DSLContext dsl, OrganizationHolder organizationHolder) {
         this.dsl = dsl;
 
         setHeightFull();
@@ -54,7 +54,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
             Button select = new Button(getTranslation("Select"));
             select.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             select.addClickListener(event -> {
-                OrganizationHolder.setOrganization(organizationRecord);
+                organizationHolder.setOrganization(organizationRecord);
                 UI.getCurrent().navigate(SeriesListView.class);
             });
 

@@ -1,18 +1,20 @@
 package ch.jtaf.ui.security;
 
 import ch.jtaf.db.tables.records.OrganizationRecord;
-import com.vaadin.flow.component.UI;
+import com.vaadin.flow.spring.annotation.VaadinSessionScope;
+import org.springframework.stereotype.Component;
 
+@VaadinSessionScope
+@Component
 public class OrganizationHolder {
 
-    private OrganizationHolder() {
+    private OrganizationRecord organization;
+
+    public OrganizationRecord getOrganization() {
+        return organization;
     }
 
-    public static OrganizationRecord getOrganization() {
-        return UI.getCurrent().getSession().getAttribute(OrganizationRecord.class);
-    }
-
-    public static void setOrganization(OrganizationRecord organization) {
-        UI.getCurrent().getSession().setAttribute(OrganizationRecord.class, organization);
+    public void setOrganization(OrganizationRecord organization) {
+        this.organization = organization;
     }
 }
