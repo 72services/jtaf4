@@ -1,6 +1,5 @@
 package ch.jtaf.ui.dialog;
 
-import ch.jtaf.ui.function.Callback;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -17,6 +16,7 @@ import org.jooq.UpdatableRecord;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.io.Serial;
+import java.util.function.Consumer;
 
 import static ch.jtaf.context.ApplicationContextHolder.getBean;
 
@@ -36,7 +36,7 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
     final Binder<R> binder;
     final FormLayout formLayout;
 
-    private transient Callback afterSave;
+    private transient Consumer<R> afterSave;
     private boolean initialized;
 
     protected EditDialog(String title, String initialWidth) {
@@ -74,7 +74,7 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
                 binder.getBean().store();
 
                 if (afterSave != null) {
-                    afterSave.execute();
+                    afterSave.accept(binder.getBean());
                 }
             });
             close();
@@ -95,7 +95,7 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
     public abstract void createForm();
 
     @SuppressWarnings("unchecked")
-    public void open(UpdatableRecord<?> updatableRecord, Callback afterSave) {
+    public void open(UpdatableRecord<?> updatableRecord, Consumer<R> afterSave) {
         binder.setBean((R) updatableRecord);
         this.afterSave = afterSave;
 

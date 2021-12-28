@@ -35,7 +35,7 @@ public class EventsView extends ProtectedGridView<EventRecord> {
         grid.addColumn(EventRecord::getB).setHeader("B");
         grid.addColumn(EventRecord::getC).setHeader("C");
 
-        addActionColumnAndSetSelectionListener(grid, dialog, dataProvider::refreshAll, () -> {
+        addActionColumnAndSetSelectionListener(grid, dialog, eventRecord -> refreshAll(), () -> {
             EventRecord newRecord = EVENT.newRecord();
             newRecord.setOrganizationId(organizationRecord.getId());
             return newRecord;

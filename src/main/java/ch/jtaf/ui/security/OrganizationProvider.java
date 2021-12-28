@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 
 import static ch.jtaf.db.tables.Organization.ORGANIZATION;
+import static ch.jtaf.db.tables.OrganizationUser.ORGANIZATION_USER;
+import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
 
 @VaadinSessionScope
 @Component
@@ -50,7 +52,14 @@ public class OrganizationProvider {
                     .filter(cookie -> cookie.getName().equals(JTAF_ORGANIZATION_ID))
                     .findFirst()
                     .map(Cookie::getValue)
-                    .ifPresent(s -> organization = dsl.selectFrom(ORGANIZATION).where(ORGANIZATION.ID.eq(Long.parseLong(s))).fetchOne());
+                    .ifPresent(s -> organization = dsl
+                        .select(ORGANIZATION.fields())
+                        .from(ORGANIZATION)
+                        .join(ORGANIZATION_USER).on(ORGANIZATION_USER.ORGANIZATION_ID.eq(ORGANIZATION.ID))
+                        .join(SECURITY_USER).on(SECURITY_USER.ID.eq(ORGANIZATION_USER.USER_ID))
+                        .where(ORGANIZATION.ID.eq(Long.parseLong(s)))
+                        .and(SECURITY_USER.EMAIL.eq(SecurityContext.getUserEmail()))
+                        .fetchOneInto(OrganizationRecord.class));
             }
         }
     }

@@ -121,7 +121,7 @@ public class SearchAthleteDialog extends Dialog {
         grid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
             : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club"));
 
-        addActionColumnAndSetSelectionListener(grid, dialog, dataProvider::refreshAll, () -> {
+        addActionColumnAndSetSelectionListener(grid, dialog, athleteRecord -> dataProvider.refreshAll(), () -> {
             AthleteRecord newRecord = ATHLETE.newRecord();
             newRecord.setOrganizationId(organizationId);
             return newRecord;

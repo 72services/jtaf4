@@ -232,7 +232,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
             return new HorizontalLayout(sheetsOrderedByAthlete, sheetsOrderedByClub, numbersOrderedByAthlete, numbersOrderedByClub);
         }));
 
-        addActionColumnAndSetSelectionListener(competitionsGrid, dialog, this::refreshAll, () -> {
+        addActionColumnAndSetSelectionListener(competitionsGrid, dialog, competitionRecord -> refreshAll(), () -> {
             CompetitionRecord newRecord = COMPETITION.newRecord();
             newRecord.setMedalPercentage(0);
             newRecord.setSeriesId(seriesRecord.getId());
@@ -260,7 +260,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
             return new HorizontalLayout(sheet);
         }));
 
-        addActionColumnAndSetSelectionListener(categoriesGrid, dialog, this::refreshAll, () -> {
+        addActionColumnAndSetSelectionListener(categoriesGrid, dialog, categoryRecord -> refreshAll(), () -> {
             CategoryRecord newRecord = CATEGORY.newRecord();
             newRecord.setSeriesId(seriesRecord.getId());
             return newRecord;

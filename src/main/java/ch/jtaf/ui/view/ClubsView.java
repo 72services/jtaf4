@@ -32,13 +32,13 @@ public class ClubsView extends ProtectedGridView<ClubRecord> {
         add.addClickListener(event -> {
             ClubRecord newRecord = CLUB.newRecord();
             newRecord.setOrganizationId(organizationRecord.getId());
-            dialog.open(newRecord, dataProvider::refreshAll);
+            dialog.open(newRecord, clubRecord -> dataProvider.refreshAll());
         });
 
         grid.addColumn(ClubRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true);
         grid.addColumn(ClubRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
 
-        addActionColumnAndSetSelectionListener(grid, dialog, dataProvider::refreshAll,
+        addActionColumnAndSetSelectionListener(grid, dialog, clubRecord -> dataProvider.refreshAll(),
             () -> {
                 ClubRecord newRecord = CLUB.newRecord();
                 newRecord.setOrganizationId(organizationRecord.getId());

@@ -30,7 +30,7 @@ public final class SecurityContext {
      * @return the username of the current user or <code>null</code> if the user
      * has not signed in
      */
-    public static String getUsername() {
+    public static String getUserEmail() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

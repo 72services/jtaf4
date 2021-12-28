@@ -6,7 +6,6 @@ import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.model.CategoryEventVO;
 import ch.jtaf.model.Gender;
 import ch.jtaf.ui.converter.JtafStringToIntegerConverter;
-import ch.jtaf.ui.function.Callback;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -25,6 +24,7 @@ import java.io.Serial;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static ch.jtaf.context.ApplicationContextHolder.getBean;
 import static ch.jtaf.db.tables.CategoryEvent.CATEGORY_EVENT;
@@ -138,7 +138,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
     }
 
     @Override
-    public void open(UpdatableRecord<?> updatableRecord, Callback afterSave) {
+    public void open(UpdatableRecord<?> updatableRecord, Consumer<CategoryRecord> afterSave) {
         super.open(updatableRecord, afterSave);
 
         categoryEventsGrid.setItems(getCategoryEvents());
