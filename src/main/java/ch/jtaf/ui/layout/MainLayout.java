@@ -105,10 +105,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
         login = new Button("Login", e -> UI.getCurrent().navigate(OrganizationsView.class));
         login.setVisible(false);
 
-        logout = new Button("Logout", e -> {
-            UI.getCurrent().getSession().close();
-            UI.getCurrent().getPage().setLocation("/logout");
-        });
+        logout = new Button("Logout", e -> SecurityContext.logout());
 
         info.add(about, version, register, login, logout);
 
@@ -219,6 +216,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
         if (SecurityContext.isUserLoggedIn()) {
             register.setVisible(false);
             login.setVisible(false);
+
+            logout.setText("Logout (%s)".formatted(SecurityContext.getUsername()));
             logout.setVisible(true);
 
             OrganizationRecord organization = organizationProvider.getOrganization();
