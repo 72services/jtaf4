@@ -1,6 +1,8 @@
 package ch.jtaf.ui.dialog;
 
+import ch.jtaf.db.tables.records.CategoryEventRecord;
 import ch.jtaf.db.tables.records.CategoryRecord;
+import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.model.CategoryEventVO;
 import ch.jtaf.model.Gender;
 import ch.jtaf.ui.converter.JtafStringToIntegerConverter;
@@ -21,6 +23,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.io.Serial;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static ch.jtaf.context.ApplicationContextHolder.getBean;
@@ -93,14 +96,18 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
 
         Button addEvent = new Button(getTranslation("Add.Event"));
         addEvent.addClickListener(event -> {
-            // TODO EventSearchDialog
+            SearchEventDialog dialog = new SearchEventDialog(getBean(DSLContext.class), binder.getBean(), this::onEventSelect);
+            dialog.open();
         });
 
         categoryEventsGrid.addComponentColumn(categoryRecord -> {
             Button remove = new Button(getTranslation("Remove"));
             remove.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            remove.addClickListener(event ->
-                getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> removeEventFromCategory(categoryRecord)));
+            remove.addClickListener(event -> {
+                getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> removeEventFromCategory(categoryRecord));
+                categoryEventsGrid.setItems(getCategoryEvents());
+                categoryEventsGrid.getDataProvider().refreshAll();
+            });
 
             HorizontalLayout horizontalLayout = new HorizontalLayout(remove);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
@@ -108,6 +115,26 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
         }).setTextAlign(ColumnTextAlign.END).setHeader(addEvent);
 
         add(categoryEventsGrid);
+    }
+
+    private void onEventSelect(EventRecord eventRecord) {
+        getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> {
+            var categoryEvent = new CategoryEventRecord();
+            categoryEvent.setCategoryId(binder.getBean().getId());
+            categoryEvent.setEventId(eventRecord.getId());
+
+            Integer newPosition = getCategoryEvents().stream()
+                .max(Comparator.comparingInt(CategoryEventVO::position))
+                .map(CategoryEventVO::position)
+                .orElse(0);
+            categoryEvent.setPosition(newPosition);
+
+            getBean(DSLContext.class).attach(categoryEvent);
+            categoryEvent.store();
+        });
+
+        categoryEventsGrid.setItems(getCategoryEvents());
+        categoryEventsGrid.getDataProvider().refreshAll();
     }
 
     @Override
@@ -135,13 +162,16 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
     private void removeEventFromCategory(CategoryEventVO categoryEventVO) {
         ConfirmDialog confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
             getTranslation("Are.you.sure"),
-            getTranslation("Remove"), event ->
+            getTranslation("Remove"), event -> {
             getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus ->
                 getBean(DSLContext.class)
                     .deleteFrom(CATEGORY_EVENT)
                     .where(CATEGORY_EVENT.CATEGORY_ID.eq(categoryEventVO.categoryId()))
                     .and(CATEGORY_EVENT.EVENT_ID.eq(categoryEventVO.eventId()))
-                    .execute()),
+                    .execute());
+            categoryEventsGrid.setItems(getCategoryEvents());
+            categoryEventsGrid.getDataProvider().refreshAll();
+        },
             getTranslation("Cancel"), event -> {
         });
         confirmDialog.setConfirmButtonTheme("error primary");
