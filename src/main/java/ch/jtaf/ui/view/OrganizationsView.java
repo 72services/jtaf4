@@ -55,6 +55,8 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
         });
 
         grid = new Grid<>();
+        grid.setId("organizations-grid");
+
         grid.getClassNames().add("rounded-corners");
         grid.setHeightFull();
 
@@ -91,7 +93,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
             HorizontalLayout horizontalLayout = new HorizontalLayout(select, delete);
             horizontalLayout.setJustifyContentMode(JustifyContentMode.END);
             return horizontalLayout;
-        }).setTextAlign(ColumnTextAlign.END).setHeader(add);
+        }).setTextAlign(ColumnTextAlign.END).setHeader(add).setKey("Edit");
 
         grid.addSelectionListener(event -> event.getFirstSelectedItem()
             .ifPresent(organization -> dialog.open(organization, this::loadData)));

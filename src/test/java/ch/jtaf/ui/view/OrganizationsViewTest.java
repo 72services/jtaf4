@@ -19,7 +19,7 @@ class OrganizationsViewTest extends KaribuTest {
     }
 
     @Test
-    void title_is_present() {
+    void navigation_to_organizations() {
         UI.getCurrent().navigate(OrganizationsView.class);
 
         H1 h1 = _get(H1.class, spec -> spec.withId("view-title"));

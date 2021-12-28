@@ -35,6 +35,8 @@ public final class SecurityContext {
         if (principal instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             return userDetails.getUsername();
+        } else if (principal instanceof String) {
+            return principal.toString();
         }
         // Anonymous or no authentication.
         return "";

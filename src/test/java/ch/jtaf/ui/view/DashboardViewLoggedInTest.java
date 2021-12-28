@@ -26,7 +26,7 @@ class DashboardViewLoggedInTest extends KaribuTest {
     }
 
     @Test
-    void check_i18n() {
+    void resultate_eingeben_is_displayed() {
         Locale.setDefault(Locale.GERMAN);
 
         UI.getCurrent().getPage().reload();
