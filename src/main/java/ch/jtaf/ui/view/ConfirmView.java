@@ -18,6 +18,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
 
+@SuppressWarnings("unused")
 @AnonymousAllowed
 @Route(value = "confirm", layout = MainLayout.class)
 public class ConfirmView extends VerticalLayout implements HasDynamicTitle, BeforeEnterObserver {

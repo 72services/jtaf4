@@ -86,7 +86,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                     .fetchOneInto(Integer.class);
                 return count != null ? count : 0;
             },
-            atheleteRecord -> atheleteRecord.get(ATHLETE.ID)
+            athleteRecord -> athleteRecord.get(ATHLETE.ID)
         );
         dataProvider = callbackDataProvider.withConfigurableFilter();
 

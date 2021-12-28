@@ -12,6 +12,7 @@ import java.io.Serial;
 
 import static com.vaadin.flow.component.Tag.DIV;
 
+@SuppressWarnings("unused")
 @Tag(DIV)
 public class RouteNotFoundError extends Component implements HasErrorParameter<NotFoundException> {
 
