@@ -35,7 +35,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
     private Grid<CategoryEventVO> categoryEventsGrid;
 
     public CategoryDialog(String title) {
-        super(title);
+        super(title, "1600px");
     }
 
     @SuppressWarnings("DuplicatedCode")
@@ -106,9 +106,6 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
             return horizontalLayout;
         }).setTextAlign(ColumnTextAlign.END).setHeader(addEvent);
-
-
-        setWidth("1600px");
 
         add(categoryEventsGrid);
     }

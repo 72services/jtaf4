@@ -18,7 +18,7 @@ public class EventDialog extends EditDialog<EventRecord> {
     private static final String MUST_BE_A_NUMBER = "Must.be.a.number";
 
     public EventDialog(String title) {
-        super(title);
+        super(title, "600px");
     }
 
     @SuppressWarnings("DuplicatedCode")

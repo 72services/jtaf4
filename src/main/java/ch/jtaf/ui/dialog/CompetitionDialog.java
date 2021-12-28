@@ -14,7 +14,7 @@ public class CompetitionDialog extends EditDialog<CompetitionRecord> {
     private static final long serialVersionUID = 1L;
 
     public CompetitionDialog(String title) {
-        super(title);
+        super(title, "600px");
     }
 
     @Override

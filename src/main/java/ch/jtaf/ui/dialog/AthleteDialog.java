@@ -32,7 +32,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
     private Map<Long, ClubRecord> clubRecordMap = new HashMap<>();
 
     public AthleteDialog(String title) {
-        super(title);
+        super(title, "600px");
     }
 
     @SuppressWarnings("DuplicatedCode")

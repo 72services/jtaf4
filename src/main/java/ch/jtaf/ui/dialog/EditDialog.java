@@ -27,6 +27,8 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
 
     public static final String FULLSCREEN = "fullscreen";
 
+    private final String initialWidth;
+
     private boolean isFullScreen = false;
     private final Div content;
     private final Button max;
@@ -37,14 +39,15 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
     private transient Callback afterSave;
     private boolean initialized;
 
-    protected EditDialog(String title) {
+    protected EditDialog(String title, String initialWidth) {
+        this.initialWidth = initialWidth;
+        setWidth(initialWidth);
+
         getElement().getThemeList().add("jtaf-dialog");
         getElement().setAttribute("aria-labelledby", "dialog-title");
 
         setDraggable(true);
         setResizable(true);
-
-        setWidth("600px");
 
         H2 headerTitel = new H2(title);
         headerTitel.addClassName("dialog-title");
@@ -108,7 +111,7 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
         max.setIcon(VaadinIcon.EXPAND_SQUARE.create());
         getElement().getThemeList().remove(FULLSCREEN);
         setHeight("auto");
-        setWidth("600px");
+        setWidth(initialWidth);
     }
 
     private void maximiseMinimize() {

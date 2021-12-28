@@ -12,7 +12,7 @@ public class ClubDialog extends EditDialog<ClubRecord> {
     private static final long serialVersionUID = 1L;
 
     public ClubDialog(String title) {
-        super(title);
+        super(title, "600px");
     }
 
     @SuppressWarnings("DuplicatedCode")

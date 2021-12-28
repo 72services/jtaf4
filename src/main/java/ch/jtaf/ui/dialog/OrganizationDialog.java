@@ -12,7 +12,7 @@ public class OrganizationDialog extends EditDialog<OrganizationRecord> {
     private static final long serialVersionUID = 1L;
 
     public OrganizationDialog(String title) {
-        super(title);
+        super(title, "600px");
     }
 
     @Override
