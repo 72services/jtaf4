@@ -1,4 +1,4 @@
-package ch.jtaf.ui.component;
+package ch.jtaf.ui.errorhandling;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Tag;

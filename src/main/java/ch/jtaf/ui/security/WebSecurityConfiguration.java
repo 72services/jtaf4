@@ -1,6 +1,8 @@
 package ch.jtaf.ui.security;
 
 import ch.jtaf.security.UserDetailsServiceImpl;
+import com.vaadin.flow.spring.security.RequestUtil;
+import com.vaadin.flow.spring.security.VaadinDefaultRequestCache;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -11,6 +13,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import static com.vaadin.flow.spring.security.VaadinWebSecurityConfigurerAdapter.getDefaultHttpSecurityPermitMatcher;
+import static com.vaadin.flow.spring.security.VaadinWebSecurityConfigurerAdapter.getDefaultWebSecurityIgnoreMatcher;
 
 /**
  * Configures spring security, doing the following:
@@ -30,9 +35,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final String LOGOUT_SUCCESS_URL = "/";
 
     private final UserDetailsService userDetailsService;
+    private final RequestUtil requestUtil;
+    private final VaadinDefaultRequestCache vaadinDefaultRequestCache;
 
-    public WebSecurityConfiguration(UserDetailsService userDetailsService) {
+    public WebSecurityConfiguration(UserDetailsService userDetailsService, RequestUtil requestUtil,
+                                    VaadinDefaultRequestCache vaadinDefaultRequestCache) {
         this.userDetailsService = userDetailsService;
+        this.requestUtil = requestUtil;
+        this.vaadinDefaultRequestCache = vaadinDefaultRequestCache;
     }
 
     /**
@@ -60,14 +70,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         // Not using Spring CSRF here to be able to use plain HTML for the login page
         http.csrf().disable()
 
+            .requestCache().requestCache(vaadinDefaultRequestCache)
+
             // Restrict access to our application.
-            .authorizeRequests()
+            .and().authorizeRequests()
 
             // Allow all flow internal requests.
-            .requestMatchers(SecurityContext::isFrameworkInternalRequest).permitAll()
-
-            // Dashboard, Registration, Confirmation, Health Check are public
-            .antMatchers("/", "register", "confirm", "/actuator/health").permitAll()
+            .requestMatchers(requestUtil::isFrameworkInternalRequest).permitAll()
+            .requestMatchers(requestUtil::isAnonymousRoute).permitAll()
+            .requestMatchers(getDefaultHttpSecurityPermitMatcher()).permitAll()
 
             // Allow all requests by logged-in users.
             .anyRequest().authenticated()
@@ -87,38 +98,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
      */
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers(
-            // Vaadin Flow static resources
-            "/VAADIN/**",
+        web.ignoring().requestMatchers(getDefaultWebSecurityIgnoreMatcher());
 
-            // the standard favicon URI
-            "/favicon.ico",
-
-            // the robots' exclusion standard
-            "/robots.txt",
-
-            // web application manifest
-            "/manifest.webmanifest",
-            "/sw.js",
-            "/offline-page.html",
-
-            // icons and images
-            "/icons/**",
-            "/images/**",
-
-            // (development mode) static resources
-            "/frontend/**",
-
-            // (development mode) webjars
-            "/webjars/**",
-
-            // (development mode) H2 debugging console
-            "/h2-console/**",
-
-            // (production mode) static resources
-            "/frontend-es5/**", "/frontend-es6/**",
-
-            // Actuator Health
-            "/actuator/health");
+        web.ignoring().antMatchers("/icons/*.png");
+        web.ignoring().antMatchers("/actuator/health");
     }
 }
