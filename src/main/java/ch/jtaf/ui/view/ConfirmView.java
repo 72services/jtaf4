@@ -22,7 +22,7 @@ import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
 @Route(value = "confirm", layout = MainLayout.class)
 public class ConfirmView extends VerticalLayout implements HasDynamicTitle, BeforeEnterObserver {
 
-    private final DSLContext dslContext;
+    private final transient DSLContext dslContext;
     private final TransactionTemplate transactionTemplate;
     private final VerticalLayout okDiv;
     private final H1 failure;

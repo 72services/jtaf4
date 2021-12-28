@@ -105,7 +105,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
 
     private void loadData(OrganizationRecord organizationRecord) {
         if (organizationRecord != null) {
-            transactionTemplate.executeWithoutResult(transactionStatus -> {
+            transactionTemplate.executeWithoutResult(transactionStatus ->
                 dsl.selectFrom(SECURITY_USER)
                     .where(SECURITY_USER.EMAIL.eq(SecurityContext.getUserEmail()))
                     .fetchOptional()
@@ -115,8 +115,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
                         organizationUser.setUserId(user.getId());
                         dsl.attach(organizationUser);
                         organizationUser.store();
-                    });
-            });
+                    }));
         }
 
         var organizations = dsl

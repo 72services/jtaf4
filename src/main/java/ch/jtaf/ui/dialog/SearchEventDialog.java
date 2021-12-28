@@ -45,6 +45,7 @@ public class SearchEventDialog extends Dialog {
 
     private final ConfigurableFilterDataProvider<EventRecord, Void, String> dataProvider;
 
+    @SuppressWarnings("DuplicatedCode")
     public SearchEventDialog(DSLContext dsl, CategoryRecord categoryRecord, Consumer<EventRecord> onSelect) {
         getElement().getThemeList().add("jtaf-dialog");
         getElement().setAttribute("aria-labelledby", "dialog-title");
@@ -64,8 +65,6 @@ public class SearchEventDialog extends Dialog {
         Header header = new Header(headerTitel, max, close);
         header.getElement().getThemeList().add(Lumo.LIGHT);
         add(header);
-
-        AthleteDialog dialog = new AthleteDialog(getTranslation("Athlete"));
 
         TextField filter = new TextField(getTranslation("Filter"));
         filter.setValueChangeMode(ValueChangeMode.EAGER);
