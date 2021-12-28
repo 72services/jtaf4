@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import static ch.jtaf.db.tables.SecurityGroup.SECURITY_GROUP;
 import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
 import static ch.jtaf.db.tables.UserGroup.USER_GROUP;
 
@@ -37,7 +38,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
             return new User(securityUserRecord.getEmail(), securityUserRecord.getSecret(),
                 groups.stream()
-                    .map(group -> new SimpleGrantedAuthority("ROLE_" + group))
+                    .map(group -> new SimpleGrantedAuthority("ROLE_" + group.getValue(SECURITY_GROUP.NAME)))
                     .toList());
         } else {
             throw new UsernameNotFoundException(username);

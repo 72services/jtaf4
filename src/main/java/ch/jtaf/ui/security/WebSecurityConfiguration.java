@@ -1,6 +1,8 @@
 package ch.jtaf.ui.security;
 
 import ch.jtaf.security.UserDetailsServiceImpl;
+import ch.jtaf.ui.view.LoginView;
+import com.vaadin.flow.server.auth.ViewAccessChecker;
 import com.vaadin.flow.spring.security.RequestUtil;
 import com.vaadin.flow.spring.security.VaadinDefaultRequestCache;
 import org.springframework.context.annotation.Bean;
@@ -37,12 +39,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final RequestUtil requestUtil;
     private final VaadinDefaultRequestCache vaadinDefaultRequestCache;
+    private final ViewAccessChecker viewAccessChecker;
 
     public WebSecurityConfiguration(UserDetailsService userDetailsService, RequestUtil requestUtil,
-                                    VaadinDefaultRequestCache vaadinDefaultRequestCache) {
+                                    VaadinDefaultRequestCache vaadinDefaultRequestCache, ViewAccessChecker viewAccessChecker) {
         this.userDetailsService = userDetailsService;
         this.requestUtil = requestUtil;
         this.vaadinDefaultRequestCache = vaadinDefaultRequestCache;
+        this.viewAccessChecker = viewAccessChecker;
     }
 
     /**
@@ -91,6 +95,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
             // Remember Me
             .and().rememberMe().key("7QPVkH83\\jA==BA`").alwaysRemember(true);
+
+        viewAccessChecker.setLoginView(LoginView.class);
+        viewAccessChecker.enable();
     }
 
     /**

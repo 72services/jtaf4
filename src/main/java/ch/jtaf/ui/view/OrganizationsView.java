@@ -19,11 +19,13 @@ import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import javax.annotation.security.RolesAllowed;
 import java.io.Serial;
 
 import static ch.jtaf.db.tables.Organization.ORGANIZATION;
 import static ch.jtaf.db.tables.OrganizationUser.ORGANIZATION_USER;
 
+@RolesAllowed({"USER", "ADMIN"})
 @Route(layout = MainLayout.class)
 public class OrganizationsView extends VerticalLayout implements HasDynamicTitle {
 
