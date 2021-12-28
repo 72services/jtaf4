@@ -3,15 +3,21 @@ package ch.jtaf.ui.view;
 import ch.jtaf.ui.KaribuTest;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.H1;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.test.context.support.WithMockUser;
+
+import java.util.List;
 
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class OrganizationsViewTest extends KaribuTest {
 
-    @WithMockUser(value = "simon@martinelli.ch", roles = "ADMIN")
+    @BeforeEach
+    public void login() {
+        login("simon@martinelli.ch", "", List.of("ADMIN"));
+    }
+
     @Test
     void title_is_present() {
         UI.getCurrent().navigate(OrganizationsView.class);

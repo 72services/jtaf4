@@ -50,7 +50,7 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
         headerTitel.addClassName("dialog-title");
 
         max = new Button(VaadinIcon.EXPAND_SQUARE.create());
-        max.addClickListener(event -> maximise());
+        max.addClickListener(event -> maximiseMinimize());
 
         Button close = new Button(VaadinIcon.CLOSE_SMALL.create());
         close.addClickListener(event -> close());
@@ -111,7 +111,7 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
         setWidth("600px");
     }
 
-    private void maximise() {
+    private void maximiseMinimize() {
         if (isFullScreen) {
             initialSize();
         } else {
