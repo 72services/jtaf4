@@ -5,8 +5,10 @@ import ch.jtaf.ui.KaribuTest;
 import com.github.mvysny.kaributesting.v10.GridKt;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
+import static com.github.mvysny.kaributesting.v10.pro.ConfirmDialogKt._fireConfirm;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SeriesListViewTest extends KaribuTest {
@@ -54,6 +57,17 @@ class SeriesListViewTest extends KaribuTest {
 
         SeriesRecord seriesRecord = GridKt._get(seriesGrid, 2);
         assertThat(seriesRecord.getName()).isEqualTo("Test");
+
+        HorizontalLayout edit = (HorizontalLayout) GridKt._getCellComponent(seriesGrid, 2, "Delete");
+        Button delete = (Button) edit.getChildren().filter(component -> component instanceof Button).findFirst().get();
+        delete.click();
+
+        ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
+        assertThat(confirmDialog.isOpened()).isTrue();
+
+        _fireConfirm(confirmDialog);
+
+        assertThat(GridKt._size(seriesGrid)).isEqualTo(2);
     }
 
 }
