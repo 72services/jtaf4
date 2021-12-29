@@ -26,9 +26,23 @@ class SeriesRankingServiceTest {
     }
 
     @Test
+    void create_club_ranking_pdf() {
+        byte[] pdf = seriesRankingService.getClubRankingAsPdf(1L);
+
+        assertThat(pdf.length).isGreaterThan(0);
+    }
+
+    @Test
     void get_series_ranking() {
         SeriesRankingData seriesRanking = seriesRankingService.getSeriesRanking(3L);
 
         assertThat(seriesRanking.name()).isEqualTo("CIS 2019");
+    }
+
+    @Test
+    void create_series_ranking_pdf() {
+        byte[] pdf = seriesRankingService.getSeriesRankingAsPdf(3L);
+
+        assertThat(pdf.length).isGreaterThan(0);
     }
 }

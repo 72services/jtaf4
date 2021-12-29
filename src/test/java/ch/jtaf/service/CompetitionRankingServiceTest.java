@@ -23,4 +23,11 @@ class CompetitionRankingServiceTest {
 
         assertThat(competitionRanking.name()).isEqualTo("39. Jugendmeisterschaft");
     }
+
+    @Test
+    void create_competition_ranking_pdf() {
+        byte[] pdf = competitionRankingService.getCompetitionRankingAsPdf(6L);
+
+        assertThat(pdf.length).isGreaterThan(0);
+    }
 }
