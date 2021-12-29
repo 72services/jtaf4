@@ -15,6 +15,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 import static ch.jtaf.db.tables.SecurityGroup.SECURITY_GROUP;
+import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
 
 @Service
 public class UserService {
@@ -62,5 +63,22 @@ public class UserService {
         message.setSubject(i18n.getTranslation("Confirm.Email.Subject", locale));
         message.setText(i18n.getTranslation("Confirm.Email.Body", locale, publicAddress, user.getConfirmationId()));
         mailSender.send(message);
+    }
+
+    @Transactional
+    public boolean confirm(String confirmationId) {
+        var securityUser = dsl
+            .selectFrom(SECURITY_USER)
+            .where(SECURITY_USER.CONFIRMATION_ID.eq(confirmationId))
+            .fetchOne();
+
+        if (securityUser != null) {
+            securityUser.setConfirmed(true);
+            securityUser.store();
+
+            return true;
+        } else {
+            return false;
+        }
     }
 }
