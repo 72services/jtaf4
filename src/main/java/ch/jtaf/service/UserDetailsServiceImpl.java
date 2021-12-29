@@ -1,4 +1,4 @@
-package ch.jtaf.security;
+package ch.jtaf.service;
 
 import org.jooq.DSLContext;
 import org.springframework.context.annotation.Primary;
