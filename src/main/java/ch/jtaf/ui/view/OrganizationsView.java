@@ -56,7 +56,6 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
 
         grid = new Grid<>();
         grid.setId("organizations-grid");
-
         grid.getClassNames().add("rounded-corners");
         grid.setHeightFull();
 

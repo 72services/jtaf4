@@ -194,7 +194,6 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
         competitionsGrid = new Grid<>();
         competitionsGrid.setId("competitions-grid");
-
         competitionsGrid.setHeightFull();
         competitionsGrid.addColumn(CompetitionRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
         competitionsGrid.addColumn(CompetitionRecord::getCompetitionDate).setHeader(getTranslation("Date")).setSortable(true);
@@ -246,6 +245,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         CategoryDialog dialog = new CategoryDialog(getTranslation("Category"));
 
         categoriesGrid = new Grid<>();
+        categoriesGrid.setId("categories-grid");
         categoriesGrid.setHeightFull();
         categoriesGrid.addColumn(CategoryRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true);
         categoriesGrid.addColumn(CategoryRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
@@ -271,6 +271,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
     private void createAthletesSection() {
         athletesGrid = new Grid<>();
+        athletesGrid.setId("athletes-grid");
         athletesGrid.setHeightFull();
         athletesGrid.addColumn(AthleteRecord::getLastName).setHeader(getTranslation("Last.Name")).setSortable(true);
         athletesGrid.addColumn(AthleteRecord::getFirstName).setHeader(getTranslation("First.Name")).setSortable(true);
