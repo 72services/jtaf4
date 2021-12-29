@@ -27,6 +27,8 @@ public class EventsView extends ProtectedGridView<EventRecord> {
 
         EventDialog dialog = new EventDialog(getTranslation("Event"));
 
+        grid.setId("events-grid");
+
         grid.addColumn(EventRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true);
         grid.addColumn(EventRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
         grid.addColumn(EventRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true);

@@ -40,6 +40,8 @@ public class AthletesView extends ProtectedGridView<AthleteRecord> {
         filter.setValueChangeMode(ValueChangeMode.EAGER);
         add(filter);
 
+        grid.setId("athletes-grid");
+
         grid.addColumn(AthleteRecord::getLastName).setHeader(getTranslation("Last.Name")).setSortable(true);
         grid.addColumn(AthleteRecord::getFirstName).setHeader(getTranslation("First.Name")).setSortable(true);
         grid.addColumn(AthleteRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true);

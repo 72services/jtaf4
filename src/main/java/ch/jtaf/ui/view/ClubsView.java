@@ -35,6 +35,8 @@ public class ClubsView extends ProtectedGridView<ClubRecord> {
             dialog.open(newRecord, clubRecord -> dataProvider.refreshAll());
         });
 
+        grid.setId("clubs-grid");
+
         grid.addColumn(ClubRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true);
         grid.addColumn(ClubRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
 
