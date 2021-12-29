@@ -33,6 +33,7 @@ public class GridBuilder {
                                                                                              Consumer<R> afterSave, Supplier<R> onNewRecord,
                                                                                              String insteadOfDeleteTitle, Consumer<R> insteadOfDelete) {
         Button buttonAdd = new Button(grid.getTranslation("Add"));
+        buttonAdd.setId("add-button");
         buttonAdd.addClickListener(event -> dialog.open(onNewRecord.get(), afterSave));
         grid.addComponentColumn(updatableRecord -> {
             Button delete = new Button(insteadOfDeleteTitle != null ? insteadOfDeleteTitle : grid.getTranslation("Delete"));
@@ -48,6 +49,7 @@ public class GridBuilder {
                             try {
                                 getBean(DSLContext.class).attach(updatableRecord);
                                 updatableRecord.delete();
+                                grid.getDataProvider().refreshAll();
                             } catch (DataAccessException ex) {
                                 Notification.show(ex.getMessage());
                             }
@@ -62,7 +64,7 @@ public class GridBuilder {
             HorizontalLayout horizontalLayout = new HorizontalLayout(delete);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
             return horizontalLayout;
-        }).setTextAlign(ColumnTextAlign.END).setHeader(buttonAdd);
+        }).setTextAlign(ColumnTextAlign.END).setHeader(buttonAdd).setKey("Edit");
 
         grid.addItemClickListener(event -> dialog.open(event.getItem(), afterSave));
     }

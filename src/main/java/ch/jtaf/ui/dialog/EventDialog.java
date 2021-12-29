@@ -60,6 +60,7 @@ public class EventDialog extends EditDialog<EventRecord> {
 
         binder.forField(a)
             .withConverter(new StringToDoubleConverter(getTranslation(MUST_BE_A_NUMBER)))
+            .withNullRepresentation(0.0d)
             .bind(EventRecord::getA, EventRecord::setA);
 
         TextField b = new TextField("B");
@@ -67,6 +68,7 @@ public class EventDialog extends EditDialog<EventRecord> {
 
         binder.forField(b)
             .withConverter(new StringToDoubleConverter(getTranslation(MUST_BE_A_NUMBER)))
+            .withNullRepresentation(0.0d)
             .bind(EventRecord::getB, EventRecord::setB);
 
         TextField c = new TextField("C");
@@ -74,6 +76,7 @@ public class EventDialog extends EditDialog<EventRecord> {
 
         binder.forField(c)
             .withConverter(new StringToDoubleConverter(getTranslation(MUST_BE_A_NUMBER)))
+            .withNullRepresentation(0.0d)
             .bind(EventRecord::getC, EventRecord::setC);
 
         formLayout.add(abbreviation, name, gender, eventType, a, b, c);
