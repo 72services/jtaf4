@@ -193,6 +193,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         CompetitionDialog dialog = new CompetitionDialog(getTranslation("Category"));
 
         competitionsGrid = new Grid<>();
+        competitionsGrid.setId("competitions-grid");
+
         competitionsGrid.setHeightFull();
         competitionsGrid.addColumn(CompetitionRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
         competitionsGrid.addColumn(CompetitionRecord::getCompetitionDate).setHeader(getTranslation("Date")).setSortable(true);

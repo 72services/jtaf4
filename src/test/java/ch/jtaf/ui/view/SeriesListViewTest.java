@@ -26,7 +26,11 @@ class SeriesListViewTest extends KaribuTest {
     }
 
     @Test
-    void select_organization_and_ensure_navigation_to_series_list() {
+    void select_organization_and_navigate_to_series_list() {
+        navigateToSeriesList();
+    }
+
+    public static Grid<SeriesRecord> navigateToSeriesList() {
         UI.getCurrent().navigate(OrganizationsView.class);
 
         H1 h1 = _get(H1.class, spec -> spec.withId("view-title"));
@@ -47,6 +51,8 @@ class SeriesListViewTest extends KaribuTest {
 
         SeriesRecord seriesRecord = GridKt._get(seriesGrid, 0);
         assertThat(seriesRecord.getName()).isEqualTo("CIS 2018");
+
+        return seriesGrid;
     }
 
 }

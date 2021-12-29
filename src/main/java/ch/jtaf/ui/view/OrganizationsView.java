@@ -95,8 +95,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
             return horizontalLayout;
         }).setTextAlign(ColumnTextAlign.END).setHeader(add).setKey("Edit");
 
-        grid.addSelectionListener(event -> event.getFirstSelectedItem()
-            .ifPresent(organization -> dialog.open(organization, this::loadData)));
+        grid.addItemClickListener(event ->dialog.open(event.getItem(), this::loadData));
 
         loadData(null);
 

@@ -63,8 +63,8 @@ public class GridBuilder {
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
             return horizontalLayout;
         }).setTextAlign(ColumnTextAlign.END).setHeader(buttonAdd);
-        grid.addSelectionListener(event -> event.getFirstSelectedItem()
-            .ifPresent(updatableRecord -> dialog.open(updatableRecord, afterSave)));
+
+        grid.addItemClickListener(event -> dialog.open(event.getItem(), afterSave));
     }
 
 }

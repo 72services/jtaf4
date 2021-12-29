@@ -89,8 +89,7 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
             return horizontalLayout;
         }).setTextAlign(ColumnTextAlign.END).setHeader(add);
 
-        grid.addSelectionListener(event -> event.getFirstSelectedItem()
-            .ifPresent(seriesRecord -> UI.getCurrent().navigate(SeriesView.class, "" + seriesRecord.getId())));
+        grid.addItemClickListener(event -> UI.getCurrent().navigate(SeriesView.class, "" + event.getItem().getId()));
 
         add(grid);
     }
