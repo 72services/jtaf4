@@ -36,6 +36,7 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
         setHeightFull();
 
         Button add = new Button(getTranslation("Add"));
+        add.setId("add-series");
         add.addClickListener(event -> UI.getCurrent().navigate(SeriesView.class));
 
         grid.setId("series-grid");

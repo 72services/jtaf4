@@ -1,14 +1,13 @@
 package ch.jtaf.ui.view;
 
-import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.db.tables.records.SeriesRecord;
 import ch.jtaf.ui.KaribuTest;
 import com.github.mvysny.kaributesting.v10.GridKt;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.textfield.TextField;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,36 +22,38 @@ class SeriesListViewTest extends KaribuTest {
     public void login() {
         login("simon@martinelli.ch", "", List.of("ADMIN"));
         UI.getCurrent().getPage().reload();
-    }
 
-    @Test
-    void select_organization_and_navigate_to_series_list() {
         navigateToSeriesList();
     }
 
-    public static Grid<SeriesRecord> navigateToSeriesList() {
-        UI.getCurrent().navigate(OrganizationsView.class);
+    @Test
+    void add_series() {
+        Button addSeries = _get(Button.class, spec -> spec.withId("add-series"));
+        addSeries.click();
 
-        H1 h1 = _get(H1.class, spec -> spec.withId("view-title"));
-        assertThat(h1.getText()).isEqualTo("Organizations");
+        TextField textField = _get(TextField.class);
+        assertThat(textField.getValue()).isEmpty();
 
-        Grid<OrganizationRecord> organizationsGrid = _get(Grid.class, spec -> spec.withId("organizations-grid"));
-        assertThat(GridKt._size(organizationsGrid)).isEqualTo(2);
+        textField.setValue("Test");
 
-        HorizontalLayout edit = (HorizontalLayout) GridKt._getCellComponent(organizationsGrid, 0, "Edit");
-        Button select = (Button) edit.getChildren().filter(component -> component instanceof Button).findFirst().get();
-        select.click();
+        Button save = _get(Button.class, spec -> spec.withId("save-series"));
+        save.click();
 
-        h1 = _get(H1.class, spec -> spec.withId("view-title"));
-        assertThat(h1.getText()).isEqualTo("Series");
+        Notification notification = _get(Notification.class);
+        assertThat(notification.getElement().getOuterHTML()).isEqualTo("""
+            <vaadin-notification suppress-template-warning>
+             <template>
+              Series saved
+             </template>
+            </vaadin-notification>""");
+
+        UI.getCurrent().navigate(SeriesListView.class);
 
         Grid<SeriesRecord> seriesGrid = _get(Grid.class, spec -> spec.withId("series-grid"));
-        assertThat(GridKt._size(seriesGrid)).isEqualTo(2);
+        assertThat(GridKt._size(seriesGrid)).isEqualTo(3);
 
-        SeriesRecord seriesRecord = GridKt._get(seriesGrid, 0);
-        assertThat(seriesRecord.getName()).isEqualTo("CIS 2018");
-
-        return seriesGrid;
+        SeriesRecord seriesRecord = GridKt._get(seriesGrid, 2);
+        assertThat(seriesRecord.getName()).isEqualTo("Test");
     }
 
 }

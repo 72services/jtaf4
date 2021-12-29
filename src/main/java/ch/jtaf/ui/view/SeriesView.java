@@ -22,6 +22,7 @@ import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -104,11 +105,14 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
             .bind(SeriesRecord::getLocked, SeriesRecord::setLocked);
 
         Button save = new Button(getTranslation("Save"));
+        save.setId("save-series");
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         save.addClickListener(event ->
             transactionTemplate.executeWithoutResult(transactionStatus -> {
                 dsl.attach(binder.getBean());
                 binder.getBean().store();
+
+                Notification.show(getTranslation("Series.saved"), 6000, Notification.Position.TOP_END);
             })
         );
         add(save);
