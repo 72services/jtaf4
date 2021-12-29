@@ -1,5 +1,6 @@
 package ch.jtaf.ui.view;
 
+import ch.jtaf.service.UserService;
 import ch.jtaf.ui.KaribuTest;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -8,11 +9,15 @@ import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class RegisterViewTest extends KaribuTest {
+
+    @MockBean
+    private UserService userService;
 
     @Test
     void register() {
@@ -28,7 +33,7 @@ class RegisterViewTest extends KaribuTest {
         assertThat(notification.getElement().getOuterHTML()).isEqualTo("""
             <vaadin-notification suppress-template-warning>
              <template>
-              Series saved
+              Thanks for registering. An email was sent to your address. Please check your inbox.
              </template>
             </vaadin-notification>""");
     }
