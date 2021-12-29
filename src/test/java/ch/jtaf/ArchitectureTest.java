@@ -20,7 +20,7 @@ public class ArchitectureTest {
     private final JavaClasses classes = new ClassFileImporter().importPackages("ch.jtaf");
 
     @Test
-    public void CheckLayeredArchitecture() {
+    public void check_layered_architecture() {
         layeredArchitecture()
             .layer(UI).definedBy("..ui..")
             .layer(SERVICE).definedBy("..service..")
@@ -40,7 +40,7 @@ public class ArchitectureTest {
     }
 
     @Test
-    public void checkCycles() {
+    public void check_cycles() {
         slices().matching("ch.jtaf.(*)..").should().beFreeOfCycles()
             .check(classes);
     }

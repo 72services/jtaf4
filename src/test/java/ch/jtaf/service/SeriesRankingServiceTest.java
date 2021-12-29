@@ -15,14 +15,14 @@ class SeriesRankingServiceTest {
     private SeriesRankingService seriesRankingService;
 
     @Test
-    void getClubRanking() {
+    void get_club_ranking() {
         ClubRankingData clubRanking = seriesRankingService.getClubRanking(1L);
 
         assertThat(clubRanking.sortedResults().size()).isEqualTo(4);
     }
 
     @Test
-    void getSeriesRanking() {
+    void get_series_ranking() {
         SeriesRankingData seriesRanking = seriesRankingService.getSeriesRanking(3L);
 
         assertThat(seriesRanking.name()).isEqualTo("CIS 2019");

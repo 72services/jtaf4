@@ -14,7 +14,7 @@ class CompetitionRankingServiceTest {
     private CompetitionRankingService competitionRankingService;
 
     @Test
-    void getCompetitionRanking() {
+    void get_competition_ranking() {
         CompetitionRankingData competitionRanking = competitionRankingService.getCompetitionRanking(6L);
 
         assertThat(competitionRanking.name()).isEqualTo("39. Jugendmeisterschaft");
