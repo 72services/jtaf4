@@ -48,6 +48,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
         OrganizationDialog dialog = new OrganizationDialog(getTranslation("Organization"));
 
         Button add = new Button(getTranslation("Add"));
+        add.setId("add-button");
         add.addClickListener(event -> {
             OrganizationRecord organizationRecord = ORGANIZATION.newRecord();
             organizationRecord.setOwner(SecurityContext.getUserEmail());
@@ -76,12 +77,18 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
                 ConfirmDialog confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
                     getTranslation("Are.you.sure"),
                     getTranslation("Delete"), e -> {
-                    try {
-                        dsl.attach(organizationRecord);
-                        organizationRecord.delete();
-                    } catch (DataAccessException ex) {
-                        Notification.show(ex.getMessage());
-                    }
+                    transactionTemplate.executeWithoutResult(transactionStatus -> {
+                        try {
+                            dsl.deleteFrom(ORGANIZATION_USER).where(ORGANIZATION_USER.ORGANIZATION_ID.eq(organizationRecord.getId())).execute();
+
+                            dsl.attach(organizationRecord);
+                            organizationRecord.delete();
+
+                            loadData(null);
+                        } catch (DataAccessException ex) {
+                            Notification.show(ex.getMessage());
+                        }
+                    });
                 },
                     getTranslation("Cancel"), e -> {
                 });
@@ -94,7 +101,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
             return horizontalLayout;
         }).setTextAlign(ColumnTextAlign.END).setHeader(add).setKey("Edit");
 
-        grid.addItemClickListener(event ->dialog.open(event.getItem(), this::loadData));
+        grid.addItemClickListener(event -> dialog.open(event.getItem(), this::loadData));
 
         loadData(null);
 
