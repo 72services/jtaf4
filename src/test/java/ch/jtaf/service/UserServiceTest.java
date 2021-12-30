@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 
 @SpringBootTest
 class UserServiceTest {
@@ -23,7 +24,8 @@ class UserServiceTest {
 
     @Test
     void create_user_and_send_confirmation_email() {
-        userService.createUserAndSendConfirmationEmail("Peter", "Muster", "peter.muster@nodomain.xyz", "pass", Locale.ENGLISH);
+        assertThatNoException().isThrownBy(() ->
+            userService.createUserAndSendConfirmationEmail("Peter", "Muster", "peter.muster@nodomain.xyz", "pass", Locale.ENGLISH));
     }
 
     @Test
