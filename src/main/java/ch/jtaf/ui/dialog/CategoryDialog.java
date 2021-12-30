@@ -71,7 +71,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
 
         binder.forField(yearFrom)
             .withConverter(new JtafStringToIntegerConverter("May.not.be.empty"))
-            .withNullRepresentation(-1)
+            .withNullRepresentation(0)
             .bind(CategoryRecord::getYearFrom, CategoryRecord::setYearFrom);
 
         TextField yearTo = new TextField(getTranslation("Year.To"));
@@ -79,7 +79,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
 
         binder.forField(yearTo)
             .withConverter(new JtafStringToIntegerConverter("May.not.be.empty"))
-            .withNullRepresentation(-1)
+            .withNullRepresentation(0)
             .bind(CategoryRecord::getYearTo, CategoryRecord::setYearTo);
 
         formLayout.add(abbreviation, name, gender, yearFrom, yearTo);

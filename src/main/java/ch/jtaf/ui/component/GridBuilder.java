@@ -25,13 +25,15 @@ public class GridBuilder {
     }
 
     public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(Grid<R> grid, EditDialog<R> dialog,
-                                                                                             Consumer<R> afterSave, Supplier<R> onNewRecord) {
-        addActionColumnAndSetSelectionListener(grid, dialog, afterSave, onNewRecord, null, null);
+                                                                                             Consumer<R> afterSave, Supplier<R> onNewRecord,
+                                                                                             Runnable afterDelete) {
+        addActionColumnAndSetSelectionListener(grid, dialog, afterSave, onNewRecord, null, null, afterDelete);
     }
 
     public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(Grid<R> grid, EditDialog<R> dialog,
                                                                                              Consumer<R> afterSave, Supplier<R> onNewRecord,
-                                                                                             String insteadOfDeleteTitle, Consumer<R> insteadOfDelete) {
+                                                                                             String insteadOfDeleteTitle, Consumer<R> insteadOfDelete,
+                                                                                             Runnable afterDelete) {
         Button buttonAdd = new Button(grid.getTranslation("Add"));
         buttonAdd.setId("add-button");
         buttonAdd.addClickListener(event -> dialog.open(onNewRecord.get(), afterSave));
@@ -49,7 +51,8 @@ public class GridBuilder {
                             try {
                                 getBean(DSLContext.class).attach(updatableRecord);
                                 updatableRecord.delete();
-                                grid.getDataProvider().refreshAll();
+
+                                afterDelete.run();
                             } catch (DataAccessException ex) {
                                 Notification.show(ex.getMessage());
                             }

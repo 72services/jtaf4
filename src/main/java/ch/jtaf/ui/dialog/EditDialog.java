@@ -67,6 +67,7 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
         binder = new Binder<>();
 
         Button save = new Button(getTranslation("Save"));
+        save.setId("edit-save");
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         save.addClickListener(event -> {
             getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> {

@@ -32,7 +32,7 @@ public class ClubsView extends ProtectedGridView<ClubRecord> {
         add.addClickListener(event -> {
             ClubRecord newRecord = CLUB.newRecord();
             newRecord.setOrganizationId(organizationRecord.getId());
-            dialog.open(newRecord, clubRecord -> dataProvider.refreshAll());
+            dialog.open(newRecord, clubRecord -> refreshAll());
         });
 
         grid.setId("clubs-grid");
@@ -40,12 +40,12 @@ public class ClubsView extends ProtectedGridView<ClubRecord> {
         grid.addColumn(ClubRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true);
         grid.addColumn(ClubRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
 
-        addActionColumnAndSetSelectionListener(grid, dialog, clubRecord -> dataProvider.refreshAll(),
+        addActionColumnAndSetSelectionListener(grid, dialog, clubRecord -> refreshAll(),
             () -> {
                 ClubRecord newRecord = CLUB.newRecord();
                 newRecord.setOrganizationId(organizationRecord.getId());
                 return newRecord;
-            });
+            }, this::refreshAll);
 
         add(grid);
     }

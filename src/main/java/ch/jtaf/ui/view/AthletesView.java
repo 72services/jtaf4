@@ -49,11 +49,11 @@ public class AthletesView extends ProtectedGridView<AthleteRecord> {
         grid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
             : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club"));
 
-        addActionColumnAndSetSelectionListener(grid, dialog, athleteRecord -> dataProvider.refreshAll(), () -> {
+        addActionColumnAndSetSelectionListener(grid, dialog, athleteRecord -> refreshAll(), () -> {
             AthleteRecord newRecord = ATHLETE.newRecord();
             newRecord.setOrganizationId(organizationRecord.getId());
             return newRecord;
-        });
+        }, this::refreshAll);
 
         filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
 

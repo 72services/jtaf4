@@ -243,7 +243,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
             newRecord.setMedalPercentage(0);
             newRecord.setSeriesId(seriesRecord.getId());
             return newRecord;
-        });
+        }, this::refreshAll);
     }
 
     private void createCategoriesSection() {
@@ -272,7 +272,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
             CategoryRecord newRecord = CATEGORY.newRecord();
             newRecord.setSeriesId(seriesRecord.getId());
             return newRecord;
-        });
+        }, this::refreshAll);
     }
 
     private void createAthletesSection() {
@@ -288,6 +288,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
             : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club"));
 
         Button assign = new Button(getTranslation("Assign.Athlete"));
+        assign.setId("assign-athlete");
         assign.addClickListener(event -> {
             SearchAthleteDialog dialog = new SearchAthleteDialog(dsl, organizationRecord.getId(), seriesRecord.getId(), this::onAthleteSelect);
             dialog.open();
@@ -309,7 +310,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
             HorizontalLayout horizontalLayout = new HorizontalLayout(remove);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
             return horizontalLayout;
-        }).setTextAlign(ColumnTextAlign.END).setHeader(assign);
+        }).setTextAlign(ColumnTextAlign.END).setHeader(assign).setKey("Remove");
     }
 
     private void onAthleteSelect(AthleteRecord athleteRecord) {
@@ -340,6 +341,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
             .where(CATEGORY_ATHLETE.ATHLETE_ID.eq(athleteRecord.getId()))
             .and(CATEGORY_ATHLETE.CATEGORY_ID.in(dsl.select(CATEGORY.ID).from(CATEGORY).where(CATEGORY.SERIES_ID.eq(seriesRecord.getId()))))
             .execute();
+
+        refreshAll();
     }
 
 }

@@ -111,6 +111,7 @@ public class SearchAthleteDialog extends Dialog {
         dataProvider = callbackDataProvider.withConfigurableFilter();
 
         Grid<AthleteRecord> grid = new Grid<>();
+        grid.setId("search-athletes-grid");
         grid.setItems(dataProvider);
         grid.getStyle().set("height", "calc(100% - 300px");
 
@@ -128,7 +129,7 @@ public class SearchAthleteDialog extends Dialog {
         }, getTranslation("Assign.Athlete"), athleteRecord -> {
             onSelect.accept(athleteRecord);
             close();
-        });
+        }, dataProvider::refreshAll);
 
         filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
 

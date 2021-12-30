@@ -41,7 +41,7 @@ public class EventsView extends ProtectedGridView<EventRecord> {
             EventRecord newRecord = EVENT.newRecord();
             newRecord.setOrganizationId(organizationRecord.getId());
             return newRecord;
-        });
+        }, this::refreshAll);
 
         add(grid);
     }
