@@ -17,7 +17,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 @Route(value = "confirm", layout = MainLayout.class)
 public class ConfirmView extends VerticalLayout implements HasDynamicTitle, BeforeEnterObserver {
 
-    private final UserService userService;
+    private final transient UserService userService;
     private final VerticalLayout okDiv;
     private final H1 failure;
 
