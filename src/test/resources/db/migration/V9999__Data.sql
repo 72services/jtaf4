@@ -2280,7 +2280,7 @@ INSERT INTO security_group (id, name) VALUES(3, 'USER');
 
 ALTER SEQUENCE security_group_seq RESTART WITH 3;
 
-INSERT INTO security_user (id, first_name, last_name, email, secret, confirmation_id, confirmed) VALUES(2, 'Simon', 'Martinelli', 'simon@martinelli.ch', '$2b$10$JI.bJV.JL4yJiQmfkug/ROOJt4wY4rJwikcfXjITkFeV2CTLxo4Jm', '', true);
+INSERT INTO security_user (id, first_name, last_name, email, secret, confirmation_id, confirmed) VALUES(2, 'Simon', 'Martinelli', 'simon@martinelli.ch', '$2a$10$UtIxsu6XdO5PEDDdXxCsc.gR94numqo4/VTS2sM3Q2krDcWJW/jby', '', true);
 
 ALTER SEQUENCE security_user_seq RESTART WITH 3;
 
