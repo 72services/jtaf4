@@ -122,7 +122,7 @@ class SeriesViewTest extends KaribuTest {
 
         _fireConfirm(confirmDialog);
 
-        assertThat(GridKt._size(categoryEventsGrid)).isEqualTo(0);
+        assertThat(GridKt._size(categoryEventsGrid)).isZero();
 
         // Remove Category
         GridKt._getCellComponent(categoriesGrid, 0, "edit-column").getChildren()
