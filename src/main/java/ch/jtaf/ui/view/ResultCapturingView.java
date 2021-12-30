@@ -93,6 +93,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
         dataProvider = callbackDataProvider.withConfigurableFilter();
 
         TextField filter = new TextField();
+        filter.setId("filter");
         filter.focus();
         filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
         add(filter);
@@ -133,6 +134,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                         .fetchOne();
 
                     TextField result = new TextField(eventRecord.getName());
+                    result.setId("result-" + position);
                     formLayout.add(result);
 
                     if (first) {
@@ -141,6 +143,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                     }
 
                     TextField points = new TextField();
+                    points.setId("points-" + position);
                     points.setReadOnly(true);
                     points.setEnabled(false);
                     formLayout.add(points);
