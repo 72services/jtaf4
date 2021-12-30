@@ -2,7 +2,6 @@ package ch.jtaf.ui;
 
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.db.tables.records.SeriesRecord;
-import ch.jtaf.service.UserService;
 import ch.jtaf.ui.view.OrganizationsView;
 import com.github.mvysny.kaributesting.mockhttp.MockRequest;
 import com.github.mvysny.kaributesting.v10.GridKt;
@@ -24,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -47,7 +47,7 @@ public abstract class KaribuTest {
     protected ApplicationContext ctx;
 
     @MockBean
-    private UserService userService;
+    private JavaMailSender javaMailSender;
 
     @BeforeAll
     public static void discoverRoutes() {
