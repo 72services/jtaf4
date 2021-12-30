@@ -25,15 +25,15 @@ class NumberAndSheetsServiceTest {
     }
 
     @Test
-    void create_sheets() {
+    void create_empty_sheets() {
         byte[] pdf = numberAndSheetsService.createEmptySheets(1L, 1L);
 
         assertThat(pdf.length).isGreaterThan(0);
     }
 
     @Test
-    void create_empty_sheets() {
-        byte[] pdf = numberAndSheetsService.createEmptySheets(1L, 1L);
+    void create_sheets() {
+        byte[] pdf = numberAndSheetsService.createSheets(1L, 6L);
 
         assertThat(pdf.length).isGreaterThan(0);
     }

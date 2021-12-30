@@ -71,7 +71,7 @@ public class NumberAndSheetsService {
 
     private NumbersAndSheetsCompetition getCompetition(Long competitionId) {
         return dsl
-            .select(COMPETITION.ID, COMPETITION.NAME, COMPETITION.COMPETITION_DATE)
+            .select(COMPETITION.NAME, COMPETITION.COMPETITION_DATE)
             .from(COMPETITION)
             .where(COMPETITION.ID.eq(competitionId))
             .fetchOneInto(NumbersAndSheetsCompetition.class);

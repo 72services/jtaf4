@@ -24,6 +24,7 @@ import org.jooq.Record4;
 import org.jooq.impl.DSL;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.annotation.security.RolesAllowed;
 import java.io.Serial;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +37,7 @@ import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Result.RESULT;
 import static org.jooq.impl.DSL.upper;
 
+@RolesAllowed({"USER", "ADMIN"})
 @Route(layout = MainLayout.class)
 public class ResultCapturingView extends VerticalLayout implements HasDynamicTitle, HasUrlParameter<String> {
 
