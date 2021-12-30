@@ -21,7 +21,7 @@ class ResultCapturingViewTest extends KaribuTest {
     }
 
     @Test
-    void enter_results() {
+    void check_pre_entered_results() {
         Button enterResults = _get(Button.class, spec -> spec.withId("enter-results-1"));
         enterResults.click();
 
