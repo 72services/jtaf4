@@ -17,6 +17,7 @@ import java.util.UUID;
 import static ch.jtaf.db.tables.SecurityGroup.SECURITY_GROUP;
 import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
 
+@SuppressWarnings("ClassCanBeRecord")
 @Service
 public class UserService {
 

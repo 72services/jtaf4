@@ -76,20 +76,18 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
             delete.addClickListener(event -> {
                 ConfirmDialog confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
                     getTranslation("Are.you.sure"),
-                    getTranslation("Delete"), e -> {
-                    transactionTemplate.executeWithoutResult(transactionStatus -> {
-                        try {
-                            dsl.deleteFrom(ORGANIZATION_USER).where(ORGANIZATION_USER.ORGANIZATION_ID.eq(organizationRecord.getId())).execute();
+                    getTranslation("Delete"), e -> transactionTemplate.executeWithoutResult(transactionStatus -> {
+                    try {
+                        dsl.deleteFrom(ORGANIZATION_USER).where(ORGANIZATION_USER.ORGANIZATION_ID.eq(organizationRecord.getId())).execute();
 
-                            dsl.attach(organizationRecord);
-                            organizationRecord.delete();
+                        dsl.attach(organizationRecord);
+                        organizationRecord.delete();
 
-                            loadData(null);
-                        } catch (DataAccessException ex) {
-                            Notification.show(ex.getMessage());
-                        }
-                    });
-                },
+                        loadData(null);
+                    } catch (DataAccessException ex) {
+                        Notification.show(ex.getMessage());
+                    }
+                }),
                     getTranslation("Cancel"), e -> {
                 });
                 confirmDialog.setConfirmButtonTheme("error primary");

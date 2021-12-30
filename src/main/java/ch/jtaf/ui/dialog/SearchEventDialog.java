@@ -45,7 +45,6 @@ public class SearchEventDialog extends Dialog {
 
     private final ConfigurableFilterDataProvider<EventRecord, Void, String> dataProvider;
 
-    @SuppressWarnings("DuplicatedCode")
     public SearchEventDialog(DSLContext dsl, CategoryRecord categoryRecord, Consumer<EventRecord> onSelect) {
         setId("search-event-dialog");
 
@@ -153,7 +152,6 @@ public class SearchEventDialog extends Dialog {
         isFullScreen = !isFullScreen;
     }
 
-    @SuppressWarnings("DuplicatedCode")
     private Condition createCondition(Query<?, ?> query) {
         Optional<?> optionalFilter = query.getFilter();
         if (optionalFilter.isPresent()) {
