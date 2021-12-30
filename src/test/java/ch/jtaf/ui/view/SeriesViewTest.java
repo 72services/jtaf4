@@ -3,6 +3,7 @@ package ch.jtaf.ui.view;
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.CategoryRecord;
 import ch.jtaf.db.tables.records.CompetitionRecord;
+import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.db.tables.records.SeriesRecord;
 import ch.jtaf.ui.KaribuTest;
 import com.github.mvysny.kaributesting.v10.GridKt;
@@ -75,7 +76,7 @@ class SeriesViewTest extends KaribuTest {
     }
 
     @Test
-    void add_category() {
+    void add_category_and_assign_event() {
         Tabs tabs = _get(Tabs.class);
         Tab categories = _get(Tab.class, spec -> spec.withText("Categories"));
         tabs.setSelectedTab(categories);
@@ -86,6 +87,7 @@ class SeriesViewTest extends KaribuTest {
         CategoryRecord categoryRecord = GridKt._get(categoriesGrid, 0);
         assertThat(categoryRecord.getAbbreviation()).isEqualTo("A");
 
+        // Create Category
         _get(Button.class, spec -> spec.withId("add-button")).click();
         _assert(Dialog.class, 1);
 
@@ -101,11 +103,41 @@ class SeriesViewTest extends KaribuTest {
         categoryRecord = GridKt._get(categoriesGrid, 0);
         assertThat(categoryRecord.getAbbreviation()).isEqualTo("1");
 
-        HorizontalLayout edit = (HorizontalLayout) GridKt._getCellComponent(categoriesGrid, 0, "Edit");
+        // Assign Event
+        GridKt._clickItem(categoriesGrid, 0);
+
+        Button addEvent = _get(Button.class, spec -> spec.withId("add-event"));
+        addEvent.click();
+
+        Grid<EventRecord> eventsGrid = _get(Grid.class, spec -> spec.withId("events-grid"));
+
+        Button assign = (Button) GridKt._getCellComponent(eventsGrid, 0, "Assign");
+        assign.click();
+
+        Dialog dialog = _get(Dialog.class, spec -> spec.withId("search-event-dialog"));
+        dialog.close();
+
+        // Remove Event from Category
+        Grid<EventRecord> categoryEventsGrid = _get(Grid.class, spec -> spec.withId("category-events-grid"));
+        assertThat(GridKt._size(categoryEventsGrid)).isEqualTo(1);
+
+        HorizontalLayout edit = (HorizontalLayout) GridKt._getCellComponent(categoryEventsGrid, 0, "Edit");
         Button delete = (Button) edit.getChildren().filter(component -> component instanceof Button).findFirst().get();
         delete.click();
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
+        assertThat(confirmDialog.isOpened()).isTrue();
+
+        _fireConfirm(confirmDialog);
+
+        assertThat(GridKt._size(categoryEventsGrid)).isEqualTo(0);
+
+        // Remove Category
+        edit = (HorizontalLayout) GridKt._getCellComponent(categoriesGrid, 0, "Edit");
+        delete = (Button) edit.getChildren().filter(component -> component instanceof Button).findFirst().get();
+        delete.click();
+
+        confirmDialog = _get(ConfirmDialog.class);
         assertThat(confirmDialog.isOpened()).isTrue();
 
         _fireConfirm(confirmDialog);

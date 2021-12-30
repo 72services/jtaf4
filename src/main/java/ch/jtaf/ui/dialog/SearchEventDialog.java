@@ -47,13 +47,15 @@ public class SearchEventDialog extends Dialog {
 
     @SuppressWarnings("DuplicatedCode")
     public SearchEventDialog(DSLContext dsl, CategoryRecord categoryRecord, Consumer<EventRecord> onSelect) {
+        setId("search-event-dialog");
+
         getElement().getThemeList().add("jtaf-dialog");
         getElement().setAttribute("aria-labelledby", "dialog-title");
 
         setDraggable(true);
         setResizable(true);
 
-        H2 headerTitel = new H2(getTranslation("Athletes"));
+        H2 headerTitel = new H2(getTranslation("Events"));
         headerTitel.addClassName("dialog-title");
 
         max = new Button(VaadinIcon.EXPAND_SQUARE.create());
@@ -103,6 +105,7 @@ public class SearchEventDialog extends Dialog {
         dataProvider = callbackDataProvider.withConfigurableFilter();
 
         Grid<EventRecord> grid = new Grid<>();
+        grid.setId("events-grid");
         grid.setItems(dataProvider);
         grid.getStyle().set("height", "calc(100% - 300px");
 
@@ -118,7 +121,7 @@ public class SearchEventDialog extends Dialog {
             onSelect.accept(eventRecord);
             Notification.show(getTranslation("Event.assigned"), 6000, Notification.Position.TOP_END);
             dataProvider.refreshAll();
-        }));
+        })).setKey("Assign");
 
         filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
 

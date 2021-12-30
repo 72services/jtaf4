@@ -85,6 +85,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
         formLayout.add(abbreviation, name, gender, yearFrom, yearTo);
 
         categoryEventsGrid = new Grid<>();
+        categoryEventsGrid.setId("category-events-grid");
         categoryEventsGrid.addColumn(CategoryEventVO::abbreviation).setHeader(getTranslation("Abbreviation"));
         categoryEventsGrid.addColumn(CategoryEventVO::name).setHeader(getTranslation("Name"));
         categoryEventsGrid.addColumn(CategoryEventVO::gender).setHeader(getTranslation("Gender"));
@@ -95,6 +96,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
         categoryEventsGrid.addColumn(CategoryEventVO::position).setHeader(getTranslation("Position"));
 
         Button addEvent = new Button(getTranslation("Add.Event"));
+        addEvent.setId("add-event");
         addEvent.addClickListener(event -> {
             SearchEventDialog dialog = new SearchEventDialog(getBean(DSLContext.class), binder.getBean(), this::onEventSelect);
             dialog.open();
@@ -112,7 +114,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
             HorizontalLayout horizontalLayout = new HorizontalLayout(remove);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
             return horizontalLayout;
-        }).setTextAlign(ColumnTextAlign.END).setHeader(addEvent);
+        }).setTextAlign(ColumnTextAlign.END).setHeader(addEvent).setKey("Edit");
 
         add(categoryEventsGrid);
     }
