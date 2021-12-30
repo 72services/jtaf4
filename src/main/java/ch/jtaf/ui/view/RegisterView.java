@@ -1,5 +1,8 @@
 package ch.jtaf.ui.view;
 
+import ch.jtaf.db.tables.records.SecurityUserRecord;
+import ch.jtaf.service.NoSuchRoleExecption;
+import ch.jtaf.service.UserAlreadyExistException;
 import ch.jtaf.service.UserService;
 import ch.jtaf.ui.layout.MainLayout;
 import com.vaadin.flow.component.UI;
@@ -33,9 +36,17 @@ public class RegisterView extends VerticalLayout implements HasDynamicTitle {
         password.setRequired(true);
 
         var register = new Button(getTranslation("Register"), e -> {
-            userService.createUserAndSendConfirmationEmail(firstName.getValue(), lastName.getValue(), email.getValue(), password.getValue(), getLocale());
-            Notification.show(getTranslation("Email.sent"), 5000, Notification.Position.TOP_END);
-            UI.getCurrent().navigate(DashboardView.class);
+            try {
+                SecurityUserRecord user = userService.createUser(firstName.getValue(), lastName.getValue(), email.getValue(), password.getValue());
+                userService.sendConfirmationEmail(user, getLocale());
+
+                Notification.show(getTranslation("Email.sent"), 5000, Notification.Position.TOP_END);
+                UI.getCurrent().navigate(DashboardView.class);
+            } catch (UserAlreadyExistException uaex) {
+                Notification.show(getTranslation("User.already.exist"), 5000, Notification.Position.TOP_END);
+            } catch (NoSuchRoleExecption ex) {
+                Notification.show(getTranslation("No.such.role"), 5000, Notification.Position.TOP_END);
+            }
         });
 
         formLayout.add(firstName, lastName, email, password, register);

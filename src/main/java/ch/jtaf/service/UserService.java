@@ -35,8 +35,14 @@ public class UserService {
         this.publicAddress = publicAddress;
     }
 
-    @Transactional
-    public void createUserAndSendConfirmationEmail(String firstName, String lastName, String email, String password, Locale locale) {
+    @Transactional(rollbackFor = {UserAlreadyExistException.class, NoSuchRoleExecption.class})
+    public SecurityUserRecord createUser(String firstName, String lastName, String email, String password)
+        throws UserAlreadyExistException, NoSuchRoleExecption {
+
+        Integer count = dsl.selectCount().from(SECURITY_USER).where(SECURITY_USER.EMAIL.eq(email)).fetchOneInto(Integer.class);
+        if (count != null && count > 0) {
+            throw new UserAlreadyExistException();
+        }
         var user = new SecurityUserRecord();
         user.setFirstName(firstName);
         user.setLastName(lastName);
@@ -54,9 +60,13 @@ public class UserService {
             dsl.attach(userGroup);
             userGroup.store();
         } else {
-            throw new IllegalStateException("No group with name USER found!");
+            throw new NoSuchRoleExecption("USER");
         }
 
+        return user;
+    }
+
+    public void sendConfirmationEmail(SecurityUserRecord user, Locale locale) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("no-reply@jtaf.ch");
         message.setTo(user.getEmail());
