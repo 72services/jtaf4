@@ -1,4 +1,4 @@
-package ch.jtaf.util;
+package ch.jtaf.ui.util;
 
 import ch.jtaf.db.tables.records.SeriesRecord;
 import com.vaadin.flow.component.html.Image;

@@ -5,8 +5,10 @@ import ch.jtaf.reporting.data.SeriesRankingData;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.javamail.JavaMailSender;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class SeriesRankingServiceTest {
@@ -14,17 +16,34 @@ class SeriesRankingServiceTest {
     @Autowired
     private SeriesRankingService seriesRankingService;
 
+    @MockBean
+    private JavaMailSender javaMailSender;
+
     @Test
-    void getClubRanking() {
+    void get_club_ranking() {
         ClubRankingData clubRanking = seriesRankingService.getClubRanking(1L);
 
-        assertEquals(4, clubRanking.sortedResults().size());
+        assertThat(clubRanking.sortedResults().size()).isEqualTo(4);
     }
 
     @Test
-    void getSeriesRanking() {
+    void create_club_ranking_pdf() {
+        byte[] pdf = seriesRankingService.getClubRankingAsPdf(1L);
+
+        assertThat(pdf).isNotEmpty();
+    }
+
+    @Test
+    void get_series_ranking() {
         SeriesRankingData seriesRanking = seriesRankingService.getSeriesRanking(3L);
 
-        System.out.println(seriesRanking);
+        assertThat(seriesRanking.name()).isEqualTo("CIS 2019");
+    }
+
+    @Test
+    void create_series_ranking_pdf() {
+        byte[] pdf = seriesRankingService.getSeriesRankingAsPdf(3L);
+
+        assertThat(pdf).isNotEmpty();
     }
 }

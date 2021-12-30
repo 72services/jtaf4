@@ -26,3 +26,5 @@ webpack.generated.js
 /code-inspection.log
 /.bashrc
 /.bashrc.swp
+/.pnpm-debug.log
+/pnpm-lock.yaml

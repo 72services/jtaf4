@@ -3,6 +3,7 @@ package ch.jtaf.ui.view;
 import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.ui.dialog.EventDialog;
 import ch.jtaf.ui.layout.MainLayout;
+import ch.jtaf.ui.security.OrganizationProvider;
 import com.vaadin.flow.router.Route;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -19,12 +20,14 @@ public class EventsView extends ProtectedGridView<EventRecord> {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public EventsView(DSLContext dsl) {
-        super(dsl, EVENT);
+    public EventsView(DSLContext dsl, OrganizationProvider organizationProvider) {
+        super(dsl, organizationProvider, EVENT);
 
         setHeightFull();
 
         EventDialog dialog = new EventDialog(getTranslation("Event"));
+
+        grid.setId("events-grid");
 
         grid.addColumn(EventRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true);
         grid.addColumn(EventRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
@@ -34,11 +37,11 @@ public class EventsView extends ProtectedGridView<EventRecord> {
         grid.addColumn(EventRecord::getB).setHeader("B");
         grid.addColumn(EventRecord::getC).setHeader("C");
 
-        addActionColumnAndSetSelectionListener(grid, dialog, dataProvider::refreshAll, () -> {
+        addActionColumnAndSetSelectionListener(grid, dialog, eventRecord -> refreshAll(), () -> {
             EventRecord newRecord = EVENT.newRecord();
             newRecord.setOrganizationId(organizationRecord.getId());
             return newRecord;
-        });
+        }, this::refreshAll);
 
         add(grid);
     }

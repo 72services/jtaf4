@@ -5,7 +5,7 @@ import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.model.Gender;
 import ch.jtaf.ui.converter.JtafStringToIntegerConverter;
-import ch.jtaf.ui.security.OrganizationHolder;
+import ch.jtaf.ui.security.OrganizationProvider;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
@@ -32,10 +32,10 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
     private Map<Long, ClubRecord> clubRecordMap = new HashMap<>();
 
     public AthleteDialog(String title) {
-        super(title);
+        super(title, "600px");
     }
 
-    @SuppressWarnings({"DuplicatedCode"})
+    @SuppressWarnings("DuplicatedCode")
     @Override
     public void createForm() {
         TextField lastName = new TextField(getTranslation("Last.Name"));
@@ -100,7 +100,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
     }
 
     private List<ClubRecord> getClubs() {
-        OrganizationRecord organizationRecord = OrganizationHolder.getOrganization();
+        OrganizationRecord organizationRecord = getBean(OrganizationProvider.class).getOrganization();
 
         if (organizationRecord == null) {
             return Collections.emptyList();

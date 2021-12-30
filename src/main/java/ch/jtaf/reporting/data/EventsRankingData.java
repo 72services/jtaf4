@@ -9,7 +9,7 @@ import java.util.List;
 
 public record EventsRankingData(String name, LocalDate competitionDate, List<Event> events) {
 
-    public static record Event(String abbreviation, String gender, String eventType, List<Result> results) {
+    public record Event(String abbreviation, String gender, String eventType, List<Result> results) {
 
         public List<Result> sortedResults() {
             results.sort((o1, o2) -> {
@@ -24,7 +24,7 @@ public record EventsRankingData(String name, LocalDate competitionDate, List<Eve
             return results;
         }
 
-        public static record Result(String firstName, String lastName, int yearOfBirth, String category, String club, String result) {
+        public record Result(String firstName, String lastName, int yearOfBirth, String category, String club, String result) {
 
             private static final Logger LOGGER = LoggerFactory.getLogger(Result.class);
 

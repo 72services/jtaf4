@@ -4,6 +4,7 @@ import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.ui.dialog.AthleteDialog;
 import ch.jtaf.ui.layout.MainLayout;
+import ch.jtaf.ui.security.OrganizationProvider;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
@@ -28,8 +29,8 @@ public class AthletesView extends ProtectedGridView<AthleteRecord> {
 
     private Map<Long, ClubRecord> clubRecordMap = new HashMap<>();
 
-    public AthletesView(DSLContext dsl) {
-        super(dsl, ATHLETE);
+    public AthletesView(DSLContext dsl, OrganizationProvider organizationProvider) {
+        super(dsl, organizationProvider, ATHLETE);
 
         setHeightFull();
 
@@ -39,6 +40,8 @@ public class AthletesView extends ProtectedGridView<AthleteRecord> {
         filter.setValueChangeMode(ValueChangeMode.EAGER);
         add(filter);
 
+        grid.setId("athletes-grid");
+
         grid.addColumn(AthleteRecord::getLastName).setHeader(getTranslation("Last.Name")).setSortable(true);
         grid.addColumn(AthleteRecord::getFirstName).setHeader(getTranslation("First.Name")).setSortable(true);
         grid.addColumn(AthleteRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true);
@@ -46,11 +49,11 @@ public class AthletesView extends ProtectedGridView<AthleteRecord> {
         grid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
             : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club"));
 
-        addActionColumnAndSetSelectionListener(grid, dialog, dataProvider::refreshAll, () -> {
+        addActionColumnAndSetSelectionListener(grid, dialog, athleteRecord -> refreshAll(), () -> {
             AthleteRecord newRecord = ATHLETE.newRecord();
             newRecord.setOrganizationId(organizationRecord.getId());
             return newRecord;
-        });
+        }, this::refreshAll);
 
         filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
 

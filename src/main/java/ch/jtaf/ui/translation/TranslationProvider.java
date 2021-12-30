@@ -18,16 +18,11 @@ public class TranslationProvider implements I18NProvider {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public static final String BUNDLE_PREFIX = "messages";
-
-    public final Locale LOCALE_DE = new Locale("de", "CH");
-    public final Locale LOCALE_EN = new Locale("en", "US");
-
     private static final Logger LOGGER = LoggerFactory.getLogger(TranslationProvider.class);
 
     @Override
     public List<Locale> getProvidedLocales() {
-        return List.of(LOCALE_DE, LOCALE_EN);
+        return List.of(new Locale("de", "CH"), new Locale("en", "US"));
     }
 
     @Override
@@ -36,7 +31,7 @@ public class TranslationProvider implements I18NProvider {
             LOGGER.warn("Got lang request for key with null value!");
             return "";
         }
-        final ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_PREFIX, locale);
+        final ResourceBundle bundle = ResourceBundle.getBundle("messages", locale);
         try {
             String value = bundle.getString(key);
             if (params.length > 0) {

@@ -164,7 +164,6 @@ public class SheetsReport extends AbstractReport {
         document.add(table);
     }
 
-    @SuppressWarnings("IfStatementWithIdenticalBranches")
     private void createEventTable(NumbersAndSheetsAthlete athlete) throws DocumentException {
         PdfPTable table = new PdfPTable(4);
         table.setWidthPercentage(100);

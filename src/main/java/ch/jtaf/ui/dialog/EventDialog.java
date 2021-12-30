@@ -10,16 +10,18 @@ import com.vaadin.flow.data.converter.StringToDoubleConverter;
 
 import java.io.Serial;
 
-@SuppressWarnings("DuplicatedCode")
 public class EventDialog extends EditDialog<EventRecord> {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
+    private static final String MUST_BE_A_NUMBER = "Must.be.a.number";
+
     public EventDialog(String title) {
-        super(title);
+        super(title, "600px");
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Override
     public void createForm() {
         TextField abbreviation = new TextField(getTranslation("Abbreviation"));
@@ -57,21 +59,24 @@ public class EventDialog extends EditDialog<EventRecord> {
         a.setRequiredIndicatorVisible(true);
 
         binder.forField(a)
-            .withConverter(new StringToDoubleConverter(getTranslation("Must.be.a.number")))
+            .withConverter(new StringToDoubleConverter(getTranslation(MUST_BE_A_NUMBER)))
+            .withNullRepresentation(0.0d)
             .bind(EventRecord::getA, EventRecord::setA);
 
         TextField b = new TextField("B");
         b.setRequiredIndicatorVisible(true);
 
         binder.forField(b)
-            .withConverter(new StringToDoubleConverter(getTranslation("Must.be.a.number")))
+            .withConverter(new StringToDoubleConverter(getTranslation(MUST_BE_A_NUMBER)))
+            .withNullRepresentation(0.0d)
             .bind(EventRecord::getB, EventRecord::setB);
 
         TextField c = new TextField("C");
         c.setRequiredIndicatorVisible(true);
 
         binder.forField(c)
-            .withConverter(new StringToDoubleConverter(getTranslation("Must.be.a.number")))
+            .withConverter(new StringToDoubleConverter(getTranslation(MUST_BE_A_NUMBER)))
+            .withNullRepresentation(0.0d)
             .bind(EventRecord::getC, EventRecord::setC);
 
         formLayout.add(abbreviation, name, gender, eventType, a, b, c);

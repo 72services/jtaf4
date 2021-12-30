@@ -1,22 +1,18 @@
 package ch.jtaf.ui.security;
 
-import ch.jtaf.ui.component.RouteNotFoundError;
-import ch.jtaf.ui.view.DashboardView;
-import ch.jtaf.ui.view.LoginView;
-import com.vaadin.flow.server.HandlerHelper;
-import com.vaadin.flow.shared.ApplicationConstants;
-import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.security.access.annotation.Secured;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.server.VaadinResponse;
+import com.vaadin.flow.server.VaadinServletRequest;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.util.StringUtils;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Takes care of all such static operations that have to do with security and
@@ -34,50 +30,16 @@ public final class SecurityContext {
      * @return the username of the current user or <code>null</code> if the user
      * has not signed in
      */
-    @SuppressWarnings("unused")
-    public static String getUsername() {
+    public static String getUserEmail() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
+            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             return userDetails.getUsername();
+        } else if (principal instanceof String) {
+            return principal.toString();
         }
         // Anonymous or no authentication.
-        return null;
-    }
-
-    /**
-     * Checks if access is granted for the current user for the given secured view,
-     * defined by the view class.
-     *
-     * @param securedClass View class
-     * @return true if access is granted, false otherwise.
-     */
-    public static boolean isAccessGranted(Class<?> securedClass) {
-        final boolean publicView = LoginView.class.equals(securedClass) || DashboardView.class.equals(securedClass)
-            || RouteNotFoundError.class.equals(securedClass);
-
-        // Always allow access to public views
-        if (publicView) {
-            return true;
-        }
-
-        Authentication userAuthentication = SecurityContextHolder.getContext().getAuthentication();
-
-        // All other views require authentication
-        if (!isUserLoggedIn(userAuthentication)) {
-            return false;
-        }
-
-        // Allow if no roles are required.
-        Secured secured = AnnotationUtils.findAnnotation(securedClass, Secured.class);
-        if (secured == null) {
-            return true;
-        }
-
-        List<String> allowedRoles = Arrays.asList(secured.value());
-        return userAuthentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-            .anyMatch(allowedRoles::contains);
+        return "";
     }
 
     /**
@@ -93,18 +55,19 @@ public final class SecurityContext {
         return authentication != null && !(authentication instanceof AnonymousAuthenticationToken);
     }
 
-    /**
-     * Tests if the request is an internal framework request. The test consists of
-     * checking if the request parameter is present and if its value is consistent
-     * with any of the request types know.
-     *
-     * @param request {@link HttpServletRequest}
-     * @return true if is an internal framework request. False otherwise.
-     */
-    static boolean isFrameworkInternalRequest(HttpServletRequest request) {
-        final String parameterValue = request.getParameter(ApplicationConstants.REQUEST_TYPE_PARAMETER);
-        return parameterValue != null && Stream.of(HandlerHelper.RequestType.values())
-            .anyMatch(r -> r.getIdentifier().equals(parameterValue));
-    }
+    public static void logout() {
+        HttpServletRequest request = VaadinServletRequest.getCurrent().getHttpServletRequest();
 
+        UI.getCurrent().getPage().setLocation(SecurityConfiguration.LOGOUT_URL);
+        SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+        logoutHandler.logout(request, null, null);
+
+        String cookieName = "remember-me";
+        Cookie cookie = new Cookie(cookieName, null);
+        cookie.setMaxAge(0);
+        cookie.setPath(StringUtils.hasLength(request.getContextPath()) ? request.getContextPath() : "/");
+
+        HttpServletResponse response = (HttpServletResponse) VaadinResponse.getCurrent();
+        response.addCookie(cookie);
+    }
 }

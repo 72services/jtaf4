@@ -1,4 +1,4 @@
-package ch.jtaf.ui.component;
+package ch.jtaf.ui.errorhandling;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Tag;
@@ -12,6 +12,7 @@ import java.io.Serial;
 
 import static com.vaadin.flow.component.Tag.DIV;
 
+@SuppressWarnings("unused")
 @Tag(DIV)
 public class RouteNotFoundError extends Component implements HasErrorParameter<NotFoundException> {
 

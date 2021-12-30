@@ -2,7 +2,8 @@ package ch.jtaf.ui.view;
 
 import ch.jtaf.db.tables.records.SeriesRecord;
 import ch.jtaf.ui.layout.MainLayout;
-import ch.jtaf.util.LogoUtil;
+import ch.jtaf.ui.security.OrganizationProvider;
+import ch.jtaf.ui.util.LogoUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -29,13 +30,16 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public SeriesListView(DSLContext dsl) {
-        super(dsl, SERIES);
+    public SeriesListView(DSLContext dsl, OrganizationProvider organizationProvider) {
+        super(dsl, organizationProvider, SERIES);
 
         setHeightFull();
 
         Button add = new Button(getTranslation("Add"));
+        add.setId("add-series");
         add.addClickListener(event -> UI.getCurrent().navigate(SeriesView.class));
+
+        grid.setId("series-grid");
 
         grid.addComponentColumn(LogoUtil::resizeLogo).setHeader(getTranslation("Logo"));
         grid.addColumn(SeriesRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
@@ -84,10 +88,9 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
             HorizontalLayout horizontalLayout = new HorizontalLayout(delete);
             horizontalLayout.setJustifyContentMode(JustifyContentMode.END);
             return horizontalLayout;
-        }).setTextAlign(ColumnTextAlign.END).setHeader(add);
+        }).setTextAlign(ColumnTextAlign.END).setHeader(add).setKey("delete-column");
 
-        grid.addSelectionListener(event -> event.getFirstSelectedItem()
-            .ifPresent(seriesRecord -> UI.getCurrent().navigate(SeriesView.class, "" + seriesRecord.getId())));
+        grid.addItemClickListener(event -> UI.getCurrent().navigate(SeriesView.class, "" + event.getItem().getId()));
 
         add(grid);
     }

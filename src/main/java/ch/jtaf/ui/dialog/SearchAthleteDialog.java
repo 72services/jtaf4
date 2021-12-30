@@ -23,6 +23,7 @@ import org.jooq.impl.DSL;
 
 import java.io.Serial;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -110,6 +111,7 @@ public class SearchAthleteDialog extends Dialog {
         dataProvider = callbackDataProvider.withConfigurableFilter();
 
         Grid<AthleteRecord> grid = new Grid<>();
+        grid.setId("search-athletes-grid");
         grid.setItems(dataProvider);
         grid.getStyle().set("height", "calc(100% - 300px");
 
@@ -120,14 +122,14 @@ public class SearchAthleteDialog extends Dialog {
         grid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
             : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club"));
 
-        addActionColumnAndSetSelectionListener(grid, dialog, dataProvider::refreshAll, () -> {
+        addActionColumnAndSetSelectionListener(grid, dialog, athleteRecord -> dataProvider.refreshAll(), () -> {
             AthleteRecord newRecord = ATHLETE.newRecord();
             newRecord.setOrganizationId(organizationId);
             return newRecord;
         }, getTranslation("Assign.Athlete"), athleteRecord -> {
             onSelect.accept(athleteRecord);
             close();
-        });
+        }, dataProvider::refreshAll);
 
         filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
 
@@ -159,9 +161,11 @@ public class SearchAthleteDialog extends Dialog {
         isFullScreen = !isFullScreen;
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private Condition createCondition(Query<?, ?> query) {
-        if (query.getFilter().isPresent()) {
-            String filterString = (String) query.getFilter().get();
+        Optional<?> optionalFilter = query.getFilter();
+        if (optionalFilter.isPresent()) {
+            String filterString = (String) optionalFilter.get();
             if (StringUtils.isNumeric(filterString)) {
                 return ATHLETE.ID.eq(Long.valueOf(filterString));
             } else {

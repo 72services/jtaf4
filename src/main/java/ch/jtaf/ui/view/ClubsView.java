@@ -3,6 +3,7 @@ package ch.jtaf.ui.view;
 import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.ui.dialog.ClubDialog;
 import ch.jtaf.ui.layout.MainLayout;
+import ch.jtaf.ui.security.OrganizationProvider;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.router.Route;
 import org.jooq.Condition;
@@ -20,8 +21,8 @@ public class ClubsView extends ProtectedGridView<ClubRecord> {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public ClubsView(DSLContext dsl) {
-        super(dsl, CLUB);
+    public ClubsView(DSLContext dsl, OrganizationProvider organizationProvider) {
+        super(dsl, organizationProvider, CLUB);
 
         setHeightFull();
 
@@ -31,18 +32,20 @@ public class ClubsView extends ProtectedGridView<ClubRecord> {
         add.addClickListener(event -> {
             ClubRecord newRecord = CLUB.newRecord();
             newRecord.setOrganizationId(organizationRecord.getId());
-            dialog.open(newRecord, dataProvider::refreshAll);
+            dialog.open(newRecord, clubRecord -> refreshAll());
         });
+
+        grid.setId("clubs-grid");
 
         grid.addColumn(ClubRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true);
         grid.addColumn(ClubRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
 
-        addActionColumnAndSetSelectionListener(grid, dialog, dataProvider::refreshAll,
+        addActionColumnAndSetSelectionListener(grid, dialog, clubRecord -> refreshAll(),
             () -> {
                 ClubRecord newRecord = CLUB.newRecord();
                 newRecord.setOrganizationId(organizationRecord.getId());
                 return newRecord;
-            });
+            }, this::refreshAll);
 
         add(grid);
     }

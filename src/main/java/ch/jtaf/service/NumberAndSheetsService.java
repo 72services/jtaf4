@@ -23,6 +23,7 @@ import static org.jooq.Records.mapping;
 import static org.jooq.impl.DSL.multiset;
 import static org.jooq.impl.DSL.select;
 
+@SuppressWarnings("ClassCanBeRecord")
 @Service
 public class NumberAndSheetsService {
 
@@ -55,11 +56,8 @@ public class NumberAndSheetsService {
                 DSL.inline(null, SQLDataType.VARCHAR),
                 multiset(
                     select(
-                        CATEGORY_EVENT.event().ABBREVIATION,
                         CATEGORY_EVENT.event().NAME,
-                        CATEGORY_EVENT.event().GENDER,
-                        CATEGORY_EVENT.event().EVENT_TYPE,
-                        CATEGORY_EVENT.POSITION
+                        CATEGORY_EVENT.event().EVENT_TYPE
                     )
                         .from(CATEGORY_EVENT)
                         .where(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
@@ -73,7 +71,7 @@ public class NumberAndSheetsService {
 
     private NumbersAndSheetsCompetition getCompetition(Long competitionId) {
         return dsl
-            .select(COMPETITION.ID, COMPETITION.NAME, COMPETITION.COMPETITION_DATE)
+            .select(COMPETITION.NAME, COMPETITION.COMPETITION_DATE)
             .from(COMPETITION)
             .where(COMPETITION.ID.eq(competitionId))
             .fetchOneInto(NumbersAndSheetsCompetition.class);
@@ -99,11 +97,8 @@ public class NumberAndSheetsService {
                 ATHLETE.club().ABBREVIATION,
                 multiset(
                     select(
-                        CATEGORY_EVENT.event().ABBREVIATION,
                         CATEGORY_EVENT.event().NAME,
-                        CATEGORY_EVENT.event().GENDER,
-                        CATEGORY_EVENT.event().EVENT_TYPE,
-                        CATEGORY_EVENT.POSITION
+                        CATEGORY_EVENT.event().EVENT_TYPE
                     )
                         .from(CATEGORY_EVENT)
                         .where(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))

@@ -6,16 +6,16 @@ import com.vaadin.flow.component.textfield.TextField;
 
 import java.io.Serial;
 
-@SuppressWarnings("DuplicatedCode")
 public class ClubDialog extends EditDialog<ClubRecord> {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     public ClubDialog(String title) {
-        super(title);
+        super(title, "600px");
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Override
     public void createForm() {
         TextField abbreviation = new TextField(getTranslation("Abbreviation"));

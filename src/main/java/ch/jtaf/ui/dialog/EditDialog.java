@@ -1,6 +1,5 @@
 package ch.jtaf.ui.dialog;
 
-import ch.jtaf.ui.function.Callback;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -17,6 +16,7 @@ import org.jooq.UpdatableRecord;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.io.Serial;
+import java.util.function.Consumer;
 
 import static ch.jtaf.context.ApplicationContextHolder.getBean;
 
@@ -27,6 +27,8 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
 
     public static final String FULLSCREEN = "fullscreen";
 
+    private final String initialWidth;
+
     private boolean isFullScreen = false;
     private final Div content;
     private final Button max;
@@ -34,23 +36,24 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
     final Binder<R> binder;
     final FormLayout formLayout;
 
-    private Callback afterSave;
+    private transient Consumer<R> afterSave;
     private boolean initialized;
 
-    public EditDialog(String title) {
+    protected EditDialog(String title, String initialWidth) {
+        this.initialWidth = initialWidth;
+        setWidth(initialWidth);
+
         getElement().getThemeList().add("jtaf-dialog");
         getElement().setAttribute("aria-labelledby", "dialog-title");
 
         setDraggable(true);
         setResizable(true);
 
-        setWidth("600px");
-
         H2 headerTitel = new H2(title);
         headerTitel.addClassName("dialog-title");
 
         max = new Button(VaadinIcon.EXPAND_SQUARE.create());
-        max.addClickListener(event -> maximise());
+        max.addClickListener(event -> maximiseMinimize());
 
         Button close = new Button(VaadinIcon.CLOSE_SMALL.create());
         close.addClickListener(event -> close());
@@ -64,14 +67,15 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
         binder = new Binder<>();
 
         Button save = new Button(getTranslation("Save"));
+        save.setId("edit-save");
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         save.addClickListener(event -> {
-            getBean(TransactionTemplate.class).executeWithoutResult((transactionStatus) -> {
+            getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> {
                 getBean(DSLContext.class).attach(binder.getBean());
                 binder.getBean().store();
 
                 if (afterSave != null) {
-                    afterSave.execute();
+                    afterSave.accept(binder.getBean());
                 }
             });
             close();
@@ -92,8 +96,8 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
     public abstract void createForm();
 
     @SuppressWarnings("unchecked")
-    public void open(UpdatableRecord<?> record, Callback afterSave) {
-        binder.setBean((R) record);
+    public void open(UpdatableRecord<?> updatableRecord, Consumer<R> afterSave) {
+        binder.setBean((R) updatableRecord);
         this.afterSave = afterSave;
 
         if (!initialized) {
@@ -108,10 +112,10 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
         max.setIcon(VaadinIcon.EXPAND_SQUARE.create());
         getElement().getThemeList().remove(FULLSCREEN);
         setHeight("auto");
-        setWidth("600px");
+        setWidth(initialWidth);
     }
 
-    private void maximise() {
+    private void maximiseMinimize() {
         if (isFullScreen) {
             initialSize();
         } else {

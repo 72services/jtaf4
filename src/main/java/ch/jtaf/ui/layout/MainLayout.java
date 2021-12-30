@@ -1,13 +1,14 @@
 package ch.jtaf.ui.layout;
 
 import ch.jtaf.db.tables.records.OrganizationRecord;
-import ch.jtaf.ui.security.OrganizationHolder;
+import ch.jtaf.ui.security.OrganizationProvider;
 import ch.jtaf.ui.security.SecurityContext;
 import ch.jtaf.ui.view.AthletesView;
 import ch.jtaf.ui.view.ClubsView;
 import ch.jtaf.ui.view.DashboardView;
 import ch.jtaf.ui.view.EventsView;
 import ch.jtaf.ui.view.OrganizationsView;
+import ch.jtaf.ui.view.RegisterView;
 import ch.jtaf.ui.view.SeriesListView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Html;
@@ -16,6 +17,7 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
@@ -45,17 +47,21 @@ import java.util.List;
 @Theme("jtaf")
 @PWA(name = "JTAF 4", shortName = "JTAF 4", description = "JTAF - Track and Field")
 @StyleSheet("https://fonts.googleapis.com/css2?family=Poppins")
+@NpmPackage(value = "lumo-css-framework", version = "^4.0.10")
+@NpmPackage(value = "line-awesome", version = "1.3.0")
 public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShellConfigurator {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
+    private static final String LA_LA_FILE = "la la-file";
+
+    private final transient OrganizationProvider organizationProvider;
+    private final String applicationVersion;
+
     private final Div version = new Div();
     private Button login;
     private Button logout;
-
-    @Value("${application.version}")
-    private String applicationVersion;
 
     private H1 viewTitle;
 
@@ -63,8 +69,12 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
     private RouterLink eventsLink;
     private RouterLink clubsLink;
     private RouterLink athletesLink;
+    private RouterLink register;
 
-    public MainLayout() {
+    public MainLayout(OrganizationProvider organizationProvider, @Value("${application.version}") String applicationVersion) {
+        this.organizationProvider = organizationProvider;
+        this.applicationVersion = applicationVersion;
+
         setPrimarySection(Section.DRAWER);
         addToNavbar(true, createHeaderContent());
         addToDrawer(createDrawerContent());
@@ -77,6 +87,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
         toggle.getElement().setAttribute("aria-label", "Menu toggle");
 
         viewTitle = new H1();
+        viewTitle.setId("view-title");
         viewTitle.addClassNames("m-0", "text-l");
         viewTitle.setWidth("300px");
 
@@ -89,15 +100,14 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
         Anchor about = new Anchor("https://github.com/72services/jtaf4", "About");
         about.setTarget("_blank");
 
+        register = new RouterLink(getTranslation("Register"), RegisterView.class);
+
         login = new Button("Login", e -> UI.getCurrent().navigate(OrganizationsView.class));
         login.setVisible(false);
 
-        logout = new Button("Logout", e -> {
-            UI.getCurrent().getSession().close();
-            UI.getCurrent().getPage().setLocation("/logout");
-        });
+        logout = new Button("Logout", e -> SecurityContext.logout());
 
-        info.add(about, version, login, logout);
+        info.add(about, version, register, login, logout);
 
         Header header = new Header(toggle, viewTitle, info);
         header.addClassNames("bg-base", "border-b", "border-contrast-10", "box-border", "flex", "h-xl", "items-center", "w-full");
@@ -131,18 +141,18 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
         List<RouterLink> links = new ArrayList<>();
 
         links.add(createLink(new MenuItemInfo(getTranslation("Dashboard"), "la la-globe", DashboardView.class)));
-        links.add(createLink(new MenuItemInfo(getTranslation("My.Organizations"), "la la-file", OrganizationsView.class)));
+        links.add(createLink(new MenuItemInfo(getTranslation("My.Organizations"), LA_LA_FILE, OrganizationsView.class)));
 
-        seriesLink = createLink(new MenuItemInfo("", "la la-file", SeriesListView.class));
+        seriesLink = createLink(new MenuItemInfo("", LA_LA_FILE, SeriesListView.class));
         links.add(seriesLink);
 
-        eventsLink = createLink(new MenuItemInfo(getTranslation("Events"), "la la-file", EventsView.class));
+        eventsLink = createLink(new MenuItemInfo(getTranslation("Events"), LA_LA_FILE, EventsView.class));
         links.add(eventsLink);
 
-        clubsLink = createLink(new MenuItemInfo(getTranslation("Clubs"), "la la-file", ClubsView.class));
+        clubsLink = createLink(new MenuItemInfo(getTranslation("Clubs"), LA_LA_FILE, ClubsView.class));
         links.add(clubsLink);
 
-        athletesLink = createLink(new MenuItemInfo(getTranslation("Athletes"), "la la-file", AthletesView.class));
+        athletesLink = createLink(new MenuItemInfo(getTranslation("Athletes"), LA_LA_FILE, AthletesView.class));
         links.add(athletesLink);
 
         setVisibilityOfLinks(false);
@@ -153,15 +163,15 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
     private static RouterLink createLink(MenuItemInfo menuItemInfo) {
         RouterLink link = new RouterLink();
         link.addClassNames("flex", "mx-s", "p-s", "relative", "text-secondary");
-        link.setRoute(menuItemInfo.getView());
+        link.setRoute(menuItemInfo.view());
 
         Span icon = new Span();
         icon.addClassNames("me-s", "text-l");
-        if (!menuItemInfo.getIconClass().isEmpty()) {
-            icon.addClassNames(menuItemInfo.getIconClass());
+        if (!menuItemInfo.iconClass().isEmpty()) {
+            icon.addClassNames(menuItemInfo.iconClass());
         }
 
-        Span text = new Span(menuItemInfo.getText());
+        Span text = new Span(menuItemInfo.text());
         text.addClassNames("font-medium", "text-s");
 
         link.add(icon, text);
@@ -204,15 +214,19 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         if (SecurityContext.isUserLoggedIn()) {
+            register.setVisible(false);
             login.setVisible(false);
+
+            logout.setText("Logout (%s)".formatted(SecurityContext.getUserEmail()));
             logout.setVisible(true);
 
-            OrganizationRecord organization = OrganizationHolder.getOrganization();
+            OrganizationRecord organization = organizationProvider.getOrganization();
             if (organization != null) {
                 seriesLink.setText(organization.getOrganizationKey());
                 setVisibilityOfLinks(true);
             }
         } else {
+            register.setVisible(true);
             login.setVisible(true);
             logout.setVisible(false);
 
@@ -228,29 +242,6 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
         athletesLink.setVisible(visible);
     }
 
-    public static class MenuItemInfo {
-
-        private String text;
-        private String iconClass;
-        private Class<? extends Component> view;
-
-        public MenuItemInfo(String text, String iconClass, Class<? extends Component> view) {
-            this.text = text;
-            this.iconClass = iconClass;
-            this.view = view;
-        }
-
-        public String getText() {
-            return text;
-        }
-
-        public String getIconClass() {
-            return iconClass;
-        }
-
-        public Class<? extends Component> getView() {
-            return view;
-        }
-
+    public record MenuItemInfo(String text, String iconClass, Class<? extends Component> view) {
     }
 }

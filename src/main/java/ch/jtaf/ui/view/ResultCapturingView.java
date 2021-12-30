@@ -24,8 +24,10 @@ import org.jooq.Record4;
 import org.jooq.impl.DSL;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.annotation.security.RolesAllowed;
 import java.io.Serial;
 import java.util.List;
+import java.util.Optional;
 
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
@@ -35,6 +37,7 @@ import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Result.RESULT;
 import static org.jooq.impl.DSL.upper;
 
+@RolesAllowed({"USER", "ADMIN"})
 @Route(layout = MainLayout.class)
 public class ResultCapturingView extends VerticalLayout implements HasDynamicTitle, HasUrlParameter<String> {
 
@@ -85,18 +88,19 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                     .fetchOneInto(Integer.class);
                 return count != null ? count : 0;
             },
-            record -> record.get(ATHLETE.ID)
+            athleteRecord -> athleteRecord.get(ATHLETE.ID)
         );
         dataProvider = callbackDataProvider.withConfigurableFilter();
 
         TextField filter = new TextField();
+        filter.setId("filter");
         filter.focus();
         filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
         add(filter);
 
-        grid.addColumn(record -> record.get(ATHLETE.ID)).setHeader("ID").setSortable(true);
-        grid.addColumn(record -> record.get(ATHLETE.LAST_NAME)).setHeader(getTranslation("Last.Name")).setSortable(true);
-        grid.addColumn(record -> record.get(ATHLETE.FIRST_NAME)).setHeader(getTranslation("First.Name")).setSortable(true);
+        grid.addColumn(athleteRecord -> athleteRecord.get(ATHLETE.ID)).setHeader("ID").setSortable(true);
+        grid.addColumn(athleteRecord -> athleteRecord.get(ATHLETE.LAST_NAME)).setHeader(getTranslation("Last.Name")).setSortable(true);
+        grid.addColumn(athleteRecord -> athleteRecord.get(ATHLETE.FIRST_NAME)).setHeader(getTranslation("First.Name")).setSortable(true);
         grid.setItems(dataProvider);
         grid.setHeight("200px");
         add(grid);
@@ -130,6 +134,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                         .fetchOne();
 
                     TextField result = new TextField(eventRecord.getName());
+                    result.setId("result-" + position);
                     formLayout.add(result);
 
                     if (first) {
@@ -138,6 +143,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                     }
 
                     TextField points = new TextField();
+                    points.setId("points-" + position);
                     points.setReadOnly(true);
                     points.setEnabled(false);
                     formLayout.add(points);
@@ -173,8 +179,9 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
     @SuppressWarnings("DuplicatedCode")
     private Condition createCondition(Query<?, ?> query) {
-        if (query.getFilter().isPresent()) {
-            String filterString = (String) query.getFilter().get();
+        Optional<?> optionalFilter = query.getFilter();
+        if (optionalFilter.isPresent()) {
+            String filterString = (String) optionalFilter.get();
             if (StringUtils.isNumeric(filterString)) {
                 return ATHLETE.ID.eq(Long.valueOf(filterString));
             } else {

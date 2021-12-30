@@ -20,6 +20,7 @@ import static org.jooq.impl.DSL.multiset;
 import static org.jooq.impl.DSL.select;
 import static org.jooq.impl.DSL.sum;
 
+@SuppressWarnings("ClassCanBeRecord")
 @Service
 public class SeriesRankingService {
 

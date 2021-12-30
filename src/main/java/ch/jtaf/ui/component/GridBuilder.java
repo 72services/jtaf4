@@ -1,7 +1,6 @@
 package ch.jtaf.ui.component;
 
 import ch.jtaf.ui.dialog.EditDialog;
-import ch.jtaf.ui.function.Callback;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
@@ -26,29 +25,34 @@ public class GridBuilder {
     }
 
     public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(Grid<R> grid, EditDialog<R> dialog,
-                                                                                             Callback afterSave, Supplier<R> onNewRecord) {
-        addActionColumnAndSetSelectionListener(grid, dialog, afterSave, onNewRecord, null, null);
+                                                                                             Consumer<R> afterSave, Supplier<R> onNewRecord,
+                                                                                             Runnable afterDelete) {
+        addActionColumnAndSetSelectionListener(grid, dialog, afterSave, onNewRecord, null, null, afterDelete);
     }
 
     public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(Grid<R> grid, EditDialog<R> dialog,
-                                                                                             Callback afterSave, Supplier<R> onNewRecord,
-                                                                                             String insteadOfDeleteTitle, Consumer<R> insteadOfDelete) {
+                                                                                             Consumer<R> afterSave, Supplier<R> onNewRecord,
+                                                                                             String insteadOfDeleteTitle, Consumer<R> insteadOfDelete,
+                                                                                             Runnable afterDelete) {
         Button buttonAdd = new Button(grid.getTranslation("Add"));
+        buttonAdd.setId("add-button");
         buttonAdd.addClickListener(event -> dialog.open(onNewRecord.get(), afterSave));
-        grid.addComponentColumn(record -> {
+        grid.addComponentColumn(updatableRecord -> {
             Button delete = new Button(insteadOfDeleteTitle != null ? insteadOfDeleteTitle : grid.getTranslation("Delete"));
             delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
             delete.addClickListener(event -> {
                 if (insteadOfDelete != null) {
-                    getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> insteadOfDelete.accept(record));
+                    getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> insteadOfDelete.accept(updatableRecord));
                 } else {
                     ConfirmDialog confirmDialog = new ConfirmDialog(grid.getTranslation("Confirm"),
                         grid.getTranslation("Are.you.sure"),
                         grid.getTranslation("Delete"), e ->
                         getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> {
                             try {
-                                getBean(DSLContext.class).attach(record);
-                                record.delete();
+                                getBean(DSLContext.class).attach(updatableRecord);
+                                updatableRecord.delete();
+
+                                afterDelete.run();
                             } catch (DataAccessException ex) {
                                 Notification.show(ex.getMessage());
                             }
@@ -63,9 +67,9 @@ public class GridBuilder {
             HorizontalLayout horizontalLayout = new HorizontalLayout(delete);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
             return horizontalLayout;
-        }).setTextAlign(ColumnTextAlign.END).setHeader(buttonAdd);
-        grid.addSelectionListener(event -> event.getFirstSelectedItem().ifPresent(
-            record -> dialog.open(record, afterSave)));
+        }).setTextAlign(ColumnTextAlign.END).setHeader(buttonAdd).setKey("edit-column");
+
+        grid.addItemClickListener(event -> dialog.open(event.getItem(), afterSave));
     }
 
 }
