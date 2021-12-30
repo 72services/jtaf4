@@ -13,7 +13,6 @@ import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
@@ -48,8 +47,7 @@ class SeriesViewTest extends KaribuTest {
         Grid<CompetitionRecord> competitionsGrid = _get(Grid.class, spec -> spec.withId("competitions-grid"));
         assertThat(GridKt._size(competitionsGrid)).isEqualTo(2);
 
-        CompetitionRecord competitionRecord = GridKt._get(competitionsGrid, 0);
-        assertThat(competitionRecord.getName()).isEqualTo("1. CIS Twann");
+        assertThat(GridKt._get(competitionsGrid, 0).getName()).isEqualTo("1. CIS Twann");
 
         _get(Button.class, spec -> spec.withId("add-button")).click();
         _assert(Dialog.class, 1);
@@ -60,12 +58,11 @@ class SeriesViewTest extends KaribuTest {
 
         assertThat(GridKt._size(competitionsGrid)).isEqualTo(3);
 
-        competitionRecord = GridKt._get(competitionsGrid, 2);
-        assertThat(competitionRecord.getName()).isEqualTo("Test");
+        assertThat(GridKt._get(competitionsGrid, 2).getName()).isEqualTo("Test");
 
-        HorizontalLayout edit = (HorizontalLayout) GridKt._getCellComponent(competitionsGrid, 2, "Edit");
-        Button delete = (Button) edit.getChildren().filter(component -> component instanceof Button).findFirst().get();
-        delete.click();
+        GridKt._getCellComponent(competitionsGrid, 2, "edit-column").getChildren()
+            .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
+            .ifPresent(Button::click);
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
         assertThat(confirmDialog.isOpened()).isTrue();
@@ -84,8 +81,7 @@ class SeriesViewTest extends KaribuTest {
         Grid<CategoryRecord> categoriesGrid = _get(Grid.class, spec -> spec.withId("categories-grid"));
         assertThat(GridKt._size(categoriesGrid)).isEqualTo(12);
 
-        CategoryRecord categoryRecord = GridKt._get(categoriesGrid, 0);
-        assertThat(categoryRecord.getAbbreviation()).isEqualTo("A");
+        assertThat(GridKt._get(categoriesGrid, 0).getAbbreviation()).isEqualTo("A");
 
         // Create Category
         _get(Button.class, spec -> spec.withId("add-button")).click();
@@ -100,30 +96,26 @@ class SeriesViewTest extends KaribuTest {
 
         assertThat(GridKt._size(categoriesGrid)).isEqualTo(13);
 
-        categoryRecord = GridKt._get(categoriesGrid, 0);
-        assertThat(categoryRecord.getAbbreviation()).isEqualTo("1");
+        assertThat(GridKt._get(categoriesGrid, 0).getAbbreviation()).isEqualTo("1");
 
         // Assign Event
         GridKt._clickItem(categoriesGrid, 0);
 
-        Button addEvent = _get(Button.class, spec -> spec.withId("add-event"));
-        addEvent.click();
+        _get(Button.class, spec -> spec.withId("add-event")).click();
 
         Grid<EventRecord> eventsGrid = _get(Grid.class, spec -> spec.withId("events-grid"));
 
-        Button assign = (Button) GridKt._getCellComponent(eventsGrid, 0, "Assign");
-        assign.click();
+        ((Button) GridKt._getCellComponent(eventsGrid, 0, "assign-column")).click();
 
-        Dialog dialog = _get(Dialog.class, spec -> spec.withId("search-event-dialog"));
-        dialog.close();
+        _get(Dialog.class, spec -> spec.withId("search-event-dialog")).close();
 
         // Remove Event from Category
         Grid<EventRecord> categoryEventsGrid = _get(Grid.class, spec -> spec.withId("category-events-grid"));
         assertThat(GridKt._size(categoryEventsGrid)).isEqualTo(1);
 
-        HorizontalLayout edit = (HorizontalLayout) GridKt._getCellComponent(categoryEventsGrid, 0, "Edit");
-        Button delete = (Button) edit.getChildren().filter(component -> component instanceof Button).findFirst().get();
-        delete.click();
+        GridKt._getCellComponent(categoryEventsGrid, 0, "edit-column").getChildren()
+            .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
+            .ifPresent(Button::click);
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
         assertThat(confirmDialog.isOpened()).isTrue();
@@ -133,9 +125,9 @@ class SeriesViewTest extends KaribuTest {
         assertThat(GridKt._size(categoryEventsGrid)).isEqualTo(0);
 
         // Remove Category
-        edit = (HorizontalLayout) GridKt._getCellComponent(categoriesGrid, 0, "Edit");
-        delete = (Button) edit.getChildren().filter(component -> component instanceof Button).findFirst().get();
-        delete.click();
+        GridKt._getCellComponent(categoriesGrid, 0, "edit-column").getChildren()
+            .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
+            .ifPresent(Button::click);
 
         confirmDialog = _get(ConfirmDialog.class);
         assertThat(confirmDialog.isOpened()).isTrue();
@@ -154,8 +146,7 @@ class SeriesViewTest extends KaribuTest {
         Grid<AthleteRecord> athletesGrid = _get(Grid.class, spec -> spec.withId("athletes-grid"));
         assertThat(GridKt._size(athletesGrid)).isEqualTo(85);
 
-        AthleteRecord athleteRecord = GridKt._get(athletesGrid, 0);
-        assertThat(athleteRecord.getLastName()).isEqualTo("Scholer");
+        assertThat(GridKt._get(athletesGrid, 0).getLastName()).isEqualTo("Scholer");
 
         Button assignAthlete = _get(Button.class, spec -> spec.withId("assign-athlete"));
         assignAthlete.click();
@@ -167,21 +158,19 @@ class SeriesViewTest extends KaribuTest {
         Grid<AthleteRecord> searchAthletesGrid = _get(Grid.class, spec -> spec.withId("search-athletes-grid"));
         assertThat(GridKt._size(searchAthletesGrid)).isEqualTo(1);
 
-        athleteRecord = GridKt._get(searchAthletesGrid, 0);
-        assertThat(athleteRecord.getLastName()).isEqualTo("Zumstein");
+        assertThat(GridKt._get(searchAthletesGrid, 0).getLastName()).isEqualTo("Zumstein");
 
-        HorizontalLayout edit = (HorizontalLayout) GridKt._getCellComponent(searchAthletesGrid, 0, "Edit");
-        Button assign = (Button) edit.getChildren().filter(component -> component instanceof Button).findFirst().get();
-        assign.click();
+        GridKt._getCellComponent(searchAthletesGrid, 0, "edit-column").getChildren()
+            .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
+            .ifPresent(Button::click);
 
         assertThat(GridKt._size(athletesGrid)).isEqualTo(86);
 
-        athleteRecord = GridKt._get(athletesGrid, 40);
-        assertThat(athleteRecord.getLastName()).isEqualTo("Zumstein");
+        assertThat(GridKt._get(athletesGrid, 40).getLastName()).isEqualTo("Zumstein");
 
-        HorizontalLayout remove = (HorizontalLayout) GridKt._getCellComponent(athletesGrid, 40, "Remove");
-        Button removeButton = (Button) remove.getChildren().filter(component -> component instanceof Button).findFirst().get();
-        removeButton.click();
+        GridKt._getCellComponent(athletesGrid, 40, "remove-column").getChildren()
+            .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
+            .ifPresent(Button::click);
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
         assertThat(confirmDialog.isOpened()).isTrue();

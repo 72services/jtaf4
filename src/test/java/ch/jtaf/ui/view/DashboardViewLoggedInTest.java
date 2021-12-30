@@ -30,6 +30,7 @@ class DashboardViewLoggedInTest extends KaribuTest {
         Locale.setDefault(Locale.GERMAN);
 
         UI.getCurrent().getPage().reload();
+
         _assert(Button.class, 6, spec -> spec.withCaption("Resultate eingeben"));
 
         Locale.setDefault(Locale.ENGLISH);

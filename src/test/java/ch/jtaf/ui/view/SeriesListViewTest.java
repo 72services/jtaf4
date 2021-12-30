@@ -8,7 +8,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,8 +41,7 @@ class SeriesListViewTest extends KaribuTest {
         Button save = _get(Button.class, spec -> spec.withId("save-series"));
         save.click();
 
-        Notification notification = _get(Notification.class);
-        assertThat(notification.getElement().getOuterHTML()).isEqualTo("""
+        assertThat(_get(Notification.class).getElement().getOuterHTML()).isEqualTo("""
             <vaadin-notification suppress-template-warning>
              <template>
               Series saved
@@ -55,12 +53,11 @@ class SeriesListViewTest extends KaribuTest {
         Grid<SeriesRecord> seriesGrid = _get(Grid.class, spec -> spec.withId("series-grid"));
         assertThat(GridKt._size(seriesGrid)).isEqualTo(3);
 
-        SeriesRecord seriesRecord = GridKt._get(seriesGrid, 2);
-        assertThat(seriesRecord.getName()).isEqualTo("Test");
+        assertThat(GridKt._get(seriesGrid, 2).getName()).isEqualTo("Test");
 
-        HorizontalLayout edit = (HorizontalLayout) GridKt._getCellComponent(seriesGrid, 2, "Delete");
-        Button delete = (Button) edit.getChildren().filter(component -> component instanceof Button).findFirst().get();
-        delete.click();
+        GridKt._getCellComponent(seriesGrid, 2, "delete-column").getChildren()
+            .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
+            .ifPresent(Button::click);
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
         assertThat(confirmDialog.isOpened()).isTrue();

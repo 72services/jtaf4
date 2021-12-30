@@ -99,7 +99,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
             HorizontalLayout horizontalLayout = new HorizontalLayout(select, delete);
             horizontalLayout.setJustifyContentMode(JustifyContentMode.END);
             return horizontalLayout;
-        }).setTextAlign(ColumnTextAlign.END).setHeader(add).setKey("Edit");
+        }).setTextAlign(ColumnTextAlign.END).setHeader(add).setKey("edit-column");
 
         grid.addItemClickListener(event -> dialog.open(event.getItem(), this::loadData));
 

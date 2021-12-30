@@ -18,20 +18,31 @@ class ResultCapturingViewTest extends KaribuTest {
     public void login() {
         login("simon@martinelli.ch", "", List.of("ADMIN"));
         UI.getCurrent().getPage().reload();
+
+        Button enterResults = _get(Button.class, spec -> spec.withId("enter-results-1"));
+        enterResults.click();
     }
 
     @Test
     void check_pre_entered_results() {
-        Button enterResults = _get(Button.class, spec -> spec.withId("enter-results-1"));
-        enterResults.click();
+        _get(TextField.class, spec -> spec.withId("filter")).setValue("Martinelli");
 
-        TextField filter = _get(TextField.class, spec -> spec.withId("filter"));
-        filter.setValue("Martinelli");
+        assertThat(_get(TextField.class, spec1 -> spec1.withCaption("80 m")).getValue()).isEqualTo("12.12");
 
-        TextField result = _get(TextField.class, spec -> spec.withCaption("80 m"));
-        assertThat(result.getValue()).isEqualTo("12.12");
+        assertThat(_get(TextField.class, spec -> spec.withId("points-0")).getValue()).isEqualTo("402");
+    }
 
-        TextField points = _get(TextField.class, spec -> spec.withId("points-0"));
-        assertThat(points.getValue()).isEqualTo("402");
+    @Test
+    void enter_new_results() {
+        _get(TextField.class, spec -> spec.withId("filter")).setValue("Ansari");
+
+        _get(TextField.class, spec -> spec.withId("result-0")).setValue("12.34");
+        assertThat(_get(TextField.class, spec2 -> spec2.withId("points-0")).getValue()).isEqualTo("48");
+
+        _get(TextField.class, spec -> spec.withId("result-1")).setValue("2.11");
+        assertThat(_get(TextField.class, spec1 -> spec1.withId("points-1")).getValue()).isEqualTo("108");
+
+        _get(TextField.class, spec -> spec.withId("result-2")).setValue("23.45");
+        assertThat(_get(TextField.class, spec -> spec.withId("points-2")).getValue()).isEqualTo("252");
     }
 }

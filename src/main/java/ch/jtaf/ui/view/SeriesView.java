@@ -310,7 +310,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
             HorizontalLayout horizontalLayout = new HorizontalLayout(remove);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
             return horizontalLayout;
-        }).setTextAlign(ColumnTextAlign.END).setHeader(assign).setKey("Remove");
+        }).setTextAlign(ColumnTextAlign.END).setHeader(assign).setKey("remove-column");
     }
 
     private void onAthleteSelect(AthleteRecord athleteRecord) {

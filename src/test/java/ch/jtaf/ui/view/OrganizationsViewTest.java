@@ -9,7 +9,6 @@ import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,8 +37,7 @@ class OrganizationsViewTest extends KaribuTest {
         Grid<OrganizationRecord> organizationGrid = _get(Grid.class, spec -> spec.withId("organizations-grid"));
         assertThat(GridKt._size(organizationGrid)).isEqualTo(2);
 
-        OrganizationRecord organizationRecord = GridKt._get(organizationGrid, 0);
-        assertThat(organizationRecord.getOrganizationKey()).isEqualTo("CIS");
+        assertThat(GridKt._get(organizationGrid, 0).getOrganizationKey()).isEqualTo("CIS");
 
         _get(Button.class, spec -> spec.withId("add-button")).click();
         _assert(Dialog.class, 1);
@@ -50,12 +48,12 @@ class OrganizationsViewTest extends KaribuTest {
 
         assertThat(GridKt._size(organizationGrid)).isEqualTo(3);
 
-        organizationRecord = GridKt._get(organizationGrid, 2);
-        assertThat(organizationRecord.getOrganizationKey()).isEqualTo("AAA");
+        assertThat(GridKt._get(organizationGrid, 2).getOrganizationKey()).isEqualTo("AAA");
 
-        HorizontalLayout edit = (HorizontalLayout) GridKt._getCellComponent(organizationGrid, 2, "Edit");
-        Button delete = (Button) edit.getChildren().filter(component -> component instanceof Button && ((Button) component).getText().equals("Delete")).findFirst().get();
-        delete.click();
+        GridKt._getCellComponent(organizationGrid, 2, "edit-column").getChildren()
+            .filter(component -> component instanceof Button && ((Button) component).getText().equals("Delete"))
+            .findFirst().map(component -> (Button) component)
+            .ifPresent(Button::click);
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
         assertThat(confirmDialog.isOpened()).isTrue();

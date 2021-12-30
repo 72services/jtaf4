@@ -12,7 +12,6 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.server.VaadinServletRequest;
 import com.vaadin.flow.spring.SpringServlet;
 import kotlin.jvm.functions.Function0;
@@ -102,9 +101,9 @@ public abstract class KaribuTest {
         Grid<OrganizationRecord> organizationsGrid = _get(Grid.class, spec -> spec.withId("organizations-grid"));
         assertThat(GridKt._size(organizationsGrid)).isEqualTo(2);
 
-        HorizontalLayout edit = (HorizontalLayout) GridKt._getCellComponent(organizationsGrid, 0, "Edit");
-        Button select = (Button) edit.getChildren().filter(component -> component instanceof Button).findFirst().get();
-        select.click();
+        GridKt._getCellComponent(organizationsGrid, 0, "edit-column").getChildren()
+            .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
+            .ifPresent(Button::click);
 
         h1 = _get(H1.class, spec -> spec.withId("view-title"));
         assertThat(h1.getText()).isEqualTo("Series");

@@ -24,8 +24,7 @@ class RegisterViewTest extends KaribuTest {
         _get(PasswordField.class, spec -> spec.withCaption("Password")).setValue("pass");
         _get(Button.class, spec -> spec.withCaption("Register")).click();
 
-        Notification notification = _get(Notification.class);
-        assertThat(notification.getElement().getOuterHTML()).isEqualTo("""
+        assertThat(_get(Notification.class).getElement().getOuterHTML()).isEqualTo("""
             <vaadin-notification suppress-template-warning>
              <template>
               Thanks for registering. An email was sent to your address. Please check your inbox.

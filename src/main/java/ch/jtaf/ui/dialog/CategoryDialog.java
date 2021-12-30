@@ -114,7 +114,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
             HorizontalLayout horizontalLayout = new HorizontalLayout(remove);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
             return horizontalLayout;
-        }).setTextAlign(ColumnTextAlign.END).setHeader(addEvent).setKey("Edit");
+        }).setTextAlign(ColumnTextAlign.END).setHeader(addEvent).setKey("edit-column");
 
         add(categoryEventsGrid);
     }

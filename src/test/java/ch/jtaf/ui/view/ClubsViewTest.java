@@ -8,7 +8,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,8 +36,7 @@ class ClubsViewTest extends KaribuTest {
         Grid<ClubRecord> clubsGrid = _get(Grid.class, spec -> spec.withId("clubs-grid"));
         assertThat(GridKt._size(clubsGrid)).isEqualTo(4);
 
-        ClubRecord clubRecord = GridKt._get(clubsGrid, 0);
-        assertThat(clubRecord.getName()).isEqualTo("Erlach");
+        assertThat(GridKt._get(clubsGrid, 0).getName()).isEqualTo("Erlach");
 
         _get(Button.class, spec -> spec.withId("add-button")).click();
         _assert(Dialog.class, 1);
@@ -49,12 +47,11 @@ class ClubsViewTest extends KaribuTest {
 
         assertThat(GridKt._size(clubsGrid)).isEqualTo(5);
 
-        clubRecord = GridKt._get(clubsGrid, 0);
-        assertThat(clubRecord.getName()).isEqualTo("Test");
+        assertThat(GridKt._get(clubsGrid, 0).getName()).isEqualTo("Test");
 
-        HorizontalLayout edit = (HorizontalLayout) GridKt._getCellComponent(clubsGrid, 0, "Edit");
-        Button delete = (Button) edit.getChildren().filter(component -> component instanceof Button).findFirst().get();
-        delete.click();
+        GridKt._getCellComponent(clubsGrid, 0, "edit-column").getChildren()
+            .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
+            .ifPresent(Button::click);
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
         assertThat(confirmDialog.isOpened()).isTrue();

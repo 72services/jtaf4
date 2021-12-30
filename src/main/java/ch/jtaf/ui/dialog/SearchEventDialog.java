@@ -121,7 +121,7 @@ public class SearchEventDialog extends Dialog {
             onSelect.accept(eventRecord);
             Notification.show(getTranslation("Event.assigned"), 6000, Notification.Position.TOP_END);
             dataProvider.refreshAll();
-        })).setKey("Assign");
+        })).setKey("assign-column");
 
         filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
 

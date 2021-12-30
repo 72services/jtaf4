@@ -88,7 +88,7 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
             HorizontalLayout horizontalLayout = new HorizontalLayout(delete);
             horizontalLayout.setJustifyContentMode(JustifyContentMode.END);
             return horizontalLayout;
-        }).setTextAlign(ColumnTextAlign.END).setHeader(add).setKey("Delete");
+        }).setTextAlign(ColumnTextAlign.END).setHeader(add).setKey("delete-column");
 
         grid.addItemClickListener(event -> UI.getCurrent().navigate(SeriesView.class, "" + event.getItem().getId()));
 
