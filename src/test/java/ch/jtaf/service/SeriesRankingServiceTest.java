@@ -30,7 +30,7 @@ class SeriesRankingServiceTest {
     void create_club_ranking_pdf() {
         byte[] pdf = seriesRankingService.getClubRankingAsPdf(1L);
 
-        assertThat(pdf.length).isPositive();
+        assertThat(pdf).isNotEmpty();
     }
 
     @Test
@@ -44,6 +44,6 @@ class SeriesRankingServiceTest {
     void create_series_ranking_pdf() {
         byte[] pdf = seriesRankingService.getSeriesRankingAsPdf(3L);
 
-        assertThat(pdf.length).isPositive();
+        assertThat(pdf).isNotEmpty();
     }
 }

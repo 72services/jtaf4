@@ -21,20 +21,20 @@ class NumberAndSheetsServiceTest {
     void create_numbers() {
         byte[] pdf = numberAndSheetsService.createNumbers(1L);
 
-        assertThat(pdf.length).isPositive();
+        assertThat(pdf).isNotEmpty();
     }
 
     @Test
     void create_empty_sheets() {
         byte[] pdf = numberAndSheetsService.createEmptySheets(1L, 1L);
 
-        assertThat(pdf.length).isPositive();
+        assertThat(pdf).isNotEmpty();
     }
 
     @Test
     void create_sheets() {
         byte[] pdf = numberAndSheetsService.createSheets(1L, 6L);
 
-        assertThat(pdf.length).isPositive();
+        assertThat(pdf).isNotEmpty();
     }
 }

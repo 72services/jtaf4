@@ -30,7 +30,7 @@ class CompetitionRankingServiceTest {
     void create_competition_ranking_pdf() {
         byte[] pdf = competitionRankingService.getCompetitionRankingAsPdf(6L);
 
-        assertThat(pdf.length).isPositive();
+        assertThat(pdf).isNotEmpty();
     }
 
     @Test
@@ -44,13 +44,13 @@ class CompetitionRankingServiceTest {
     void get_events_ranking_pdf() {
         byte[] pdf = competitionRankingService.getEventRankingAsPdf(6L);
 
-        assertThat(pdf.length).isPositive();
+        assertThat(pdf).isNotEmpty();
     }
 
     @Test
     void get_diplomas_pdf() {
         byte[] pdf = competitionRankingService.getDiplomasAsPdf(6L);
 
-        assertThat(pdf.length).isPositive();
+        assertThat(pdf).isNotEmpty();
     }
 }
