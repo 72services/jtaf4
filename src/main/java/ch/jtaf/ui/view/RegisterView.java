@@ -1,7 +1,6 @@
 package ch.jtaf.ui.view;
 
 import ch.jtaf.db.tables.records.SecurityUserRecord;
-import ch.jtaf.service.NoSuchRoleExecption;
 import ch.jtaf.service.UserAlreadyExistException;
 import ch.jtaf.service.UserService;
 import ch.jtaf.ui.layout.MainLayout;
@@ -44,8 +43,6 @@ public class RegisterView extends VerticalLayout implements HasDynamicTitle {
                 UI.getCurrent().navigate(DashboardView.class);
             } catch (UserAlreadyExistException uaex) {
                 Notification.show(getTranslation("User.already.exist"), 5000, Notification.Position.TOP_END);
-            } catch (NoSuchRoleExecption ex) {
-                Notification.show(getTranslation("No.such.role"), 5000, Notification.Position.TOP_END);
             }
         });
 

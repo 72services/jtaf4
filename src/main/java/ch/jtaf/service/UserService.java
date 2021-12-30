@@ -35,9 +35,8 @@ public class UserService {
         this.publicAddress = publicAddress;
     }
 
-    @Transactional(rollbackFor = {UserAlreadyExistException.class, NoSuchRoleExecption.class})
-    public SecurityUserRecord createUser(String firstName, String lastName, String email, String password)
-        throws UserAlreadyExistException, NoSuchRoleExecption {
+    @Transactional(rollbackFor = UserAlreadyExistException.class)
+    public SecurityUserRecord createUser(String firstName, String lastName, String email, String password) throws UserAlreadyExistException {
 
         Integer count = dsl.selectCount().from(SECURITY_USER).where(SECURITY_USER.EMAIL.eq(email)).fetchOneInto(Integer.class);
         if (count != null && count > 0) {
@@ -60,7 +59,7 @@ public class UserService {
             dsl.attach(userGroup);
             userGroup.store();
         } else {
-            throw new NoSuchRoleExecption("USER");
+            throw new IllegalStateException("USER role does not exist!");
         }
 
         return user;
