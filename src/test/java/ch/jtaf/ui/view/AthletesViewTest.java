@@ -63,4 +63,13 @@ class AthletesViewTest extends KaribuTest {
 
         assertThat(GridKt._size(athletesGrid)).isEqualTo(140);
     }
+
+    @Test
+    void filter() {
+        Grid<AthleteRecord> athletesGrid = _get(Grid.class, spec -> spec.withId("athletes-grid"));
+        assertThat(GridKt._size(athletesGrid)).isEqualTo(140);
+
+        _get(TextField.class, spec -> spec.withId("filter")).setValue("Martinelli");;
+        assertThat(GridKt._size(athletesGrid)).isEqualTo(1);
+    }
 }
