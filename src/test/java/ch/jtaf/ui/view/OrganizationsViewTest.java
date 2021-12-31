@@ -2,6 +2,8 @@ package ch.jtaf.ui.view;
 
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.ui.KaribuTest;
+import ch.jtaf.ui.security.OrganizationProvider;
+import com.github.mvysny.kaributesting.mockhttp.MockRequest;
 import com.github.mvysny.kaributesting.v10.GridKt;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -10,9 +12,12 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.VaadinServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.servlet.http.Cookie;
 import java.util.List;
 
 import static com.github.mvysny.kaributesting.v10.LocatorJ._assert;
@@ -25,12 +30,12 @@ class OrganizationsViewTest extends KaribuTest {
     @BeforeEach
     public void login() {
         login("simon@martinelli.ch", "", List.of("ADMIN"));
-
-        UI.getCurrent().navigate(OrganizationsView.class);
     }
 
     @Test
     void add_organization() {
+        UI.getCurrent().navigate(OrganizationsView.class);
+
         H1 h1 = _get(H1.class, spec -> spec.withId("view-title"));
         assertThat(h1.getText()).isEqualTo("Organizations");
 
@@ -61,5 +66,16 @@ class OrganizationsViewTest extends KaribuTest {
         _fireConfirm(confirmDialog);
 
         assertThat(GridKt._size(organizationGrid)).isEqualTo(2);
+    }
+
+    @Test
+    void with_cookie() {
+        MockRequest request = (MockRequest) VaadinServletRequest.getCurrent().getRequest();
+        request.addCookie(new Cookie(OrganizationProvider.JTAF_ORGANIZATION_ID, "1"));
+
+        UI.getCurrent().navigate(OrganizationsView.class);
+
+        RouterLink routerLink = _get(RouterLink.class, spec -> spec.withId("series-list-link"));
+        assertThat(routerLink.getText()).isEqualTo("CIS");
     }
 }

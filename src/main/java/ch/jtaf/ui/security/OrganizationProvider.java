@@ -20,7 +20,7 @@ import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
 @Component
 public class OrganizationProvider {
 
-    private static final String JTAF_ORGANIZATION_ID = "jtaf-organization-id";
+    public static final String JTAF_ORGANIZATION_ID = "jtaf-organization-id";
 
     private final DSLContext dsl;
 

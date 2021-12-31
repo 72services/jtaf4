@@ -144,6 +144,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
         links.add(createLink(new MenuItemInfo(getTranslation("My.Organizations"), LA_LA_FILE, OrganizationsView.class)));
 
         seriesLink = createLink(new MenuItemInfo("", LA_LA_FILE, SeriesListView.class));
+        seriesLink.setId("series-list-link");
         links.add(seriesLink);
 
         eventsLink = createLink(new MenuItemInfo(getTranslation("Events"), LA_LA_FILE, EventsView.class));
