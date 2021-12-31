@@ -2281,6 +2281,7 @@ INSERT INTO security_group (id, name) VALUES(3, 'USER');
 ALTER SEQUENCE security_group_seq RESTART WITH 3;
 
 INSERT INTO security_user (id, first_name, last_name, email, secret, confirmation_id, confirmed) VALUES(2, 'Simon', 'Martinelli', 'simon@martinelli.ch', '$2a$10$UtIxsu6XdO5PEDDdXxCsc.gR94numqo4/VTS2sM3Q2krDcWJW/jby', '', true);
+INSERT INTO security_user (id, first_name, last_name, email, secret, confirmation_id, confirmed) VALUES(3, 'John', 'doe', 'john@doe.com', '$2a$10$UtIxsu6XdO5PEDDdXxCsc.gR94numqo4/VTS2sM3Q2krDcWJW/jby', '', true);
 
 ALTER SEQUENCE security_user_seq RESTART WITH 3;
 
@@ -2293,6 +2294,7 @@ ALTER SEQUENCE series_seq RESTART WITH 5;
 
 INSERT INTO user_group (user_id, group_id) VALUES(2, 1);
 INSERT INTO user_group (user_id, group_id) VALUES(2, 2);
+INSERT INTO user_group (user_id, group_id) VALUES(3, 1);
 
 INSERT INTO organization_user (organization_id, user_id) VALUES (1, 2);
 INSERT INTO organization_user (organization_id, user_id) VALUES (2, 2);
