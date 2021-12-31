@@ -19,7 +19,7 @@ class ResultCapturingViewTest extends KaribuTest {
         login("simon@martinelli.ch", "", List.of("ADMIN"));
         UI.getCurrent().getPage().reload();
 
-        Button enterResults = _get(Button.class, spec -> spec.withId("enter-results-1"));
+        Button enterResults = _get(Button.class, spec -> spec.withId("enter-results-1-1"));
         enterResults.click();
     }
 
