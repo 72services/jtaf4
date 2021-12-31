@@ -15,7 +15,7 @@ public class ProtectedViewTest extends KaribuTest {
     @Test
     void user_without_organization() {
         // This user has no organization
-        login("john@doe.com", "pass", List.of("ADMIN"));
+        login("susan.miller@mail.com", "pass", List.of("ADMIN"));
 
         UI.getCurrent().navigate(ClubsView.class);
 
