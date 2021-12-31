@@ -335,7 +335,7 @@
                         <version>0.8.7</version>
                         <configuration>
                             <excludes>
-                                <exclude>ch/jtaf/Jtaf4Application.class</exclude>
+                                <exclude>**/*ch/jtaf/Jtaf4Application.*</exclude>
                             </excludes>
                         </configuration>
                         <executions>
