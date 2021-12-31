@@ -41,6 +41,11 @@ class ClubsViewTest extends KaribuTest {
         _get(Button.class, spec -> spec.withId("add-button")).click();
         _assert(Dialog.class, 1);
 
+        // Test maximize and restore
+        Button toggle = _get(Button.class, spec -> spec.withId("toggle"));
+        toggle.click();
+        toggle.click();
+
         _get(TextField.class, spec -> spec.withCaption("Abbreviation")).setValue("Test");
         _get(TextField.class, spec -> spec.withCaption("Name")).setValue("Test");
         _get(Button.class, spec -> spec.withCaption("Save")).click();

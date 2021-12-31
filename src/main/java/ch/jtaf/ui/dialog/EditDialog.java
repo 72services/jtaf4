@@ -31,7 +31,7 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
 
     private boolean isFullScreen = false;
     private final Div content;
-    private final Button max;
+    private final Button toggle;
 
     final Binder<R> binder;
     final FormLayout formLayout;
@@ -52,13 +52,14 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
         var headerTitel = new H2(title);
         headerTitel.addClassName("dialog-title");
 
-        max = new Button(VaadinIcon.EXPAND_SQUARE.create());
-        max.addClickListener(event -> maximiseMinimize());
+        toggle = new Button(VaadinIcon.EXPAND_SQUARE.create());
+        toggle.addClickListener(event -> toggleFullscreen());
+        toggle.setId("toggle");
 
         var close = new Button(VaadinIcon.CLOSE_SMALL.create());
         close.addClickListener(event -> close());
 
-        var header = new Header(headerTitel, max, close);
+        var header = new Header(headerTitel, toggle, close);
         header.getElement().getThemeList().add(Lumo.LIGHT);
         add(header);
 
@@ -109,17 +110,17 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
     }
 
     private void initialSize() {
-        max.setIcon(VaadinIcon.EXPAND_SQUARE.create());
+        toggle.setIcon(VaadinIcon.EXPAND_SQUARE.create());
         getElement().getThemeList().remove(FULLSCREEN);
         setHeight("auto");
         setWidth(initialWidth);
     }
 
-    private void maximiseMinimize() {
+    private void toggleFullscreen() {
         if (isFullScreen) {
             initialSize();
         } else {
-            max.setIcon(VaadinIcon.COMPRESS_SQUARE.create());
+            toggle.setIcon(VaadinIcon.COMPRESS_SQUARE.create());
             getElement().getThemeList().add(FULLSCREEN);
             setSizeFull();
             content.setVisible(true);
