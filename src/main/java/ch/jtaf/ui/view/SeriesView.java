@@ -21,6 +21,7 @@ import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -93,7 +94,14 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         var buffer = new MultiFileMemoryBuffer();
         var upload = new Upload(buffer);
         upload.setMaxFiles(1);
-        upload.addSucceededListener(event -> {
+
+        var uploadButton = new Button(getTranslation("Logo.upload"));
+        uploadButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        upload.setUploadButton(uploadButton);
+
+        upload.setDropLabel(new Span(getTranslation("Logo.drop.here")));
+
+        upload.addSucceededListener(event ->
             transactionTemplate.executeWithoutResult(transactionStatus -> {
                 try {
                     var fileName = event.getFileName();
@@ -104,8 +112,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-            });
-        });
+            }));
         formLayout.add(upload);
 
         var checkboxes = new HorizontalLayout();
