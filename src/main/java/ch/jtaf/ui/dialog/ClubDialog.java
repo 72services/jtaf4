@@ -18,14 +18,14 @@ public class ClubDialog extends EditDialog<ClubRecord> {
     @SuppressWarnings("DuplicatedCode")
     @Override
     public void createForm() {
-        TextField abbreviation = new TextField(getTranslation("Abbreviation"));
+        var abbreviation = new TextField(getTranslation("Abbreviation"));
         abbreviation.setRequiredIndicatorVisible(true);
 
         binder.forField(abbreviation)
             .withValidator(new NotEmptyValidator(this))
             .bind(ClubRecord::getAbbreviation, ClubRecord::setAbbreviation);
 
-        TextField name = new TextField(getTranslation("Name"));
+        var name = new TextField(getTranslation("Name"));
         name.setRequiredIndicatorVisible(true);
 
         binder.forField(name)

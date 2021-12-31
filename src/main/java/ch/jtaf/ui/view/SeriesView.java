@@ -1,7 +1,6 @@
 package ch.jtaf.ui.view;
 
 import ch.jtaf.db.tables.records.AthleteRecord;
-import ch.jtaf.db.tables.records.CategoryAthleteRecord;
 import ch.jtaf.db.tables.records.CategoryRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.db.tables.records.CompetitionRecord;
@@ -81,10 +80,10 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         this.transactionTemplate = transactionTemplate;
         this.numberAndSheetsService = numberAndSheetsService;
 
-        FormLayout formLayout = new FormLayout();
+        var formLayout = new FormLayout();
         add(formLayout);
 
-        TextField name = new TextField(getTranslation("Name"));
+        var name = new TextField(getTranslation("Name"));
         name.setRequiredIndicatorVisible(true);
         formLayout.add(name);
 
@@ -92,19 +91,19 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
             .withValidator(new NotEmptyValidator(this))
             .bind(SeriesRecord::getName, SeriesRecord::setName);
 
-        Checkbox hidden = new Checkbox(getTranslation("Hidden"));
+        var hidden = new Checkbox(getTranslation("Hidden"));
         formLayout.add(hidden);
 
         binder.forField(hidden)
             .bind(SeriesRecord::getHidden, SeriesRecord::setHidden);
 
-        Checkbox locked = new Checkbox(getTranslation("Locked"));
+        var locked = new Checkbox(getTranslation("Locked"));
         formLayout.add(locked);
 
         binder.forField(locked)
             .bind(SeriesRecord::getLocked, SeriesRecord::setLocked);
 
-        Button save = new Button(getTranslation("Save"));
+        var save = new Button(getTranslation("Save"));
         save.setId("save-series");
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         save.addClickListener(event ->
@@ -124,19 +123,19 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         createCategoriesSection();
         createAthletesSection();
 
-        Div grids = new Div(competitionsGrid, categoriesGrid, athletesGrid);
+        var grids = new Div(competitionsGrid, categoriesGrid, athletesGrid);
         grids.setWidthFull();
         grids.setHeightFull();
         add(grids);
 
-        Tab tabCompetitions = new Tab(getTranslation("Competitions"));
+        var tabCompetitions = new Tab(getTranslation("Competitions"));
         sectionTabs.add(tabCompetitions);
-        Tab tabCategories = new Tab(getTranslation("Categories"));
+        var tabCategories = new Tab(getTranslation("Categories"));
         sectionTabs.add(tabCategories);
-        Tab tabAthletes = new Tab(getTranslation("Athletes"));
+        var tabAthletes = new Tab(getTranslation("Athletes"));
         sectionTabs.add(tabAthletes);
 
-        Map<Tab, Grid<? extends UpdatableRecord<?>>> tabsToGrids = new HashMap<>();
+        var tabsToGrids = new HashMap<Tab, Grid<? extends UpdatableRecord<?>>>();
         tabsToGrids.put(tabCompetitions, competitionsGrid);
         tabsToGrids.put(tabCategories, categoriesGrid);
         tabsToGrids.put(tabAthletes, athletesGrid);
@@ -194,7 +193,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
     }
 
     private void createCompetitionsSection() {
-        CompetitionDialog dialog = new CompetitionDialog(getTranslation("Category"));
+        var dialog = new CompetitionDialog(getTranslation("Category"));
 
         competitionsGrid = new Grid<>();
         competitionsGrid.setId("competitions-grid");
@@ -203,7 +202,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         competitionsGrid.addColumn(CompetitionRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
         competitionsGrid.addColumn(CompetitionRecord::getCompetitionDate).setHeader(getTranslation("Date")).setSortable(true);
         competitionsGrid.addColumn(new ComponentRenderer<>(competition -> {
-            Anchor sheetsOrderedByAthlete = new Anchor(new StreamResource("sheets_orderby_athlete" + competition.getId() + ".pdf",
+            var sheetsOrderedByAthlete = new Anchor(new StreamResource("sheets_orderby_athlete" + competition.getId() + ".pdf",
                 () -> {
                     byte[] pdf = numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(),
                         CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
@@ -211,7 +210,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                 }), getTranslation("Sheets"));
             sheetsOrderedByAthlete.setTarget(BLANK);
 
-            Anchor sheetsOrderedByClub = new Anchor(new StreamResource("sheets_orderby_club" + competition.getId() + ".pdf",
+            var sheetsOrderedByClub = new Anchor(new StreamResource("sheets_orderby_club" + competition.getId() + ".pdf",
                 () -> {
                     byte[] pdf = numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(),
                         CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
@@ -219,7 +218,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                 }), getTranslation("Ordered.by.club"));
             sheetsOrderedByClub.setTarget(BLANK);
 
-            Anchor numbersOrderedByAthlete = new Anchor(new StreamResource("numbers_orderby_athlete" + competition.getId() + ".pdf",
+            var numbersOrderedByAthlete = new Anchor(new StreamResource("numbers_orderby_athlete" + competition.getId() + ".pdf",
                 () -> {
                     byte[] pdf = numberAndSheetsService.createNumbers(competition.getSeriesId(),
                         CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
@@ -227,7 +226,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                 }), getTranslation("Numbers"));
             numbersOrderedByAthlete.setTarget(BLANK);
 
-            Anchor numbersOrderedByClub = new Anchor(new StreamResource("numbers_orderby_club" + competition.getId() + ".pdf",
+            var numbersOrderedByClub = new Anchor(new StreamResource("numbers_orderby_club" + competition.getId() + ".pdf",
                 () -> {
                     byte[] pdf = numberAndSheetsService.createNumbers(competition.getSeriesId(),
                         CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
@@ -239,7 +238,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         }));
 
         addActionColumnAndSetSelectionListener(competitionsGrid, dialog, competitionRecord -> refreshAll(), () -> {
-            CompetitionRecord newRecord = COMPETITION.newRecord();
+            var newRecord = COMPETITION.newRecord();
             newRecord.setMedalPercentage(0);
             newRecord.setSeriesId(seriesRecord.getId());
             return newRecord;
@@ -247,7 +246,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
     }
 
     private void createCategoriesSection() {
-        CategoryDialog dialog = new CategoryDialog(getTranslation("Category"));
+        var dialog = new CategoryDialog(getTranslation("Category"));
 
         categoriesGrid = new Grid<>();
         categoriesGrid.setId("categories-grid");
@@ -258,7 +257,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         categoriesGrid.addColumn(CategoryRecord::getYearFrom).setHeader(getTranslation("Year.From")).setSortable(true);
         categoriesGrid.addColumn(CategoryRecord::getYearTo).setHeader(getTranslation("Year.To")).setSortable(true);
         categoriesGrid.addColumn(new ComponentRenderer<>(category -> {
-            Anchor sheet = new Anchor(new StreamResource("sheet" + category.getId() + ".pdf",
+            var sheet = new Anchor(new StreamResource("sheet" + category.getId() + ".pdf",
                 () -> {
                     byte[] pdf = numberAndSheetsService.createEmptySheets(seriesRecord.getId(), category.getId());
                     return new ByteArrayInputStream(pdf);
@@ -269,7 +268,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         }));
 
         addActionColumnAndSetSelectionListener(categoriesGrid, dialog, categoryRecord -> refreshAll(), () -> {
-            CategoryRecord newRecord = CATEGORY.newRecord();
+            var newRecord = CATEGORY.newRecord();
             newRecord.setSeriesId(seriesRecord.getId());
             return newRecord;
         }, this::refreshAll);
@@ -287,7 +286,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         athletesGrid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
             : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club"));
 
-        Button assign = new Button(getTranslation("Assign.Athlete"));
+        var assign = new Button(getTranslation("Assign.Athlete"));
         assign.setId("assign-athlete");
         assign.addClickListener(event -> {
             SearchAthleteDialog dialog = new SearchAthleteDialog(dsl, organizationRecord.getId(), seriesRecord.getId(), this::onAthleteSelect);
@@ -295,10 +294,10 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         });
 
         athletesGrid.addComponentColumn(athleteRecord -> {
-            Button remove = new Button(getTranslation("Remove"));
+            var remove = new Button(getTranslation("Remove"));
             remove.addThemeVariants(ButtonVariant.LUMO_ERROR);
             remove.addClickListener(event -> {
-                ConfirmDialog confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
+                var confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
                     getTranslation("Are.you.sure"),
                     getTranslation("Remove"), e -> removeAthleteFromSeries(athleteRecord),
                     getTranslation("Cancel"), e -> {
@@ -307,7 +306,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                 confirmDialog.open();
             });
 
-            HorizontalLayout horizontalLayout = new HorizontalLayout(remove);
+            var horizontalLayout = new HorizontalLayout(remove);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
             return horizontalLayout;
         }).setTextAlign(ColumnTextAlign.END).setHeader(assign).setKey("remove-column");
@@ -315,7 +314,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
     private void onAthleteSelect(AthleteRecord athleteRecord) {
         transactionTemplate.executeWithoutResult(transactionStatus -> {
-            Long categoryId = dsl
+            var categoryId = dsl
                 .select(CATEGORY.ID)
                 .from(CATEGORY)
                 .where(CATEGORY.SERIES_ID.eq(seriesRecord.getId()))
@@ -324,7 +323,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                 .and(CATEGORY.YEAR_TO.ge(athleteRecord.getYearOfBirth()))
                 .fetchOneInto(Long.class);
 
-            CategoryAthleteRecord categoryAthleteRecord = CATEGORY_ATHLETE.newRecord();
+            var categoryAthleteRecord = CATEGORY_ATHLETE.newRecord();
             categoryAthleteRecord.setAthleteId(athleteRecord.getId());
             categoryAthleteRecord.setCategoryId(categoryId);
             categoryAthleteRecord.attach(dsl.configuration());
@@ -335,7 +334,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
     }
 
     private void removeAthleteFromSeries(UpdatableRecord<?> updatableRecord) {
-        AthleteRecord athleteRecord = (AthleteRecord) updatableRecord;
+        var athleteRecord = (AthleteRecord) updatableRecord;
         dsl
             .deleteFrom(CATEGORY_ATHLETE)
             .where(CATEGORY_ATHLETE.ATHLETE_ID.eq(athleteRecord.getId()))

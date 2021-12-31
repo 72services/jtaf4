@@ -2,7 +2,6 @@ package ch.jtaf.ui.dialog;
 
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
-import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.model.Gender;
 import ch.jtaf.ui.converter.JtafStringToIntegerConverter;
 import ch.jtaf.ui.security.OrganizationProvider;
@@ -38,7 +37,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
     @SuppressWarnings("DuplicatedCode")
     @Override
     public void createForm() {
-        TextField lastName = new TextField(getTranslation("Last.Name"));
+        var lastName = new TextField(getTranslation("Last.Name"));
         lastName.setRequiredIndicatorVisible(true);
         lastName.focus();
 
@@ -46,14 +45,14 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
             .withValidator(new NotEmptyValidator(this))
             .bind(AthleteRecord::getLastName, AthleteRecord::setLastName);
 
-        TextField firstName = new TextField(getTranslation("First.Name"));
+        var firstName = new TextField(getTranslation("First.Name"));
         firstName.setRequiredIndicatorVisible(true);
 
         binder.forField(firstName)
             .withValidator(new NotEmptyValidator(this))
             .bind(AthleteRecord::getFirstName, AthleteRecord::setFirstName);
 
-        Select<String> gender = new Select<>();
+        var gender = new Select<String>();
         gender.setLabel(getTranslation("Gender"));
         gender.setRequiredIndicatorVisible(true);
         gender.setItems(Gender.valuesAsStrings());
@@ -61,7 +60,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
         binder.forField(gender)
             .bind(AthleteRecord::getGender, AthleteRecord::setGender);
 
-        TextField yearOfBirth = new TextField(getTranslation("Year"));
+        var yearOfBirth = new TextField(getTranslation("Year"));
         lastName.setRequiredIndicatorVisible(true);
 
         binder.forField(yearOfBirth)
@@ -69,7 +68,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
             .withNullRepresentation(0)
             .bind(AthleteRecord::getYearOfBirth, AthleteRecord::setYearOfBirth);
 
-        Select<ClubRecord> club = new Select<>();
+        var club = new Select<ClubRecord>();
         club.setLabel(getTranslation("Club"));
         club.setItemLabelGenerator(item -> item.getAbbreviation() + " " + item.getName());
         club.setItems(getClubs());
@@ -88,7 +87,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
             })
             .bind(AthleteRecord::getClubId, AthleteRecord::setClubId);
 
-        TextField year = new TextField("Year");
+        var year = new TextField("Year");
         year.setRequiredIndicatorVisible(true);
 
         binder.forField(year)
@@ -100,7 +99,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
     }
 
     private List<ClubRecord> getClubs() {
-        OrganizationRecord organizationRecord = getBean(OrganizationProvider.class).getOrganization();
+        var organizationRecord = getBean(OrganizationProvider.class).getOrganization();
 
         if (organizationRecord == null) {
             return Collections.emptyList();

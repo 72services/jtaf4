@@ -14,7 +14,6 @@ import org.jooq.Table;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -54,8 +53,8 @@ public class JooqDataProviderProducer<R extends Record> {
     }
 
     private Condition createCondition(Query<R, String> query) {
-        Condition condition = noCondition();
-        Optional<String> filter = query.getFilter();
+        var condition = noCondition();
+        var filter = query.getFilter();
         if (filter.isPresent()) {
             for (Field<?> field : table.fields()) {
                 if (field.getType() == String.class) {

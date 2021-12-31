@@ -19,20 +19,20 @@ public class CompetitionDialog extends EditDialog<CompetitionRecord> {
 
     @Override
     public void createForm() {
-        TextField name = new TextField(getTranslation("Name"));
+        var name = new TextField(getTranslation("Name"));
         name.setRequiredIndicatorVisible(true);
 
         binder.forField(name)
             .withValidator(new NotEmptyValidator(this))
             .bind(CompetitionRecord::getName, CompetitionRecord::setName);
 
-        DatePicker date = new DatePicker(getTranslation("Date"));
+        var date = new DatePicker(getTranslation("Date"));
         name.setRequiredIndicatorVisible(true);
 
         binder.forField(date)
             .bind(CompetitionRecord::getCompetitionDate, CompetitionRecord::setCompetitionDate);
 
-        Checkbox alwaysFirstThreeMedals = new Checkbox(getTranslation("Always.first.three.medals"));
+        var alwaysFirstThreeMedals = new Checkbox(getTranslation("Always.first.three.medals"));
 
         binder.forField(alwaysFirstThreeMedals)
             .bind(CompetitionRecord::getAlwaysFirstThreeMedals, CompetitionRecord::setAlwaysFirstThreeMedals);

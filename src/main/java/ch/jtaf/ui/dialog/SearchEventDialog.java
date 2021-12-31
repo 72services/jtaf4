@@ -24,7 +24,6 @@ import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 
 import java.io.Serial;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import static ch.jtaf.context.ApplicationContextHolder.getBean;
@@ -54,20 +53,20 @@ public class SearchEventDialog extends Dialog {
         setDraggable(true);
         setResizable(true);
 
-        H2 headerTitel = new H2(getTranslation("Events"));
+        var headerTitel = new H2(getTranslation("Events"));
         headerTitel.addClassName("dialog-title");
 
         max = new Button(VaadinIcon.EXPAND_SQUARE.create());
         max.addClickListener(event -> maximise());
 
-        Button close = new Button(VaadinIcon.CLOSE_SMALL.create());
+        var close = new Button(VaadinIcon.CLOSE_SMALL.create());
         close.addClickListener(event -> close());
 
-        Header header = new Header(headerTitel, max, close);
+        var header = new Header(headerTitel, max, close);
         header.getElement().getThemeList().add(Lumo.LIGHT);
         add(header);
 
-        TextField filter = new TextField(getTranslation("Filter"));
+        var filter = new TextField(getTranslation("Filter"));
         filter.setValueChangeMode(ValueChangeMode.EAGER);
         filter.focus();
 
@@ -103,7 +102,7 @@ public class SearchEventDialog extends Dialog {
 
         dataProvider = callbackDataProvider.withConfigurableFilter();
 
-        Grid<EventRecord> grid = new Grid<>();
+        var grid = new Grid<EventRecord>();
         grid.setId("events-grid");
         grid.setItems(dataProvider);
         grid.getStyle().set("height", "calc(100% - 300px");
@@ -153,7 +152,7 @@ public class SearchEventDialog extends Dialog {
     }
 
     private Condition createCondition(Query<?, ?> query) {
-        Optional<?> optionalFilter = query.getFilter();
+        var optionalFilter = query.getFilter();
         if (optionalFilter.isPresent()) {
             String filterString = (String) optionalFilter.get();
             if (StringUtils.isNumeric(filterString)) {

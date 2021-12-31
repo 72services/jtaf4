@@ -43,10 +43,10 @@ public class OrganizationProvider {
     }
 
     private void loadOrganizationFromCookie() {
-        HttpServletRequest request = (HttpServletRequest) VaadinRequest.getCurrent();
+        var request = (HttpServletRequest) VaadinRequest.getCurrent();
 
         if (request != null) {
-            Cookie[] cookies = request.getCookies();
+            var cookies = request.getCookies();
             if (cookies != null) {
                 Arrays.stream(cookies)
                     .filter(cookie -> cookie.getName().equals(JTAF_ORGANIZATION_ID))
@@ -65,9 +65,9 @@ public class OrganizationProvider {
     }
 
     private void saveOrganizationToCookie() {
-        HttpServletResponse response = (HttpServletResponse) VaadinResponse.getCurrent();
+        var response = (HttpServletResponse) VaadinResponse.getCurrent();
 
-        Cookie cookie = new Cookie(JTAF_ORGANIZATION_ID, organization.getId().toString());
+        var cookie = new Cookie(JTAF_ORGANIZATION_ID, organization.getId().toString());
         cookie.setHttpOnly(true);
         cookie.setMaxAge(60 * 60 * 24);
         response.addCookie(cookie);

@@ -23,7 +23,6 @@ import org.jooq.impl.DSL;
 
 import java.io.Serial;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -55,22 +54,22 @@ public class SearchAthleteDialog extends Dialog {
         setDraggable(true);
         setResizable(true);
 
-        H2 headerTitel = new H2(getTranslation("Athletes"));
+        var headerTitel = new H2(getTranslation("Athletes"));
         headerTitel.addClassName("dialog-title");
 
         max = new Button(VaadinIcon.EXPAND_SQUARE.create());
         max.addClickListener(event -> maximise());
 
-        Button close = new Button(VaadinIcon.CLOSE_SMALL.create());
+        var close = new Button(VaadinIcon.CLOSE_SMALL.create());
         close.addClickListener(event -> close());
 
-        Header header = new Header(headerTitel, max, close);
+        var header = new Header(headerTitel, max, close);
         header.getElement().getThemeList().add(Lumo.LIGHT);
         add(header);
 
-        AthleteDialog dialog = new AthleteDialog(getTranslation("Athlete"));
+        var dialog = new AthleteDialog(getTranslation("Athlete"));
 
-        TextField filter = new TextField(getTranslation("Filter"));
+        var filter = new TextField(getTranslation("Filter"));
         filter.setValueChangeMode(ValueChangeMode.EAGER);
         filter.focus();
 
@@ -110,7 +109,7 @@ public class SearchAthleteDialog extends Dialog {
 
         dataProvider = callbackDataProvider.withConfigurableFilter();
 
-        Grid<AthleteRecord> grid = new Grid<>();
+        var grid = new Grid<AthleteRecord>();
         grid.setId("search-athletes-grid");
         grid.setItems(dataProvider);
         grid.getStyle().set("height", "calc(100% - 300px");
@@ -123,7 +122,7 @@ public class SearchAthleteDialog extends Dialog {
             : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club"));
 
         addActionColumnAndSetSelectionListener(grid, dialog, athleteRecord -> dataProvider.refreshAll(), () -> {
-            AthleteRecord newRecord = ATHLETE.newRecord();
+            var newRecord = ATHLETE.newRecord();
             newRecord.setOrganizationId(organizationId);
             return newRecord;
         }, getTranslation("Assign.Athlete"), athleteRecord -> {
@@ -163,7 +162,7 @@ public class SearchAthleteDialog extends Dialog {
 
     @SuppressWarnings("DuplicatedCode")
     private Condition createCondition(Query<?, ?> query) {
-        Optional<?> optionalFilter = query.getFilter();
+        var optionalFilter = query.getFilter();
         if (optionalFilter.isPresent()) {
             String filterString = (String) optionalFilter.get();
             if (StringUtils.isNumeric(filterString)) {

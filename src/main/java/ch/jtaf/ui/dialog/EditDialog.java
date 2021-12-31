@@ -49,16 +49,16 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
         setDraggable(true);
         setResizable(true);
 
-        H2 headerTitel = new H2(title);
+        var headerTitel = new H2(title);
         headerTitel.addClassName("dialog-title");
 
         max = new Button(VaadinIcon.EXPAND_SQUARE.create());
         max.addClickListener(event -> maximiseMinimize());
 
-        Button close = new Button(VaadinIcon.CLOSE_SMALL.create());
+        var close = new Button(VaadinIcon.CLOSE_SMALL.create());
         close.addClickListener(event -> close());
 
-        Header header = new Header(headerTitel, max, close);
+        var header = new Header(headerTitel, max, close);
         header.getElement().getThemeList().add(Lumo.LIGHT);
         add(header);
 
@@ -66,7 +66,7 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
 
         binder = new Binder<>();
 
-        Button save = new Button(getTranslation("Save"));
+        var save = new Button(getTranslation("Save"));
         save.setId("edit-save");
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         save.addClickListener(event -> {
@@ -81,10 +81,10 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
             close();
         });
 
-        Button cancel = new Button(getTranslation("Cancel"));
+        var cancel = new Button(getTranslation("Cancel"));
         cancel.addClickListener(event -> close());
 
-        HorizontalLayout buttons = new HorizontalLayout(save, cancel);
+        var buttons = new HorizontalLayout(save, cancel);
         buttons.getStyle().set("padding-top", "20px");
 
         content = new Div(formLayout, buttons);

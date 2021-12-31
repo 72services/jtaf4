@@ -57,7 +57,7 @@ public class ClubRankingReport extends RankingReport {
         table.setSpacingBefore(1f);
 
         int rank = 1;
-        for (ClubRankingData.Result result : ranking.sortedResults()) {
+        for (var result : ranking.sortedResults()) {
             createClubRow(table, result, rank);
             rank++;
         }

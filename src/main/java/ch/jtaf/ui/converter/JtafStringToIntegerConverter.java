@@ -2,7 +2,6 @@ package ch.jtaf.ui.converter;
 
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
 
-import java.text.NumberFormat;
 import java.util.Locale;
 
 public class JtafStringToIntegerConverter extends StringToIntegerConverter {
@@ -13,7 +12,7 @@ public class JtafStringToIntegerConverter extends StringToIntegerConverter {
 
     @Override
     protected java.text.NumberFormat getFormat(Locale locale) {
-        NumberFormat format = super.getFormat(locale);
+        var format = super.getFormat(locale);
         format.setGroupingUsed(false);
         return format;
     }

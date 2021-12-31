@@ -25,7 +25,7 @@ public class EventsView extends ProtectedGridView<EventRecord> {
 
         setHeightFull();
 
-        EventDialog dialog = new EventDialog(getTranslation("Event"));
+        var dialog = new EventDialog(getTranslation("Event"));
 
         grid.setId("events-grid");
 
@@ -38,7 +38,7 @@ public class EventsView extends ProtectedGridView<EventRecord> {
         grid.addColumn(EventRecord::getC).setHeader("C");
 
         addActionColumnAndSetSelectionListener(grid, dialog, eventRecord -> refreshAll(), () -> {
-            EventRecord newRecord = EVENT.newRecord();
+            var newRecord = EVENT.newRecord();
             newRecord.setOrganizationId(organizationRecord.getId());
             return newRecord;
         }, this::refreshAll);

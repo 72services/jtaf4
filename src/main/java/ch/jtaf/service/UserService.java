@@ -39,7 +39,7 @@ public class UserService {
     @Transactional(rollbackFor = UserAlreadyExistException.class)
     public SecurityUserRecord createUser(String firstName, String lastName, String email, String password) throws UserAlreadyExistException {
 
-        Integer count = dsl.selectCount().from(SECURITY_USER).where(SECURITY_USER.EMAIL.eq(email)).fetchOneInto(Integer.class);
+        var count = dsl.selectCount().from(SECURITY_USER).where(SECURITY_USER.EMAIL.eq(email)).fetchOneInto(Integer.class);
         if (count != null && count > 0) {
             throw new UserAlreadyExistException();
         }
@@ -67,7 +67,7 @@ public class UserService {
     }
 
     public void sendConfirmationEmail(SecurityUserRecord user, Locale locale) {
-        SimpleMailMessage message = new SimpleMailMessage();
+        var message = new SimpleMailMessage();
         message.setFrom("no-reply@jtaf.ch");
         message.setTo(user.getEmail());
         message.setSubject(i18n.getTranslation("Confirm.Email.Subject", locale));

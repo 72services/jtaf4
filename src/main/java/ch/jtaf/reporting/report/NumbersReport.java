@@ -36,14 +36,14 @@ public class NumbersReport extends AbstractReport {
     }
 
     public byte[] create() {
-        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
-            Document document = new Document(A4, cmToPixel(1.5f), cmToPixel(1.7f), cmToPixel(0.8f), cmToPixel(0f));
-            PdfWriter pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
+        try (var byteArrayOutputStream = new ByteArrayOutputStream()) {
+            var document = new Document(A4, cmToPixel(1.5f), cmToPixel(1.7f), cmToPixel(0.8f), cmToPixel(0f));
+            var pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
             document.open();
 
             int i = 0;
             int number = 1;
-            PdfPTable table = createMainTable();
+            var table = createMainTable();
             for (var athlete : athletes) {
                 if (i > 9) {
                     document.add(table);
@@ -73,22 +73,22 @@ public class NumbersReport extends AbstractReport {
     }
 
     private PdfPTable createMainTable() {
-        PdfPTable table = new PdfPTable(new float[]{10f, 1.8f, 10f});
+        var table = new PdfPTable(new float[]{10f, 1.8f, 10f});
         table.setWidthPercentage(100);
         return table;
     }
 
     private void addEmptyCell(PdfPTable table) {
-        PdfPCell cellEmpty = new PdfPCell(new Phrase(""));
+        var cellEmpty = new PdfPCell(new Phrase(""));
         cellEmpty.setBorder(0);
         table.addCell(cellEmpty);
     }
 
     private void addAthleteInfo(PdfPTable table, NumbersAndSheetsAthlete athlete, int number) {
-        PdfPTable pdfPTable = new PdfPTable(1);
+        var pdfPTable = new PdfPTable(1);
         pdfPTable.setWidthPercentage(100);
 
-        PdfPCell cellId = new PdfPCell(
+        var cellId = new PdfPCell(
             new Phrase(number + "",
                 FontFactory.getFont(HELVETICA, FONT_SIZE_TEXT)));
         cellId.setBorder(0);
@@ -96,27 +96,27 @@ public class NumbersReport extends AbstractReport {
         cellId.setHorizontalAlignment(ALIGN_CENTER);
         pdfPTable.addCell(cellId);
 
-        String text = athlete.lastName() + " " + athlete.firstName() + "\n";
+        var text = athlete.lastName() + " " + athlete.firstName() + "\n";
         text += athlete.category();
         if (athlete.club() != null) {
             text += " / " + athlete.club();
         }
 
-        PdfPCell cellName = new PdfPCell(new Phrase(text, FontFactory.getFont(HELVETICA, FONT_SIZE_INFO)));
+        var cellName = new PdfPCell(new Phrase(text, FontFactory.getFont(HELVETICA, FONT_SIZE_INFO)));
         cellName.setBorder(0);
         cellName.setMinimumHeight(cmToPixel(1.8f));
         cellName.setHorizontalAlignment(ALIGN_CENTER);
         cellName.setVerticalAlignment(ALIGN_MIDDLE);
         pdfPTable.addCell(cellName);
 
-        PdfPCell cellTable = new PdfPCell(pdfPTable);
+        var cellTable = new PdfPCell(pdfPTable);
         cellTable.setBorder(0);
 
         table.addCell(cellTable);
     }
 
     private void addEmptyRow(PdfPTable table) {
-        PdfPCell cellId = new PdfPCell(new Phrase(" "));
+        var cellId = new PdfPCell(new Phrase(" "));
         cellId.setBorder(0);
         cellId.setMinimumHeight(cmToPixel(0.5f));
         cellId.setHorizontalAlignment(ALIGN_CENTER);
@@ -124,7 +124,7 @@ public class NumbersReport extends AbstractReport {
 
         addEmptyCell(table);
 
-        PdfPCell cellName = new PdfPCell(new Phrase(" "));
+        var cellName = new PdfPCell(new Phrase(" "));
         cellName.setBorder(0);
         cellName.setMinimumHeight(cmToPixel(0.5f));
         cellName.setHorizontalAlignment(ALIGN_CENTER);

@@ -38,7 +38,7 @@ public class DiplomaReport extends AbstractReport {
     }
 
     public byte[] create() {
-        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+        try (var byteArrayOutputStream = new ByteArrayOutputStream()) {
             document = new Document(A5, cmToPixel(1.5f), cmToPixel(1.5f), cmToPixel(1f), cmToPixel(1.5f));
             var pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
             document.open();

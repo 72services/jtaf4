@@ -35,7 +35,7 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
 
         setHeightFull();
 
-        Button add = new Button(getTranslation("Add"));
+        var add = new Button(getTranslation("Add"));
         add.setId("add-series");
         add.addClickListener(event -> UI.getCurrent().navigate(SeriesView.class));
 
@@ -53,23 +53,23 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
             .setHeader(getTranslation("Number.of.Athletes"));
 
         grid.addComponentColumn(seriesRecord -> {
-            Checkbox hidden = new Checkbox();
+            var hidden = new Checkbox();
             hidden.setReadOnly(true);
             hidden.setValue(seriesRecord.getHidden());
             return hidden;
         }).setHeader(getTranslation("Hidden"));
         grid.addComponentColumn(seriesRecord -> {
-            Checkbox locked = new Checkbox();
+            var locked = new Checkbox();
             locked.setReadOnly(true);
             locked.setValue(seriesRecord.getLocked());
             return locked;
         }).setHeader(getTranslation("Hidden"));
 
         grid.addComponentColumn(seriesRecord -> {
-            Button delete = new Button(getTranslation("Delete"));
+            var delete = new Button(getTranslation("Delete"));
             delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
             delete.addClickListener(event -> {
-                ConfirmDialog confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
+                var confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
                     getTranslation("Are.you.sure"),
                     getTranslation("Delete"), e -> {
                     try {
@@ -85,7 +85,7 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
                 confirmDialog.open();
             });
 
-            HorizontalLayout horizontalLayout = new HorizontalLayout(delete);
+            var horizontalLayout = new HorizontalLayout(delete);
             horizontalLayout.setJustifyContentMode(JustifyContentMode.END);
             return horizontalLayout;
         }).setTextAlign(ColumnTextAlign.END).setHeader(add).setKey("delete-column");

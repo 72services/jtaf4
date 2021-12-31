@@ -26,9 +26,9 @@ public class ClubsView extends ProtectedGridView<ClubRecord> {
 
         setHeightFull();
 
-        ClubDialog dialog = new ClubDialog(getTranslation("Clubs"));
+        var dialog = new ClubDialog(getTranslation("Clubs"));
 
-        Button add = new Button(getTranslation("Add"));
+        var add = new Button(getTranslation("Add"));
         add.addClickListener(event -> {
             ClubRecord newRecord = CLUB.newRecord();
             newRecord.setOrganizationId(organizationRecord.getId());

@@ -45,12 +45,12 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
 
         setHeightFull();
 
-        OrganizationDialog dialog = new OrganizationDialog(getTranslation("Organization"));
+        var dialog = new OrganizationDialog(getTranslation("Organization"));
 
-        Button add = new Button(getTranslation("Add"));
+        var add = new Button(getTranslation("Add"));
         add.setId("add-button");
         add.addClickListener(event -> {
-            OrganizationRecord organizationRecord = ORGANIZATION.newRecord();
+            var organizationRecord = ORGANIZATION.newRecord();
             organizationRecord.setOwner(SecurityContext.getUserEmail());
             dialog.open(organizationRecord, this::loadData);
         });
@@ -64,14 +64,14 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
         grid.addColumn(OrganizationRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
 
         grid.addComponentColumn(organizationRecord -> {
-            Button select = new Button(getTranslation("Select"));
+            var select = new Button(getTranslation("Select"));
             select.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             select.addClickListener(event -> {
                 organizationProvider.setOrganization(organizationRecord);
                 UI.getCurrent().navigate(SeriesListView.class);
             });
 
-            Button delete = new Button(getTranslation("Delete"));
+            var delete = new Button(getTranslation("Delete"));
             delete.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
             delete.addClickListener(event -> {
                 ConfirmDialog confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
@@ -94,7 +94,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
                 confirmDialog.open();
             });
 
-            HorizontalLayout horizontalLayout = new HorizontalLayout(select, delete);
+            var horizontalLayout = new HorizontalLayout(select, delete);
             horizontalLayout.setJustifyContentMode(JustifyContentMode.END);
             return horizontalLayout;
         }).setTextAlign(ColumnTextAlign.END).setHeader(add).setKey("edit-column");

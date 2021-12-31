@@ -11,7 +11,6 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -31,9 +30,9 @@ public final class SecurityContext {
      * has not signed in
      */
     public static String getUserEmail() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            var userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             return userDetails.getUsername();
         } else if (principal instanceof String) {
             return principal.toString();
@@ -56,18 +55,18 @@ public final class SecurityContext {
     }
 
     public static void logout() {
-        HttpServletRequest request = VaadinServletRequest.getCurrent().getHttpServletRequest();
+        var request = VaadinServletRequest.getCurrent().getHttpServletRequest();
 
         UI.getCurrent().getPage().setLocation(SecurityConfiguration.LOGOUT_URL);
-        SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+        var logoutHandler = new SecurityContextLogoutHandler();
         logoutHandler.logout(request, null, null);
 
-        String cookieName = "remember-me";
-        Cookie cookie = new Cookie(cookieName, null);
+        var cookieName = "remember-me";
+        var cookie = new Cookie(cookieName, null);
         cookie.setMaxAge(0);
         cookie.setPath(StringUtils.hasLength(request.getContextPath()) ? request.getContextPath() : "/");
 
-        HttpServletResponse response = (HttpServletResponse) VaadinResponse.getCurrent();
+        var response = (HttpServletResponse) VaadinResponse.getCurrent();
         response.addCookie(cookie);
     }
 }

@@ -34,9 +34,9 @@ public class AthletesView extends ProtectedGridView<AthleteRecord> {
 
         setHeightFull();
 
-        AthleteDialog dialog = new AthleteDialog(getTranslation("Athlete"));
+        var dialog = new AthleteDialog(getTranslation("Athlete"));
 
-        TextField filter = new TextField(getTranslation("Filter"));
+        var filter = new TextField(getTranslation("Filter"));
         filter.setValueChangeMode(ValueChangeMode.EAGER);
         add(filter);
 

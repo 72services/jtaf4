@@ -8,7 +8,6 @@ import com.lowagie.text.DocumentException;
 import com.lowagie.text.FontFactory;
 import com.lowagie.text.Image;
 import com.lowagie.text.Phrase;
-import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
@@ -62,7 +61,7 @@ public class SheetsReport extends AbstractReport {
     }
 
     public byte[] create() {
-        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+        try (var byteArrayOutputStream = new ByteArrayOutputStream()) {
             float oneCm = cmToPixel(1f);
             document = new Document(A5, oneCm, oneCm, cmToPixel(4.5f), oneCm);
             pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
@@ -93,7 +92,7 @@ public class SheetsReport extends AbstractReport {
     private void createLogo() throws DocumentException {
         if (logo != null) {
             try {
-                Image image = Image.getInstance(logo);
+                var image = Image.getInstance(logo);
                 image.setAbsolutePosition(cmToPixel(1f), cmToPixel(17.5f));
                 image.scaleToFit(120, 60);
                 document.add(image);
@@ -104,17 +103,17 @@ public class SheetsReport extends AbstractReport {
     }
 
     private void createCategory(NumbersAndSheetsAthlete athlete) {
-        PdfPTable table = new PdfPTable(1);
+        var table = new PdfPTable(1);
         table.setWidthPercentage(100);
         addCategoryCell(table, athlete.category());
 
-        Rectangle page = document.getPageSize();
+        var page = document.getPageSize();
         table.setTotalWidth(page.getWidth() - document.leftMargin() - document.rightMargin());
         table.writeSelectedRows(0, 1, document.leftMargin(), cmToPixel(20.5f), pdfWriter.getDirectContent());
     }
 
     private void createAthleteInfo(NumbersAndSheetsAthlete athlete, int number) throws DocumentException {
-        PdfPTable table = new PdfPTable(2);
+        var table = new PdfPTable(2);
         table.setWidthPercentage(100);
         table.setSpacingBefore(cmToPixel(1f));
 
@@ -154,7 +153,7 @@ public class SheetsReport extends AbstractReport {
     }
 
     private void createCompetitionRow() throws DocumentException {
-        PdfPTable table = new PdfPTable(1);
+        var table = new PdfPTable(1);
         table.setWidthPercentage(100);
         table.setSpacingBefore(cmToPixel(0.5f));
         table.setSpacingAfter(cmToPixel(0.5f));
@@ -165,7 +164,7 @@ public class SheetsReport extends AbstractReport {
     }
 
     private void createEventTable(NumbersAndSheetsAthlete athlete) throws DocumentException {
-        PdfPTable table = new PdfPTable(4);
+        var table = new PdfPTable(4);
         table.setWidthPercentage(100);
         table.setSpacingBefore(cmToPixel(1f));
 
@@ -185,31 +184,27 @@ public class SheetsReport extends AbstractReport {
     }
 
     protected void addCategoryCell(PdfPTable table, String text) {
-        PdfPCell cell = new PdfPCell(
-            new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 80f)));
+        var cell = new PdfPCell(new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 80f)));
         cell.setBorder(0);
         cell.setHorizontalAlignment(ALIGN_RIGHT);
         table.addCell(cell);
     }
 
     private void addCompetitionCell(PdfPTable table, String text) {
-        PdfPCell cell = new PdfPCell(
-            new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA_BOLD, FONT_SIZE_TEXT)));
+        var cell = new PdfPCell(new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA_BOLD, FONT_SIZE_TEXT)));
         cell.setBorder(0);
         table.addCell(cell);
     }
 
     private void addInfoCell(PdfPTable table, String text) {
-        PdfPCell cell = new PdfPCell(
-            new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE_TEXT)));
+        var cell = new PdfPCell(new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE_TEXT)));
         cell.setBorder(0);
         cell.setMinimumHeight(INFO_LINE_HEIGHT);
         table.addCell(cell);
     }
 
     private void addInfoCellWithColspan(PdfPTable table, String text, @SuppressWarnings("SameParameterValue") int colspan) {
-        PdfPCell cell = new PdfPCell(
-            new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE_TEXT)));
+        var cell = new PdfPCell(new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE_TEXT)));
         cell.setBorder(0);
         cell.setColspan(colspan);
         cell.setMinimumHeight(INFO_LINE_HEIGHT);
@@ -217,8 +212,7 @@ public class SheetsReport extends AbstractReport {
     }
 
     private void addInfoCellWithBorder(PdfPTable table, String text) {
-        PdfPCell cell = new PdfPCell(
-            new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE_INFO)));
+        var cell = new PdfPCell(new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE_INFO)));
         cell.setMinimumHeight(INFO_LINE_HEIGHT);
         cell.setBorderWidth(1);
         table.addCell(cell);
