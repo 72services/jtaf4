@@ -13,6 +13,7 @@ import java.util.List;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._assert;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 
 class DashboardViewTest extends KaribuTest {
 
@@ -35,26 +36,26 @@ class DashboardViewTest extends KaribuTest {
 
     @Test
     void series_ranking() {
-        _get(Button.class, spec -> spec.withId("series-ranking-1")).click();
+        assertThatNoException().isThrownBy(() -> _get(Button.class, spec -> spec.withId("series-ranking-1")).click());
     }
 
     @Test
     void club_ranking() {
-        _get(Button.class, spec -> spec.withId("club-ranking-1")).click();
+        assertThatNoException().isThrownBy(() ->_get(Button.class, spec -> spec.withId("club-ranking-1")).click());
     }
 
     @Test
     void competition_ranking() {
-        _get(Button.class, spec -> spec.withId("competition-ranking-1-1")).click();
+        assertThatNoException().isThrownBy(() ->_get(Button.class, spec -> spec.withId("competition-ranking-1-1")).click());
     }
 
     @Test
     void diploma() {
-        _get(Button.class, spec -> spec.withId("diploma-1-1")).click();
+        assertThatNoException().isThrownBy(() ->_get(Button.class, spec -> spec.withId("diploma-1-1")).click());
     }
 
     @Test
     void event_ranking() {
-        _get(Button.class, spec -> spec.withId("event-ranking-1-1")).click();
+        assertThatNoException().isThrownBy(() ->_get(Button.class, spec -> spec.withId("event-ranking-1-1")).click());
     }
 }

@@ -52,6 +52,6 @@ class TranslationProviderTest {
     void get_null_translation() {
         String nothing = translationProvider.getTranslation(null, Locale.ENGLISH);
 
-        assertThat(nothing).isEqualTo("");
+        assertThat(nothing).isEmpty();
     }
 }
