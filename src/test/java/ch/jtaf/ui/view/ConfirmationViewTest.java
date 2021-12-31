@@ -22,7 +22,7 @@ class ConfirmationViewTest extends KaribuTest {
 
     @Test
     void confirmation_successful() throws UserAlreadyExistException {
-        SecurityUserRecord user = userService.createUser("Peter", "Muster", "peter.muster@nodomain.xyz", "pass");
+        SecurityUserRecord user = userService.createUser("Martha", "Keller", "martha.keller@nodomain.xyz", "pass");
 
         UI.getCurrent().navigate("confirm", new QueryParameters(Map.of("cf", List.of(user.getConfirmationId()))));
 
