@@ -107,6 +107,11 @@ class SeriesViewTest extends KaribuTest {
 
         ((Button) GridKt._getCellComponent(eventsGrid, 0, "assign-column")).click();
 
+        // Test maximize and restore
+        Button toggle = _get(Button.class, spec -> spec.withId("toggle"));
+        toggle.click();
+        toggle.click();
+
         _get(Dialog.class, spec -> spec.withId("search-event-dialog")).close();
 
         // Remove Event from Category
@@ -152,6 +157,11 @@ class SeriesViewTest extends KaribuTest {
         assignAthlete.click();
 
         _assert(Dialog.class, 1);
+
+        // Test maximize and restore
+        Button toggle = _get(Button.class, spec -> spec.withId("toggle"));
+        toggle.click();
+        toggle.click();
 
         _get(TextField.class, spec -> spec.withCaption("Filter").withValue("")).setValue("z");
 
