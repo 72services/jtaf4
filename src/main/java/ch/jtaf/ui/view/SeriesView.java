@@ -27,6 +27,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.BeforeEvent;
@@ -39,6 +41,7 @@ import org.jooq.UpdatableRecord;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.Serial;
 import java.util.HashMap;
 import java.util.Map;
@@ -87,18 +90,39 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         name.setRequiredIndicatorVisible(true);
         formLayout.add(name);
 
+        var buffer = new MultiFileMemoryBuffer();
+        var upload = new Upload(buffer);
+        upload.setMaxFiles(1);
+        upload.addSucceededListener(event -> {
+            transactionTemplate.executeWithoutResult(transactionStatus -> {
+                try {
+                    var fileName = event.getFileName();
+                    var inputStream = buffer.getInputStream(fileName);
+                    binder.getBean().setLogo(inputStream.readAllBytes());
+                    dsl.attach(binder.getBean());
+                    binder.getBean().store();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        });
+        formLayout.add(upload);
+
+        var checkboxes = new HorizontalLayout();
+        add(checkboxes);
+
         binder.forField(name)
             .withValidator(new NotEmptyValidator(this))
             .bind(SeriesRecord::getName, SeriesRecord::setName);
 
         var hidden = new Checkbox(getTranslation("Hidden"));
-        formLayout.add(hidden);
+        checkboxes.add(hidden);
 
         binder.forField(hidden)
             .bind(SeriesRecord::getHidden, SeriesRecord::setHidden);
 
         var locked = new Checkbox(getTranslation("Locked"));
-        formLayout.add(locked);
+        checkboxes.add(locked);
 
         binder.forField(locked)
             .bind(SeriesRecord::getLocked, SeriesRecord::setLocked);
