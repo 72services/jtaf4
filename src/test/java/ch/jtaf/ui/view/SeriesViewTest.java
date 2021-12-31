@@ -105,14 +105,14 @@ class SeriesViewTest extends KaribuTest {
 
         _get(Button.class, spec -> spec.withId("add-event")).click();
 
+        // Test maximize and restore
+        Button toggle = _get(Button.class, spec -> spec.withId("search-event-dialog-toggle"));
+        toggle.click();
+        toggle.click();
+
         Grid<EventRecord> eventsGrid = _get(Grid.class, spec -> spec.withId("events-grid"));
 
         ((Button) GridKt._getCellComponent(eventsGrid, 0, "assign-column")).click();
-
-        // Test maximize and restore
-        Button toggle = _get(Button.class, spec -> spec.withId("toggle"));
-        toggle.click();
-        toggle.click();
 
         _get(Dialog.class, spec -> spec.withId("search-event-dialog")).close();
 
