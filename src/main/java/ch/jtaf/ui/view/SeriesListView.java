@@ -75,6 +75,7 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
                     try {
                         dsl.attach(seriesRecord);
                         seriesRecord.delete();
+                        refreshAll();
                     } catch (DataAccessException ex) {
                         Notification.show(ex.getMessage());
                     }

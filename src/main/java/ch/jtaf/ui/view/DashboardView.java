@@ -50,7 +50,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
         var verticalLayout = new VerticalLayout();
         add(verticalLayout);
 
-        int i = 1;
+        int seriesIndex = 1;
         var seriesRecords = dsl.selectFrom(SERIES)
             .orderBy(DSL.field(dsl.select(DSL.max(COMPETITION.COMPETITION_DATE)).from(COMPETITION).where(COMPETITION.SERIES_ID.eq(SERIES.ID))).desc())
             .fetch();
@@ -74,6 +74,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
             seriesLayout.add(buttonLayout);
 
             var seriesRanking = new Button(getTranslation("Series.Ranking"), new Icon(VaadinIcon.FILE));
+            seriesRanking.setId("series-ranking-" + seriesIndex);
             seriesRanking.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
             seriesRanking.addClickListener(event -> {
                 StreamResource streamResource = new StreamResource("series_ranking" + series.getId() + ".pdf",
@@ -88,6 +89,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
             buttonLayout.add(seriesRankingDiv);
 
             var clubRanking = new Button(getTranslation("Club.Ranking"), new Icon(VaadinIcon.FILE));
+            clubRanking.setId("club-ranking-" + seriesIndex);
             clubRanking.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
             clubRanking.addClickListener(event -> {
                 StreamResource streamResource = new StreamResource("club_ranking" + series.getId() + ".pdf",
@@ -101,6 +103,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
             clubRankingDiv.getClassNames().add(BUTTON_DIV);
             buttonLayout.add(clubRankingDiv);
 
+            int competitionIndex = 1;
             var competitionRecords = dsl.selectFrom(COMPETITION)
                 .where(COMPETITION.SERIES_ID.eq(series.getId()))
                 .fetch();
@@ -122,6 +125,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                 competitionLayout.add(links);
 
                 var competitionRanking = new Button(getTranslation("Competition.Ranking"), new Icon(VaadinIcon.FILE));
+                competitionRanking.setId("competition-ranking-" + seriesIndex + "-" + competitionIndex);
                 competitionRanking.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
                 competitionRanking.addClickListener(event -> {
                     StreamResource streamResource = new StreamResource("competition_ranking" + competition.getId() + ".pdf",
@@ -137,6 +141,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 
                 if (SecurityContext.isUserLoggedIn()) {
                     var diploma = new Button(getTranslation("Diploma"), new Icon(VaadinIcon.FILE));
+                    diploma.setId("diploma-" + seriesIndex + "-" + competitionIndex);
                     diploma.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
                     diploma.addClickListener(event -> {
                         var streamResource = new StreamResource("diploma" + competition.getId() + ".pdf",
@@ -151,6 +156,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                     links.add(diplomaDiv);
 
                     var eventRanking = new Button(getTranslation("Event.Ranking"), new Icon(VaadinIcon.FILE));
+                    eventRanking.setId("event-ranking-" + seriesIndex + "-" + competitionIndex);
                     eventRanking.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
                     eventRanking.addClickListener(event -> {
                         StreamResource streamResource = new StreamResource("event_ranking" + competition.getId() + ".pdf",
@@ -165,16 +171,17 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                     links.add(eventRankingDiv);
 
                     var enterResults = new Button(getTranslation("Enter.Results"), new Icon(VaadinIcon.KEYBOARD));
-                    enterResults.setId("enter-results-" + i);
+                    enterResults.setId("enter-results-" + seriesIndex + "-" + competitionIndex);
                     enterResults.addThemeVariants(ButtonVariant.LUMO_ERROR);
                     enterResults.addClickListener(event -> UI.getCurrent().navigate(ResultCapturingView.class, competition.getId().toString()));
                     var enterResultsDiv = new Div(enterResults);
                     enterResultsDiv.getClassNames().add(BUTTON_DIV);
                     links.add(enterResultsDiv);
 
-                    i++;
+                    competitionIndex++;
                 }
             }
+            seriesIndex++;
         }
     }
 
