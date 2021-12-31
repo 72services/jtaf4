@@ -44,11 +44,12 @@ class SeriesViewTest extends KaribuTest {
 
     @Test
     void add_competition() {
+        // Check content of competions grid
         Grid<CompetitionRecord> competitionsGrid = _get(Grid.class, spec -> spec.withId("competitions-grid"));
         assertThat(GridKt._size(competitionsGrid)).isEqualTo(2);
-
         assertThat(GridKt._get(competitionsGrid, 0).getName()).isEqualTo("1. CIS Twann");
 
+        // Add competition
         _get(Button.class, spec -> spec.withId("add-button")).click();
         _assert(Dialog.class, 1);
 
@@ -56,19 +57,20 @@ class SeriesViewTest extends KaribuTest {
         _get(DatePicker.class, spec -> spec.withCaption("Date")).setValue(LocalDate.now());
         _get(Button.class, spec -> spec.withId("edit-save")).click();
 
+        // Check if competition was added
         assertThat(GridKt._size(competitionsGrid)).isEqualTo(3);
-
         assertThat(GridKt._get(competitionsGrid, 2).getName()).isEqualTo("Test");
 
+        // Remove competition
         GridKt._getCellComponent(competitionsGrid, 2, "edit-column").getChildren()
             .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
             .ifPresent(Button::click);
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
         assertThat(confirmDialog.isOpened()).isTrue();
-
         _fireConfirm(confirmDialog);
 
+        // Check if competition was removed
         assertThat(GridKt._size(competitionsGrid)).isEqualTo(2);
     }
 
@@ -78,12 +80,12 @@ class SeriesViewTest extends KaribuTest {
         Tab categories = _get(Tab.class, spec -> spec.withText("Categories"));
         tabs.setSelectedTab(categories);
 
+        // Check content of categories grid
         Grid<CategoryRecord> categoriesGrid = _get(Grid.class, spec -> spec.withId("categories-grid"));
         assertThat(GridKt._size(categoriesGrid)).isEqualTo(12);
-
         assertThat(GridKt._get(categoriesGrid, 0).getAbbreviation()).isEqualTo("A");
 
-        // Create Category
+        // Add category
         _get(Button.class, spec -> spec.withId("add-button")).click();
         _assert(Dialog.class, 1);
 
@@ -94,11 +96,11 @@ class SeriesViewTest extends KaribuTest {
         _get(TextField.class, spec -> spec.withCaption("Year to")).setValue("2000");
         _get(Button.class, spec -> spec.withId("edit-save")).click();
 
+        // Check if category was added
         assertThat(GridKt._size(categoriesGrid)).isEqualTo(13);
-
         assertThat(GridKt._get(categoriesGrid, 0).getAbbreviation()).isEqualTo("1");
 
-        // Assign Event
+        // Select category and assign event
         GridKt._clickItem(categoriesGrid, 0);
 
         _get(Button.class, spec -> spec.withId("add-event")).click();
@@ -114,7 +116,7 @@ class SeriesViewTest extends KaribuTest {
 
         _get(Dialog.class, spec -> spec.withId("search-event-dialog")).close();
 
-        // Remove Event from Category
+        // Remove event from category
         Grid<EventRecord> categoryEventsGrid = _get(Grid.class, spec -> spec.withId("category-events-grid"));
         assertThat(GridKt._size(categoryEventsGrid)).isEqualTo(1);
 
@@ -124,21 +126,21 @@ class SeriesViewTest extends KaribuTest {
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
         assertThat(confirmDialog.isOpened()).isTrue();
-
         _fireConfirm(confirmDialog);
 
+        // Check if event was removed
         assertThat(GridKt._size(categoryEventsGrid)).isZero();
 
-        // Remove Category
+        // Remove category
         GridKt._getCellComponent(categoriesGrid, 0, "edit-column").getChildren()
             .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
             .ifPresent(Button::click);
 
         confirmDialog = _get(ConfirmDialog.class);
         assertThat(confirmDialog.isOpened()).isTrue();
-
         _fireConfirm(confirmDialog);
 
+        // Check if category was removed
         assertThat(GridKt._size(categoriesGrid)).isEqualTo(12);
     }
 
@@ -148,11 +150,12 @@ class SeriesViewTest extends KaribuTest {
         Tab athletes = _get(Tab.class, spec -> spec.withText("Athletes"));
         tabs.setSelectedTab(athletes);
 
+        // Check content of athletes grid
         Grid<AthleteRecord> athletesGrid = _get(Grid.class, spec -> spec.withId("athletes-grid"));
         assertThat(GridKt._size(athletesGrid)).isEqualTo(85);
-
         assertThat(GridKt._get(athletesGrid, 0).getLastName()).isEqualTo("Scholer");
 
+        // Assign athlete
         Button assignAthlete = _get(Button.class, spec -> spec.withId("assign-athlete"));
         assignAthlete.click();
 
@@ -174,19 +177,20 @@ class SeriesViewTest extends KaribuTest {
             .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
             .ifPresent(Button::click);
 
+        // Check if athlete was assigned
         assertThat(GridKt._size(athletesGrid)).isEqualTo(86);
-
         assertThat(GridKt._get(athletesGrid, 40).getLastName()).isEqualTo("Zumstein");
 
+        // Remove athlete from category
         GridKt._getCellComponent(athletesGrid, 40, "remove-column").getChildren()
             .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
             .ifPresent(Button::click);
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
         assertThat(confirmDialog.isOpened()).isTrue();
-
         _fireConfirm(confirmDialog);
 
+        // Check if athlete was removed
         assertThat(GridKt._size(athletesGrid)).isEqualTo(85);
     }
 

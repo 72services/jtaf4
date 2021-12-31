@@ -34,11 +34,12 @@ class AthletesViewTest extends KaribuTest {
 
     @Test
     void add_athlete() {
+        // Check content of athletes grid
         Grid<AthleteRecord> athletesGrid = _get(Grid.class, spec -> spec.withId("athletes-grid"));
         assertThat(GridKt._size(athletesGrid)).isEqualTo(140);
-
         assertThat(GridKt._get(athletesGrid, 0).getLastName()).isEqualTo("Bangerter");
 
+        // Add a new athlete
         _get(Button.class, spec -> spec.withId("add-button")).click();
         _assert(Dialog.class, 1);
 
@@ -48,33 +49,38 @@ class AthletesViewTest extends KaribuTest {
         _get(TextField.class, spec -> spec.withCaption("Year")).setValue("2000");
         _get(Button.class, spec -> spec.withCaption("Save")).click();
 
+        // Check if athlete was added
         assertThat(GridKt._size(athletesGrid)).isEqualTo(141);
-
         assertThat(GridKt._get(athletesGrid, 0).getLastName()).isEqualTo("Test");
 
+        // Remove athlete
         GridKt._getCellComponent(athletesGrid, 0, "edit-column").getChildren()
             .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
             .ifPresent(Button::click);
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
         assertThat(confirmDialog.isOpened()).isTrue();
-
         _fireConfirm(confirmDialog);
 
+        // Check that athlete was removed
         assertThat(GridKt._size(athletesGrid)).isEqualTo(140);
     }
 
     @Test
     void filter_and_sort() {
+        // Check number of athletes before filtering
         Grid<AthleteRecord> athletesGrid = _get(Grid.class, spec -> spec.withId("athletes-grid"));
         assertThat(GridKt._size(athletesGrid)).isEqualTo(140);
 
+        // Filter
         _get(TextField.class, spec -> spec.withId("filter")).setValue("Martinelli");
         assertThat(GridKt._size(athletesGrid)).isEqualTo(1);
 
+        // Remove filter
         _get(TextField.class, spec -> spec.withId("filter")).setValue("");
         assertThat(GridKt._size(athletesGrid)).isEqualTo(140);
 
+        // Sort grid
         // TODO https://github.com/mvysny/karibu-testing/issues/97
         // GridKt.sort(athletesGrid, new QuerySortOrder("Last Name", SortDirection.ASCENDING));
     }

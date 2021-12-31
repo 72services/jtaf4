@@ -42,7 +42,7 @@ public class SearchAthleteDialog extends Dialog {
 
     private boolean isFullScreen = false;
     private final Div content;
-    private final Button max;
+    private final Button toggle;
 
     private final Map<Long, ClubRecord> clubRecordMap;
     private final ConfigurableFilterDataProvider<AthleteRecord, Void, String> dataProvider;
@@ -57,13 +57,14 @@ public class SearchAthleteDialog extends Dialog {
         var headerTitel = new H2(getTranslation("Athletes"));
         headerTitel.addClassName("dialog-title");
 
-        max = new Button(VaadinIcon.EXPAND_SQUARE.create());
-        max.addClickListener(event -> maximise());
+        toggle = new Button(VaadinIcon.EXPAND_SQUARE.create());
+        toggle.setId("toggle");
+        toggle.addClickListener(event -> toggle());
 
         var close = new Button(VaadinIcon.CLOSE_SMALL.create());
         close.addClickListener(event -> close());
 
-        var header = new Header(headerTitel, max, close);
+        var header = new Header(headerTitel, toggle, close);
         header.getElement().getThemeList().add(Lumo.LIGHT);
         add(header);
 
@@ -136,23 +137,23 @@ public class SearchAthleteDialog extends Dialog {
         content.addClassName("dialog-content");
         add(content);
 
-        maximise();
+        toggle();
 
         filter.focus();
     }
 
     private void initialSize() {
-        max.setIcon(VaadinIcon.EXPAND_SQUARE.create());
+        toggle.setIcon(VaadinIcon.EXPAND_SQUARE.create());
         getElement().getThemeList().remove(FULLSCREEN);
         setHeight("auto");
         setWidth("600px");
     }
 
-    private void maximise() {
+    private void toggle() {
         if (isFullScreen) {
             initialSize();
         } else {
-            max.setIcon(VaadinIcon.COMPRESS_SQUARE.create());
+            toggle.setIcon(VaadinIcon.COMPRESS_SQUARE.create());
             getElement().getThemeList().add(FULLSCREEN);
             setSizeFull();
             content.setVisible(true);

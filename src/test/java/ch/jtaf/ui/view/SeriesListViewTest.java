@@ -30,6 +30,7 @@ class SeriesListViewTest extends KaribuTest {
 
     @Test
     void add_series() {
+        // Add new series
         Button addSeries = _get(Button.class, spec -> spec.withId("add-series"));
         addSeries.click();
 
@@ -50,20 +51,21 @@ class SeriesListViewTest extends KaribuTest {
 
         UI.getCurrent().navigate(SeriesListView.class);
 
+        // Check if series was added
         Grid<SeriesRecord> seriesGrid = _get(Grid.class, spec -> spec.withId("series-grid"));
         assertThat(GridKt._size(seriesGrid)).isEqualTo(3);
-
         assertThat(GridKt._get(seriesGrid, 2).getName()).isEqualTo("Test");
 
+        // Remove series
         GridKt._getCellComponent(seriesGrid, 2, "delete-column").getChildren()
             .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
             .ifPresent(Button::click);
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
         assertThat(confirmDialog.isOpened()).isTrue();
-
         _fireConfirm(confirmDialog);
 
+        // Check if series was removed
         assertThat(GridKt._size(seriesGrid)).isEqualTo(2);
     }
 

@@ -39,11 +39,12 @@ class OrganizationsViewTest extends KaribuTest {
         H1 h1 = _get(H1.class, spec -> spec.withId("view-title"));
         assertThat(h1.getText()).isEqualTo("Organizations");
 
+        // Check content of organizations grid
         Grid<OrganizationRecord> organizationGrid = _get(Grid.class, spec -> spec.withId("organizations-grid"));
         assertThat(GridKt._size(organizationGrid)).isEqualTo(2);
-
         assertThat(GridKt._get(organizationGrid, 0).getOrganizationKey()).isEqualTo("CIS");
 
+        // Add organization
         _get(Button.class, spec -> spec.withId("add-button")).click();
         _assert(Dialog.class, 1);
 
@@ -51,10 +52,11 @@ class OrganizationsViewTest extends KaribuTest {
         _get(TextField.class, spec -> spec.withCaption("Name")).setValue("Test");
         _get(Button.class, spec -> spec.withCaption("Save")).click();
 
+        // Check if organization was added
         assertThat(GridKt._size(organizationGrid)).isEqualTo(3);
-
         assertThat(GridKt._get(organizationGrid, 2).getOrganizationKey()).isEqualTo("AAA");
 
+        // Remove organization
         GridKt._getCellComponent(organizationGrid, 2, "edit-column").getChildren()
             .filter(component -> component instanceof Button && ((Button) component).getText().equals("Delete"))
             .findFirst().map(component -> (Button) component)
@@ -62,9 +64,9 @@ class OrganizationsViewTest extends KaribuTest {
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
         assertThat(confirmDialog.isOpened()).isTrue();
-
         _fireConfirm(confirmDialog);
 
+        // Check if organization was removed
         assertThat(GridKt._size(organizationGrid)).isEqualTo(2);
     }
 
@@ -75,6 +77,7 @@ class OrganizationsViewTest extends KaribuTest {
 
         UI.getCurrent().navigate(OrganizationsView.class);
 
+        // Check if series from Cookie was loaded
         RouterLink routerLink = _get(RouterLink.class, spec -> spec.withId("series-list-link"));
         assertThat(routerLink.getText()).isEqualTo("CIS");
     }
