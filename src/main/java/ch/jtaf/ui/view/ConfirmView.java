@@ -26,6 +26,7 @@ public class ConfirmView extends VerticalLayout implements HasDynamicTitle, Befo
         okDiv = new VerticalLayout();
         okDiv.add(new H1(getTranslation("Confirm.success")));
         okDiv.add(new RouterLink("Login", OrganizationsView.class));
+        okDiv.setVisible(false);
         add(okDiv);
 
         failure = new H1(getTranslation("Confirm.failure"));
