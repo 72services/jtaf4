@@ -65,11 +65,17 @@ class AthletesViewTest extends KaribuTest {
     }
 
     @Test
-    void filter() {
+    void filter_and_sort() {
         Grid<AthleteRecord> athletesGrid = _get(Grid.class, spec -> spec.withId("athletes-grid"));
         assertThat(GridKt._size(athletesGrid)).isEqualTo(140);
 
-        _get(TextField.class, spec -> spec.withId("filter")).setValue("Martinelli");;
+        _get(TextField.class, spec -> spec.withId("filter")).setValue("Martinelli");
         assertThat(GridKt._size(athletesGrid)).isEqualTo(1);
+
+        _get(TextField.class, spec -> spec.withId("filter")).setValue("");
+        assertThat(GridKt._size(athletesGrid)).isEqualTo(140);
+
+        // TODO https://github.com/mvysny/karibu-testing/issues/97
+        // GridKt.sort(athletesGrid, new QuerySortOrder("Last Name", SortDirection.ASCENDING));
     }
 }
