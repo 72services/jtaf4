@@ -105,6 +105,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
         login.setVisible(false);
 
         logout = new Button("Logout", e -> SecurityContext.logout());
+        logout.setId("logout");
 
         info.add(about, version, register, login, logout);
 

@@ -58,8 +58,12 @@ public final class SecurityContext {
         var request = VaadinServletRequest.getCurrent().getHttpServletRequest();
 
         UI.getCurrent().getPage().setLocation(SecurityConfiguration.LOGOUT_URL);
-        var logoutHandler = new SecurityContextLogoutHandler();
-        logoutHandler.logout(request, null, null);
+        try {
+            var logoutHandler = new SecurityContextLogoutHandler();
+            logoutHandler.logout(request, null, null);
+        } catch (IllegalStateException e) {
+            // Ignored for testing
+        }
 
         var cookieName = "remember-me";
         var cookie = new Cookie(cookieName, null);

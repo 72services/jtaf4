@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.github.mvysny.kaributesting.v10.LocatorJ._assert;
+import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
 
 class DashboardViewLoggedInTest extends KaribuTest {
 
@@ -23,6 +24,8 @@ class DashboardViewLoggedInTest extends KaribuTest {
         UI.getCurrent().getPage().reload();
 
         _assert(Button.class, 6, spec -> spec.withCaption("Enter Results"));
+
+        _get(Button.class, spec -> spec.withId("logout")).click();
     }
 
     @Test
