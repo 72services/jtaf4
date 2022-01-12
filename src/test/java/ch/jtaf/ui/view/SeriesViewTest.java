@@ -121,9 +121,13 @@ class SeriesViewTest extends KaribuTest {
         Grid<EventRecord> eventsGrid = _get(Grid.class, spec -> spec.withId("events-grid"));
         assertThat(GridKt._size(eventsGrid)).isEqualTo(9);
 
-        // Filter
+        // Filter with text
         _get(TextField.class, spec -> spec.withId("event-filter")).setValue("w");
         assertThat(GridKt._size(eventsGrid)).isEqualTo(1);
+
+        // Filter with number
+        _get(TextField.class, spec -> spec.withId("event-filter")).setValue("2");
+        assertThat(GridKt._size(eventsGrid)).isEqualTo(0);
 
         // Remove filter
         _get(TextField.class, spec -> spec.withId("event-filter")).setValue("");
