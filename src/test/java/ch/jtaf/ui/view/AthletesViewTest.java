@@ -10,11 +10,14 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.provider.QuerySortOrder;
+import com.vaadin.flow.data.provider.SortDirection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._assert;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
 import static com.github.mvysny.kaributesting.v10.pro.ConfirmDialogKt._fireConfirm;
@@ -81,7 +84,10 @@ class AthletesViewTest extends KaribuTest {
         assertThat(GridKt._size(athletesGrid)).isEqualTo(140);
 
         // Sort grid
-        // TODO https://github.com/mvysny/karibu-testing/issues/97
-        // GridKt.sort(athletesGrid, new QuerySortOrder("Last Name", SortDirection.ASCENDING));
+        GridKt.sort(athletesGrid, new QuerySortOrder(ATHLETE.LAST_NAME.getName(), SortDirection.ASCENDING));
+        assertThat(GridKt._get(athletesGrid, 0).getLastName()).isEqualTo("Abaterusso");
+
+        GridKt.sort(athletesGrid, new QuerySortOrder(ATHLETE.LAST_NAME.getName(), SortDirection.DESCENDING));
+        assertThat(GridKt._get(athletesGrid, 0).getLastName()).isEqualTo("Zumstein");
     }
 }

@@ -60,8 +60,8 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
         grid.getClassNames().add("rounded-corners");
         grid.setHeightFull();
 
-        grid.addColumn(OrganizationRecord::getOrganizationKey).setHeader(getTranslation("Key")).setSortable(true);
-        grid.addColumn(OrganizationRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
+        grid.addColumn(OrganizationRecord::getOrganizationKey).setHeader(getTranslation("Key")).setSortable(true).setKey(ORGANIZATION.ORGANIZATION_KEY.getName());
+        grid.addColumn(OrganizationRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setKey(ORGANIZATION.NAME.getName());
 
         grid.addComponentColumn(organizationRecord -> {
             var select = new Button(getTranslation("Select"));

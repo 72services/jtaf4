@@ -230,8 +230,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         competitionsGrid.setId("competitions-grid");
         competitionsGrid.setHeightFull();
 
-        competitionsGrid.addColumn(CompetitionRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
-        competitionsGrid.addColumn(CompetitionRecord::getCompetitionDate).setHeader(getTranslation("Date")).setSortable(true);
+        competitionsGrid.addColumn(CompetitionRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setKey(COMPETITION.NAME.getName());
+        competitionsGrid.addColumn(CompetitionRecord::getCompetitionDate).setHeader(getTranslation("Date")).setSortable(true).setKey(COMPETITION.COMPETITION_DATE.getName());
         competitionsGrid.addColumn(new ComponentRenderer<>(competition -> {
             var sheetsOrderedByAthlete = new Anchor(new StreamResource("sheets_orderby_athlete" + competition.getId() + ".pdf",
                 () -> {
@@ -283,10 +283,10 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         categoriesGrid.setId("categories-grid");
         categoriesGrid.setHeightFull();
 
-        categoriesGrid.addColumn(CategoryRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true);
-        categoriesGrid.addColumn(CategoryRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
-        categoriesGrid.addColumn(CategoryRecord::getYearFrom).setHeader(getTranslation("Year.From")).setSortable(true);
-        categoriesGrid.addColumn(CategoryRecord::getYearTo).setHeader(getTranslation("Year.To")).setSortable(true);
+        categoriesGrid.addColumn(CategoryRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true).setKey(CATEGORY.ABBREVIATION.getName());
+        categoriesGrid.addColumn(CategoryRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setKey(CATEGORY.NAME.getName());
+        categoriesGrid.addColumn(CategoryRecord::getYearFrom).setHeader(getTranslation("Year.From")).setSortable(true).setKey(CATEGORY.YEAR_FROM.getName());
+        categoriesGrid.addColumn(CategoryRecord::getYearTo).setHeader(getTranslation("Year.To")).setSortable(true).setKey(CATEGORY.YEAR_TO.getName());
         categoriesGrid.addColumn(new ComponentRenderer<>(category -> {
             var sheet = new Anchor(new StreamResource("sheet" + category.getId() + ".pdf",
                 () -> {
@@ -310,10 +310,10 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         athletesGrid.setId("athletes-grid");
         athletesGrid.setHeightFull();
 
-        athletesGrid.addColumn(AthleteRecord::getLastName).setHeader(getTranslation("Last.Name")).setSortable(true);
-        athletesGrid.addColumn(AthleteRecord::getFirstName).setHeader(getTranslation("First.Name")).setSortable(true);
-        athletesGrid.addColumn(AthleteRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true);
-        athletesGrid.addColumn(AthleteRecord::getYearOfBirth).setHeader(getTranslation("Year")).setSortable(true);
+        athletesGrid.addColumn(AthleteRecord::getLastName).setHeader(getTranslation("Last.Name")).setSortable(true).setKey(ATHLETE.LAST_NAME.getName());
+        athletesGrid.addColumn(AthleteRecord::getFirstName).setHeader(getTranslation("First.Name")).setSortable(true).setKey(ATHLETE.FIRST_NAME.getName());
+        athletesGrid.addColumn(AthleteRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true).setKey(ATHLETE.GENDER.getName());
+        athletesGrid.addColumn(AthleteRecord::getYearOfBirth).setHeader(getTranslation("Year")).setSortable(true).setKey(ATHLETE.YEAR_OF_BIRTH.getName());
         athletesGrid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
             : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club"));
 

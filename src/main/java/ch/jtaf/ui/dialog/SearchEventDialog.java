@@ -108,10 +108,10 @@ public class SearchEventDialog extends Dialog {
         grid.setItems(dataProvider);
         grid.getStyle().set("height", "calc(100% - 300px");
 
-        grid.addColumn(EventRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true);
-        grid.addColumn(EventRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
-        grid.addColumn(EventRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true);
-        grid.addColumn(EventRecord::getEventType).setHeader(getTranslation("Event.Type")).setSortable(true);
+        grid.addColumn(EventRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true).setKey(EVENT.ABBREVIATION.getName());
+        grid.addColumn(EventRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setKey(EVENT.NAME.getName());
+        grid.addColumn(EventRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true).setKey(EVENT.GENDER.getName());
+        grid.addColumn(EventRecord::getEventType).setHeader(getTranslation("Event.Type")).setSortable(true).setKey(EVENT.EVENT_TYPE.getName());
         grid.addColumn(EventRecord::getA).setHeader("A");
         grid.addColumn(EventRecord::getA).setHeader("B");
         grid.addColumn(EventRecord::getA).setHeader("C");

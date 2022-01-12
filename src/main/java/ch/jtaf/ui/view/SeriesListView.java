@@ -42,7 +42,7 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
         grid.setId("series-grid");
 
         grid.addComponentColumn(LogoUtil::resizeLogo).setHeader(getTranslation("Logo"));
-        grid.addColumn(SeriesRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
+        grid.addColumn(SeriesRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setKey(SERIES.NAME.getName());
 
         grid.addColumn(seriesRecord ->
                 dsl

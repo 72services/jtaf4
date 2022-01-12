@@ -29,8 +29,8 @@ public class ClubsView extends ProtectedGridView<ClubRecord> {
 
         grid.setId("clubs-grid");
 
-        grid.addColumn(ClubRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true);
-        grid.addColumn(ClubRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
+        grid.addColumn(ClubRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true).setKey(CLUB.ABBREVIATION.getName());
+        grid.addColumn(ClubRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setKey(CLUB.NAME.getName());
 
         addActionColumnAndSetSelectionListener(grid, dialog, clubRecord -> refreshAll(),
             () -> {
