@@ -44,4 +44,13 @@ class ResultCapturingViewTest extends KaribuTest {
         _get(TextField.class, spec -> spec.withId("result-2")).setValue("23.45");
         assertThat(_get(TextField.class, spec -> spec.withId("points-2")).getValue()).isEqualTo("252");
     }
+
+    @Test
+    void search_with_id() {
+        _get(TextField.class, spec -> spec.withId("filter")).setValue("140");
+
+        assertThat(_get(TextField.class, spec1 -> spec1.withCaption("80 m")).getValue()).isEqualTo("12.12");
+        assertThat(_get(TextField.class, spec -> spec.withId("points-0")).getValue()).isEqualTo("402");
+    }
+
 }

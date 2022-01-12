@@ -22,6 +22,12 @@ import com.vaadin.flow.component.upload.Upload;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -197,8 +203,12 @@ class SeriesViewTest extends KaribuTest {
     }
 
     @Test
-    void logo_upload() {
+    void logo_upload() throws URISyntaxException, IOException {
+        URL imageUrl = getClass().getClassLoader().getResource("images/logo.png");
+        Path path = Paths.get(imageUrl.toURI());
+        byte[] logoData = Files.readAllBytes(path);
+
         Upload upload = _get(Upload.class, spec -> spec.withId("logo-upload"));
-        UploadKt._upload(upload, "logo.png", new byte[0]);
+        UploadKt._upload(upload, "logo.png", logoData);
     }
 }
