@@ -28,3 +28,4 @@ webpack.generated.js
 /.bashrc.swp
 /.pnpm-debug.log
 /pnpm-lock.yaml
+/dance.txt

@@ -10,7 +10,7 @@ import java.util.List;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ProtectedViewTest extends KaribuTest {
+class ProtectedViewTest extends KaribuTest {
 
     @Test
     void user_without_organization() {
