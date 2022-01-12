@@ -3,7 +3,6 @@ package ch.jtaf.ui.view;
 import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.model.EventType;
 import ch.jtaf.ui.layout.MainLayout;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
@@ -197,13 +196,8 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
     @Override
     public void setParameter(BeforeEvent event, String parameter) {
-        if (parameter == null) {
-            UI.getCurrent().navigate(DashboardView.class);
-        } else {
-            competitionId = Long.parseLong(parameter);
-
-            dataProvider.refreshAll();
-        }
+        competitionId = Long.parseLong(parameter);
+        dataProvider.refreshAll();
     }
 
     private int calculatePoints(EventRecord event, String result) {
