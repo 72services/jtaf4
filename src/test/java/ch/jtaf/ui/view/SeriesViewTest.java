@@ -7,6 +7,7 @@ import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.db.tables.records.SeriesRecord;
 import ch.jtaf.ui.KaribuTest;
 import com.github.mvysny.kaributesting.v10.GridKt;
+import com.github.mvysny.kaributesting.v10.UploadKt;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
@@ -17,6 +18,7 @@ import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.upload.Upload;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -194,4 +196,9 @@ class SeriesViewTest extends KaribuTest {
         assertThat(GridKt._size(athletesGrid)).isEqualTo(85);
     }
 
+    @Test
+    void logo_upload() {
+        Upload upload = _get(Upload.class, spec -> spec.withId("logo-upload"));
+        UploadKt._upload(upload, "logo.png", new byte[0]);
+    }
 }

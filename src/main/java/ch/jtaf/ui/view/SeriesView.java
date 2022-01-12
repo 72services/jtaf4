@@ -93,6 +93,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
 
         var buffer = new MultiFileMemoryBuffer();
         var upload = new Upload(buffer);
+        upload.setId("logo-upload");
         upload.setMaxFiles(1);
 
         var uploadButton = new Button(getTranslation("Logo.upload"));
