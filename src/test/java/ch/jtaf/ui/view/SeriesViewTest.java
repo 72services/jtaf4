@@ -119,6 +119,15 @@ class SeriesViewTest extends KaribuTest {
         toggle.click();
 
         Grid<EventRecord> eventsGrid = _get(Grid.class, spec -> spec.withId("events-grid"));
+        assertThat(GridKt._size(eventsGrid)).isEqualTo(9);
+
+        // Filter
+        _get(TextField.class, spec -> spec.withId("event-filter")).setValue("w");
+        assertThat(GridKt._size(eventsGrid)).isEqualTo(1);
+
+        // Remove filter
+        _get(TextField.class, spec -> spec.withId("event-filter")).setValue("");
+        assertThat(GridKt._size(eventsGrid)).isEqualTo(9);
 
         ((Button) GridKt._getCellComponent(eventsGrid, 0, "assign-column")).click();
 

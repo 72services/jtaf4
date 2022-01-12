@@ -68,6 +68,7 @@ public class SearchEventDialog extends Dialog {
         add(header);
 
         var filter = new TextField(getTranslation("Filter"));
+        filter.setId("event-filter");
         filter.setValueChangeMode(ValueChangeMode.EAGER);
         filter.focus();
 
