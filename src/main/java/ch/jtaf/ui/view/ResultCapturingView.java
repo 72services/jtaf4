@@ -3,6 +3,7 @@ package ch.jtaf.ui.view;
 import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.model.EventType;
 import ch.jtaf.ui.layout.MainLayout;
+import ch.jtaf.ui.security.Role;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
@@ -33,7 +34,7 @@ import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Result.RESULT;
 import static org.jooq.impl.DSL.upper;
 
-@RolesAllowed({"USER", "ADMIN"})
+@RolesAllowed({Role.USER, Role.ADMIN})
 @Route(layout = MainLayout.class)
 public class ResultCapturingView extends VerticalLayout implements HasDynamicTitle, HasUrlParameter<String> {
 

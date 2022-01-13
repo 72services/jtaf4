@@ -3,6 +3,7 @@ package ch.jtaf.ui.view;
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.ui.KaribuTest;
 import ch.jtaf.ui.security.OrganizationProvider;
+import ch.jtaf.ui.security.Role;
 import com.github.mvysny.kaributesting.mockhttp.MockRequest;
 import com.github.mvysny.kaributesting.v10.GridKt;
 import com.vaadin.flow.component.UI;
@@ -29,7 +30,7 @@ class OrganizationsViewTest extends KaribuTest {
 
     @BeforeEach
     public void login() {
-        login("simon@martinelli.ch", "", List.of("ADMIN"));
+        login("simon@martinelli.ch", "", List.of(Role.ADMIN));
     }
 
     @Test

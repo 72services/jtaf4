@@ -2,6 +2,7 @@ package ch.jtaf.ui.view;
 
 import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.ui.KaribuTest;
+import ch.jtaf.ui.security.Role;
 import com.github.mvysny.kaributesting.v10.GridKt;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -24,7 +25,7 @@ class EventsViewTest extends KaribuTest {
 
     @BeforeEach
     public void login() {
-        login("simon@martinelli.ch", "", List.of("ADMIN"));
+        login("simon@martinelli.ch", "", List.of(Role.ADMIN));
         UI.getCurrent().getPage().reload();
 
         navigateToSeriesList();

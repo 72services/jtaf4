@@ -1,6 +1,7 @@
 package ch.jtaf.ui.view;
 
 import ch.jtaf.ui.KaribuTest;
+import ch.jtaf.ui.security.Role;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.login.LoginOverlay;
@@ -25,7 +26,7 @@ class LoginViewTest extends KaribuTest {
 
     @Test
     void already_logged_in() {
-        login("simon@martinelli.ch", "", List.of("ADMIN"));
+        login("simon@martinelli.ch", "", List.of(Role.ADMIN));
 
         UI.getCurrent().navigate(LoginView.class);
 

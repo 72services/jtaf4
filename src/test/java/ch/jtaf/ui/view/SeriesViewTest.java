@@ -6,6 +6,7 @@ import ch.jtaf.db.tables.records.CompetitionRecord;
 import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.db.tables.records.SeriesRecord;
 import ch.jtaf.ui.KaribuTest;
+import ch.jtaf.ui.security.Role;
 import com.github.mvysny.kaributesting.v10.GridKt;
 import com.github.mvysny.kaributesting.v10.UploadKt;
 import com.vaadin.flow.component.UI;
@@ -40,7 +41,7 @@ class SeriesViewTest extends KaribuTest {
 
     @BeforeEach
     public void login() {
-        login("simon@martinelli.ch", "", List.of("ADMIN"));
+        login("simon@martinelli.ch", "", List.of(Role.ADMIN));
         UI.getCurrent().getPage().reload();
 
         Grid<SeriesRecord> seriesGrid = navigateToSeriesList();

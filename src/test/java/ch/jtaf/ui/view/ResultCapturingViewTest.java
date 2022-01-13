@@ -1,6 +1,7 @@
 package ch.jtaf.ui.view;
 
 import ch.jtaf.ui.KaribuTest;
+import ch.jtaf.ui.security.Role;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.textfield.TextField;
@@ -16,7 +17,7 @@ class ResultCapturingViewTest extends KaribuTest {
 
     @BeforeEach
     public void login() {
-        login("simon@martinelli.ch", "", List.of("ADMIN"));
+        login("simon@martinelli.ch", "", List.of(Role.ADMIN));
         UI.getCurrent().getPage().reload();
 
         Button enterResults = _get(Button.class, spec -> spec.withId("enter-results-1-1"));

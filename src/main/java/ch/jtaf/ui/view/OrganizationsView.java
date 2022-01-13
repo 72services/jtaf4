@@ -5,6 +5,7 @@ import ch.jtaf.db.tables.records.OrganizationUserRecord;
 import ch.jtaf.ui.dialog.OrganizationDialog;
 import ch.jtaf.ui.layout.MainLayout;
 import ch.jtaf.ui.security.OrganizationProvider;
+import ch.jtaf.ui.security.Role;
 import ch.jtaf.ui.security.SecurityContext;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -28,7 +29,7 @@ import static ch.jtaf.db.tables.Organization.ORGANIZATION;
 import static ch.jtaf.db.tables.OrganizationUser.ORGANIZATION_USER;
 import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
 
-@RolesAllowed({"USER", "ADMIN"})
+@RolesAllowed({Role.USER, Role.ADMIN})
 @Route(layout = MainLayout.class)
 public class OrganizationsView extends VerticalLayout implements HasDynamicTitle {
 

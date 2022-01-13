@@ -1,6 +1,7 @@
 package ch.jtaf.ui.view;
 
 import ch.jtaf.ui.KaribuTest;
+import ch.jtaf.ui.security.Role;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.H1;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ class ProtectedViewTest extends KaribuTest {
     @Test
     void user_without_organization() {
         // This user has no organization
-        login("susan.miller@mail.com", "pass", List.of("ADMIN"));
+        login("susan.miller@mail.com", "pass", List.of(Role.ADMIN));
 
         UI.getCurrent().navigate(ClubsView.class);
 
