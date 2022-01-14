@@ -203,7 +203,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
     private int calculatePoints(EventRecord event, String result) {
         double points = 0.0d;
-        if (result != null && Double.parseDouble(result) > 0) {
+        if (result != null) {
             if (EventType.valueOf(event.getEventType()) == EventType.RUN) {
                 points = event.getA() * Math.pow((event.getB() - Double.parseDouble(result) * 100) / 100, event.getC());
             } else if (EventType.valueOf(event.getEventType()) == EventType.RUN_LONG) {
