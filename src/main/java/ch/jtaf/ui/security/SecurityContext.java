@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.util.StringUtils;
 
@@ -31,11 +32,12 @@ public final class SecurityContext {
      */
     public static String getUserEmail() {
         var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            var userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails userDetails) {
             return userDetails.getUsername();
         } else if (principal instanceof String) {
             return principal.toString();
+        } else if (principal instanceof Jwt jwt) {
+            return jwt.getSubject();
         }
         // Anonymous or no authentication.
         return "";
