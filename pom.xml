@@ -12,7 +12,7 @@
 
     <groupId>ch.jtaf</groupId>
     <artifactId>jtaf4</artifactId>
-    <version>4.3.3</version>
+    <version>4.3.4</version>
 
     <name>JTAF 4</name>
     <description>JTAF - Track And Field</description>
@@ -515,8 +515,8 @@
 
     <distributionManagement>
         <repository>
-            <id>internal</id>
-            <url>file://${project.build.directory}/mvn-repo</url>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/72services/jtaf4</url>
         </repository>
     </distributionManagement>
 </project>
