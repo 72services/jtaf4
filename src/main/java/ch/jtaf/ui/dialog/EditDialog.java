@@ -31,7 +31,7 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
 
     private boolean isFullScreen = false;
     private final Div content;
-    private final Button max;
+    private final Button toggle;
 
     final Binder<R> binder;
     final FormLayout formLayout;
@@ -49,16 +49,17 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
         setDraggable(true);
         setResizable(true);
 
-        H2 headerTitel = new H2(title);
+        var headerTitel = new H2(title);
         headerTitel.addClassName("dialog-title");
 
-        max = new Button(VaadinIcon.EXPAND_SQUARE.create());
-        max.addClickListener(event -> maximiseMinimize());
+        toggle = new Button(VaadinIcon.EXPAND_SQUARE.create());
+        toggle.addClickListener(event -> toggleFullscreen());
+        toggle.setId("toggle");
 
-        Button close = new Button(VaadinIcon.CLOSE_SMALL.create());
+        var close = new Button(VaadinIcon.CLOSE_SMALL.create());
         close.addClickListener(event -> close());
 
-        Header header = new Header(headerTitel, max, close);
+        var header = new Header(headerTitel, toggle, close);
         header.getElement().getThemeList().add(Lumo.LIGHT);
         add(header);
 
@@ -66,7 +67,7 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
 
         binder = new Binder<>();
 
-        Button save = new Button(getTranslation("Save"));
+        var save = new Button(getTranslation("Save"));
         save.setId("edit-save");
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         save.addClickListener(event -> {
@@ -81,10 +82,10 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
             close();
         });
 
-        Button cancel = new Button(getTranslation("Cancel"));
+        var cancel = new Button(getTranslation("Cancel"));
         cancel.addClickListener(event -> close());
 
-        HorizontalLayout buttons = new HorizontalLayout(save, cancel);
+        var buttons = new HorizontalLayout(save, cancel);
         buttons.getStyle().set("padding-top", "20px");
 
         content = new Div(formLayout, buttons);
@@ -109,17 +110,17 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
     }
 
     private void initialSize() {
-        max.setIcon(VaadinIcon.EXPAND_SQUARE.create());
+        toggle.setIcon(VaadinIcon.EXPAND_SQUARE.create());
         getElement().getThemeList().remove(FULLSCREEN);
         setHeight("auto");
         setWidth(initialWidth);
     }
 
-    private void maximiseMinimize() {
+    private void toggleFullscreen() {
         if (isFullScreen) {
             initialSize();
         } else {
-            max.setIcon(VaadinIcon.COMPRESS_SQUARE.create());
+            toggle.setIcon(VaadinIcon.COMPRESS_SQUARE.create());
             getElement().getThemeList().add(FULLSCREEN);
             setSizeFull();
             content.setVisible(true);

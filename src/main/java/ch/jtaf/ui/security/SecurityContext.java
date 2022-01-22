@@ -7,11 +7,11 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -31,12 +31,13 @@ public final class SecurityContext {
      * has not signed in
      */
     public static String getUserEmail() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails userDetails) {
             return userDetails.getUsername();
         } else if (principal instanceof String) {
             return principal.toString();
+        } else if (principal instanceof Jwt jwt) {
+            return jwt.getSubject();
         }
         // Anonymous or no authentication.
         return "";
@@ -56,18 +57,22 @@ public final class SecurityContext {
     }
 
     public static void logout() {
-        HttpServletRequest request = VaadinServletRequest.getCurrent().getHttpServletRequest();
+        var request = VaadinServletRequest.getCurrent().getHttpServletRequest();
 
         UI.getCurrent().getPage().setLocation(SecurityConfiguration.LOGOUT_URL);
-        SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
-        logoutHandler.logout(request, null, null);
+        try {
+            var logoutHandler = new SecurityContextLogoutHandler();
+            logoutHandler.logout(request, null, null);
+        } catch (IllegalStateException e) {
+            // Ignored for testing
+        }
 
-        String cookieName = "remember-me";
-        Cookie cookie = new Cookie(cookieName, null);
+        var cookieName = "remember-me";
+        var cookie = new Cookie(cookieName, null);
         cookie.setMaxAge(0);
         cookie.setPath(StringUtils.hasLength(request.getContextPath()) ? request.getContextPath() : "/");
 
-        HttpServletResponse response = (HttpServletResponse) VaadinResponse.getCurrent();
+        var response = (HttpServletResponse) VaadinResponse.getCurrent();
         response.addCookie(cookie);
     }
 }

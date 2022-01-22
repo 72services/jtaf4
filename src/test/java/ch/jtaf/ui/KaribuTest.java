@@ -84,11 +84,15 @@ public abstract class KaribuTest {
     }
 
     protected void logout() {
-        SecurityContextHolder.getContext().setAuthentication(null);
-        if (VaadinServletRequest.getCurrent() != null) {
-            final MockRequest request = (MockRequest) VaadinServletRequest.getCurrent().getRequest();
-            request.setUserPrincipalInt(null);
-            request.setUserInRole((principal, role) -> false);
+        try {
+            SecurityContextHolder.getContext().setAuthentication(null);
+            if (VaadinServletRequest.getCurrent() != null) {
+                final MockRequest request = (MockRequest) VaadinServletRequest.getCurrent().getRequest();
+                request.setUserPrincipalInt(null);
+                request.setUserInRole((principal, role) -> false);
+            }
+        } catch (IllegalStateException e) {
+            // Ignored
         }
     }
 

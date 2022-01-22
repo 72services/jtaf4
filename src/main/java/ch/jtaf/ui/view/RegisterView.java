@@ -1,6 +1,5 @@
 package ch.jtaf.ui.view;
 
-import ch.jtaf.db.tables.records.SecurityUserRecord;
 import ch.jtaf.service.UserAlreadyExistException;
 import ch.jtaf.service.UserService;
 import ch.jtaf.ui.layout.MainLayout;
@@ -36,7 +35,7 @@ public class RegisterView extends VerticalLayout implements HasDynamicTitle {
 
         var register = new Button(getTranslation("Register"), e -> {
             try {
-                SecurityUserRecord user = userService.createUser(firstName.getValue(), lastName.getValue(), email.getValue(), password.getValue());
+                var user = userService.createUser(firstName.getValue(), lastName.getValue(), email.getValue(), password.getValue());
                 userService.sendConfirmationEmail(user, getLocale());
 
                 Notification.show(getTranslation("Email.sent"), 5000, Notification.Position.TOP_END);

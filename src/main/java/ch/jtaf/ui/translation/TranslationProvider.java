@@ -33,7 +33,7 @@ public class TranslationProvider implements I18NProvider {
         }
         final ResourceBundle bundle = ResourceBundle.getBundle("messages", locale);
         try {
-            String value = bundle.getString(key);
+            var value = bundle.getString(key);
             if (params.length > 0) {
                 value = MessageFormat.format(value, params);
             }

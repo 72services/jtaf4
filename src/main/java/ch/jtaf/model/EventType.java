@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum EventType {
+
     JUMP_THROW, RUN, RUN_LONG;
 
     public static List<String> valuesAsStrings() {

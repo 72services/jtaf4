@@ -1,10 +1,9 @@
 package ch.jtaf.ui.view;
 
 import ch.jtaf.db.tables.records.EventRecord;
-import ch.jtaf.db.tables.records.ResultRecord;
 import ch.jtaf.model.EventType;
 import ch.jtaf.ui.layout.MainLayout;
-import com.vaadin.flow.component.UI;
+import ch.jtaf.ui.security.Role;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
@@ -26,8 +25,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.security.RolesAllowed;
 import java.io.Serial;
-import java.util.List;
-import java.util.Optional;
 
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
@@ -37,7 +34,7 @@ import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Result.RESULT;
 import static org.jooq.impl.DSL.upper;
 
-@RolesAllowed({"USER", "ADMIN"})
+@RolesAllowed({Role.USER, Role.ADMIN})
 @Route(layout = MainLayout.class)
 public class ResultCapturingView extends VerticalLayout implements HasDynamicTitle, HasUrlParameter<String> {
 
@@ -92,40 +89,40 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
         );
         dataProvider = callbackDataProvider.withConfigurableFilter();
 
-        TextField filter = new TextField();
+        var filter = new TextField();
         filter.setId("filter");
         filter.focus();
         filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
         add(filter);
 
-        grid.addColumn(athleteRecord -> athleteRecord.get(ATHLETE.ID)).setHeader("ID").setSortable(true);
-        grid.addColumn(athleteRecord -> athleteRecord.get(ATHLETE.LAST_NAME)).setHeader(getTranslation("Last.Name")).setSortable(true);
-        grid.addColumn(athleteRecord -> athleteRecord.get(ATHLETE.FIRST_NAME)).setHeader(getTranslation("First.Name")).setSortable(true);
+        grid.addColumn(athleteRecord -> athleteRecord.get(ATHLETE.ID)).setHeader("ID").setSortable(true).setKey(ATHLETE.ID.getName());
+        grid.addColumn(athleteRecord -> athleteRecord.get(ATHLETE.LAST_NAME)).setHeader(getTranslation("Last.Name")).setSortable(true).setKey(ATHLETE.LAST_NAME.getName());
+        grid.addColumn(athleteRecord -> athleteRecord.get(ATHLETE.FIRST_NAME)).setHeader(getTranslation("First.Name")).setSortable(true).setKey(ATHLETE.FIRST_NAME.getName());
         grid.setItems(dataProvider);
         grid.setHeight("200px");
         add(grid);
 
-        Div form = new Div();
+        var form = new Div();
         add(form);
 
         grid.asSingleSelect().addValueChangeListener(event -> {
             form.removeAll();
 
             if (event.getValue() != null) {
-                List<EventRecord> events = dsl
+                var events = dsl
                     .select(CATEGORY_EVENT.event().fields())
                     .from(CATEGORY_EVENT)
                     .where(CATEGORY_EVENT.CATEGORY_ID.eq(event.getValue().get(CATEGORY.ID)))
                     .orderBy(CATEGORY_EVENT.POSITION)
                     .fetchInto(EventRecord.class);
 
-                FormLayout formLayout = new FormLayout();
+                var formLayout = new FormLayout();
                 form.add(formLayout);
 
                 boolean first = true;
                 int position = 0;
-                for (EventRecord eventRecord : events) {
-                    ResultRecord resultRecord = dsl
+                for (var eventRecord : events) {
+                    var resultRecord = dsl
                         .selectFrom(RESULT)
                         .where(RESULT.COMPETITION_ID.eq(competitionId))
                         .and(RESULT.ATHLETE_ID.eq(event.getValue().get(ATHLETE.ID)))
@@ -133,7 +130,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                         .and(RESULT.EVENT_ID.eq(eventRecord.getId()))
                         .fetchOne();
 
-                    TextField result = new TextField(eventRecord.getName());
+                    var result = new TextField(eventRecord.getName());
                     result.setId("result-" + position);
                     formLayout.add(result);
 
@@ -142,7 +139,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                         first = false;
                     }
 
-                    TextField points = new TextField();
+                    var points = new TextField();
                     points.setId("points-" + position);
                     points.setReadOnly(true);
                     points.setEnabled(false);
@@ -160,10 +157,10 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                         resultRecord.setCompetitionId(competitionId);
                     }
 
-                    ResultRecord finalResultRecord = resultRecord;
+                    var finalResultRecord = resultRecord;
                     result.addValueChangeListener(ve ->
                         transactionTemplate.executeWithoutResult(ts -> {
-                            String resultValue = ve.getValue();
+                            var resultValue = ve.getValue();
                             finalResultRecord.setResult(resultValue);
                             finalResultRecord.setPoints(calculatePoints(eventRecord, resultValue));
                             points.setValue(finalResultRecord.getPoints() == null ? "" : finalResultRecord.getPoints().toString());
@@ -179,7 +176,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
     @SuppressWarnings("DuplicatedCode")
     private Condition createCondition(Query<?, ?> query) {
-        Optional<?> optionalFilter = query.getFilter();
+        var optionalFilter = query.getFilter();
         if (optionalFilter.isPresent()) {
             String filterString = (String) optionalFilter.get();
             if (StringUtils.isNumeric(filterString)) {
@@ -200,18 +197,13 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
     @Override
     public void setParameter(BeforeEvent event, String parameter) {
-        if (parameter == null) {
-            UI.getCurrent().navigate(DashboardView.class);
-        } else {
-            competitionId = Long.parseLong(parameter);
-
-            dataProvider.refreshAll();
-        }
+        competitionId = Long.parseLong(parameter);
+        dataProvider.refreshAll();
     }
 
     private int calculatePoints(EventRecord event, String result) {
         double points = 0.0d;
-        if (result != null && Double.parseDouble(result) > 0) {
+        if (result != null) {
             if (EventType.valueOf(event.getEventType()) == EventType.RUN) {
                 points = event.getA() * Math.pow((event.getB() - Double.parseDouble(result) * 100) / 100, event.getC());
             } else if (EventType.valueOf(event.getEventType()) == EventType.RUN_LONG) {

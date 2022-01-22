@@ -29,9 +29,9 @@ public class SeriesRankingReport extends RankingReport {
     public byte[] create() {
         try {
             byte[] ba;
-            try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            try (var byteArrayOutputStream = new ByteArrayOutputStream()) {
                 document = new Document(A4);
-                PdfWriter pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
+                var pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
                 pdfWriter.setPageEvent(new HeaderFooter(
                     messages.getString("Series.Ranking"), ranking.name(), ""));
                 document.open();
@@ -50,16 +50,16 @@ public class SeriesRankingReport extends RankingReport {
     }
 
     private void createRanking() throws DocumentException {
-        for (SeriesRankingData.Category category : ranking.categories()) {
+        for (var category : ranking.categories()) {
             if (numberOfRows > 20) {
                 document.newPage();
             }
-            PdfPTable table = createAthletesTable();
+            var table = createAthletesTable();
             createCategoryTitle(table, category);
             numberOfRows += 2;
 
             int rank = 1;
-            for (SeriesRankingData.Category.Athlete athlete : category.getFilteredAndSortedAthletes(ranking.numberOfCompetitions())) {
+            for (var athlete : category.getFilteredAndSortedAthletes(ranking.numberOfCompetitions())) {
                 if (numberOfRows > 23) {
                     document.add(table);
                     document.newPage();
@@ -74,7 +74,7 @@ public class SeriesRankingReport extends RankingReport {
     }
 
     private PdfPTable createAthletesTable() {
-        PdfPTable table = new PdfPTable(new float[]{2f, 10f, 10f, 2f, 5f, 5f});
+        var table = new PdfPTable(new float[]{2f, 10f, 10f, 2f, 5f, 5f});
         table.setWidthPercentage(100);
         table.setSpacingBefore(cmToPixel(1f));
         return table;
@@ -96,8 +96,8 @@ public class SeriesRankingReport extends RankingReport {
         addCell(table, athlete.club() != null ? athlete.club() : "");
         addCellAlignRight(table, athlete.totalPoints() + "");
 
-        StringBuilder sb = new StringBuilder();
-        for (SeriesRankingData.Category.Athlete.Result result : athlete.results()) {
+        var sb = new StringBuilder();
+        for (var result : athlete.results()) {
             sb.append(result.competitionName());
             sb.append(": ");
             sb.append(result.points());

@@ -1,6 +1,7 @@
 package ch.jtaf.ui.errorhandling;
 
 import ch.jtaf.ui.KaribuTest;
+import ch.jtaf.ui.security.Role;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.H1;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +16,7 @@ class RouteNotFoundErrorTest extends KaribuTest {
 
     @BeforeEach
     public void login() {
-        login("simon@martinelli.ch", "", List.of("ADMIN"));
+        login("simon@martinelli.ch", "", List.of(Role.ADMIN));
         UI.getCurrent().getPage().reload();
 
         navigateToSeriesList();

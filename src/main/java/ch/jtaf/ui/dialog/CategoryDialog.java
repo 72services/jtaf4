@@ -44,21 +44,21 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
     @SuppressWarnings("DuplicatedCode")
     @Override
     public void createForm() {
-        TextField abbreviation = new TextField(getTranslation("Abbreviation"));
+        var abbreviation = new TextField(getTranslation("Abbreviation"));
         abbreviation.setRequiredIndicatorVisible(true);
 
         binder.forField(abbreviation)
             .withValidator(new NotEmptyValidator(this))
             .bind(CategoryRecord::getAbbreviation, CategoryRecord::setAbbreviation);
 
-        TextField name = new TextField(getTranslation("Name"));
+        var name = new TextField(getTranslation("Name"));
         name.setRequiredIndicatorVisible(true);
 
         binder.forField(name)
             .withValidator(new NotEmptyValidator(this))
             .bind(CategoryRecord::getName, CategoryRecord::setName);
 
-        Select<String> gender = new Select<>();
+        var gender = new Select<String>();
         gender.setLabel(getTranslation("Gender"));
         gender.setRequiredIndicatorVisible(true);
         gender.setItems(Gender.valuesAsStrings());
@@ -66,7 +66,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
         binder.forField(gender)
             .bind(CategoryRecord::getGender, CategoryRecord::setGender);
 
-        TextField yearFrom = new TextField(getTranslation("Year.From"));
+        var yearFrom = new TextField(getTranslation("Year.From"));
         yearFrom.setRequiredIndicatorVisible(true);
 
         binder.forField(yearFrom)
@@ -74,7 +74,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
             .withNullRepresentation(0)
             .bind(CategoryRecord::getYearFrom, CategoryRecord::setYearFrom);
 
-        TextField yearTo = new TextField(getTranslation("Year.To"));
+        var yearTo = new TextField(getTranslation("Year.To"));
         yearTo.setRequiredIndicatorVisible(true);
 
         binder.forField(yearTo)
@@ -95,7 +95,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
         categoryEventsGrid.addColumn(CategoryEventVO::C).setHeader("C");
         categoryEventsGrid.addColumn(CategoryEventVO::position).setHeader(getTranslation("Position"));
 
-        Button addEvent = new Button(getTranslation("Add.Event"));
+        var addEvent = new Button(getTranslation("Add.Event"));
         addEvent.setId("add-event");
         addEvent.addClickListener(event -> {
             SearchEventDialog dialog = new SearchEventDialog(getBean(DSLContext.class), binder.getBean(), this::onEventSelect);
@@ -111,7 +111,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
                 categoryEventsGrid.getDataProvider().refreshAll();
             });
 
-            HorizontalLayout horizontalLayout = new HorizontalLayout(remove);
+            var horizontalLayout = new HorizontalLayout(remove);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
             return horizontalLayout;
         }).setTextAlign(ColumnTextAlign.END).setHeader(addEvent).setKey("edit-column");
@@ -125,7 +125,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
             categoryEvent.setCategoryId(binder.getBean().getId());
             categoryEvent.setEventId(eventRecord.getId());
 
-            Integer newPosition = getCategoryEvents().stream()
+            var newPosition = getCategoryEvents().stream()
                 .max(Comparator.comparingInt(CategoryEventVO::position))
                 .map(CategoryEventVO::position)
                 .orElse(0);
@@ -162,7 +162,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
     }
 
     private void removeEventFromCategory(CategoryEventVO categoryEventVO) {
-        ConfirmDialog confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
+        var confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
             getTranslation("Are.you.sure"),
             getTranslation("Remove"), event -> {
             getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus ->

@@ -34,11 +34,11 @@ public class GridBuilder {
                                                                                              Consumer<R> afterSave, Supplier<R> onNewRecord,
                                                                                              String insteadOfDeleteTitle, Consumer<R> insteadOfDelete,
                                                                                              Runnable afterDelete) {
-        Button buttonAdd = new Button(grid.getTranslation("Add"));
+        var buttonAdd = new Button(grid.getTranslation("Add"));
         buttonAdd.setId("add-button");
         buttonAdd.addClickListener(event -> dialog.open(onNewRecord.get(), afterSave));
         grid.addComponentColumn(updatableRecord -> {
-            Button delete = new Button(insteadOfDeleteTitle != null ? insteadOfDeleteTitle : grid.getTranslation("Delete"));
+            var delete = new Button(insteadOfDeleteTitle != null ? insteadOfDeleteTitle : grid.getTranslation("Delete"));
             delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
             delete.addClickListener(event -> {
                 if (insteadOfDelete != null) {
@@ -64,7 +64,7 @@ public class GridBuilder {
                 }
             });
 
-            HorizontalLayout horizontalLayout = new HorizontalLayout(delete);
+            var horizontalLayout = new HorizontalLayout(delete);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
             return horizontalLayout;
         }).setTextAlign(ColumnTextAlign.END).setHeader(buttonAdd).setKey("edit-column");

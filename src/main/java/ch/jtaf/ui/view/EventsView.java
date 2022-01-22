@@ -25,20 +25,20 @@ public class EventsView extends ProtectedGridView<EventRecord> {
 
         setHeightFull();
 
-        EventDialog dialog = new EventDialog(getTranslation("Event"));
+        var dialog = new EventDialog(getTranslation("Event"));
 
         grid.setId("events-grid");
 
-        grid.addColumn(EventRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true);
-        grid.addColumn(EventRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
-        grid.addColumn(EventRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true);
-        grid.addColumn(EventRecord::getEventType).setHeader(getTranslation("Event.Type")).setSortable(true);
+        grid.addColumn(EventRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true).setKey(EVENT.ABBREVIATION.getName());
+        grid.addColumn(EventRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setKey(EVENT.NAME.getName());
+        grid.addColumn(EventRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true).setKey(EVENT.GENDER.getName());
+        grid.addColumn(EventRecord::getEventType).setHeader(getTranslation("Event.Type")).setSortable(true).setKey(EVENT.EVENT_TYPE.getName());
         grid.addColumn(EventRecord::getA).setHeader("A");
         grid.addColumn(EventRecord::getB).setHeader("B");
         grid.addColumn(EventRecord::getC).setHeader("C");
 
         addActionColumnAndSetSelectionListener(grid, dialog, eventRecord -> refreshAll(), () -> {
-            EventRecord newRecord = EVENT.newRecord();
+            var newRecord = EVENT.newRecord();
             newRecord.setOrganizationId(organizationRecord.getId());
             return newRecord;
         }, this::refreshAll);

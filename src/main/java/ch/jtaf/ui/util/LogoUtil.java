@@ -5,7 +5,6 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.server.StreamResource;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
@@ -15,11 +14,11 @@ public class LogoUtil {
     }
 
     public static Image resizeLogo(SeriesRecord series) {
-        Image logo = new Image();
+        var logo = new Image();
 
         if (series.getLogo() != null) {
             try {
-                BufferedImage image = ImageIO.read(new ByteArrayInputStream(series.getLogo()));
+                var image = ImageIO.read(new ByteArrayInputStream(series.getLogo()));
                 double width = image.getWidth(null);
                 double height = image.getHeight(null);
                 double ratio = width / height;

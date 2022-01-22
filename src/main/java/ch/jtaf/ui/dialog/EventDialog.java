@@ -24,21 +24,21 @@ public class EventDialog extends EditDialog<EventRecord> {
     @SuppressWarnings("DuplicatedCode")
     @Override
     public void createForm() {
-        TextField abbreviation = new TextField(getTranslation("Abbreviation"));
+        var abbreviation = new TextField(getTranslation("Abbreviation"));
         abbreviation.setRequiredIndicatorVisible(true);
 
         binder.forField(abbreviation)
             .withValidator(new NotEmptyValidator(this))
             .bind(EventRecord::getAbbreviation, EventRecord::setAbbreviation);
 
-        TextField name = new TextField(getTranslation("Name"));
+        var name = new TextField(getTranslation("Name"));
         name.setRequiredIndicatorVisible(true);
 
         binder.forField(name)
             .withValidator(new NotEmptyValidator(this))
             .bind(EventRecord::getName, EventRecord::setName);
 
-        Select<String> gender = new Select<>();
+        var gender = new Select<String>();
         gender.setLabel(getTranslation("Gender"));
         gender.setRequiredIndicatorVisible(true);
         gender.setItems(Gender.valuesAsStrings());
@@ -46,7 +46,7 @@ public class EventDialog extends EditDialog<EventRecord> {
         binder.forField(gender)
             .bind(EventRecord::getGender, EventRecord::setGender);
 
-        Select<String> eventType = new Select<>();
+        var eventType = new Select<String>();
         eventType.setLabel(getTranslation("Event.Type"));
         eventType.setRequiredIndicatorVisible(true);
         eventType.setItems(EventType.valuesAsStrings());
@@ -55,7 +55,7 @@ public class EventDialog extends EditDialog<EventRecord> {
             .withValidator(new NotEmptyValidator(this))
             .bind(EventRecord::getEventType, EventRecord::setEventType);
 
-        TextField a = new TextField("A");
+        var a = new TextField("A");
         a.setRequiredIndicatorVisible(true);
 
         binder.forField(a)
@@ -63,7 +63,7 @@ public class EventDialog extends EditDialog<EventRecord> {
             .withNullRepresentation(0.0d)
             .bind(EventRecord::getA, EventRecord::setA);
 
-        TextField b = new TextField("B");
+        var b = new TextField("B");
         b.setRequiredIndicatorVisible(true);
 
         binder.forField(b)
@@ -71,7 +71,7 @@ public class EventDialog extends EditDialog<EventRecord> {
             .withNullRepresentation(0.0d)
             .bind(EventRecord::getB, EventRecord::setB);
 
-        TextField c = new TextField("C");
+        var c = new TextField("C");
         c.setRequiredIndicatorVisible(true);
 
         binder.forField(c)

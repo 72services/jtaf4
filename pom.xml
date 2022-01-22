@@ -12,7 +12,7 @@
 
     <groupId>ch.jtaf</groupId>
     <artifactId>jtaf4</artifactId>
-    <version>4.3.2</version>
+    <version>4.3.3</version>
 
     <name>JTAF 4</name>
     <description>JTAF - Track And Field</description>
@@ -51,8 +51,8 @@
     <properties>
         <java.version>17</java.version>
 
-        <vaadin.version>22.0.2</vaadin.version>
-        <jooq.version>3.15.5</jooq.version>
+        <vaadin.version>22.0.3</vaadin.version>
+        <jooq.version>3.15.4</jooq.version>
 
         <testcontainers.version>1.16.2</testcontainers.version>
 
@@ -68,6 +68,7 @@
 
         <sonar.organization>72services</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.exclusions>src/main/java/ch/jtaf/Jtaf4Application.java</sonar.exclusions>
     </properties>
 
     <dependencyManagement>
@@ -107,6 +108,15 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-jose</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-resource-server</artifactId>
         </dependency>
 
         <dependency>
@@ -196,9 +206,9 @@
                         <configuration>
                             <source>
                                 db = new org.testcontainers.containers.PostgreSQLContainer("postgres:12.7")
-                                    .withUsername("${db.username}")
-                                    .withDatabaseName("jtaf4")
-                                    .withPassword("${db.password}")
+                                .withUsername("${db.username}")
+                                .withDatabaseName("jtaf4")
+                                .withPassword("${db.password}")
                                 db.start()
                                 project.properties.setProperty('db.url', db.getJdbcUrl())
                             </source>
@@ -333,6 +343,12 @@
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
                         <version>0.8.7</version>
+                        <configuration>
+                            <excludes>
+                                <exclude>ch/jtaf/Jtaf4Application.*</exclude>
+                                <exclude>ch/jtaf/db/**/**.*</exclude>
+                            </excludes>
+                        </configuration>
                         <executions>
                             <execution>
                                 <id>prepare-agent</id>

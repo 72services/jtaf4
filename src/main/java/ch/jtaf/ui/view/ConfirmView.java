@@ -7,7 +7,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.HasDynamicTitle;
-import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -27,6 +26,7 @@ public class ConfirmView extends VerticalLayout implements HasDynamicTitle, Befo
         okDiv = new VerticalLayout();
         okDiv.add(new H1(getTranslation("Confirm.success")));
         okDiv.add(new RouterLink("Login", OrganizationsView.class));
+        okDiv.setVisible(false);
         add(okDiv);
 
         failure = new H1(getTranslation("Confirm.failure"));
@@ -35,7 +35,7 @@ public class ConfirmView extends VerticalLayout implements HasDynamicTitle, Befo
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-        QueryParameters queryParameters = beforeEnterEvent.getLocation().getQueryParameters();
+        var queryParameters = beforeEnterEvent.getLocation().getQueryParameters();
         if (queryParameters.getParameters().containsKey("cf")) {
             boolean confirmed = userService.confirm(queryParameters.getParameters().get("cf").get(0));
 

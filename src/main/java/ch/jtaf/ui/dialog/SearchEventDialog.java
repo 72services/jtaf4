@@ -24,7 +24,6 @@ import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 
 import java.io.Serial;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import static ch.jtaf.context.ApplicationContextHolder.getBean;
@@ -41,7 +40,7 @@ public class SearchEventDialog extends Dialog {
 
     private boolean isFullScreen = false;
     private final Div content;
-    private final Button max;
+    private final Button toggle;
 
     private final ConfigurableFilterDataProvider<EventRecord, Void, String> dataProvider;
 
@@ -54,20 +53,22 @@ public class SearchEventDialog extends Dialog {
         setDraggable(true);
         setResizable(true);
 
-        H2 headerTitel = new H2(getTranslation("Events"));
+        var headerTitel = new H2(getTranslation("Events"));
         headerTitel.addClassName("dialog-title");
 
-        max = new Button(VaadinIcon.EXPAND_SQUARE.create());
-        max.addClickListener(event -> maximise());
+        toggle = new Button(VaadinIcon.EXPAND_SQUARE.create());
+        toggle.setId("search-event-dialog-toggle");
+        toggle.addClickListener(event -> toggle());
 
-        Button close = new Button(VaadinIcon.CLOSE_SMALL.create());
+        var close = new Button(VaadinIcon.CLOSE_SMALL.create());
         close.addClickListener(event -> close());
 
-        Header header = new Header(headerTitel, max, close);
+        var header = new Header(headerTitel, toggle, close);
         header.getElement().getThemeList().add(Lumo.LIGHT);
         add(header);
 
-        TextField filter = new TextField(getTranslation("Filter"));
+        var filter = new TextField(getTranslation("Filter"));
+        filter.setId("event-filter");
         filter.setValueChangeMode(ValueChangeMode.EAGER);
         filter.focus();
 
@@ -103,15 +104,15 @@ public class SearchEventDialog extends Dialog {
 
         dataProvider = callbackDataProvider.withConfigurableFilter();
 
-        Grid<EventRecord> grid = new Grid<>();
+        var grid = new Grid<EventRecord>();
         grid.setId("events-grid");
         grid.setItems(dataProvider);
         grid.getStyle().set("height", "calc(100% - 300px");
 
-        grid.addColumn(EventRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true);
-        grid.addColumn(EventRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
-        grid.addColumn(EventRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true);
-        grid.addColumn(EventRecord::getEventType).setHeader(getTranslation("Event.Type")).setSortable(true);
+        grid.addColumn(EventRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true).setKey(EVENT.ABBREVIATION.getName());
+        grid.addColumn(EventRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setKey(EVENT.NAME.getName());
+        grid.addColumn(EventRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true).setKey(EVENT.GENDER.getName());
+        grid.addColumn(EventRecord::getEventType).setHeader(getTranslation("Event.Type")).setSortable(true).setKey(EVENT.EVENT_TYPE.getName());
         grid.addColumn(EventRecord::getA).setHeader("A");
         grid.addColumn(EventRecord::getA).setHeader("B");
         grid.addColumn(EventRecord::getA).setHeader("C");
@@ -128,23 +129,23 @@ public class SearchEventDialog extends Dialog {
         content.addClassName("dialog-content");
         add(content);
 
-        maximise();
+        toggle();
 
         filter.focus();
     }
 
     private void initialSize() {
-        max.setIcon(VaadinIcon.EXPAND_SQUARE.create());
+        toggle.setIcon(VaadinIcon.EXPAND_SQUARE.create());
         getElement().getThemeList().remove(FULLSCREEN);
         setHeight("auto");
         setWidth("600px");
     }
 
-    private void maximise() {
+    private void toggle() {
         if (isFullScreen) {
             initialSize();
         } else {
-            max.setIcon(VaadinIcon.COMPRESS_SQUARE.create());
+            toggle.setIcon(VaadinIcon.COMPRESS_SQUARE.create());
             getElement().getThemeList().add(FULLSCREEN);
             setSizeFull();
             content.setVisible(true);
@@ -153,7 +154,7 @@ public class SearchEventDialog extends Dialog {
     }
 
     private Condition createCondition(Query<?, ?> query) {
-        Optional<?> optionalFilter = query.getFilter();
+        var optionalFilter = query.getFilter();
         if (optionalFilter.isPresent()) {
             String filterString = (String) optionalFilter.get();
             if (StringUtils.isNumeric(filterString)) {

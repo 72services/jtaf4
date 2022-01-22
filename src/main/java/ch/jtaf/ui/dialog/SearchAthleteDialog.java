@@ -23,7 +23,6 @@ import org.jooq.impl.DSL;
 
 import java.io.Serial;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -43,7 +42,7 @@ public class SearchAthleteDialog extends Dialog {
 
     private boolean isFullScreen = false;
     private final Div content;
-    private final Button max;
+    private final Button toggle;
 
     private final Map<Long, ClubRecord> clubRecordMap;
     private final ConfigurableFilterDataProvider<AthleteRecord, Void, String> dataProvider;
@@ -55,22 +54,23 @@ public class SearchAthleteDialog extends Dialog {
         setDraggable(true);
         setResizable(true);
 
-        H2 headerTitel = new H2(getTranslation("Athletes"));
+        var headerTitel = new H2(getTranslation("Athletes"));
         headerTitel.addClassName("dialog-title");
 
-        max = new Button(VaadinIcon.EXPAND_SQUARE.create());
-        max.addClickListener(event -> maximise());
+        toggle = new Button(VaadinIcon.EXPAND_SQUARE.create());
+        toggle.setId("toggle");
+        toggle.addClickListener(event -> toggle());
 
-        Button close = new Button(VaadinIcon.CLOSE_SMALL.create());
+        var close = new Button(VaadinIcon.CLOSE_SMALL.create());
         close.addClickListener(event -> close());
 
-        Header header = new Header(headerTitel, max, close);
+        var header = new Header(headerTitel, toggle, close);
         header.getElement().getThemeList().add(Lumo.LIGHT);
         add(header);
 
-        AthleteDialog dialog = new AthleteDialog(getTranslation("Athlete"));
+        var dialog = new AthleteDialog(getTranslation("Athlete"));
 
-        TextField filter = new TextField(getTranslation("Filter"));
+        var filter = new TextField(getTranslation("Filter"));
         filter.setValueChangeMode(ValueChangeMode.EAGER);
         filter.focus();
 
@@ -110,20 +110,20 @@ public class SearchAthleteDialog extends Dialog {
 
         dataProvider = callbackDataProvider.withConfigurableFilter();
 
-        Grid<AthleteRecord> grid = new Grid<>();
+        var grid = new Grid<AthleteRecord>();
         grid.setId("search-athletes-grid");
         grid.setItems(dataProvider);
         grid.getStyle().set("height", "calc(100% - 300px");
 
-        grid.addColumn(AthleteRecord::getLastName).setHeader(getTranslation("Last.Name")).setSortable(true);
-        grid.addColumn(AthleteRecord::getFirstName).setHeader(getTranslation("First.Name")).setSortable(true);
-        grid.addColumn(AthleteRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true);
-        grid.addColumn(AthleteRecord::getYearOfBirth).setHeader(getTranslation("Year")).setSortable(true);
+        grid.addColumn(AthleteRecord::getLastName).setHeader(getTranslation("Last.Name")).setSortable(true).setKey(ATHLETE.LAST_NAME.getName());
+        grid.addColumn(AthleteRecord::getFirstName).setHeader(getTranslation("First.Name")).setSortable(true).setKey(ATHLETE.FIRST_NAME.getName());
+        grid.addColumn(AthleteRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true).setKey(ATHLETE.GENDER.getName());
+        grid.addColumn(AthleteRecord::getYearOfBirth).setHeader(getTranslation("Year")).setSortable(true).setKey(ATHLETE.YEAR_OF_BIRTH.getName());
         grid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
             : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club"));
 
         addActionColumnAndSetSelectionListener(grid, dialog, athleteRecord -> dataProvider.refreshAll(), () -> {
-            AthleteRecord newRecord = ATHLETE.newRecord();
+            var newRecord = ATHLETE.newRecord();
             newRecord.setOrganizationId(organizationId);
             return newRecord;
         }, getTranslation("Assign.Athlete"), athleteRecord -> {
@@ -137,23 +137,23 @@ public class SearchAthleteDialog extends Dialog {
         content.addClassName("dialog-content");
         add(content);
 
-        maximise();
+        toggle();
 
         filter.focus();
     }
 
     private void initialSize() {
-        max.setIcon(VaadinIcon.EXPAND_SQUARE.create());
+        toggle.setIcon(VaadinIcon.EXPAND_SQUARE.create());
         getElement().getThemeList().remove(FULLSCREEN);
         setHeight("auto");
         setWidth("600px");
     }
 
-    private void maximise() {
+    private void toggle() {
         if (isFullScreen) {
             initialSize();
         } else {
-            max.setIcon(VaadinIcon.COMPRESS_SQUARE.create());
+            toggle.setIcon(VaadinIcon.COMPRESS_SQUARE.create());
             getElement().getThemeList().add(FULLSCREEN);
             setSizeFull();
             content.setVisible(true);
@@ -163,7 +163,7 @@ public class SearchAthleteDialog extends Dialog {
 
     @SuppressWarnings("DuplicatedCode")
     private Condition createCondition(Query<?, ?> query) {
-        Optional<?> optionalFilter = query.getFilter();
+        var optionalFilter = query.getFilter();
         if (optionalFilter.isPresent()) {
             String filterString = (String) optionalFilter.get();
             if (StringUtils.isNumeric(filterString)) {

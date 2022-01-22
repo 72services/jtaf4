@@ -4,7 +4,6 @@ import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.ui.dialog.ClubDialog;
 import ch.jtaf.ui.layout.MainLayout;
 import ch.jtaf.ui.security.OrganizationProvider;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.router.Route;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -26,19 +25,12 @@ public class ClubsView extends ProtectedGridView<ClubRecord> {
 
         setHeightFull();
 
-        ClubDialog dialog = new ClubDialog(getTranslation("Clubs"));
-
-        Button add = new Button(getTranslation("Add"));
-        add.addClickListener(event -> {
-            ClubRecord newRecord = CLUB.newRecord();
-            newRecord.setOrganizationId(organizationRecord.getId());
-            dialog.open(newRecord, clubRecord -> refreshAll());
-        });
+        var dialog = new ClubDialog(getTranslation("Clubs"));
 
         grid.setId("clubs-grid");
 
-        grid.addColumn(ClubRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true);
-        grid.addColumn(ClubRecord::getName).setHeader(getTranslation("Name")).setSortable(true);
+        grid.addColumn(ClubRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true).setKey(CLUB.ABBREVIATION.getName());
+        grid.addColumn(ClubRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setKey(CLUB.NAME.getName());
 
         addActionColumnAndSetSelectionListener(grid, dialog, clubRecord -> refreshAll(),
             () -> {

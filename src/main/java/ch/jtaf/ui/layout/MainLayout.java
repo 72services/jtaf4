@@ -1,6 +1,5 @@
 package ch.jtaf.ui.layout;
 
-import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.ui.security.OrganizationProvider;
 import ch.jtaf.ui.security.SecurityContext;
 import ch.jtaf.ui.view.AthletesView;
@@ -81,7 +80,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
     }
 
     private Component createHeaderContent() {
-        DrawerToggle toggle = new DrawerToggle();
+        var toggle = new DrawerToggle();
         toggle.addClassName("text-secondary");
         toggle.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         toggle.getElement().setAttribute("aria-label", "Menu toggle");
@@ -91,13 +90,13 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
         viewTitle.addClassNames("m-0", "text-l");
         viewTitle.setWidth("300px");
 
-        HorizontalLayout info = new HorizontalLayout();
+        var info = new HorizontalLayout();
         info.setWidthFull();
         info.getStyle().set("padding-right", "20px");
         info.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
         info.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 
-        Anchor about = new Anchor("https://github.com/72services/jtaf4", "About");
+        var about = new Anchor("https://github.com/72services/jtaf4", "About");
         about.setTarget("_blank");
 
         register = new RouterLink(getTranslation("Register"), RegisterView.class);
@@ -106,44 +105,46 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
         login.setVisible(false);
 
         logout = new Button("Logout", e -> SecurityContext.logout());
+        logout.setId("logout");
 
         info.add(about, version, register, login, logout);
 
-        Header header = new Header(toggle, viewTitle, info);
+        var header = new Header(toggle, viewTitle, info);
         header.addClassNames("bg-base", "border-b", "border-contrast-10", "box-border", "flex", "h-xl", "items-center", "w-full");
         return header;
     }
 
     private Component createDrawerContent() {
-        Image logo = new Image("icons/logo.png", "JTAF");
+        var logo = new Image("icons/logo.png", "JTAF");
 
-        com.vaadin.flow.component.html.Section section = new com.vaadin.flow.component.html.Section(logo, createNavigation(), createFooter());
+        var section = new com.vaadin.flow.component.html.Section(logo, createNavigation(), createFooter());
         section.addClassNames("flex", "flex-col", "items-stretch", "max-h-full", "min-h-full");
         return section;
     }
 
     private Nav createNavigation() {
-        Nav nav = new Nav();
+        var nav = new Nav();
         nav.addClassNames("border-b", "border-contrast-10", "flex-grow", "overflow-auto");
         nav.getElement().setAttribute("aria-labelledby", "views");
 
-        H3 views = new H3("Views");
+        var views = new H3("Views");
         views.addClassNames("flex", "h-m", "items-center", "mx-m", "my-0", "text-s", "text-tertiary");
         views.setId("views");
 
-        for (RouterLink link : createLinks()) {
+        for (var link : createLinks()) {
             nav.add(link);
         }
         return nav;
     }
 
     private List<RouterLink> createLinks() {
-        List<RouterLink> links = new ArrayList<>();
+        var links = new ArrayList<RouterLink>();
 
         links.add(createLink(new MenuItemInfo(getTranslation("Dashboard"), "la la-globe", DashboardView.class)));
         links.add(createLink(new MenuItemInfo(getTranslation("My.Organizations"), LA_LA_FILE, OrganizationsView.class)));
 
         seriesLink = createLink(new MenuItemInfo("", LA_LA_FILE, SeriesListView.class));
+        seriesLink.setId("series-list-link");
         links.add(seriesLink);
 
         eventsLink = createLink(new MenuItemInfo(getTranslation("Events"), LA_LA_FILE, EventsView.class));
@@ -161,17 +162,17 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
     }
 
     private static RouterLink createLink(MenuItemInfo menuItemInfo) {
-        RouterLink link = new RouterLink();
+        var link = new RouterLink();
         link.addClassNames("flex", "mx-s", "p-s", "relative", "text-secondary");
         link.setRoute(menuItemInfo.view());
 
-        Span icon = new Span();
+        var icon = new Span();
         icon.addClassNames("me-s", "text-l");
         if (!menuItemInfo.iconClass().isEmpty()) {
             icon.addClassNames(menuItemInfo.iconClass());
         }
 
-        Span text = new Span(menuItemInfo.text());
+        var text = new Span(menuItemInfo.text());
         text.addClassNames("font-medium", "text-s");
 
         link.add(icon, text);
@@ -179,12 +180,12 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
     }
 
     private Footer createFooter() {
-        Footer layout = new Footer();
+        var layout = new Footer();
         layout.addClassNames("flex", "my-s", "px-m", "py-xs");
 
-        Html htmlByLink = new Html("<p style='color: var(--lumo-primary-color)'>Free and<br>Open Source<br>by 72© Services LLC</p>");
+        var htmlByLink = new Html("<p style='color: var(--lumo-primary-color)'>Free and<br>Open Source<br>by 72© Services LLC</p>");
 
-        Anchor byLink = new Anchor();
+        var byLink = new Anchor();
         byLink.setWidth("300px");
         byLink.getElement().getStyle().set("font-size", "small");
         byLink.setHref("https://72.services");
@@ -202,7 +203,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
     }
 
     private String getCurrentPageTitle() {
-        HasDynamicTitle title = (HasDynamicTitle) getContent();
+        var title = (HasDynamicTitle) getContent();
         return title == null ? "" : title.getPageTitle();
     }
 
@@ -220,7 +221,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
             logout.setText("Logout (%s)".formatted(SecurityContext.getUserEmail()));
             logout.setVisible(true);
 
-            OrganizationRecord organization = organizationProvider.getOrganization();
+            var organization = organizationProvider.getOrganization();
             if (organization != null) {
                 seriesLink.setText(organization.getOrganizationKey());
                 setVisibilityOfLinks(true);
