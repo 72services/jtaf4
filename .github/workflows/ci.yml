@@ -36,7 +36,7 @@ jobs:
                     restore-keys: |
                         ${{ runner.os }}-maven-
 
-            -   name: Maven build
+            -   name: Maven Build and Sonar Checks
                 run: mvn -B verify sonar:sonar -Pcoverage -Dsonar.projectKey=72services_jtaf4
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
