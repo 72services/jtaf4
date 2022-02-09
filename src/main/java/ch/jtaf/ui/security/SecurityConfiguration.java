@@ -50,8 +50,6 @@ public class SecurityConfiguration extends VaadinWebSecurityConfigurerAdapter {
 
         setStatelessAuthentication(http, new SecretKeySpec(Base64.getDecoder().decode(authSecret), JwsAlgorithms.HS256),
             "ch.jtaf", 3600);
-
-        http.userDetailsService(userDetailsService);
     }
 
     @Override
