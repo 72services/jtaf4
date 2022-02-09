@@ -104,7 +104,10 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
         if (organizationRecord == null) {
             return Collections.emptyList();
         } else {
-            var clubs = getBean(DSLContext.class).selectFrom(CLUB).where(CLUB.ORGANIZATION_ID.eq(organizationRecord.getId())).fetch();
+            var clubs = getBean(DSLContext.class)
+                .selectFrom(CLUB)
+                .where(CLUB.ORGANIZATION_ID.eq(organizationRecord.getId()))
+                .fetch();
             clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
             return clubs;
         }
