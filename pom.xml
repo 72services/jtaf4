@@ -53,8 +53,12 @@
 
         <vaadin.version>23.0.0</vaadin.version>
         <jooq.version>3.16.4</jooq.version>
+        <openpdf.version>1.3.26</openpdf.version>
+        <postgres-socket-factory.version>1.4.3</postgres-socket-factory.version>
 
         <testcontainers.version>1.16.3</testcontainers.version>
+        <karibu-testing.version>1.3.11</karibu-testing.version>
+        <archunit.version>0.22.0</archunit.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -126,7 +130,7 @@
         <dependency>
             <groupId>com.github.librepdf</groupId>
             <artifactId>openpdf</artifactId>
-            <version>1.3.26</version>
+            <version>${openpdf.version}</version>
         </dependency>
 
         <dependency>
@@ -137,7 +141,7 @@
         <dependency>
             <groupId>com.google.cloud.sql</groupId>
             <artifactId>postgres-socket-factory</artifactId>
-            <version>1.4.3</version>
+            <version>${postgres-socket-factory.version}</version>
         </dependency>
 
         <dependency>
@@ -184,14 +188,14 @@
         <dependency>
             <groupId>com.github.mvysny.kaributesting</groupId>
             <artifactId>karibu-testing-v10-spring</artifactId>
-            <version>1.3.8</version>
+            <version>${karibu-testing.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>com.tngtech.archunit</groupId>
             <artifactId>archunit</artifactId>
-            <version>0.22.0</version>
+            <version>${archunit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

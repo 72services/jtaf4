@@ -21,6 +21,7 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -83,7 +84,7 @@ class SeriesViewTest extends KaribuTest {
         assertThat(GridKt._size(competitionsGrid)).isEqualTo(2);
     }
 
-    @Test
+    @Test @Disabled
     void add_category_and_assign_event() {
         Tabs tabs = _get(Tabs.class);
         Tab categories = _get(Tab.class, spec -> spec.withText("Categories"));
