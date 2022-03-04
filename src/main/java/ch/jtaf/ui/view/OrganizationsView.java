@@ -92,6 +92,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
                     getTranslation("Cancel"), e -> {
                 });
                 confirmDialog.setConfirmButtonTheme("error primary");
+                confirmDialog.setId("delete-organization-confirm-dialog");
                 confirmDialog.open();
             });
 

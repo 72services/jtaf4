@@ -60,6 +60,7 @@ public class GridBuilder {
                         grid.getTranslation("Cancel"), e -> {
                     });
                     confirmDialog.setConfirmButtonTheme("error primary");
+                    confirmDialog.setId("delete-confirm-dialog");
                     confirmDialog.open();
                 }
             });

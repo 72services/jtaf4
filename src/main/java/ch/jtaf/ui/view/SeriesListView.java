@@ -83,6 +83,7 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
                     getTranslation("Cancel"), e -> {
                 });
                 confirmDialog.setConfirmButtonTheme("error primary");
+                confirmDialog.setId("delete-series-confirm-dialog");
                 confirmDialog.open();
             });
 

@@ -6,6 +6,10 @@ import ch.jtaf.db.tables.records.CompetitionRecord;
 import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.db.tables.records.SeriesRecord;
 import ch.jtaf.ui.KaribuTest;
+import ch.jtaf.ui.dialog.CategoryDialog;
+import ch.jtaf.ui.dialog.CompetitionDialog;
+import ch.jtaf.ui.dialog.SearchAthleteDialog;
+import ch.jtaf.ui.dialog.SearchEventDialog;
 import ch.jtaf.ui.security.Role;
 import com.github.mvysny.kaributesting.v10.GridKt;
 import com.github.mvysny.kaributesting.v10.UploadKt;
@@ -61,7 +65,7 @@ class SeriesViewTest extends KaribuTest {
 
         // Add competition
         _get(Button.class, spec -> spec.withId("add-button")).click();
-        _assert(Dialog.class, 1);
+        _assert(CompetitionDialog.class, 1);
 
         _get(TextField.class, spec -> spec.withCaption("Name").withValue("")).setValue("Test");
         _get(DatePicker.class, spec -> spec.withCaption("Date")).setValue(LocalDate.now());
@@ -84,7 +88,7 @@ class SeriesViewTest extends KaribuTest {
         assertThat(GridKt._size(competitionsGrid)).isEqualTo(2);
     }
 
-    @Test @Disabled
+    @Test
     void add_category_and_assign_event() {
         Tabs tabs = _get(Tabs.class);
         Tab categories = _get(Tab.class, spec -> spec.withText("Categories"));
@@ -97,7 +101,7 @@ class SeriesViewTest extends KaribuTest {
 
         // Add category
         _get(Button.class, spec -> spec.withId("add-button")).click();
-        _assert(Dialog.class, 1);
+        _assert(CategoryDialog.class, 1);
 
         _get(TextField.class, spec -> spec.withCaption("Abbreviation").withValue("")).setValue("1");
         _get(TextField.class, spec -> spec.withCaption("Name").withValue("")).setValue("Test");
@@ -137,7 +141,7 @@ class SeriesViewTest extends KaribuTest {
 
         ((Button) GridKt._getCellComponent(eventsGrid, 0, "assign-column")).click();
 
-        _get(Dialog.class, spec -> spec.withId("search-event-dialog")).close();
+        _get(SearchEventDialog.class, spec -> spec.withId("search-event-dialog")).close();
 
         // Remove event from category
         Grid<EventRecord> categoryEventsGrid = _get(Grid.class, spec -> spec.withId("category-events-grid"));
@@ -147,7 +151,7 @@ class SeriesViewTest extends KaribuTest {
             .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
             .ifPresent(Button::click);
 
-        ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
+        ConfirmDialog confirmDialog = _get(ConfirmDialog.class, spec-> spec.withId("remove-event-from-category-confirm-dialog"));
         assertThat(confirmDialog.isOpened()).isTrue();
         _fireConfirm(confirmDialog);
 
@@ -159,7 +163,7 @@ class SeriesViewTest extends KaribuTest {
             .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
             .ifPresent(Button::click);
 
-        confirmDialog = _get(ConfirmDialog.class);
+        confirmDialog = _get(ConfirmDialog.class, spec -> spec.withId("delete-confirm-dialog"));
         assertThat(confirmDialog.isOpened()).isTrue();
         _fireConfirm(confirmDialog);
 
@@ -182,7 +186,7 @@ class SeriesViewTest extends KaribuTest {
         Button assignAthlete = _get(Button.class, spec -> spec.withId("assign-athlete"));
         assignAthlete.click();
 
-        _assert(Dialog.class, 1);
+        _assert(SearchAthleteDialog.class, 1);
 
         // Test maximize and restore
         Button toggle = _get(Button.class, spec -> spec.withId("toggle"));

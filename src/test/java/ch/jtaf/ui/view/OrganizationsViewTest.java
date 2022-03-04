@@ -2,6 +2,7 @@ package ch.jtaf.ui.view;
 
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.ui.KaribuTest;
+import ch.jtaf.ui.dialog.OrganizationDialog;
 import ch.jtaf.ui.security.OrganizationProvider;
 import ch.jtaf.ui.security.Role;
 import com.github.mvysny.kaributesting.mockhttp.MockRequest;
@@ -47,7 +48,7 @@ class OrganizationsViewTest extends KaribuTest {
 
         // Add organization
         _get(Button.class, spec -> spec.withId("add-button")).click();
-        _assert(Dialog.class, 1);
+        _assert(OrganizationDialog.class, 1);
 
         _get(TextField.class, spec -> spec.withCaption("Key")).setValue("AAA");
         _get(TextField.class, spec -> spec.withCaption("Name")).setValue("Test");

@@ -335,6 +335,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                     getTranslation("Cancel"), e -> {
                 });
                 confirmDialog.setConfirmButtonTheme("error primary");
+                confirmDialog.setId("athlete-delete-confirm-dialog");
                 confirmDialog.open();
             });
 

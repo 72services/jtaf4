@@ -2,6 +2,7 @@ package ch.jtaf.ui.view;
 
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.ui.KaribuTest;
+import ch.jtaf.ui.dialog.AthleteDialog;
 import ch.jtaf.ui.security.Role;
 import com.github.mvysny.kaributesting.v10.GridKt;
 import com.vaadin.flow.component.UI;
@@ -45,7 +46,7 @@ class AthletesViewTest extends KaribuTest {
 
         // Add a new athlete
         _get(Button.class, spec -> spec.withId("add-button")).click();
-        _assert(Dialog.class, 1);
+        _assert(AthleteDialog.class, 1);
 
         _get(TextField.class, spec -> spec.withCaption("Last Name")).setValue("Test");
         _get(TextField.class, spec -> spec.withCaption("First Name")).setValue("Test");

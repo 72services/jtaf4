@@ -177,6 +177,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
             getTranslation("Cancel"), event -> {
         });
         confirmDialog.setConfirmButtonTheme("error primary");
+        confirmDialog.setId("remove-event-from-category-confirm-dialog");
         confirmDialog.open();
     }
 }
