@@ -31,6 +31,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
@@ -127,6 +128,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         checkboxes.add(hidden);
 
         binder.forField(hidden)
+            .withValidator((aBoolean, valueContext) -> ValidationResult.ok())
             .bind(SeriesRecord::getHidden, SeriesRecord::setHidden);
 
         var locked = new Checkbox(getTranslation("Locked"));
