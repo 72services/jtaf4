@@ -22,7 +22,6 @@ class UserServiceTest {
     @MockBean
     private JavaMailSender javaMailSender;
 
-
     @Test
     void create_user_and_confirm() {
         assertThatNoException().isThrownBy(() -> {

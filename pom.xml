@@ -51,10 +51,9 @@
     <properties>
         <java.version>17</java.version>
 
-        <vaadin.version>23.0.1</vaadin.version>
+        <vaadin.version>23.0.3</vaadin.version>
         <jooq.version>3.16.4</jooq.version>
         <openpdf.version>1.3.26</openpdf.version>
-        <postgres-socket-factory.version>1.4.3</postgres-socket-factory.version>
 
         <testcontainers.version>1.16.3</testcontainers.version>
         <karibu-testing.version>1.3.11</karibu-testing.version>
@@ -68,7 +67,7 @@
 
         <db.username>jtaf4</db.username>
         <db.password>jtaf420</db.password>
-        <db.driver>org.postgresql.Driver</db.driver>
+        <db.driver>org.mariadb.jdbc.Driver</db.driver>
 
         <sonar.organization>72services</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -134,14 +133,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.cloud.sql</groupId>
-            <artifactId>postgres-socket-factory</artifactId>
-            <version>${postgres-socket-factory.version}</version>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
         </dependency>
 
         <dependency>
@@ -174,7 +167,7 @@
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
+            <artifactId>mariadb</artifactId>
             <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
@@ -215,7 +208,7 @@
                         </goals>
                         <configuration>
                             <source>
-                                db = new org.testcontainers.containers.PostgreSQLContainer("postgres:12.7")
+                                db = new org.testcontainers.containers.MariaDBContainer("mariadb:10.7.3")
                                 .withUsername("${db.username}")
                                 .withDatabaseName("jtaf4")
                                 .withPassword("${db.password}")
@@ -228,14 +221,13 @@
                 <dependencies>
                     <dependency>
                         <groupId>org.testcontainers</groupId>
-                        <artifactId>postgresql</artifactId>
+                        <artifactId>mariadb</artifactId>
                         <version>${testcontainers.version}</version>
                     </dependency>
-                    <!-- Junit seems to be a transitive dependency of testcontainers? -->
                     <dependency>
-                        <groupId>junit</groupId>
-                        <artifactId>junit</artifactId>
-                        <version>4.13.1</version>
+                        <groupId>org.mariadb.jdbc</groupId>
+                        <artifactId>mariadb-java-client</artifactId>
+                        <version>${mariadb.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -281,7 +273,13 @@
                     </jdbc>
                     <generator>
                         <database>
-                            <inputSchema>public</inputSchema>
+                            <inputSchema>jtaf4</inputSchema>
+                            <forcedTypes>
+                                <forcedType>
+                                    <name>BOOLEAN</name>
+                                    <includeTypes>(?i:TINYINT\(1\))</includeTypes>
+                                </forcedType>
+                            </forcedTypes>
                         </database>
                         <target>
                             <packageName>ch.jtaf.db</packageName>

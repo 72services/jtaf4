@@ -1,229 +1,225 @@
-CREATE SEQUENCE athlete_seq;
-
-CREATE TABLE athlete
+create sequence athlete_seq;
+create table athlete
 (
-    id              bigint       NOT NULL DEFAULT NEXTVAL('athlete_seq') PRIMARY KEY,
-
-    first_name      varchar(255) NOT NULL,
-    last_name       varchar(255) NOT NULL,
-    gender          char(1)      NOT NULL,
-    year_of_birth   int          NOT NULL,
-
-    club_id         bigint                DEFAULT NULL,
-    organization_id bigint                DEFAULT NULL
+    id              bigint       not null default next value for athlete_seq,
+    first_name      varchar(255) not null,
+    last_name       varchar(255) not null,
+    gender          char(1)      not null,
+    year_of_birth   int          not null,
+    club_id         bigint                default null,
+    organization_id bigint                default null,
+    primary key (id)
 );
-
-CREATE SEQUENCE category_seq;
-
-CREATE TABLE category
+create sequence category_seq;
+create table category
 (
-    id           bigint       NOT NULL DEFAULT NEXTVAL('category_seq') PRIMARY KEY,
-
-    abbreviation varchar(255) NOT NULL,
-    name         varchar(255) NOT NULL,
-    gender       char(1)      NOT NULL,
-    year_from    int          NOT NULL,
-    year_to      int          NOT NULL,
-
-    series_id    bigint                DEFAULT NULL
+    id           bigint       not null default next value for category_seq,
+    abbreviation varchar(255) not null,
+    name         varchar(255) not null,
+    gender       char(1)      not null,
+    year_from    int          not null,
+    year_to      int          not null,
+    series_id    bigint                default null,
+    primary key (id)
 );
-
-CREATE TABLE category_athlete
+create table category_athlete
 (
-    category_id bigint NOT NULL,
-    athlete_id  bigint NOT NULL
+    category_id bigint not null,
+    athlete_id  bigint not null
 );
-
-CREATE TABLE category_event
+create table category_event
 (
-    category_id bigint NOT NULL,
-    event_id    bigint NOT NULL,
-
-    position    int    NOT NULL
+    category_id bigint not null,
+    event_id    bigint not null,
+    position    int    not null
 );
-
-CREATE SEQUENCE club_seq;
-
-CREATE TABLE club
+create sequence club_seq;
+create table club
 (
-    id              bigint       NOT NULL DEFAULT NEXTVAL('club_seq') PRIMARY KEY,
-
-    abbreviation    varchar(255) NOT NULL,
-    name            varchar(255) NOT NULL,
-
-    organization_id bigint                DEFAULT NULL
+    id              bigint       not null default next value for club_seq,
+    abbreviation    varchar(255) not null,
+    name            varchar(255) not null,
+    organization_id bigint                default null,
+    primary key (id)
 );
-
-CREATE SEQUENCE competition_seq;
-
-CREATE TABLE competition
+create sequence competition_seq;
+create table competition
 (
-    id                        bigint       NOT NULL DEFAULT NEXTVAL('competition_seq') PRIMARY KEY,
-
-    name                      varchar(255) NOT NULL,
-    competition_date          date         NOT NULL,
-    always_first_three_medals boolean      NOT NULL DEFAULT false,
-    medal_percentage          int          NOT NULL,
-    locked                    boolean      NOT NULL DEFAULT false,
-
-    series_id                 bigint                DEFAULT NULL
+    id                        bigint       not null default next value for competition_seq,
+    name                      varchar(255) not null,
+    competition_date          date         not null,
+    always_first_three_medals tinyint(1) not null default 0,
+    medal_percentage          int          not null,
+    locked                    tinyint(1) not null default 0,
+    series_id                 bigint                default null,
+    primary key (id)
 );
-
-CREATE SEQUENCE event_seq;
-
-CREATE TABLE event
+create sequence event_seq;
+create table event
 (
-    id              bigint           NOT NULL DEFAULT NEXTVAL('event_seq') PRIMARY KEY,
-
-    abbreviation    varchar(255)              DEFAULT NULL,
-    name            varchar(255)              DEFAULT NULL,
-    gender          char(1)                   DEFAULT NULL,
-    event_type      varchar(255)              DEFAULT NULL,
-    a               double precision NOT NULL,
-    b               double precision NOT NULL,
-    c               double precision NOT NULL,
-
-    organization_id bigint                    DEFAULT NULL
+    id              bigint not null default next value for event_seq,
+    abbreviation    varchar(255)    default null,
+    name            varchar(255)    default null,
+    gender          char(1)         default null,
+    event_type      varchar(255)    default null,
+    a               double not null,
+    b               double not null,
+    c               double not null,
+    organization_id bigint          default null,
+    primary key (id)
 );
-
-CREATE SEQUENCE organization_seq;
-
-CREATE TABLE organization
+create sequence organization_seq;
+create table organization
 (
-    id               bigint       NOT NULL DEFAULT NEXTVAL('organization_seq') PRIMARY KEY,
-
-    organization_key varchar(255) NOT NULL,
-    name             varchar(255) NOT NULL,
-    owner            varchar(255) NOT NULL
+    id               bigint       not null default next value for organization_seq,
+    organization_key varchar(255) not null,
+    name             varchar(255) not null,
+    owner            varchar(255) not null,
+    primary key (id)
 );
-
-CREATE TABLE organization_user
+create table organization_user
 (
-    organization_id bigint NOT NULL,
-    user_id         bigint NOT NULL
+    organization_id bigint not null,
+    user_id         bigint not null
 );
-
-CREATE SEQUENCE result_seq;
-
-CREATE TABLE result
+create sequence result_seq;
+create table result
 (
-    id             bigint       NOT NULL DEFAULT NEXTVAL('result_seq') PRIMARY KEY,
-
-    position       int          NOT NULL,
-    result         varchar(255) NOT NULL,
-    points         int          NOT NULL,
-
-    athlete_id     bigint       NOT NULL,
-    category_id    bigint       NOT NULL,
-    competition_id bigint       NOT NULL,
-    event_id       bigint       NOT NULL
+    id             bigint       not null default next value for result_seq,
+    position       int          not null,
+    result         varchar(255) not null,
+    points         int          not null,
+    athlete_id     bigint       not null,
+    category_id    bigint       not null,
+    competition_id bigint       not null,
+    event_id       bigint       not null,
+    primary key (id)
 );
-
-CREATE SEQUENCE security_group_seq;
-
-CREATE TABLE security_group
+create sequence security_group_seq;
+create table security_group
 (
-    id   bigint       NOT NULL DEFAULT NEXTVAL('security_group_seq') PRIMARY KEY,
-
-    name varchar(255) NOT NULL
+    id   bigint       not null default next value for security_group_seq,
+    name varchar(255) not null,
+    primary key (id)
 );
-
-CREATE SEQUENCE security_user_seq;
-
-CREATE TABLE security_user
+create sequence security_user_seq;
+create table security_user
 (
-    id              bigint       NOT NULL DEFAULT NEXTVAL('security_user_seq') PRIMARY KEY,
-
-    first_name      varchar(255) NOT NULL,
-    last_name       varchar(255) NOT NULL,
-    email           varchar(255) NOT NULL,
-    secret          varchar(255) NOT NULL,
-
+    id              bigint       not null default next value for security_user_seq,
+    first_name      varchar(255) not null,
+    last_name       varchar(255) not null,
+    email           varchar(255) not null,
+    secret          varchar(255) not null,
     confirmation_id varchar(255),
-    confirmed       boolean               DEFAULT false
+    confirmed       tinyint(1) default 0,
+    primary key (id)
 );
-
-CREATE SEQUENCE series_seq;
-
-CREATE TABLE series
+create sequence series_seq;
+create table series
 (
-    id              bigint       NOT NULL DEFAULT NEXTVAL('series_seq') PRIMARY KEY,
-
-    name            varchar(255) NOT NULL,
-    logo            bytea,
-    hidden          boolean      NOT NULL DEFAULT false,
-    locked          boolean      NOT NULL DEFAULT false,
-
-    organization_id bigint                DEFAULT NULL
+    id              bigint       not null default next value for series_seq,
+    name            varchar(255) not null,
+    logo            blob,
+    hidden          tinyint(1) not null default 0,
+    locked          tinyint(1) not null default 0,
+    organization_id bigint                default null,
+    primary key (id)
 );
-
-CREATE TABLE user_group
+create table user_group
 (
-    user_id  bigint NOT NULL,
-    group_id bigint NOT NULL
+    user_id  bigint not null,
+    group_id bigint not null
 );
-
-ALTER TABLE athlete
-    ADD CONSTRAINT fk_athlete_club FOREIGN KEY (club_id) REFERENCES club (id);
-ALTER TABLE athlete
-    ADD CONSTRAINT fk_athlete_organization FOREIGN KEY (organization_id) REFERENCES organization (id);
-
-ALTER TABLE category
-    ADD CONSTRAINT fk_category_series FOREIGN KEY (series_id) REFERENCES series (id);
-
-ALTER TABLE category_athlete
-    ADD PRIMARY KEY (athlete_id, category_id);
-ALTER TABLE category_athlete
-    ADD CONSTRAINT fk_category_athlete_athlete FOREIGN KEY (athlete_id) REFERENCES athlete (id);
-ALTER TABLE category_athlete
-    ADD CONSTRAINT fk_category_athlete_category FOREIGN KEY (category_id) REFERENCES category (id);
-
-ALTER TABLE category_event
-    ADD PRIMARY KEY (category_id, event_id);
-ALTER TABLE category_event
-    ADD CONSTRAINT fk_category_event_category FOREIGN KEY (category_id) REFERENCES category (id);
-ALTER TABLE category_event
-    ADD CONSTRAINT fk_category_event_event FOREIGN KEY (event_id) REFERENCES event (id);
-
-ALTER TABLE club
-    ADD CONSTRAINT fk_club_organization FOREIGN KEY (organization_id) REFERENCES organization (id);
-
-ALTER TABLE competition
-    ADD CONSTRAINT fk_competition_series FOREIGN KEY (series_id) REFERENCES series (id);
-
-ALTER TABLE event
-    ADD CONSTRAINT fk_event_organization FOREIGN KEY (organization_id) REFERENCES organization (id);
-
-ALTER TABLE organization
-    ADD CONSTRAINT uk_organization_key UNIQUE (organization_key);
-
-ALTER TABLE organization_user
-    ADD PRIMARY KEY (organization_id, user_id);
-ALTER TABLE organization_user
-    ADD CONSTRAINT fk_organization_user_organzation FOREIGN KEY (organization_id) REFERENCES organization (id);
-ALTER TABLE organization_user
-    ADD CONSTRAINT fk_organization_user_user FOREIGN KEY (user_id) REFERENCES security_user (id);
-
-ALTER TABLE result
-    ADD CONSTRAINT fk_result_athlete FOREIGN KEY (athlete_id) REFERENCES athlete (id);
-ALTER TABLE result
-    ADD CONSTRAINT fk_result_category FOREIGN KEY (category_id) REFERENCES category (id);
-ALTER TABLE result
-    ADD CONSTRAINT fk_result_competition FOREIGN KEY (competition_id) REFERENCES competition (id);
-ALTER TABLE result
-    ADD CONSTRAINT fk_result_event FOREIGN KEY (event_id) REFERENCES event (id);
-
-ALTER TABLE security_group
-    ADD CONSTRAINT uk_security_group_name UNIQUE (name);
-ALTER TABLE security_user
-    ADD CONSTRAINT uk_security_user_email UNIQUE (email);
-
-ALTER TABLE series
-    ADD CONSTRAINT fk_series_organization FOREIGN KEY (organization_id) REFERENCES organization (id);
-
-ALTER TABLE user_group
-    ADD PRIMARY KEY (group_id, user_id);
-ALTER TABLE user_group
-    ADD CONSTRAINT fk_user_group_user FOREIGN KEY (user_id) REFERENCES security_user (id);
-ALTER TABLE user_group
-    ADD CONSTRAINT fk_user_group_group FOREIGN KEY (group_id) REFERENCES security_group (id);
+alter table athlete
+    add constraint fk_athlete_club
+        foreign key (club_id)
+            references club (id);
+alter table athlete
+    add constraint fk_athlete_organization
+        foreign key (organization_id)
+            references organization (id);
+alter table category
+    add constraint fk_category_series
+        foreign key (series_id)
+            references series (id);
+alter table category_athlete
+    add primary key (athlete_id, category_id);
+alter table category_athlete
+    add constraint fk_category_athlete_athlete
+        foreign key (athlete_id)
+            references athlete (id);
+alter table category_athlete
+    add constraint fk_category_athlete_category
+        foreign key (category_id)
+            references category (id);
+alter table category_event
+    add primary key (category_id, event_id);
+alter table category_event
+    add constraint fk_category_event_category
+        foreign key (category_id)
+            references category (id);
+alter table category_event
+    add constraint fk_category_event_event
+        foreign key (event_id)
+            references event (id);
+alter table club
+    add constraint fk_club_organization
+        foreign key (organization_id)
+            references organization (id);
+alter table competition
+    add constraint fk_competition_series
+        foreign key (series_id)
+            references series (id);
+alter table event
+    add constraint fk_event_organization
+        foreign key (organization_id)
+            references organization (id);
+alter table organization
+    add constraint uk_organization_key
+        unique (organization_key);
+alter table organization_user
+    add primary key (organization_id, user_id);
+alter table organization_user
+    add constraint fk_organization_user_organzation
+        foreign key (organization_id)
+            references organization (id);
+alter table organization_user
+    add constraint fk_organization_user_user
+        foreign key (user_id)
+            references security_user (id);
+alter table result
+    add constraint fk_result_athlete
+        foreign key (athlete_id)
+            references athlete (id);
+alter table result
+    add constraint fk_result_category
+        foreign key (category_id)
+            references category (id);
+alter table result
+    add constraint fk_result_competition
+        foreign key (competition_id)
+            references competition (id);
+alter table result
+    add constraint fk_result_event
+        foreign key (event_id)
+            references event (id);
+alter table security_group
+    add constraint uk_security_group_name
+        unique (name);
+alter table security_user
+    add constraint uk_security_user_email
+        unique (email);
+alter table series
+    add constraint fk_series_organization
+        foreign key (organization_id)
+            references organization (id);
+alter table user_group
+    add primary key (group_id, user_id);
+alter table user_group
+    add constraint fk_user_group_user
+        foreign key (user_id)
+            references security_user (id);
+alter table user_group
+    add constraint fk_user_group_group
+        foreign key (group_id)
+            references security_group (id);

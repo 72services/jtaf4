@@ -11,6 +11,6 @@ public class JtafJooqConfiguration {
 
     @Bean
     Settings jooqSettings() {
-        return new Settings().withRenderNameCase(RenderNameCase.LOWER).withRenderQuotedNames(RenderQuotedNames.NEVER);
+        return new Settings().withRenderNameCase(RenderNameCase.LOWER).withRenderQuotedNames(RenderQuotedNames.NEVER).withRenderSchema(false);
     }
 }
