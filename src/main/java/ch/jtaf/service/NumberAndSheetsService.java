@@ -20,8 +20,7 @@ import static ch.jtaf.db.tables.CategoryEvent.CATEGORY_EVENT;
 import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Series.SERIES;
 import static org.jooq.Records.mapping;
-import static org.jooq.impl.DSL.multiset;
-import static org.jooq.impl.DSL.select;
+import static org.jooq.impl.DSL.multisetAgg;
 
 @SuppressWarnings("ClassCanBeRecord")
 @Service
@@ -54,19 +53,15 @@ public class NumberAndSheetsService {
                 DSL.inline(null, SQLDataType.INTEGER),
                 CATEGORY.ABBREVIATION,
                 DSL.inline(null, SQLDataType.VARCHAR),
-                multiset(
-                    select(
-                        CATEGORY_EVENT.event().NAME,
-                        CATEGORY_EVENT.event().EVENT_TYPE
-                    )
-                        .from(CATEGORY_EVENT)
-                        .where(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
-                        .orderBy(CATEGORY_EVENT.POSITION)
+                multisetAgg(
+                    CATEGORY_EVENT.event().NAME,
+                    CATEGORY_EVENT.event().EVENT_TYPE
                 ).convertFrom(r -> r.map(mapping(NumbersAndSheetsAthlete.Event::new)))
             )
             .from(CATEGORY)
+            .join(CATEGORY_EVENT).on(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
             .where(CATEGORY.ID.eq(categoryId))
-            .fetchOne(mapping(NumbersAndSheetsAthlete::new));
+            .fetchOneInto(NumbersAndSheetsAthlete.class);
     }
 
     private NumbersAndSheetsCompetition getCompetition(Long competitionId) {
@@ -87,6 +82,8 @@ public class NumberAndSheetsService {
     }
 
     private List<NumbersAndSheetsAthlete> getAthletes(Long seriesId, Field<?>... orderBy) {
+        Field<?>[] order = new Field[orderBy.length + 1];
+        order[orderBy.length] = CATEGORY_EVENT.POSITION;
         return dsl
             .select(
                 ATHLETE.ID,
@@ -95,21 +92,23 @@ public class NumberAndSheetsService {
                 ATHLETE.YEAR_OF_BIRTH,
                 CATEGORY.ABBREVIATION,
                 ATHLETE.club().ABBREVIATION,
-                multiset(
-                    select(
-                        CATEGORY_EVENT.event().NAME,
-                        CATEGORY_EVENT.event().EVENT_TYPE
-                    )
-                        .from(CATEGORY_EVENT)
-                        .where(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
-                        .orderBy(CATEGORY_EVENT.POSITION)
+                multisetAgg(
+                    CATEGORY_EVENT.event().NAME,
+                    CATEGORY_EVENT.event().EVENT_TYPE
                 ).convertFrom(r -> r.map(mapping(NumbersAndSheetsAthlete.Event::new)))
             )
             .from(CATEGORY_ATHLETE)
             .join(ATHLETE).on(ATHLETE.ID.eq(CATEGORY_ATHLETE.ATHLETE_ID))
             .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
+            .join(CATEGORY_EVENT).on(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
             .where(CATEGORY.series().ID.eq(seriesId))
-            .orderBy(orderBy)
+            .groupBy(ATHLETE.ID,
+                ATHLETE.FIRST_NAME,
+                ATHLETE.LAST_NAME,
+                ATHLETE.YEAR_OF_BIRTH,
+                CATEGORY.ABBREVIATION,
+                ATHLETE.club().ABBREVIATION)
+            .orderBy(order)
             .fetch(mapping(NumbersAndSheetsAthlete::new));
     }
 
