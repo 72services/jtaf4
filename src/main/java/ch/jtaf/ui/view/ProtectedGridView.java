@@ -1,7 +1,7 @@
 package ch.jtaf.ui.view;
 
+import ch.jtaf.configuration.security.OrganizationProvider;
 import ch.jtaf.ui.component.JooqDataProviderProducer;
-import ch.jtaf.ui.security.OrganizationProvider;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import org.jooq.Condition;

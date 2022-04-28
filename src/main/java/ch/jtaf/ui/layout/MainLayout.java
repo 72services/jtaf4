@@ -1,7 +1,7 @@
 package ch.jtaf.ui.layout;
 
-import ch.jtaf.ui.security.OrganizationProvider;
-import ch.jtaf.ui.security.SecurityContext;
+import ch.jtaf.configuration.security.OrganizationProvider;
+import ch.jtaf.configuration.security.SecurityContext;
 import ch.jtaf.ui.view.AthletesView;
 import ch.jtaf.ui.view.ClubsView;
 import ch.jtaf.ui.view.DashboardView;

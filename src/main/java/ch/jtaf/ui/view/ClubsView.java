@@ -1,9 +1,9 @@
 package ch.jtaf.ui.view;
 
+import ch.jtaf.configuration.security.OrganizationProvider;
 import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.ui.dialog.ClubDialog;
 import ch.jtaf.ui.layout.MainLayout;
-import ch.jtaf.ui.security.OrganizationProvider;
 import com.vaadin.flow.router.Route;
 import org.jooq.Condition;
 import org.jooq.DSLContext;

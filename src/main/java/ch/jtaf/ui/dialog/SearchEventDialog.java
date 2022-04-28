@@ -1,8 +1,8 @@
 package ch.jtaf.ui.dialog;
 
+import ch.jtaf.configuration.security.OrganizationProvider;
 import ch.jtaf.db.tables.records.CategoryRecord;
 import ch.jtaf.db.tables.records.EventRecord;
-import ch.jtaf.ui.security.OrganizationProvider;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;

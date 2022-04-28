@@ -1,4 +1,4 @@
-package ch.jtaf.ui.security;
+package ch.jtaf.configuration.security;
 
 import ch.jtaf.ui.view.LoginView;
 import com.vaadin.flow.spring.security.VaadinWebSecurityConfigurerAdapter;

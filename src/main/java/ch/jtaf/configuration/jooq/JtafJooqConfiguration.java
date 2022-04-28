@@ -1,4 +1,4 @@
-package ch.jtaf.configuration;
+package ch.jtaf.configuration.jooq;
 
 import org.jooq.conf.RenderNameCase;
 import org.jooq.conf.RenderQuotedNames;

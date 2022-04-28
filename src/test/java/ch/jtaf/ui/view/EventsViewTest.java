@@ -1,14 +1,13 @@
 package ch.jtaf.ui.view;
 
+import ch.jtaf.configuration.security.Role;
 import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.ui.KaribuTest;
 import ch.jtaf.ui.dialog.EventDialog;
-import ch.jtaf.ui.security.Role;
 import com.github.mvysny.kaributesting.v10.GridKt;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;

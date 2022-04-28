@@ -1,4 +1,4 @@
-package ch.jtaf.ui.security;
+package ch.jtaf.configuration.security;
 
 public class Role {
 

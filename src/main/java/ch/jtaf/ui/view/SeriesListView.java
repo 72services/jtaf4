@@ -1,8 +1,8 @@
 package ch.jtaf.ui.view;
 
+import ch.jtaf.configuration.security.OrganizationProvider;
 import ch.jtaf.db.tables.records.SeriesRecord;
 import ch.jtaf.ui.layout.MainLayout;
-import ch.jtaf.ui.security.OrganizationProvider;
 import ch.jtaf.ui.util.LogoUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;

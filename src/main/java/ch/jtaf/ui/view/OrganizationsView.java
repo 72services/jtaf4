@@ -1,12 +1,12 @@
 package ch.jtaf.ui.view;
 
+import ch.jtaf.configuration.security.OrganizationProvider;
+import ch.jtaf.configuration.security.Role;
+import ch.jtaf.configuration.security.SecurityContext;
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.db.tables.records.OrganizationUserRecord;
 import ch.jtaf.ui.dialog.OrganizationDialog;
 import ch.jtaf.ui.layout.MainLayout;
-import ch.jtaf.ui.security.OrganizationProvider;
-import ch.jtaf.ui.security.Role;
-import ch.jtaf.ui.security.SecurityContext;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
