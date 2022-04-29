@@ -1,4 +1,4 @@
-package ch.jtaf.ui.security;
+package ch.jtaf.configuration.security;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinResponse;

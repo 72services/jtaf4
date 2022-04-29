@@ -1,5 +1,6 @@
 package ch.jtaf.ui.component;
 
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.Query;
@@ -23,14 +24,16 @@ import static org.jooq.impl.DSL.upper;
 public class JooqDataProviderProducer<R extends Record> {
 
     private final DSLContext dsl;
+    private final Grid<?> grid;
     private final Table<R> table;
     private final ConfigurableFilterDataProvider<R, Void, String> dataProvider;
     private final Supplier<Condition> initialCondition;
     private final Supplier<SortField<?>[]> initialSort;
 
-    public JooqDataProviderProducer(DSLContext dsl, Table<R> table, Supplier<Condition> initialCondition,
+    public JooqDataProviderProducer(DSLContext dsl, Grid<?> grid, Table<R> table, Supplier<Condition> initialCondition,
                                     Supplier<SortField<?>[]> initialSort) {
         this.dsl = dsl;
+        this.grid = grid;
         this.table = table;
         this.initialCondition = initialCondition;
         this.initialSort = initialSort;
@@ -43,8 +46,16 @@ public class JooqDataProviderProducer<R extends Record> {
     }
 
     private Stream<R> fetch(Query<R, String> query) {
-        return dsl.selectFrom(table).where(createCondition(query)).orderBy(createOrderBy(query))
+        Stream<R> stream = dsl.selectFrom(table).where(createCondition(query)).orderBy(createOrderBy(query))
             .offset(query.getOffset()).limit(query.getLimit()).stream();
+
+        grid.getElement().executeJs("return;").then(r -> gridFix());
+
+        return stream;
+    }
+
+    private void gridFix() {
+        grid.getElement().executeJs("this.__virtualizer.flush()");
     }
 
     private int count(Query<R, String> query) {

@@ -1,7 +1,7 @@
 package ch.jtaf.ui.view;
 
+import ch.jtaf.configuration.security.OrganizationProvider;
 import ch.jtaf.ui.component.JooqDataProviderProducer;
-import ch.jtaf.ui.security.OrganizationProvider;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import org.jooq.Condition;
@@ -23,10 +23,11 @@ public abstract class ProtectedGridView<R extends Record> extends ProtectedView 
     protected ProtectedGridView(DSLContext dsl, OrganizationProvider organizationProvider, Table<R> table) {
         super(dsl, organizationProvider);
 
-        dataProvider = new JooqDataProviderProducer<>(dsl, table, this::initialCondition, this::initialSort).getDataProvider();
-
         grid = new Grid<>();
         grid.setHeightFull();
+
+        dataProvider = new JooqDataProviderProducer<>(dsl, grid, table, this::initialCondition, this::initialSort).getDataProvider();
+
         grid.setItems(dataProvider);
 
         setHeightFull();

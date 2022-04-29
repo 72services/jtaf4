@@ -1,5 +1,6 @@
 package ch.jtaf.ui.view;
 
+import ch.jtaf.configuration.security.OrganizationProvider;
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.CategoryRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
@@ -10,7 +11,6 @@ import ch.jtaf.ui.dialog.CategoryDialog;
 import ch.jtaf.ui.dialog.CompetitionDialog;
 import ch.jtaf.ui.dialog.SearchAthleteDialog;
 import ch.jtaf.ui.layout.MainLayout;
-import ch.jtaf.ui.security.OrganizationProvider;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -31,6 +31,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
@@ -127,6 +128,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         checkboxes.add(hidden);
 
         binder.forField(hidden)
+            .withValidator((aBoolean, valueContext) -> ValidationResult.ok())
             .bind(SeriesRecord::getHidden, SeriesRecord::setHidden);
 
         var locked = new Checkbox(getTranslation("Locked"));
@@ -335,6 +337,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
                     getTranslation("Cancel"), e -> {
                 });
                 confirmDialog.setConfirmButtonTheme("error primary");
+                confirmDialog.setId("athlete-delete-confirm-dialog");
                 confirmDialog.open();
             });
 

@@ -127,7 +127,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
 
             var newPosition = getCategoryEvents().stream()
                 .max(Comparator.comparingInt(CategoryEventVO::position))
-                .map(CategoryEventVO::position)
+                .map(categoryEventVO -> categoryEventVO.position() + 1)
                 .orElse(0);
             categoryEvent.setPosition(newPosition);
 
@@ -177,6 +177,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
             getTranslation("Cancel"), event -> {
         });
         confirmDialog.setConfirmButtonTheme("error primary");
+        confirmDialog.setId("remove-event-from-category-confirm-dialog");
         confirmDialog.open();
     }
 }

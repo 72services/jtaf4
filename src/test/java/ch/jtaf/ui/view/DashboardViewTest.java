@@ -1,7 +1,7 @@
 package ch.jtaf.ui.view;
 
+import ch.jtaf.configuration.security.Role;
 import ch.jtaf.ui.KaribuTest;
-import ch.jtaf.ui.security.Role;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;

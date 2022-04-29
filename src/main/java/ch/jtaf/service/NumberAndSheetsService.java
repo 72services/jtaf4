@@ -17,6 +17,7 @@ import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
 import static ch.jtaf.db.tables.CategoryEvent.CATEGORY_EVENT;
+import static ch.jtaf.db.tables.Club.CLUB;
 import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Series.SERIES;
 import static org.jooq.Records.mapping;
@@ -94,7 +95,7 @@ public class NumberAndSheetsService {
                 ATHLETE.LAST_NAME,
                 ATHLETE.YEAR_OF_BIRTH,
                 CATEGORY.ABBREVIATION,
-                ATHLETE.club().ABBREVIATION,
+                CLUB.ABBREVIATION,
                 multiset(
                     select(
                         CATEGORY_EVENT.event().NAME,
@@ -108,6 +109,7 @@ public class NumberAndSheetsService {
             .from(CATEGORY_ATHLETE)
             .join(ATHLETE).on(ATHLETE.ID.eq(CATEGORY_ATHLETE.ATHLETE_ID))
             .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
+            .leftOuterJoin(CLUB).on(CLUB.ID.eq(ATHLETE.CLUB_ID))
             .where(CATEGORY.series().ID.eq(seriesId))
             .orderBy(orderBy)
             .fetch(mapping(NumbersAndSheetsAthlete::new));

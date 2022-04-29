@@ -1,4 +1,4 @@
-package ch.jtaf.ui.security;
+package ch.jtaf.configuration.security;
 
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import com.vaadin.flow.server.VaadinRequest;

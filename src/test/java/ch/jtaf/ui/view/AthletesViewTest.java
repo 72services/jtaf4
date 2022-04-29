@@ -1,13 +1,13 @@
 package ch.jtaf.ui.view;
 
+import ch.jtaf.configuration.security.Role;
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.ui.KaribuTest;
-import ch.jtaf.ui.security.Role;
+import ch.jtaf.ui.dialog.AthleteDialog;
 import com.github.mvysny.kaributesting.v10.GridKt;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
@@ -45,7 +45,7 @@ class AthletesViewTest extends KaribuTest {
 
         // Add a new athlete
         _get(Button.class, spec -> spec.withId("add-button")).click();
-        _assert(Dialog.class, 1);
+        _assert(AthleteDialog.class, 1);
 
         _get(TextField.class, spec -> spec.withCaption("Last Name")).setValue("Test");
         _get(TextField.class, spec -> spec.withCaption("First Name")).setValue("Test");

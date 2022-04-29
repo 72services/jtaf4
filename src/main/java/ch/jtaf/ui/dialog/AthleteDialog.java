@@ -1,10 +1,10 @@
 package ch.jtaf.ui.dialog;
 
+import ch.jtaf.configuration.security.OrganizationProvider;
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.model.Gender;
 import ch.jtaf.ui.converter.JtafStringToIntegerConverter;
-import ch.jtaf.ui.security.OrganizationProvider;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
@@ -104,7 +104,10 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
         if (organizationRecord == null) {
             return Collections.emptyList();
         } else {
-            var clubs = getBean(DSLContext.class).selectFrom(CLUB).where(CLUB.ORGANIZATION_ID.eq(organizationRecord.getId())).fetch();
+            var clubs = getBean(DSLContext.class)
+                .selectFrom(CLUB)
+                .where(CLUB.ORGANIZATION_ID.eq(organizationRecord.getId()))
+                .fetch();
             clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
             return clubs;
         }
