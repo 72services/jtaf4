@@ -6,6 +6,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import static ch.jtaf.db.tables.Athlete.ATHLETE;
+import static ch.jtaf.db.tables.Category.CATEGORY;
+import static ch.jtaf.db.tables.Club.CLUB;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -25,6 +28,13 @@ class NumberAndSheetsServiceTest {
     }
 
     @Test
+    void create_numbers_ordered_by_club() {
+        byte[] pdf = numberAndSheetsService.createNumbers(1L, CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
+
+        assertThat(pdf).isNotEmpty();
+    }
+
+    @Test
     void create_empty_sheets() {
         byte[] pdf = numberAndSheetsService.createEmptySheets(1L, 1L);
 
@@ -37,4 +47,12 @@ class NumberAndSheetsServiceTest {
 
         assertThat(pdf).isNotEmpty();
     }
+
+    @Test
+    void create_sheets_ordered_by_club() {
+        byte[] pdf = numberAndSheetsService.createSheets(1L, 6L, CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
+
+        assertThat(pdf).isNotEmpty();
+    }
+
 }
