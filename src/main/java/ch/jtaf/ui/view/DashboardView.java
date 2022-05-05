@@ -57,7 +57,6 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
         for (var series : seriesRecords) {
             HorizontalLayout seriesLayout = new HorizontalLayout();
             seriesLayout.getClassNames().add("series-layout");
-            seriesLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
 
             verticalLayout.add(seriesLayout);
 
@@ -71,6 +70,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
             seriesLayout.add(pSeriesName);
 
             var buttonLayout = new HorizontalLayout();
+            buttonLayout.getClassNames().add("button-layout");
             seriesLayout.add(buttonLayout);
 
             var seriesRanking = new Button(getTranslation("Series.Ranking"), new Icon(VaadinIcon.FILE));
@@ -122,6 +122,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                 competitionLayout.add(pCompetition);
 
                 var links = new HorizontalLayout();
+                links.getClassNames().add("links-layout");
                 competitionLayout.add(links);
 
                 var competitionRanking = new Button(getTranslation("Competition.Ranking"), new Icon(VaadinIcon.FILE));
