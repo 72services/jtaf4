@@ -20,6 +20,8 @@
     border-bottom-style: solid;
 
     overflow: hidden;
+
+    align-items: center;
 }
 
 .series-layout p {
@@ -32,4 +34,30 @@
 
 .button-div {
     width: 250px;
+}
+
+@media screen and (max-width: 1400px) {
+    .series-layout {
+        height: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .competition-layout {
+        height: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .button-layout {
+        height: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .links-layout {
+        height: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }
