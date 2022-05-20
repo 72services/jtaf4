@@ -1,0 +1,3 @@
+:host([theme~="jtaf-dialog"]) [part="content"] {
+    padding: 0;
+}
