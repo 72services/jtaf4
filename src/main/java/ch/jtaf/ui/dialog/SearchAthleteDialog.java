@@ -125,6 +125,7 @@ public class SearchAthleteDialog extends Dialog {
         filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
 
         content = new Div(filter, grid);
+        content.setSizeFull();
         add(content);
 
         toggle();
