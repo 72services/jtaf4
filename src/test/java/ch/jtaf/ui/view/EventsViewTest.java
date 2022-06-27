@@ -3,11 +3,11 @@ package ch.jtaf.ui.view;
 import ch.jtaf.configuration.security.Role;
 import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.ui.KaribuTest;
+import ch.jtaf.ui.dialog.ConfirmDialog;
 import ch.jtaf.ui.dialog.EventDialog;
 import com.github.mvysny.kaributesting.v10.GridKt;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
@@ -18,7 +18,6 @@ import java.util.List;
 
 import static com.github.mvysny.kaributesting.v10.LocatorJ._assert;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
-import static com.github.mvysny.kaributesting.v10.pro.ConfirmDialogKt._fireConfirm;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class EventsViewTest extends KaribuTest {
@@ -64,7 +63,7 @@ class EventsViewTest extends KaribuTest {
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
         assertThat(confirmDialog.isOpened()).isTrue();
-        _fireConfirm(confirmDialog);
+        _get(Button.class, spec -> spec.withId("delete-confirm-dialog-confirm")).click();
 
         // Check if event was removed
         assertThat(GridKt._size(eventsGrid)).isEqualTo(17);

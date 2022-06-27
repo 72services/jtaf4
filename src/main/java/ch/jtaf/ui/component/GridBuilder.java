@@ -1,9 +1,9 @@
 package ch.jtaf.ui.component;
 
+import ch.jtaf.ui.dialog.ConfirmDialog;
 import ch.jtaf.ui.dialog.EditDialog;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
@@ -44,9 +44,11 @@ public class GridBuilder {
                 if (insteadOfDelete != null) {
                     getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> insteadOfDelete.accept(updatableRecord));
                 } else {
-                    ConfirmDialog confirmDialog = new ConfirmDialog(grid.getTranslation("Confirm"),
+                    new ConfirmDialog(
+                        "delete-confirm-dialog",
+                        grid.getTranslation("Confirm"),
                         grid.getTranslation("Are.you.sure"),
-                        grid.getTranslation("Delete"), e ->
+                        grid.getTranslation("Delete"), () ->
                         getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> {
                             try {
                                 getBean(DSLContext.class).attach(updatableRecord);
@@ -57,11 +59,8 @@ public class GridBuilder {
                                 Notification.show(ex.getMessage());
                             }
                         }),
-                        grid.getTranslation("Cancel"), e -> {
-                    });
-                    confirmDialog.setConfirmButtonTheme("error primary");
-                    confirmDialog.setId("delete-confirm-dialog");
-                    confirmDialog.open();
+                        grid.getTranslation("Cancel"), () -> {
+                    }).open();
                 }
             });
 

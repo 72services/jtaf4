@@ -3,10 +3,10 @@ package ch.jtaf.ui.view;
 import ch.jtaf.configuration.security.Role;
 import ch.jtaf.db.tables.records.SeriesRecord;
 import ch.jtaf.ui.KaribuTest;
+import ch.jtaf.ui.dialog.ConfirmDialog;
 import com.github.mvysny.kaributesting.v10.GridKt;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.textfield.TextField;
@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
-import static com.github.mvysny.kaributesting.v10.pro.ConfirmDialogKt._fireConfirm;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SeriesListViewTest extends KaribuTest {
@@ -64,7 +63,7 @@ class SeriesListViewTest extends KaribuTest {
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
         assertThat(confirmDialog.isOpened()).isTrue();
-        _fireConfirm(confirmDialog);
+        _get(Button.class, spec -> spec.withId("delete-series-confirm-dialog-confirm")).click();
 
         // Check if series was removed
         assertThat(GridKt._size(seriesGrid)).isEqualTo(2);

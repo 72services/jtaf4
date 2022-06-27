@@ -5,12 +5,12 @@ import ch.jtaf.configuration.security.Role;
 import ch.jtaf.configuration.security.SecurityContext;
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.db.tables.records.OrganizationUserRecord;
+import ch.jtaf.ui.dialog.ConfirmDialog;
 import ch.jtaf.ui.dialog.OrganizationDialog;
 import ch.jtaf.ui.layout.MainLayout;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
@@ -75,9 +75,11 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
             var delete = new Button(getTranslation("Delete"));
             delete.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
             delete.addClickListener(event -> {
-                ConfirmDialog confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
+                new ConfirmDialog(
+                    "delete-organization-confirm-dialog",
+                    getTranslation("Confirm"),
                     getTranslation("Are.you.sure"),
-                    getTranslation("Delete"), e -> transactionTemplate.executeWithoutResult(transactionStatus -> {
+                    getTranslation("Delete"), () -> transactionTemplate.executeWithoutResult(transactionStatus -> {
                     try {
                         dsl.deleteFrom(ORGANIZATION_USER).where(ORGANIZATION_USER.ORGANIZATION_ID.eq(organizationRecord.getId())).execute();
 
@@ -89,11 +91,8 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
                         Notification.show(ex.getMessage());
                     }
                 }),
-                    getTranslation("Cancel"), e -> {
-                });
-                confirmDialog.setConfirmButtonTheme("error primary");
-                confirmDialog.setId("delete-organization-confirm-dialog");
-                confirmDialog.open();
+                    getTranslation("Cancel"), () -> {
+                }).open();
             });
 
             var horizontalLayout = new HorizontalLayout(select, delete);

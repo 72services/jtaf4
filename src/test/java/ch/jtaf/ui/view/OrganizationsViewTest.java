@@ -4,12 +4,12 @@ import ch.jtaf.configuration.security.OrganizationProvider;
 import ch.jtaf.configuration.security.Role;
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.ui.KaribuTest;
+import ch.jtaf.ui.dialog.ConfirmDialog;
 import ch.jtaf.ui.dialog.OrganizationDialog;
 import com.github.mvysny.kaributesting.mockhttp.MockRequest;
 import com.github.mvysny.kaributesting.v10.GridKt;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.textfield.TextField;
@@ -23,7 +23,6 @@ import java.util.List;
 
 import static com.github.mvysny.kaributesting.v10.LocatorJ._assert;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
-import static com.github.mvysny.kaributesting.v10.pro.ConfirmDialogKt._fireConfirm;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class OrganizationsViewTest extends KaribuTest {
@@ -65,7 +64,7 @@ class OrganizationsViewTest extends KaribuTest {
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
         assertThat(confirmDialog.isOpened()).isTrue();
-        _fireConfirm(confirmDialog);
+        _get(Button.class, spec -> spec.withId("delete-organization-confirm-dialog-confirm")).click();
 
         // Check if organization was removed
         assertThat(GridKt._size(organizationGrid)).isEqualTo(2);
