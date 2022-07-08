@@ -44,7 +44,7 @@ jobs:
                 uses: google-github-actions/auth@v0
                 with:
                     workload_identity_provider: 'projects/171200369422/locations/global/workloadIdentityPools/jtaf-pool/providers/github'
-                    service_account: 'jtaf-cloud@appspot.gserviceaccount.com'
+                    service_account: 'github@jtaf-cloud.iam.gserviceaccount.com'
 
             -   name: Maven Build and Sonar Checks
                 run: mvn -B verify sonar:sonar -Pcoverage -Dsonar.projectKey=72services_jtaf4
