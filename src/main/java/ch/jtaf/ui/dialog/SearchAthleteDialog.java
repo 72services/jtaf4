@@ -6,8 +6,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
@@ -15,7 +13,6 @@ import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.data.value.ValueChangeMode;
-import com.vaadin.flow.theme.lumo.Lumo;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -48,14 +45,10 @@ public class SearchAthleteDialog extends Dialog {
     private final ConfigurableFilterDataProvider<AthleteRecord, Void, String> dataProvider;
 
     public SearchAthleteDialog(DSLContext dsl, Long organizationId, Long seriesId, Consumer<AthleteRecord> onSelect) {
-        getElement().getThemeList().add("jtaf-dialog");
-        getElement().setAttribute("aria-labelledby", "dialog-title");
-
         setDraggable(true);
         setResizable(true);
 
-        var headerTitel = new H2(getTranslation("Athletes"));
-        headerTitel.addClassName("dialog-title");
+        setHeaderTitle(getTranslation("Athletes"));
 
         toggle = new Button(VaadinIcon.EXPAND_SQUARE.create());
         toggle.setId("toggle");
@@ -64,9 +57,7 @@ public class SearchAthleteDialog extends Dialog {
         var close = new Button(VaadinIcon.CLOSE_SMALL.create());
         close.addClickListener(event -> close());
 
-        var header = new Header(headerTitel, toggle, close);
-        header.getElement().getThemeList().add(Lumo.LIGHT);
-        add(header);
+        getHeader().add(toggle, close);
 
         var dialog = new AthleteDialog(getTranslation("Athlete"));
 
@@ -134,7 +125,7 @@ public class SearchAthleteDialog extends Dialog {
         filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
 
         content = new Div(filter, grid);
-        content.addClassName("dialog-content");
+        content.setSizeFull();
         add(content);
 
         toggle();

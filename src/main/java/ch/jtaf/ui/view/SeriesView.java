@@ -9,13 +9,13 @@ import ch.jtaf.db.tables.records.SeriesRecord;
 import ch.jtaf.service.NumberAndSheetsService;
 import ch.jtaf.ui.dialog.CategoryDialog;
 import ch.jtaf.ui.dialog.CompetitionDialog;
+import ch.jtaf.ui.dialog.ConfirmDialog;
 import ch.jtaf.ui.dialog.SearchAthleteDialog;
 import ch.jtaf.ui.layout.MainLayout;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
@@ -330,16 +330,14 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         athletesGrid.addComponentColumn(athleteRecord -> {
             var remove = new Button(getTranslation("Remove"));
             remove.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            remove.addClickListener(event -> {
-                var confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
+            remove.addClickListener(event ->
+                new ConfirmDialog(
+                    "athlete-delete-confirm-dialog",
+                    getTranslation("Confirm"),
                     getTranslation("Are.you.sure"),
-                    getTranslation("Remove"), e -> removeAthleteFromSeries(athleteRecord),
-                    getTranslation("Cancel"), e -> {
-                });
-                confirmDialog.setConfirmButtonTheme("error primary");
-                confirmDialog.setId("athlete-delete-confirm-dialog");
-                confirmDialog.open();
-            });
+                    getTranslation("Remove"), () -> removeAthleteFromSeries(athleteRecord),
+                    getTranslation("Cancel"), () -> {
+                }).open());
 
             var horizontalLayout = new HorizontalLayout(remove);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);

@@ -28,3 +28,5 @@ webpack.generated.js
 /pnpm-lock.yaml
 /dance.txt
 /vite.generated.ts
+
+/src/test/resources/secrets/

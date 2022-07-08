@@ -9,13 +9,13 @@ import ch.jtaf.db.tables.records.SeriesRecord;
 import ch.jtaf.ui.KaribuTest;
 import ch.jtaf.ui.dialog.CategoryDialog;
 import ch.jtaf.ui.dialog.CompetitionDialog;
+import ch.jtaf.ui.dialog.ConfirmDialog;
 import ch.jtaf.ui.dialog.SearchAthleteDialog;
 import ch.jtaf.ui.dialog.SearchEventDialog;
 import com.github.mvysny.kaributesting.v10.GridKt;
 import com.github.mvysny.kaributesting.v10.UploadKt;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.select.Select;
@@ -37,7 +37,6 @@ import java.util.List;
 
 import static com.github.mvysny.kaributesting.v10.LocatorJ._assert;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
-import static com.github.mvysny.kaributesting.v10.pro.ConfirmDialogKt._fireConfirm;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SeriesViewTest extends KaribuTest {
@@ -80,7 +79,7 @@ class SeriesViewTest extends KaribuTest {
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
         assertThat(confirmDialog.isOpened()).isTrue();
-        _fireConfirm(confirmDialog);
+        _get(Button.class, spec -> spec.withId("delete-confirm-dialog-confirm")).click();
 
         // Check if competition was removed
         assertThat(GridKt._size(competitionsGrid)).isEqualTo(2);
@@ -151,7 +150,7 @@ class SeriesViewTest extends KaribuTest {
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class, spec-> spec.withId("remove-event-from-category-confirm-dialog"));
         assertThat(confirmDialog.isOpened()).isTrue();
-        _fireConfirm(confirmDialog);
+        _get(Button.class, spec -> spec.withId("remove-event-from-category-confirm-dialog-confirm")).click();
 
         // Check if event was removed
         assertThat(GridKt._size(categoryEventsGrid)).isZero();
@@ -163,7 +162,7 @@ class SeriesViewTest extends KaribuTest {
 
         confirmDialog = _get(ConfirmDialog.class, spec -> spec.withId("delete-confirm-dialog"));
         assertThat(confirmDialog.isOpened()).isTrue();
-        _fireConfirm(confirmDialog);
+        _get(Button.class, spec -> spec.withId("delete-confirm-dialog-confirm")).click();
 
         // Check if category was removed
         assertThat(GridKt._size(categoriesGrid)).isEqualTo(12);
@@ -213,7 +212,7 @@ class SeriesViewTest extends KaribuTest {
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
         assertThat(confirmDialog.isOpened()).isTrue();
-        _fireConfirm(confirmDialog);
+        _get(Button.class, spec -> spec.withId("athlete-delete-confirm-dialog-confirm")).click();
 
         // Check if athlete was removed
         assertThat(GridKt._size(athletesGrid)).isEqualTo(85);

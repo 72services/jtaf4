@@ -5,12 +5,8 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.theme.lumo.Lumo;
 import org.jooq.DSLContext;
 import org.jooq.UpdatableRecord;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -43,14 +39,10 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
         this.initialWidth = initialWidth;
         setWidth(initialWidth);
 
-        getElement().getThemeList().add("jtaf-dialog");
-        getElement().setAttribute("aria-labelledby", "dialog-title");
-
         setDraggable(true);
         setResizable(true);
 
-        var headerTitel = new H2(title);
-        headerTitel.addClassName("dialog-title");
+        setHeaderTitle(title);
 
         toggle = new Button(VaadinIcon.EXPAND_SQUARE.create());
         toggle.addClickListener(event -> toggleFullscreen());
@@ -59,13 +51,15 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
         var close = new Button(VaadinIcon.CLOSE_SMALL.create());
         close.addClickListener(event -> close());
 
-        var header = new Header(headerTitel, toggle, close);
-        header.getElement().getThemeList().add(Lumo.LIGHT);
-        add(header);
+        getHeader().add(toggle, close);
 
         formLayout = new FormLayout();
 
         binder = new Binder<>();
+
+        content = new Div(formLayout);
+
+        add(content);
 
         var save = new Button(getTranslation("Save"));
         save.setId("edit-save");
@@ -85,13 +79,7 @@ public abstract class EditDialog<R extends UpdatableRecord<?>> extends Dialog {
         var cancel = new Button(getTranslation("Cancel"));
         cancel.addClickListener(event -> close());
 
-        var buttons = new HorizontalLayout(save, cancel);
-        buttons.getStyle().set("padding-top", "20px");
-
-        content = new Div(formLayout, buttons);
-        content.addClassName("dialog-content");
-
-        add(content);
+        getFooter().add(save, cancel);
     }
 
     public abstract void createForm();

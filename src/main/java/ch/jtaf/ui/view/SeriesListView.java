@@ -2,13 +2,13 @@ package ch.jtaf.ui.view;
 
 import ch.jtaf.configuration.security.OrganizationProvider;
 import ch.jtaf.db.tables.records.SeriesRecord;
+import ch.jtaf.ui.dialog.ConfirmDialog;
 import ch.jtaf.ui.layout.MainLayout;
 import ch.jtaf.ui.util.LogoUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -68,10 +68,12 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
         grid.addComponentColumn(seriesRecord -> {
             var delete = new Button(getTranslation("Delete"));
             delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            delete.addClickListener(event -> {
-                var confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
+            delete.addClickListener(event ->
+                new ConfirmDialog(
+                    "delete-series-confirm-dialog",
+                    getTranslation("Confirm"),
                     getTranslation("Are.you.sure"),
-                    getTranslation("Delete"), e -> {
+                    getTranslation("Delete"), () -> {
                     try {
                         dsl.attach(seriesRecord);
                         seriesRecord.delete();
@@ -80,12 +82,8 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
                         Notification.show(ex.getMessage());
                     }
                 },
-                    getTranslation("Cancel"), e -> {
-                });
-                confirmDialog.setConfirmButtonTheme("error primary");
-                confirmDialog.setId("delete-series-confirm-dialog");
-                confirmDialog.open();
-            });
+                    getTranslation("Cancel"), () -> {
+                }).open());
 
             var horizontalLayout = new HorizontalLayout(delete);
             horizontalLayout.setJustifyContentMode(JustifyContentMode.END);

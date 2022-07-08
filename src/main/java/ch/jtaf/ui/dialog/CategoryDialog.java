@@ -9,7 +9,6 @@ import ch.jtaf.ui.converter.JtafStringToIntegerConverter;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -162,9 +161,11 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
     }
 
     private void removeEventFromCategory(CategoryEventVO categoryEventVO) {
-        var confirmDialog = new ConfirmDialog(getTranslation("Confirm"),
+        new ConfirmDialog(
+            "remove-event-from-category-confirm-dialog",
+            getTranslation("Confirm"),
             getTranslation("Are.you.sure"),
-            getTranslation("Remove"), event -> {
+            getTranslation("Remove"), () -> {
             getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus ->
                 getBean(DSLContext.class)
                     .deleteFrom(CATEGORY_EVENT)
@@ -174,10 +175,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
             categoryEventsGrid.setItems(getCategoryEvents());
             categoryEventsGrid.getDataProvider().refreshAll();
         },
-            getTranslation("Cancel"), event -> {
-        });
-        confirmDialog.setConfirmButtonTheme("error primary");
-        confirmDialog.setId("remove-event-from-category-confirm-dialog");
-        confirmDialog.open();
+            getTranslation("Cancel"), () -> {
+        }).open();
     }
 }

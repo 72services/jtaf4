@@ -3,40 +3,47 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@vaadin/common-frontend": "0.0.17",
-    "construct-style-sheets-polyfill": "3.0.4",
-    "lit": "2.1.4",
+    "construct-style-sheets-polyfill": "3.1.0",
+    "lit": "2.2.3",
     "@vaadin/router": "1.7.4",
     "@polymer/polymer": "3.4.1"
   },
   "devDependencies": {
+    "async": "3.2.2",
     "mkdirp": "1.0.4",
-    "vite": "v2.9.1",
+    "vite": "v2.9.13",
     "workbox-core": "6.5.0",
     "rollup-plugin-brotli": "3.1.0",
     "workbox-build": "6.5.0",
-    "vite-plugin-checker": "0.3.4",
+    "vite-plugin-checker": "0.4.6",
     "glob": "7.1.6",
     "workbox-precaching": "6.5.0",
-    "typescript": "4.5.3"
+    "typescript": "4.5.3",
+    "@rollup/plugin-replace": "3.1.0"
+  },
+  "overrides": {
+    
   },
   "vaadin": {
     "dependencies": {
       "@vaadin/common-frontend": "0.0.17",
-      "construct-style-sheets-polyfill": "3.0.4",
-      "lit": "2.1.4",
+      "construct-style-sheets-polyfill": "3.1.0",
+      "lit": "2.2.3",
       "@vaadin/router": "1.7.4",
       "@polymer/polymer": "3.4.1"
     },
     "devDependencies": {
+      "async": "3.2.2",
       "mkdirp": "1.0.4",
-      "vite": "v2.9.1",
+      "vite": "v2.9.13",
       "workbox-core": "6.5.0",
       "rollup-plugin-brotli": "3.1.0",
       "workbox-build": "6.5.0",
-      "vite-plugin-checker": "0.3.4",
+      "vite-plugin-checker": "0.4.6",
       "glob": "7.1.6",
       "workbox-precaching": "6.5.0",
-      "typescript": "4.5.3"
+      "typescript": "4.5.3",
+      "@rollup/plugin-replace": "3.1.0"
     },
     "hash": ""
   }
