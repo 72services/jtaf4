@@ -51,9 +51,10 @@
     <properties>
         <java.version>17</java.version>
 
-        <vaadin.version>23.1.1</vaadin.version>
-        <jooq.version>3.17.0</jooq.version>
+        <vaadin.version>23.1.3</vaadin.version>
+        <jooq.version>3.17.2</jooq.version>
         <openpdf.version>1.3.28</openpdf.version>
+        <gcp.version>3.3.0</gcp.version>
 
         <testcontainers.version>1.17.2</testcontainers.version>
         <karibu-testing.version>1.3.14</karibu-testing.version>
@@ -80,6 +81,13 @@
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-bom</artifactId>
                 <version>${vaadin.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.google.cloud</groupId>
+                <artifactId>spring-cloud-gcp-dependencies</artifactId>
+                <version>${gcp.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -133,8 +141,12 @@
         </dependency>
 
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>spring-cloud-gcp-starter-sql-postgresql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>spring-cloud-gcp-starter-secretmanager</artifactId>
         </dependency>
 
         <dependency>
@@ -216,9 +228,9 @@
                         <configuration>
                             <source>
                                 db = new org.testcontainers.containers.PostgreSQLContainer("postgres:12.7")
-                                .withUsername("${db.username}")
-                                .withDatabaseName("jtaf4")
-                                .withPassword("${db.password}")
+                                    .withUsername("${db.username}")
+                                    .withDatabaseName("jtaf4")
+                                    .withPassword("${db.password}")
                                 db.start()
                                 project.properties.setProperty('db.url', db.getJdbcUrl())
                             </source>
@@ -333,20 +345,12 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.22.2</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>appengine-maven-plugin</artifactId>
+                <version>2.4.2</version>
                 <configuration>
-                    <trimStackTrace>false</trimStackTrace>
-                    <enableAssertions>true</enableAssertions>
+                    <projectId>jtaf-cloud</projectId>
+                    <version>GCLOUD_CONFIG</version>
                 </configuration>
             </plugin>
             <!-- Gitflow -->
@@ -390,6 +394,50 @@
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>it</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>start-spring-boot</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>stop-spring-boot</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>stop</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Runs the integration tests (*IT) after the server is started -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <trimStackTrace>false</trimStackTrace>
+                            <enableAssertions>true</enableAssertions>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>

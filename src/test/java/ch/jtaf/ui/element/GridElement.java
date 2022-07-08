@@ -14,7 +14,11 @@ public class GridElement {
         elementHandle.evaluate("(grid, index) => grid.scrollToIndex(index)", index);
     }
 
-    public ElementHandle getCellByTextContent(String textContent) {
+    public ElementHandle waitForCellByTextContent(String textContent) {
         return elementHandle.waitForSelector(String.format("vaadin-grid-cell-content >> '%s'", textContent));
+    }
+
+    public ElementHandle getCellByTextContent(String textContent) {
+        return elementHandle.querySelector(String.format("vaadin-grid-cell-content >> '%s'", textContent));
     }
 }

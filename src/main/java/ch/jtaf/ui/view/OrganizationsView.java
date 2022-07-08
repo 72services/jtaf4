@@ -66,6 +66,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
 
         grid.addComponentColumn(organizationRecord -> {
             var select = new Button(getTranslation("Select"));
+            select.setId("select-organization-" + organizationRecord.getOrganizationKey());
             select.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             select.addClickListener(event -> {
                 organizationProvider.setOrganization(organizationRecord);
@@ -73,6 +74,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
             });
 
             var delete = new Button(getTranslation("Delete"));
+            delete.setId("delete-organization-" + organizationRecord.getOrganizationKey());
             delete.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
             delete.addClickListener(event -> {
                 new ConfirmDialog(
