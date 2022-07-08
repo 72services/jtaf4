@@ -32,8 +32,8 @@ jobs:
             -   name: GCP Authentication
                 uses: google-github-actions/auth@v0
                 with:
-                    workload_identity_provider: 'projects/839267018602/locations/global/workloadIdentityPools/playground-pool/providers/gha-provider'
-                    service_account: 'github@jtaf-cloud.iam.gserviceaccount.com'
+                    workload_identity_provider: 'projects/171200369422/locations/global/workloadIdentityPools/jtaf-pool/providers/github'
+                    service_account: 'jtaf-cloud@appspot.gserviceaccount.com'
 
             -   name: Maven Build and AppEngine Deploy
                 run: mvn -B package appengine:deploy -Pproduction
