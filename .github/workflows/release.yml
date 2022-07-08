@@ -32,7 +32,7 @@ jobs:
             -   name: GCP Authentication
                 uses: google-github-actions/auth@v0
                 with:
-                    workload_identity_provider: 'projects/171200369422/locations/global/workloadIdentityPools/jtaf-pool/providers/github'
+                    workload_identity_provider: 'projects/171200369422/locations/global/workloadIdentityPools/jtaf-pool/providers/gha-provider'
                     service_account: 'github@jtaf-cloud.iam.gserviceaccount.com'
 
             -   name: Maven Build and AppEngine Deploy
