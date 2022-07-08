@@ -350,7 +350,7 @@
                 <version>2.4.2</version>
                 <configuration>
                     <projectId>jtaf-cloud</projectId>
-                    <version>GCLOUD_CONFIG</version>
+                    <version>${project.version}</version>
                 </configuration>
             </plugin>
             <!-- Gitflow -->
