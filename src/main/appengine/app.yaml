@@ -7,7 +7,7 @@ network:
 
 automatic_scaling:
     min_instances: 1
-    max_instances: 2
+    max_instances: 1
 
 inbound_services:
     - warmup
