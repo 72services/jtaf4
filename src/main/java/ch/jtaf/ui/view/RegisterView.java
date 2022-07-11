@@ -35,8 +35,7 @@ public class RegisterView extends VerticalLayout implements HasDynamicTitle {
 
         var register = new Button(getTranslation("Register"), e -> {
             try {
-                var user = userService.createUser(firstName.getValue(), lastName.getValue(), email.getValue(), password.getValue());
-                userService.sendConfirmationEmail(user, getLocale());
+                userService.createUser(firstName.getValue(), lastName.getValue(), email.getValue(), password.getValue(), getLocale());
 
                 Notification.show(getTranslation("Email.sent"), 5000, Notification.Position.TOP_END);
                 UI.getCurrent().navigate(DashboardView.class);

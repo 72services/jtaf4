@@ -20,9 +20,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -44,9 +42,6 @@ public abstract class KaribuTest {
 
     @Autowired
     protected ApplicationContext ctx;
-
-    @MockBean
-    private JavaMailSender javaMailSender;
 
     @BeforeAll
     public static void discoverRoutes() {
