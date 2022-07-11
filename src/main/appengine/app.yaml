@@ -1,12 +1,13 @@
-instance_class: B4
+instance_class: F2
 
 runtime: java17
 
 network:
     session_affinity: true
 
-manual_scaling:
-    instances: 2
+automatic_scaling:
+    min_instances: 1
+    max_instances: 1
 
 inbound_services:
     - warmup
