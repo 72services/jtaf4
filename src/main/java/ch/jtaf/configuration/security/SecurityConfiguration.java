@@ -57,6 +57,6 @@ public class SecurityConfiguration extends VaadinWebSecurityConfigurerAdapter {
         super.configure(web);
 
         web.ignoring().antMatchers("/icons/*.png");
-        web.ignoring().antMatchers("/actuator/health");
+        web.ignoring().antMatchers("/actuator/health/*");
     }
 }
