@@ -2,6 +2,13 @@ package ch.jtaf.service;
 
 import ch.jtaf.db.tables.records.SecurityUserRecord;
 import ch.jtaf.db.tables.records.UserGroupRecord;
+import com.sendgrid.Content;
+import com.sendgrid.Email;
+import com.sendgrid.Mail;
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
 import com.vaadin.flow.i18n.I18NProvider;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
@@ -11,14 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import java.io.IOException;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.UUID;
 
 import static ch.jtaf.db.tables.SecurityGroup.SECURITY_GROUP;
@@ -33,18 +34,20 @@ public class UserService {
     private final DSLContext dsl;
     private final PasswordEncoder passwordEncoder;
     private final I18NProvider i18n;
+    private final SendGrid sendGrid;
     private final String publicAddress;
 
-    public UserService(DSLContext dsl, PasswordEncoder passwordEncoder, I18NProvider i18n,
+    public UserService(DSLContext dsl, PasswordEncoder passwordEncoder, I18NProvider i18n, SendGrid sendGrid,
                        @Value("${jtaf.public.address}") String publicAddress) {
         this.dsl = dsl;
         this.passwordEncoder = passwordEncoder;
         this.i18n = i18n;
+        this.sendGrid = sendGrid;
         this.publicAddress = publicAddress;
     }
 
     @Transactional(rollbackFor = UserAlreadyExistException.class)
-    public SecurityUserRecord createUser(String firstName, String lastName, String email, String password) throws UserAlreadyExistException {
+    public SecurityUserRecord createUser(String firstName, String lastName, String email, String password, Locale locale) throws UserAlreadyExistException {
 
         var count = dsl.selectCount().from(SECURITY_USER).where(SECURITY_USER.EMAIL.eq(email)).fetchOneInto(Integer.class);
         if (count != null && count > 0) {
@@ -70,23 +73,31 @@ public class UserService {
             throw new IllegalStateException("USER role does not exist!");
         }
 
+        if (locale != null) {
+            sendConfirmationEmail(user, locale);
+        }
+
         return user;
     }
 
     public void sendConfirmationEmail(SecurityUserRecord user, Locale locale) {
         try {
-            Properties props = new Properties();
-            Session session = Session.getDefaultInstance(props, null);
+            Email from = new Email("noreply@jtaf.ch");
+            Email to = new Email(user.getEmail());
+            Content content = new Content("text/plain", i18n.getTranslation("Confirm.Email.Body", locale, publicAddress, user.getConfirmationId()));
+            Mail mail = new Mail(from, i18n.getTranslation("Confirm.Email.Subject", locale), to, content);
 
-            var message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("noreply@jtaf-cloud.appspotmail.com"));
-            message.addRecipients(Message.RecipientType.TO, user.getEmail());
-            message.setSubject(i18n.getTranslation("Confirm.Email.Subject", locale));
-            message.setText(i18n.getTranslation("Confirm.Email.Body", locale, publicAddress, user.getConfirmationId()));
+            Request request = new Request();
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
 
-            Transport.send(message);
-        } catch (MessagingException e) {
-            LOGGER.error(e.getMessage(), e);
+            Response response = sendGrid.api(request);
+            if (response.getStatusCode() != 202) {
+                throw new RuntimeException(response.getStatusCode() + " : " + response.getBody());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

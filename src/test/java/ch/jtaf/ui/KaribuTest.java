@@ -8,6 +8,7 @@ import com.github.mvysny.kaributesting.v10.GridKt;
 import com.github.mvysny.kaributesting.v10.MockVaadin;
 import com.github.mvysny.kaributesting.v10.Routes;
 import com.github.mvysny.kaributesting.v10.spring.MockSpringServlet;
+import com.sendgrid.SendGrid;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -22,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -42,11 +42,11 @@ public abstract class KaribuTest {
 
     private static Routes routes;
 
+    @MockBean
+    private SendGrid sendGrid;
+
     @Autowired
     protected ApplicationContext ctx;
-
-    @MockBean
-    private JavaMailSender javaMailSender;
 
     @BeforeAll
     public static void discoverRoutes() {
