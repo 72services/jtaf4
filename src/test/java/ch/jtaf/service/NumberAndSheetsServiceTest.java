@@ -1,8 +1,10 @@
 package ch.jtaf.service;
 
+import com.sendgrid.SendGrid;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
@@ -11,6 +13,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class NumberAndSheetsServiceTest {
+
+    @MockBean
+    private SendGrid sendGrid;
 
     @Autowired
     private NumberAndSheetsService numberAndSheetsService;

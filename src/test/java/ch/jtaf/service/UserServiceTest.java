@@ -1,9 +1,11 @@
 package ch.jtaf.service;
 
 import ch.jtaf.db.tables.records.SecurityUserRecord;
+import com.sendgrid.SendGrid;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.UUID;
 
@@ -13,6 +15,9 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 
 @SpringBootTest
 class UserServiceTest {
+
+    @MockBean
+    private SendGrid sendGrid;
 
     @Autowired
     private UserService userService;

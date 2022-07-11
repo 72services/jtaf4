@@ -2,6 +2,7 @@ package ch.jtaf.service;
 
 import ch.jtaf.reporting.data.ClubRankingData;
 import ch.jtaf.reporting.data.SeriesRankingData;
+import com.sendgrid.SendGrid;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +12,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class SeriesRankingServiceTest {
+
+    @MockBean
+    private SendGrid sendGrid;
 
     @Autowired
     private SeriesRankingService seriesRankingService;
