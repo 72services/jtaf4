@@ -1,4 +1,4 @@
-![CI](https://github.com/72services/jtaf4/actions/workflows/ci/badge.svg)
+![CI](https://github.com/72services/jtaf4/actions/workflows/ci.yml/badge.svg)
 
 # JTAF - Track and Field
 
