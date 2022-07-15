@@ -6,10 +6,8 @@ network:
     session_affinity: true
 
 automatic_scaling:
+    min_instances: 0
     max_instances: 1
-
-inbound_services:
-    - warmup
 
 liveness_check:
     path: "/actuator/health/liveness"
