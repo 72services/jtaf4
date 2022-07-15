@@ -7,7 +7,6 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
@@ -16,7 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class RegisterViewTest extends KaribuTest {
 
     @Test
-    @Disabled("Sendgrid does not work in tests")
     void register() {
         UI.getCurrent().navigate(RegisterView.class);
 

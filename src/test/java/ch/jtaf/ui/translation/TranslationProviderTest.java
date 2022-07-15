@@ -1,10 +1,10 @@
 package ch.jtaf.ui.translation;
 
-import com.sendgrid.SendGrid;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import java.util.Locale;
 
@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class TranslationProviderTest {
 
     @MockBean
-    private SendGrid sendGrid;
+    private JavaMailSender javaMailSender;
 
     @Autowired
     private TranslationProvider translationProvider;
