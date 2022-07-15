@@ -25,7 +25,12 @@ jobs:
                     restore-keys: |
                         ${{ runner.os }}-maven-
 
-            -   name: Production Build and Publish to GitHub Packages Apache Maven
-                run: mvn -B deploy -Pproduction
+            -   name: Production Build
+                run: mvn -B package -Pproduction
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            -   name: Release
+                uses: softprops/action-gh-release@v1
+                with:
+                    files: target/jtaf4*.jar
