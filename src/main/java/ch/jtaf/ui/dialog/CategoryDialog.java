@@ -85,14 +85,14 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
 
         categoryEventsGrid = new Grid<>();
         categoryEventsGrid.setId("category-events-grid");
-        categoryEventsGrid.addColumn(CategoryEventVO::abbreviation).setHeader(getTranslation("Abbreviation"));
-        categoryEventsGrid.addColumn(CategoryEventVO::name).setHeader(getTranslation("Name"));
-        categoryEventsGrid.addColumn(CategoryEventVO::gender).setHeader(getTranslation("Gender"));
-        categoryEventsGrid.addColumn(CategoryEventVO::eventType).setHeader(getTranslation("Event.Type"));
-        categoryEventsGrid.addColumn(CategoryEventVO::A).setHeader("A");
-        categoryEventsGrid.addColumn(CategoryEventVO::B).setHeader("B");
-        categoryEventsGrid.addColumn(CategoryEventVO::C).setHeader("C");
-        categoryEventsGrid.addColumn(CategoryEventVO::position).setHeader(getTranslation("Position"));
+        categoryEventsGrid.addColumn(CategoryEventVO::abbreviation).setHeader(getTranslation("Abbreviation")).setAutoWidth(true);
+        categoryEventsGrid.addColumn(CategoryEventVO::name).setHeader(getTranslation("Name")).setAutoWidth(true);
+        categoryEventsGrid.addColumn(CategoryEventVO::gender).setHeader(getTranslation("Gender")).setAutoWidth(true);
+        categoryEventsGrid.addColumn(CategoryEventVO::eventType).setHeader(getTranslation("Event.Type")).setAutoWidth(true);
+        categoryEventsGrid.addColumn(CategoryEventVO::A).setHeader("A").setAutoWidth(true);
+        categoryEventsGrid.addColumn(CategoryEventVO::B).setHeader("B").setAutoWidth(true);
+        categoryEventsGrid.addColumn(CategoryEventVO::C).setHeader("C").setAutoWidth(true);
+        categoryEventsGrid.addColumn(CategoryEventVO::position).setHeader(getTranslation("Position")).setAutoWidth(true);
 
         var addEvent = new Button(getTranslation("Add.Event"));
         addEvent.setId("add-event");
@@ -113,7 +113,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
             var horizontalLayout = new HorizontalLayout(remove);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
             return horizontalLayout;
-        }).setTextAlign(ColumnTextAlign.END).setHeader(addEvent).setKey("edit-column");
+        }).setTextAlign(ColumnTextAlign.END).setHeader(addEvent).setKey("edit-column").setAutoWidth(true);
 
         add(categoryEventsGrid);
     }

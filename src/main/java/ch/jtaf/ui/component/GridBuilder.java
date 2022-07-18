@@ -67,7 +67,7 @@ public class GridBuilder {
             var horizontalLayout = new HorizontalLayout(delete);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
             return horizontalLayout;
-        }).setTextAlign(ColumnTextAlign.END).setHeader(buttonAdd).setKey("edit-column");
+        }).setTextAlign(ColumnTextAlign.END).setHeader(buttonAdd).setAutoWidth(true).setKey("edit-column");
 
         grid.addItemClickListener(event -> dialog.open(event.getItem(), afterSave));
     }

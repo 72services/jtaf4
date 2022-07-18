@@ -41,8 +41,8 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
 
         grid.setId("series-grid");
 
-        grid.addComponentColumn(LogoUtil::resizeLogo).setHeader(getTranslation("Logo"));
-        grid.addColumn(SeriesRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setKey(SERIES.NAME.getName());
+        grid.addComponentColumn(LogoUtil::resizeLogo).setHeader(getTranslation("Logo")).setAutoWidth(true);
+        grid.addColumn(SeriesRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setAutoWidth(true).setKey(SERIES.NAME.getName());
 
         grid.addColumn(seriesRecord ->
                 dsl
@@ -50,20 +50,20 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
                     .where(CATEGORY_ATHLETE.category().SERIES_ID.eq(seriesRecord.getId()))
                     .fetchOneInto(Integer.class)
             )
-            .setHeader(getTranslation("Number.of.Athletes"));
+            .setHeader(getTranslation("Number.of.Athletes")).setAutoWidth(true);
 
         grid.addComponentColumn(seriesRecord -> {
             var hidden = new Checkbox();
             hidden.setReadOnly(true);
             hidden.setValue(seriesRecord.getHidden());
             return hidden;
-        }).setHeader(getTranslation("Hidden"));
+        }).setHeader(getTranslation("Hidden")).setAutoWidth(true);
         grid.addComponentColumn(seriesRecord -> {
             var locked = new Checkbox();
             locked.setReadOnly(true);
             locked.setValue(seriesRecord.getLocked());
             return locked;
-        }).setHeader(getTranslation("Hidden"));
+        }).setHeader(getTranslation("Hidden")).setAutoWidth(true);
 
         grid.addComponentColumn(seriesRecord -> {
             var delete = new Button(getTranslation("Delete"));
@@ -88,7 +88,7 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
             var horizontalLayout = new HorizontalLayout(delete);
             horizontalLayout.setJustifyContentMode(JustifyContentMode.END);
             return horizontalLayout;
-        }).setTextAlign(ColumnTextAlign.END).setHeader(add).setKey("delete-column");
+        }).setTextAlign(ColumnTextAlign.END).setHeader(add).setAutoWidth(true).setKey("delete-column");
 
         grid.addItemClickListener(event -> UI.getCurrent().navigate(SeriesView.class, "" + event.getItem().getId()));
 
