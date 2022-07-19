@@ -26,11 +26,20 @@ public class RegisterView extends VerticalLayout implements HasDynamicTitle {
         add(formLayout);
 
         var firstName = new TextField(getTranslation("First.Name"));
+        firstName.setAutoselect(true);
+        firstName.setAutofocus(true);
         firstName.setRequired(true);
+
         var lastName = new TextField(getTranslation("Last.Name"));
+        lastName.setAutoselect(true);
         lastName.setRequired(true);
+
         var email = new EmailField(getTranslation("Email"));
+        email.setRequiredIndicatorVisible(true);
+        email.setAutoselect(true);
+
         var password = new PasswordField(getTranslation("Password"));
+        password.setAutoselect(true);;
         password.setRequired(true);
 
         var register = new Button(getTranslation("Register"), e -> {

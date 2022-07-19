@@ -44,6 +44,8 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
     @Override
     public void createForm() {
         var abbreviation = new TextField(getTranslation("Abbreviation"));
+        abbreviation.setAutoselect(true);
+        abbreviation.setAutofocus(true);
         abbreviation.setRequiredIndicatorVisible(true);
 
         binder.forField(abbreviation)
@@ -51,6 +53,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
             .bind(CategoryRecord::getAbbreviation, CategoryRecord::setAbbreviation);
 
         var name = new TextField(getTranslation("Name"));
+        name.setAutoselect(true);
         name.setRequiredIndicatorVisible(true);
 
         binder.forField(name)
@@ -66,6 +69,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
             .bind(CategoryRecord::getGender, CategoryRecord::setGender);
 
         var yearFrom = new TextField(getTranslation("Year.From"));
+        yearFrom.setAutoselect(true);
         yearFrom.setRequiredIndicatorVisible(true);
 
         binder.forField(yearFrom)
@@ -74,6 +78,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
             .bind(CategoryRecord::getYearFrom, CategoryRecord::setYearFrom);
 
         var yearTo = new TextField(getTranslation("Year.To"));
+        yearTo.setAutoselect(true);
         yearTo.setRequiredIndicatorVisible(true);
 
         binder.forField(yearTo)

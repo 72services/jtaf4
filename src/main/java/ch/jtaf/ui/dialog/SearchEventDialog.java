@@ -60,8 +60,9 @@ public class SearchEventDialog extends Dialog {
 
         var filter = new TextField(getTranslation("Filter"));
         filter.setId("event-filter");
+        filter.setAutoselect(true);
+        filter.setAutofocus(true);
         filter.setValueChangeMode(ValueChangeMode.EAGER);
-        filter.focus();
 
         CallbackDataProvider<EventRecord, String> callbackDataProvider = DataProvider.fromFilteringCallbacks(
             query -> dsl

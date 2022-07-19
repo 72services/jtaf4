@@ -91,7 +91,8 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
         var filter = new TextField();
         filter.setId("filter");
-        filter.focus();
+        filter.setAutoselect(true);
+        filter.setAutofocus(true);
         filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
         add(filter);
 

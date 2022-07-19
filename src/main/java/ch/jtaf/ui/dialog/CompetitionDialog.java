@@ -20,6 +20,8 @@ public class CompetitionDialog extends EditDialog<CompetitionRecord> {
     @Override
     public void createForm() {
         var name = new TextField(getTranslation("Name"));
+        name.setAutoselect(true);
+        name.setAutofocus(true);
         name.setRequiredIndicatorVisible(true);
 
         binder.forField(name)
