@@ -25,6 +25,8 @@ public class EventDialog extends EditDialog<EventRecord> {
     @Override
     public void createForm() {
         var abbreviation = new TextField(getTranslation("Abbreviation"));
+        abbreviation.setAutoselect(true);
+        abbreviation.setAutofocus(true);
         abbreviation.setRequiredIndicatorVisible(true);
 
         binder.forField(abbreviation)
@@ -32,6 +34,7 @@ public class EventDialog extends EditDialog<EventRecord> {
             .bind(EventRecord::getAbbreviation, EventRecord::setAbbreviation);
 
         var name = new TextField(getTranslation("Name"));
+        name.setAutoselect(true);
         name.setRequiredIndicatorVisible(true);
 
         binder.forField(name)
@@ -56,6 +59,7 @@ public class EventDialog extends EditDialog<EventRecord> {
             .bind(EventRecord::getEventType, EventRecord::setEventType);
 
         var a = new TextField("A");
+        a.setAutoselect(true);
         a.setRequiredIndicatorVisible(true);
 
         binder.forField(a)
@@ -64,6 +68,7 @@ public class EventDialog extends EditDialog<EventRecord> {
             .bind(EventRecord::getA, EventRecord::setA);
 
         var b = new TextField("B");
+        b.setAutoselect(true);
         b.setRequiredIndicatorVisible(true);
 
         binder.forField(b)
@@ -72,6 +77,7 @@ public class EventDialog extends EditDialog<EventRecord> {
             .bind(EventRecord::getB, EventRecord::setB);
 
         var c = new TextField("C");
+        c.setAutoselect(true);
         c.setRequiredIndicatorVisible(true);
 
         binder.forField(c)

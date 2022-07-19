@@ -60,8 +60,9 @@ public class SearchEventDialog extends Dialog {
 
         var filter = new TextField(getTranslation("Filter"));
         filter.setId("event-filter");
+        filter.setAutoselect(true);
+        filter.setAutofocus(true);
         filter.setValueChangeMode(ValueChangeMode.EAGER);
-        filter.focus();
 
         CallbackDataProvider<EventRecord, String> callbackDataProvider = DataProvider.fromFilteringCallbacks(
             query -> dsl
@@ -100,19 +101,19 @@ public class SearchEventDialog extends Dialog {
         grid.setItems(dataProvider);
         grid.getStyle().set("height", "calc(100% - 300px");
 
-        grid.addColumn(EventRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true).setKey(EVENT.ABBREVIATION.getName());
-        grid.addColumn(EventRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setKey(EVENT.NAME.getName());
-        grid.addColumn(EventRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true).setKey(EVENT.GENDER.getName());
-        grid.addColumn(EventRecord::getEventType).setHeader(getTranslation("Event.Type")).setSortable(true).setKey(EVENT.EVENT_TYPE.getName());
-        grid.addColumn(EventRecord::getA).setHeader("A");
-        grid.addColumn(EventRecord::getA).setHeader("B");
-        grid.addColumn(EventRecord::getA).setHeader("C");
+        grid.addColumn(EventRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true).setAutoWidth(true).setKey(EVENT.ABBREVIATION.getName());
+        grid.addColumn(EventRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setAutoWidth(true).setKey(EVENT.NAME.getName());
+        grid.addColumn(EventRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true).setAutoWidth(true).setKey(EVENT.GENDER.getName());
+        grid.addColumn(EventRecord::getEventType).setHeader(getTranslation("Event.Type")).setSortable(true).setAutoWidth(true).setKey(EVENT.EVENT_TYPE.getName());
+        grid.addColumn(EventRecord::getA).setHeader("A").setAutoWidth(true);
+        grid.addColumn(EventRecord::getA).setHeader("B").setAutoWidth(true);
+        grid.addColumn(EventRecord::getA).setHeader("C").setAutoWidth(true);
 
         grid.addComponentColumn(eventRecord -> new Button(getTranslation("Assign.Event"), e -> {
             onSelect.accept(eventRecord);
             Notification.show(getTranslation("Event.assigned"), 6000, Notification.Position.TOP_END);
             dataProvider.refreshAll();
-        })).setKey("assign-column");
+        })).setAutoWidth(true).setKey("assign-column");
 
         filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
 

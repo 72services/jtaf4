@@ -19,6 +19,8 @@ public class ClubDialog extends EditDialog<ClubRecord> {
     @Override
     public void createForm() {
         var abbreviation = new TextField(getTranslation("Abbreviation"));
+        abbreviation.setAutoselect(true);
+        abbreviation.setAutofocus(true);
         abbreviation.setRequiredIndicatorVisible(true);
 
         binder.forField(abbreviation)
@@ -26,6 +28,7 @@ public class ClubDialog extends EditDialog<ClubRecord> {
             .bind(ClubRecord::getAbbreviation, ClubRecord::setAbbreviation);
 
         var name = new TextField(getTranslation("Name"));
+        name.setAutoselect(true);
         name.setRequiredIndicatorVisible(true);
 
         binder.forField(name)

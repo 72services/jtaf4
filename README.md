@@ -1,5 +1,7 @@
 # JTAF - Track and Field
 
+![CI](https://github.com/72services/jtaf4/actions/workflows/ci.yml/badge.svg)
+
 ## Goals
 
 - Manage track and field competitions in a simple manner

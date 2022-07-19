@@ -233,8 +233,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         competitionsGrid.setId("competitions-grid");
         competitionsGrid.setHeightFull();
 
-        competitionsGrid.addColumn(CompetitionRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setKey(COMPETITION.NAME.getName());
-        competitionsGrid.addColumn(CompetitionRecord::getCompetitionDate).setHeader(getTranslation("Date")).setSortable(true).setKey(COMPETITION.COMPETITION_DATE.getName());
+        competitionsGrid.addColumn(CompetitionRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setAutoWidth(true).setKey(COMPETITION.NAME.getName());
+        competitionsGrid.addColumn(CompetitionRecord::getCompetitionDate).setHeader(getTranslation("Date")).setSortable(true).setAutoWidth(true).setKey(COMPETITION.COMPETITION_DATE.getName());
         competitionsGrid.addColumn(new ComponentRenderer<>(competition -> {
             var sheetsOrderedByAthlete = new Anchor(new StreamResource("sheets_orderby_athlete" + competition.getId() + ".pdf",
                 () -> {
@@ -269,7 +269,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
             numbersOrderedByClub.setTarget(BLANK);
 
             return new HorizontalLayout(sheetsOrderedByAthlete, sheetsOrderedByClub, numbersOrderedByAthlete, numbersOrderedByClub);
-        }));
+        })).setAutoWidth(true);
 
         addActionColumnAndSetSelectionListener(competitionsGrid, dialog, competitionRecord -> refreshAll(), () -> {
             var newRecord = COMPETITION.newRecord();
@@ -286,10 +286,10 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         categoriesGrid.setId("categories-grid");
         categoriesGrid.setHeightFull();
 
-        categoriesGrid.addColumn(CategoryRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true).setKey(CATEGORY.ABBREVIATION.getName());
-        categoriesGrid.addColumn(CategoryRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setKey(CATEGORY.NAME.getName());
-        categoriesGrid.addColumn(CategoryRecord::getYearFrom).setHeader(getTranslation("Year.From")).setSortable(true).setKey(CATEGORY.YEAR_FROM.getName());
-        categoriesGrid.addColumn(CategoryRecord::getYearTo).setHeader(getTranslation("Year.To")).setSortable(true).setKey(CATEGORY.YEAR_TO.getName());
+        categoriesGrid.addColumn(CategoryRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true).setAutoWidth(true).setKey(CATEGORY.ABBREVIATION.getName());
+        categoriesGrid.addColumn(CategoryRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setAutoWidth(true).setKey(CATEGORY.NAME.getName());
+        categoriesGrid.addColumn(CategoryRecord::getYearFrom).setHeader(getTranslation("Year.From")).setSortable(true).setAutoWidth(true).setKey(CATEGORY.YEAR_FROM.getName());
+        categoriesGrid.addColumn(CategoryRecord::getYearTo).setHeader(getTranslation("Year.To")).setSortable(true).setAutoWidth(true).setKey(CATEGORY.YEAR_TO.getName());
         categoriesGrid.addColumn(new ComponentRenderer<>(category -> {
             var sheet = new Anchor(new StreamResource("sheet" + category.getId() + ".pdf",
                 () -> {
@@ -299,7 +299,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
             sheet.setTarget(BLANK);
 
             return new HorizontalLayout(sheet);
-        }));
+        })).setAutoWidth(true);
 
         addActionColumnAndSetSelectionListener(categoriesGrid, dialog, categoryRecord -> refreshAll(), () -> {
             var newRecord = CATEGORY.newRecord();
@@ -313,12 +313,12 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
         athletesGrid.setId("athletes-grid");
         athletesGrid.setHeightFull();
 
-        athletesGrid.addColumn(AthleteRecord::getLastName).setHeader(getTranslation("Last.Name")).setSortable(true).setKey(ATHLETE.LAST_NAME.getName());
-        athletesGrid.addColumn(AthleteRecord::getFirstName).setHeader(getTranslation("First.Name")).setSortable(true).setKey(ATHLETE.FIRST_NAME.getName());
-        athletesGrid.addColumn(AthleteRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true).setKey(ATHLETE.GENDER.getName());
-        athletesGrid.addColumn(AthleteRecord::getYearOfBirth).setHeader(getTranslation("Year")).setSortable(true).setKey(ATHLETE.YEAR_OF_BIRTH.getName());
+        athletesGrid.addColumn(AthleteRecord::getLastName).setHeader(getTranslation("Last.Name")).setSortable(true).setAutoWidth(true).setKey(ATHLETE.LAST_NAME.getName());
+        athletesGrid.addColumn(AthleteRecord::getFirstName).setHeader(getTranslation("First.Name")).setSortable(true).setAutoWidth(true).setKey(ATHLETE.FIRST_NAME.getName());
+        athletesGrid.addColumn(AthleteRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true).setAutoWidth(true).setKey(ATHLETE.GENDER.getName());
+        athletesGrid.addColumn(AthleteRecord::getYearOfBirth).setHeader(getTranslation("Year")).setSortable(true).setAutoWidth(true).setKey(ATHLETE.YEAR_OF_BIRTH.getName());
         athletesGrid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
-            : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club"));
+            : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club")).setAutoWidth(true);
 
         var assign = new Button(getTranslation("Assign.Athlete"));
         assign.setId("assign-athlete");
@@ -342,7 +342,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
             var horizontalLayout = new HorizontalLayout(remove);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
             return horizontalLayout;
-        }).setTextAlign(ColumnTextAlign.END).setHeader(assign).setKey("remove-column");
+        }).setTextAlign(ColumnTextAlign.END).setHeader(assign).setAutoWidth(true).setKey("remove-column");
     }
 
     private void onAthleteSelect(AthleteRecord athleteRecord) {

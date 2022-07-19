@@ -44,6 +44,8 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
     @Override
     public void createForm() {
         var abbreviation = new TextField(getTranslation("Abbreviation"));
+        abbreviation.setAutoselect(true);
+        abbreviation.setAutofocus(true);
         abbreviation.setRequiredIndicatorVisible(true);
 
         binder.forField(abbreviation)
@@ -51,6 +53,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
             .bind(CategoryRecord::getAbbreviation, CategoryRecord::setAbbreviation);
 
         var name = new TextField(getTranslation("Name"));
+        name.setAutoselect(true);
         name.setRequiredIndicatorVisible(true);
 
         binder.forField(name)
@@ -66,6 +69,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
             .bind(CategoryRecord::getGender, CategoryRecord::setGender);
 
         var yearFrom = new TextField(getTranslation("Year.From"));
+        yearFrom.setAutoselect(true);
         yearFrom.setRequiredIndicatorVisible(true);
 
         binder.forField(yearFrom)
@@ -74,6 +78,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
             .bind(CategoryRecord::getYearFrom, CategoryRecord::setYearFrom);
 
         var yearTo = new TextField(getTranslation("Year.To"));
+        yearTo.setAutoselect(true);
         yearTo.setRequiredIndicatorVisible(true);
 
         binder.forField(yearTo)
@@ -85,14 +90,14 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
 
         categoryEventsGrid = new Grid<>();
         categoryEventsGrid.setId("category-events-grid");
-        categoryEventsGrid.addColumn(CategoryEventVO::abbreviation).setHeader(getTranslation("Abbreviation"));
-        categoryEventsGrid.addColumn(CategoryEventVO::name).setHeader(getTranslation("Name"));
-        categoryEventsGrid.addColumn(CategoryEventVO::gender).setHeader(getTranslation("Gender"));
-        categoryEventsGrid.addColumn(CategoryEventVO::eventType).setHeader(getTranslation("Event.Type"));
-        categoryEventsGrid.addColumn(CategoryEventVO::A).setHeader("A");
-        categoryEventsGrid.addColumn(CategoryEventVO::B).setHeader("B");
-        categoryEventsGrid.addColumn(CategoryEventVO::C).setHeader("C");
-        categoryEventsGrid.addColumn(CategoryEventVO::position).setHeader(getTranslation("Position"));
+        categoryEventsGrid.addColumn(CategoryEventVO::abbreviation).setHeader(getTranslation("Abbreviation")).setAutoWidth(true);
+        categoryEventsGrid.addColumn(CategoryEventVO::name).setHeader(getTranslation("Name")).setAutoWidth(true);
+        categoryEventsGrid.addColumn(CategoryEventVO::gender).setHeader(getTranslation("Gender")).setAutoWidth(true);
+        categoryEventsGrid.addColumn(CategoryEventVO::eventType).setHeader(getTranslation("Event.Type")).setAutoWidth(true);
+        categoryEventsGrid.addColumn(CategoryEventVO::A).setHeader("A").setAutoWidth(true);
+        categoryEventsGrid.addColumn(CategoryEventVO::B).setHeader("B").setAutoWidth(true);
+        categoryEventsGrid.addColumn(CategoryEventVO::C).setHeader("C").setAutoWidth(true);
+        categoryEventsGrid.addColumn(CategoryEventVO::position).setHeader(getTranslation("Position")).setAutoWidth(true);
 
         var addEvent = new Button(getTranslation("Add.Event"));
         addEvent.setId("add-event");
@@ -113,7 +118,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
             var horizontalLayout = new HorizontalLayout(remove);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
             return horizontalLayout;
-        }).setTextAlign(ColumnTextAlign.END).setHeader(addEvent).setKey("edit-column");
+        }).setTextAlign(ColumnTextAlign.END).setHeader(addEvent).setKey("edit-column").setAutoWidth(true);
 
         add(categoryEventsGrid);
     }

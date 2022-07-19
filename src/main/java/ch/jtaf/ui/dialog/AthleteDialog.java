@@ -38,6 +38,8 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
     @Override
     public void createForm() {
         var lastName = new TextField(getTranslation("Last.Name"));
+        lastName.setAutoselect(true);
+        lastName.setAutofocus(true);
         lastName.setRequiredIndicatorVisible(true);
         lastName.focus();
 
@@ -46,6 +48,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
             .bind(AthleteRecord::getLastName, AthleteRecord::setLastName);
 
         var firstName = new TextField(getTranslation("First.Name"));
+        firstName.setAutoselect(true);
         firstName.setRequiredIndicatorVisible(true);
 
         binder.forField(firstName)
@@ -61,6 +64,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
             .bind(AthleteRecord::getGender, AthleteRecord::setGender);
 
         var yearOfBirth = new TextField(getTranslation("Year"));
+        yearOfBirth.setAutoselect(true);
         lastName.setRequiredIndicatorVisible(true);
 
         binder.forField(yearOfBirth)
@@ -88,6 +92,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
             .bind(AthleteRecord::getClubId, AthleteRecord::setClubId);
 
         var year = new TextField("Year");
+        year.setAutoselect(true);
         year.setRequiredIndicatorVisible(true);
 
         binder.forField(year)
