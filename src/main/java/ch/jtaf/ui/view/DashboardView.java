@@ -9,6 +9,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -181,6 +182,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 
                     competitionIndex++;
                 }
+                verticalLayout.add(new Hr());
             }
             seriesIndex++;
         }

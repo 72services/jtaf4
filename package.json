@@ -219,7 +219,9 @@
     "construct-style-sheets-polyfill": "$construct-style-sheets-polyfill",
     "lit": "$lit",
     "@polymer/polymer": "$@polymer/polymer",
-    "date-fns": "$date-fns"
+    "date-fns": "$date-fns",
+    "line-awesome": "$line-awesome",
+    "lumo-css-framework": "$lumo-css-framework"
   },
   "vaadin": {
     "dependencies": {

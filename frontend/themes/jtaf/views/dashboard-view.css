@@ -11,13 +11,7 @@
     width: 100%;
     height: 80px;
 
-    border-top-width: 1px;
-    border-top-color: lightgray;
-    border-top-style: solid;
-
-    border-bottom-width: 3px;
-    border-bottom-color: var(--lumo-primary-color);
-    border-bottom-style: solid;
+    border-bottom: 3px solid var(--lumo-primary-color);
 
     overflow: hidden;
 
