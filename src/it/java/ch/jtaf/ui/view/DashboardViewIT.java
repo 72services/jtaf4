@@ -9,16 +9,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DashboardViewIT extends PlaywrightIT {
 
     @Test
-    void title_is_dashboard() {
-        Locator locator = page.locator("#view-title");
-
-        assertThat(locator.innerText()).isEqualTo("Dashboard");
-    }
-
-    @Test
     void series_are_displayed() {
-        Locator locator = page.locator(".series-layout");
+        page.navigate("http://localhost:8484/");
 
-        assertThat(locator.count()).isEqualTo(6);
+        Locator viewTitle = page.locator("#view-title");
+        assertThat(viewTitle.innerText()).isEqualTo("Dashboard");
+
+        Locator seriesLayouts = page.locator(".series-layout");
+        assertThat(seriesLayouts.count()).isEqualTo(6);
     }
 }

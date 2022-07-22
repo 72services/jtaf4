@@ -14,6 +14,7 @@ public class OrganizationsViewIT extends PlaywrightIT {
     @BeforeEach
     void login() {
         page.navigate("http://localhost:8484/organizations");
+
         new LoginPO(page).login(System.getenv("JTAF4_TEST_USERNAME"), System.getenv("JTAF4_TEST_PASSWORD"));
 
         Locator locator = page.locator("#view-title");

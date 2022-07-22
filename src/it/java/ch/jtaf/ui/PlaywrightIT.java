@@ -15,6 +15,7 @@ public class PlaywrightIT {
     private static Playwright playwright;
     private static Browser browser;
     protected Page page;
+    private BrowserContext browserContext;
 
     @BeforeAll
     static void setUpClass() {
@@ -27,20 +28,19 @@ public class PlaywrightIT {
 
     @AfterAll
     static void tearDownClass() {
+        browser.close();
         playwright.close();
     }
 
     @BeforeEach
     void setUp() {
-        Browser.NewContextOptions newContextOptions = new Browser.NewContextOptions();
-        newContextOptions.setViewportSize(1920, 1080);
-        BrowserContext context = browser.newContext(newContextOptions);
-        page = context.newPage();
-        page.navigate("http://localhost:8484/");
+        browserContext = browser.newContext();
+        page = browserContext.newPage();
     }
 
     @AfterEach
     void tearDown() {
-        page.context().close();
+        page.close();
+        browserContext.close();
     }
 }
