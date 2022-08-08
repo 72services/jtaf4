@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 class OrganizationsViewIT extends PlaywrightIT {
 
@@ -23,23 +24,27 @@ class OrganizationsViewIT extends PlaywrightIT {
 
     @Test
     void add_organization() {
-        GridElement organizationsGrid = new GridElement(page.locator("id=organizations-grid").elementHandle());
+        try {
+            GridElement organizationsGrid = new GridElement(page.locator("id=organizations-grid").elementHandle());
 
-        organizationsGrid.waitForCellByTextContent("CIS");
-        organizationsGrid.waitForCellByTextContent("Concours InterSection");
-        organizationsGrid.waitForCellByTextContent("TVE");
-        organizationsGrid.waitForCellByTextContent("Turnverein Erlach");
+            organizationsGrid.waitForCellByTextContent("CIS");
+            organizationsGrid.waitForCellByTextContent("Concours InterSection");
+            organizationsGrid.waitForCellByTextContent("TVE");
+            organizationsGrid.waitForCellByTextContent("Turnverein Erlach");
 
-        page.locator("id=add-button").click();
+            page.locator("id=add-button").click();
 
-        page.locator("id=vaadin-text-field-0").fill("TST");
-        page.locator("id=vaadin-text-field-1").fill("Test");
-        page.locator("id=edit-save").click();
+            page.locator("id=vaadin-text-field-0").fill("TST");
+            page.locator("id=vaadin-text-field-1").fill("Test");
+            page.locator("id=edit-save").click();
 
-        organizationsGrid.waitForCellByTextContent("TST");
-        organizationsGrid.waitForCellByTextContent("Test");
+            organizationsGrid.waitForCellByTextContent("TST");
+            organizationsGrid.waitForCellByTextContent("Test");
 
-        page.locator("id=delete-organization-TST").click();
-        page.locator("id=delete-organization-confirm-dialog-confirm").click();
+            page.locator("id=delete-organization-TST").click();
+            page.locator("id=delete-organization-confirm-dialog-confirm").click();
+        } catch (Exception e) {
+            fail(e.getMessage(), e);
+        }
     }
 }
