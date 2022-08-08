@@ -39,7 +39,7 @@ public class RegisterView extends VerticalLayout implements HasDynamicTitle {
         email.setAutoselect(true);
 
         var password = new PasswordField(getTranslation("Password"));
-        password.setAutoselect(true);;
+        password.setAutoselect(true);
         password.setRequired(true);
 
         var register = new Button(getTranslation("Register"), e -> {

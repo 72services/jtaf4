@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DashboardViewIT extends PlaywrightIT {
+class DashboardViewIT extends PlaywrightIT {
 
     @Test
     void series_are_displayed() {

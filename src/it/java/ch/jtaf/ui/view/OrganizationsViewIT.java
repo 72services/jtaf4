@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class OrganizationsViewIT extends PlaywrightIT {
+class OrganizationsViewIT extends PlaywrightIT {
 
     @BeforeEach
     void login() {

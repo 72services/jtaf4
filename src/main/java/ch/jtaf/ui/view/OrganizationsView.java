@@ -76,7 +76,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
             var delete = new Button(getTranslation("Delete"));
             delete.setId("delete-organization-" + organizationRecord.getOrganizationKey());
             delete.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
-            delete.addClickListener(event -> {
+            delete.addClickListener(event ->
                 new ConfirmDialog(
                     "delete-organization-confirm-dialog",
                     getTranslation("Confirm"),
@@ -94,8 +94,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
                     }
                 }),
                     getTranslation("Cancel"), () -> {
-                }).open();
-            });
+                }).open());
 
             var horizontalLayout = new HorizontalLayout(select, delete);
             horizontalLayout.setJustifyContentMode(JustifyContentMode.END);

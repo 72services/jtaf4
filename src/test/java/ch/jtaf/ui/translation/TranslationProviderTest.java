@@ -24,7 +24,7 @@ class TranslationProviderTest {
         var providedLocales = translationProvider.getProvidedLocales();
 
         assertThat(providedLocales).isNotEmpty();
-        assertThat(providedLocales.size()).isEqualTo(2);
+        assertThat(providedLocales).hasSize(2);
     }
 
     @Test
