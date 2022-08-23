@@ -12,7 +12,7 @@
 
     <groupId>ch.jtaf</groupId>
     <artifactId>jtaf4</artifactId>
-    <version>4.3.31</version>
+    <version>4.3.32</version>
 
     <name>JTAF 4</name>
     <description>JTAF - Track And Field</description>
@@ -331,6 +331,26 @@
                     <wait>500</wait>
                     <maxAttempts>240</maxAttempts>
                 </configuration>
+            </plugin>
+            <!-- ITs in its own directory -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>add-test-source</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/it/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <!-- Gitflow -->
             <plugin>

@@ -26,8 +26,6 @@ import com.vaadin.flow.component.upload.Upload;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,6 +36,7 @@ import java.util.List;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._assert;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 class SeriesViewTest extends KaribuTest {
 
@@ -130,7 +129,7 @@ class SeriesViewTest extends KaribuTest {
 
         // Filter with number
         _get(TextField.class, spec -> spec.withId("event-filter")).setValue("2");
-        assertThat(GridKt._size(eventsGrid)).isEqualTo(0);
+        assertThat(GridKt._size(eventsGrid)).isZero();
 
         // Remove filter
         _get(TextField.class, spec -> spec.withId("event-filter")).setValue("");
@@ -148,7 +147,7 @@ class SeriesViewTest extends KaribuTest {
             .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
             .ifPresent(Button::click);
 
-        ConfirmDialog confirmDialog = _get(ConfirmDialog.class, spec-> spec.withId("remove-event-from-category-confirm-dialog"));
+        ConfirmDialog confirmDialog = _get(ConfirmDialog.class, spec -> spec.withId("remove-event-from-category-confirm-dialog"));
         assertThat(confirmDialog.isOpened()).isTrue();
         _get(Button.class, spec -> spec.withId("remove-event-from-category-confirm-dialog-confirm")).click();
 
@@ -219,12 +218,16 @@ class SeriesViewTest extends KaribuTest {
     }
 
     @Test
-    void logo_upload() throws URISyntaxException, IOException {
-        URL imageUrl = getClass().getClassLoader().getResource("images/logo.png");
-        Path path = Paths.get(imageUrl.toURI());
-        byte[] logoData = Files.readAllBytes(path);
+    void logo_upload() {
+        try {
+            URL imageUrl = getClass().getClassLoader().getResource("images/logo.png");
+            Path path = Paths.get(imageUrl.toURI());
+            byte[] logoData = Files.readAllBytes(path);
 
-        Upload upload = _get(Upload.class, spec -> spec.withId("logo-upload"));
-        UploadKt._upload(upload, "logo.png", logoData);
+            Upload upload = _get(Upload.class, spec -> spec.withId("logo-upload"));
+            UploadKt._upload(upload, "logo.png", logoData);
+        } catch (Exception e) {
+            fail(e.getMessage(), e);
+        }
     }
 }
