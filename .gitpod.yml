@@ -1,0 +1,8 @@
+image: gitpod/workspace-java-17
+
+tasks:
+    -   init: mvn test
+        command: mvn test
+ports:
+    -   port: 8484
+        onOpen: open-browser
