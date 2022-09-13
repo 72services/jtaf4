@@ -340,7 +340,7 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${project.build.directory}/generated-sources/jooq/</source>
+                                <source>${project.build.directory}/generated-sources/jooq</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -353,6 +353,7 @@
                         <configuration>
                             <sources>
                                 <source>src/it/java</source>
+                                <source>${project.build.directory}/generated-sources/jooq</source>
                             </sources>
                         </configuration>
                     </execution>
