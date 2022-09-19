@@ -56,7 +56,7 @@
         <openpdf.version>1.3.28</openpdf.version>
 
         <testcontainers.version>1.17.2</testcontainers.version>
-        <karibu-testing.version>1.3.14</karibu-testing.version>
+        <karibu-testing.version>1.3.20</karibu-testing.version>
         <archunit.version>0.23.1</archunit.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

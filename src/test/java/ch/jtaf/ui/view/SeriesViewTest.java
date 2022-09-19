@@ -87,7 +87,7 @@ class SeriesViewTest extends KaribuTest {
     @Test
     void add_category_and_assign_event() {
         Tabs tabs = _get(Tabs.class);
-        Tab categories = _get(Tab.class, spec -> spec.withText("Categories"));
+        Tab categories = _get(Tab.class, spec -> spec.withCaption("Categories"));
         tabs.setSelectedTab(categories);
 
         // Check content of categories grid
@@ -170,7 +170,7 @@ class SeriesViewTest extends KaribuTest {
     @Test
     void assign_athelete() {
         Tabs tabs = _get(Tabs.class);
-        Tab athletes = _get(Tab.class, spec -> spec.withText("Athletes"));
+        Tab athletes = _get(Tab.class, spec -> spec.withCaption("Athletes"));
         tabs.setSelectedTab(athletes);
 
         // Check content of athletes grid
