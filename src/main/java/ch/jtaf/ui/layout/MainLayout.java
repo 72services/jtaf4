@@ -37,18 +37,22 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import org.springframework.beans.factory.annotation.Value;
+import org.vaadin.googleanalytics.tracking.EnableGoogleAnalytics;
+import org.vaadin.googleanalytics.tracking.TrackerConfiguration;
+import org.vaadin.googleanalytics.tracking.TrackerConfigurator;
 
 import javax.annotation.PostConstruct;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
+@EnableGoogleAnalytics(value = "336871986")
 @Theme("jtaf")
 @PWA(name = "JTAF 4", shortName = "JTAF 4", description = "JTAF - Track and Field")
 @StyleSheet("https://fonts.googleapis.com/css2?family=Poppins")
 @NpmPackage(value = "lumo-css-framework", version = "^4.0.10")
 @NpmPackage(value = "line-awesome", version = "1.3.0")
-public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShellConfigurator {
+public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShellConfigurator, TrackerConfigurator {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -241,6 +245,12 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
         eventsLink.setVisible(visible);
         clubsLink.setVisible(visible);
         athletesLink.setVisible(visible);
+    }
+
+    @Override
+    public void configureTracker(TrackerConfiguration configuration) {
+        configuration.setCreateField("allowAnchor", Boolean.FALSE);
+        configuration.setInitialValue("transport", "beacon");
     }
 
     public record MenuItemInfo(String text, String iconClass, Class<? extends Component> view) {

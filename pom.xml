@@ -12,7 +12,7 @@
 
     <groupId>ch.jtaf</groupId>
     <artifactId>jtaf4</artifactId>
-    <version>4.4.1</version>
+    <version>4.4.2</version>
 
     <name>JTAF 4</name>
     <description>JTAF - Track And Field</description>
@@ -135,6 +135,11 @@
             <groupId>com.github.librepdf</groupId>
             <artifactId>openpdf</artifactId>
             <version>${openpdf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.vaadin.addons</groupId>
+            <artifactId>googleanalyticstracker</artifactId>
+            <version>4.0.2</version>
         </dependency>
 
         <dependency>
