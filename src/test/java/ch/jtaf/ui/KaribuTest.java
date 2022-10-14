@@ -27,6 +27,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 import java.util.Locale;
@@ -70,7 +72,9 @@ public abstract class KaribuTest {
         // also see https://github.com/mvysny/karibu-testing/issues/47 for more details.
         final List<SimpleGrantedAuthority> authorities =
             roles.stream().map(it -> new SimpleGrantedAuthority("ROLE_" + it)).collect(Collectors.toList());
-        UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(user, pass, authorities);
+
+        UserDetails userDetails = new User(user, pass, authorities);
+        UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(userDetails, pass, authorities);
         SecurityContext sc = SecurityContextHolder.getContext();
         sc.setAuthentication(authReq);
 
