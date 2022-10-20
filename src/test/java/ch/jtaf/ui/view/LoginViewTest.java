@@ -19,7 +19,11 @@ class LoginViewTest extends KaribuTest {
     void login_with_unknown_user() {
         UI.getCurrent().navigate(LoginView.class);
 
-        _login(_get(LoginOverlay.class), "not.existing@user.com", "pass");
+        try {
+            _login(_get(LoginOverlay.class), "not.existing@user.com", "pass");
+        } catch (IllegalStateException e) {
+            // From GoogleAnalyticsTracker. Ignore
+        }
 
         assertThat(_get(LoginOverlay.class).getElement().getOuterHTML()).isEqualTo("<vaadin-login-overlay></vaadin-login-overlay>");
     }
