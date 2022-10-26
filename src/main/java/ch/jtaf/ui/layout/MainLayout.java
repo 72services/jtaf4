@@ -36,12 +36,12 @@ import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.vaadin.googleanalytics.tracking.EnableGoogleAnalytics;
 import org.vaadin.googleanalytics.tracking.TrackerConfiguration;
 import org.vaadin.googleanalytics.tracking.TrackerConfigurator;
 
-import javax.annotation.PostConstruct;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;

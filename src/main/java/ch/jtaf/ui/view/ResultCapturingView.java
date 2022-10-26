@@ -16,6 +16,7 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.RolesAllowed;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -23,7 +24,6 @@ import org.jooq.Record4;
 import org.jooq.impl.DSL;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import javax.annotation.security.RolesAllowed;
 import java.io.Serial;
 
 import static ch.jtaf.db.tables.Athlete.ATHLETE;

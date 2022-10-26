@@ -18,11 +18,11 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.RolesAllowed;
 import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import javax.annotation.security.RolesAllowed;
 import java.io.Serial;
 
 import static ch.jtaf.db.tables.Organization.ORGANIZATION;

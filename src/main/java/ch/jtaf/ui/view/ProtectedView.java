@@ -7,9 +7,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.HasDynamicTitle;
+import jakarta.annotation.security.RolesAllowed;
 import org.jooq.DSLContext;
 
-import javax.annotation.security.RolesAllowed;
 import java.io.Serial;
 
 @RolesAllowed({Role.USER, Role.ADMIN})
