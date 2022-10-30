@@ -22,6 +22,8 @@ public class ArchitectureTest {
     @Test
     public void check_layered_architecture() {
         layeredArchitecture()
+            .consideringAllDependencies()
+
             .layer(UI).definedBy("..ui..")
             .layer(SERVICE).definedBy("..service..")
             .layer(SECURITY).definedBy("..security..")
