@@ -26,11 +26,18 @@ jobs:
                     restore-keys: |
                         ${{ runner.os }}-maven-
 
-            -   name: Production Build
-                run: mvn -B package -Pproduction
+            -   name: Get Version
+                shell: bash -l {0}
+                run: echo PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout) >> $GITHUB_ENV
 
-            -   name: Release
-                uses: softprops/action-gh-release@v1
+            -   name: Maven Build Docker Image
+                run: mvn -B spring-boot:build-image -Pproduction -Dspring-boot.build-image.imageName=72services/jtaf4:${{ PROJECT_VERSION }}
+
+            -   name: Log in to Docker Hub
+                uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
                 with:
-                    generate_release_notes: true
-                    files: target/jtaf4*.jar
+                    username: ${{ secrets.DOCKER_USERNAME }}
+                    password: ${{ secrets.DOCKER_PASSWORD }}
+
+            -   name: Docker Push
+                run: docker push 72services/jtaf4:${{ PROJECT_VERSION }}
