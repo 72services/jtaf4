@@ -40,14 +40,14 @@ jobs:
                     restore-keys: |
                         ${{ runner.os }}-maven-
 
-            -   name: Maven Build and Sonar Checks
+            -   name: Maven Build and Sonar Checks and Create Docker Image
                 run: mvn -B verify sonar:sonar -Pcoverage -Dsonar.projectKey=72services_jtaf4
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
             -   name: Maven Build Docker Image
-                run: mvn -B spring-boot:build-image -Dspring-boot.build-image.imageName=72services/jtaf4:latest
+                run: mvn -B spring-boot:build-image -Pproduction -DskipTests -Dspring-boot.build-image.imageName=72services/jtaf4:latest
 
             -   name: Extract metadata (tags, labels) for Docker
                 id: meta
