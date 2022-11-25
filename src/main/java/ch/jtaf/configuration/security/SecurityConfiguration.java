@@ -3,14 +3,16 @@ package ch.jtaf.configuration.security;
 import ch.jtaf.ui.view.LoginView;
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
+import org.springframework.boot.actuate.health.HealthEndpoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.JwsAlgorithms;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
@@ -34,19 +36,14 @@ public class SecurityConfiguration extends VaadinWebSecurity {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests().requestMatchers(new AntPathRequestMatcher("/images/*.png")).permitAll();
+        http.authorizeRequests().requestMatchers(EndpointRequest.to(HealthEndpoint.class)).permitAll();
+
         super.configure(http);
 
         setLoginView(http, LoginView.class, LOGOUT_URL);
 
         setStatelessAuthentication(http, new SecretKeySpec(Base64.getDecoder().decode(authSecret), JwsAlgorithms.HS256),
             "ch.jtaf", 3600);
-    }
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        super.configure(web);
-
-        web.ignoring().antMatchers("/icons/*.png");
-        web.ignoring().antMatchers("/actuator/health/*");
     }
 }
