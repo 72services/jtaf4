@@ -9,6 +9,7 @@
     "@polymer/polymer": "3.5.1"
   },
   "devDependencies": {
+    "strip-css-comments": "5.0.0",
     "workbox-build": "6.5.0",
     "glob": "7.2.3",
     "@rollup/plugin-replace": "3.1.0",
@@ -35,6 +36,7 @@
       "@polymer/polymer": "3.5.1"
     },
     "devDependencies": {
+      "strip-css-comments": "5.0.0",
       "workbox-build": "6.5.0",
       "glob": "7.2.3",
       "@rollup/plugin-replace": "3.1.0",
