@@ -25,3 +25,4 @@ error-screenshots/
 
 /src/test/resources/secrets/
 /pom.xml.versionsBackup
+/vite.generated.ts
