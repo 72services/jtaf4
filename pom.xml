@@ -49,9 +49,9 @@
     </contributors>
 
     <properties>
-        <java.version>17</java.version>
+        <java.version>19</java.version>
 
-        <vaadin.version>23.3.0</vaadin.version>
+        <vaadin.version>23.3.1</vaadin.version>
         <jooq.version>3.17.5</jooq.version>
         <openpdf.version>1.3.30</openpdf.version>
 
