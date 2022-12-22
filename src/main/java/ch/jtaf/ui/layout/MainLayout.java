@@ -222,7 +222,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
             register.setVisible(false);
             login.setVisible(false);
 
-            logout.setText("Logout (%s)".formatted(SecurityContext.getUserEmail()));
+            logout.setText("Logout (%s)".formatted(SecurityContext.getUsername()));
             logout.setVisible(true);
 
             var organization = organizationProvider.getOrganization();
