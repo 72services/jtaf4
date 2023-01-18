@@ -58,7 +58,7 @@ public class OrganizationProvider {
                         .join(ORGANIZATION_USER).on(ORGANIZATION_USER.ORGANIZATION_ID.eq(ORGANIZATION.ID))
                         .join(SECURITY_USER).on(SECURITY_USER.ID.eq(ORGANIZATION_USER.USER_ID))
                         .where(ORGANIZATION.ID.eq(Long.parseLong(s)))
-                        .and(SECURITY_USER.EMAIL.eq(SecurityContext.getUserEmail()))
+                        .and(SECURITY_USER.EMAIL.eq(SecurityContext.getUsername()))
                         .fetchOneInto(OrganizationRecord.class));
             }
         }

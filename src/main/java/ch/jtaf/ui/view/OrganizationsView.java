@@ -52,7 +52,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
         add.setId("add-button");
         add.addClickListener(event -> {
             var organizationRecord = ORGANIZATION.newRecord();
-            organizationRecord.setOwner(SecurityContext.getUserEmail());
+            organizationRecord.setOwner(SecurityContext.getUsername());
             dialog.open(organizationRecord, this::loadData);
         });
 
@@ -112,7 +112,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
         if (organizationRecord != null) {
             transactionTemplate.executeWithoutResult(transactionStatus ->
                 dsl.selectFrom(SECURITY_USER)
-                    .where(SECURITY_USER.EMAIL.eq(SecurityContext.getUserEmail()))
+                    .where(SECURITY_USER.EMAIL.eq(SecurityContext.getUsername()))
                     .fetchOptional()
                     .ifPresent(user -> {
                         var organizationUser = new OrganizationUserRecord();
@@ -126,7 +126,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
         var organizations = dsl
             .select(ORGANIZATION_USER.organization().fields())
             .from(ORGANIZATION_USER)
-            .where(ORGANIZATION_USER.securityUser().EMAIL.eq(SecurityContext.getUserEmail()))
+            .where(ORGANIZATION_USER.securityUser().EMAIL.eq(SecurityContext.getUsername()))
             .fetch().into(ORGANIZATION);
 
         grid.setItems(organizations);
