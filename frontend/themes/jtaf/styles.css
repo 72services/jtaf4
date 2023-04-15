@@ -1,7 +1,5 @@
 @import url('./main-layout.css');
 @import url('./views/dashboard-view.css');
-@import url('lumo-css-framework/all-classes.css');
-@import url('line-awesome/dist/line-awesome/css/line-awesome.min.css');
 
 html {
     --lumo-border-radius: calc(var(--lumo-size-m) / 2);

@@ -15,10 +15,10 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.VaadinServletRequest;
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.servlet.http.Cookie;
 import java.util.List;
 
 import static com.github.mvysny.kaributesting.v10.LocatorJ._assert;
