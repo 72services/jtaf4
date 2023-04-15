@@ -36,7 +36,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private static final String BUTTON_DIV = "button-div";
+    private static final String NAME_MIN_WIDTH = "350px";
 
     private final Anchor downloadWidget;
 
@@ -58,7 +58,6 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
         for (var series : seriesRecords) {
             HorizontalLayout seriesLayout = new HorizontalLayout();
             seriesLayout.getClassNames().add("series-layout");
-
             verticalLayout.add(seriesLayout);
 
             var logo = resizeLogo(series);
@@ -67,7 +66,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
             seriesLayout.add(divLogo);
 
             var pSeriesName = new Paragraph(series.getName());
-            pSeriesName.setWidth("400px");
+            pSeriesName.setMinWidth("270px");
             seriesLayout.add(pSeriesName);
 
             var buttonLayout = new HorizontalLayout();
@@ -86,7 +85,6 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                 download(streamResource);
             });
             var seriesRankingDiv = new Div(seriesRanking);
-            seriesRankingDiv.getClassNames().add(BUTTON_DIV);
             buttonLayout.add(seriesRankingDiv);
 
             var clubRanking = new Button(getTranslation("Club.Ranking"), new Icon(VaadinIcon.FILE));
@@ -101,7 +99,6 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                 download(streamResource);
             });
             var clubRankingDiv = new Div(clubRanking);
-            clubRankingDiv.getClassNames().add(BUTTON_DIV);
             buttonLayout.add(clubRankingDiv);
 
             int competitionIndex = 1;
@@ -119,7 +116,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                 competitionLayout.add(fakeLogo);
 
                 var pCompetition = new Paragraph(competition.getName() + " " + competition.getCompetitionDate());
-                pCompetition.setWidth("400px");
+                pCompetition.setMinWidth(NAME_MIN_WIDTH);
                 competitionLayout.add(pCompetition);
 
                 var links = new HorizontalLayout();
@@ -138,7 +135,6 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                     download(streamResource);
                 });
                 var competitionRankingDiv = new Div(competitionRanking);
-                competitionRankingDiv.getClassNames().add(BUTTON_DIV);
                 links.add(competitionRankingDiv);
 
                 if (SecurityContext.isUserLoggedIn()) {
@@ -154,7 +150,6 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                         download(streamResource);
                     });
                     var diplomaDiv = new Div(diploma);
-                    diplomaDiv.getClassNames().add(BUTTON_DIV);
                     links.add(diplomaDiv);
 
                     var eventRanking = new Button(getTranslation("Event.Ranking"), new Icon(VaadinIcon.FILE));
@@ -169,7 +164,6 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                         download(streamResource);
                     });
                     var eventRankingDiv = new Div(eventRanking);
-                    eventRankingDiv.getClassNames().add(BUTTON_DIV);
                     links.add(eventRankingDiv);
 
                     var enterResults = new Button(getTranslation("Enter.Results"), new Icon(VaadinIcon.KEYBOARD));
@@ -177,13 +171,15 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                     enterResults.addThemeVariants(ButtonVariant.LUMO_ERROR);
                     enterResults.addClickListener(event -> UI.getCurrent().navigate(ResultCapturingView.class, competition.getId().toString()));
                     var enterResultsDiv = new Div(enterResults);
-                    enterResultsDiv.getClassNames().add(BUTTON_DIV);
                     links.add(enterResultsDiv);
 
                     competitionIndex++;
                 }
-                verticalLayout.add(new Hr());
             }
+            Hr hr = new Hr();
+            hr.setClassName("dashboard-separator");
+            verticalLayout.add(hr);
+
             seriesIndex++;
         }
     }
