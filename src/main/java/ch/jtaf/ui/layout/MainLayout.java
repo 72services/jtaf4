@@ -2,13 +2,7 @@ package ch.jtaf.ui.layout;
 
 import ch.jtaf.configuration.security.OrganizationProvider;
 import ch.jtaf.configuration.security.SecurityContext;
-import ch.jtaf.ui.view.AthletesView;
-import ch.jtaf.ui.view.ClubsView;
-import ch.jtaf.ui.view.DashboardView;
-import ch.jtaf.ui.view.EventsView;
-import ch.jtaf.ui.view.OrganizationsView;
-import ch.jtaf.ui.view.RegisterView;
-import ch.jtaf.ui.view.SeriesListView;
+import ch.jtaf.ui.view.*;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.UI;
@@ -16,17 +10,8 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.dependency.StyleSheet;
-import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Footer;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.Header;
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Nav;
-import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.page.AppShellConfigurator;
@@ -36,23 +21,18 @@ import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.lumo.LumoUtility;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
-import org.vaadin.googleanalytics.tracking.EnableGoogleAnalytics;
-import org.vaadin.googleanalytics.tracking.TrackerConfiguration;
-import org.vaadin.googleanalytics.tracking.TrackerConfigurator;
 
-import javax.annotation.PostConstruct;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
-@EnableGoogleAnalytics(value = "336871986")
 @Theme("jtaf")
 @PWA(name = "JTAF 4", shortName = "JTAF 4", description = "JTAF - Track and Field")
 @StyleSheet("https://fonts.googleapis.com/css2?family=Poppins")
-@NpmPackage(value = "lumo-css-framework", version = "^4.0.10")
-@NpmPackage(value = "line-awesome", version = "1.3.0")
-public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShellConfigurator, TrackerConfigurator {
+public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShellConfigurator {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -79,7 +59,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
         this.applicationVersion = applicationVersion;
 
         setPrimarySection(Section.DRAWER);
-        addToNavbar(true, createHeaderContent());
+        addToNavbar(false, createHeaderContent());
         addToDrawer(createDrawerContent());
     }
 
@@ -91,7 +71,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
 
         viewTitle = new H1();
         viewTitle.setId("view-title");
-        viewTitle.addClassNames("m-0", "text-l");
+        viewTitle.addClassNames(LumoUtility.Margin.NONE, LumoUtility.FontSize.LARGE);
         viewTitle.setWidth("300px");
 
         var info = new HorizontalLayout();
@@ -245,12 +225,6 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
         eventsLink.setVisible(visible);
         clubsLink.setVisible(visible);
         athletesLink.setVisible(visible);
-    }
-
-    @Override
-    public void configureTracker(TrackerConfiguration configuration) {
-        configuration.setCreateField("allowAnchor", Boolean.FALSE);
-        configuration.setInitialValue("transport", "beacon");
     }
 
     public record MenuItemInfo(String text, String iconClass, Class<? extends Component> view) {

@@ -1,17 +1,18 @@
 package ch.jtaf.configuration.security;
 
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinResponse;
 import com.vaadin.flow.server.VaadinServletRequest;
+import com.vaadin.flow.spring.security.AuthenticationContext;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+import static ch.jtaf.context.ApplicationContextHolder.getBean;
 
 /**
  * Takes care of all such static operations that have to do with security and
@@ -33,6 +34,8 @@ public final class SecurityContext {
         var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails userDetails) {
             return userDetails.getUsername();
+        } else if (principal instanceof Jwt jwt) {
+            return jwt.getSubject();
         } else {
             // Anonymous or no authentication.
             return "";
@@ -55,13 +58,7 @@ public final class SecurityContext {
     public static void logout() {
         var request = VaadinServletRequest.getCurrent().getHttpServletRequest();
 
-        UI.getCurrent().getPage().setLocation(SecurityConfiguration.LOGOUT_URL);
-        try {
-            var logoutHandler = new SecurityContextLogoutHandler();
-            logoutHandler.logout(request, null, null);
-        } catch (IllegalStateException e) {
-            // Ignored for testing
-        }
+        getBean(AuthenticationContext.class).logout();
 
         var cookieName = "remember-me";
         var cookie = new Cookie(cookieName, null);
