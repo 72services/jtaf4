@@ -1,21 +1,18 @@
 package ch.jtaf.ui.view;
 
 import ch.jtaf.ui.KaribuTest;
+import com.github.mvysny.kaributesting.v10.NotificationsKt;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
-import static org.assertj.core.api.Assertions.assertThat;
 
 class RegisterViewTest extends KaribuTest {
 
-    @Disabled("Breaks with Vaadin 24. Needs more investigation")
     @Test
     void register() {
         UI.getCurrent().navigate(RegisterView.class);
@@ -26,11 +23,6 @@ class RegisterViewTest extends KaribuTest {
         _get(PasswordField.class, spec -> spec.withCaption("Password")).setValue("pass");
         _get(Button.class, spec -> spec.withCaption("Register")).click();
 
-        assertThat(_get(Notification.class).getElement().getOuterHTML()).isEqualTo("""
-            <vaadin-notification suppress-template-warning>
-             <template>
-              Thanks for registering. An email was sent to your address. Please check your inbox.
-             </template>
-            </vaadin-notification>""");
+        NotificationsKt.expectNotifications("Thanks for registering. An email was sent to your address. Please check your inbox.");
     }
 }
