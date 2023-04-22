@@ -99,7 +99,7 @@ public class SearchEventDialog extends Dialog {
         var grid = new Grid<EventRecord>();
         grid.setId("events-grid");
         grid.setItems(dataProvider);
-        grid.getStyle().set("height", "calc(100% - 300px");
+        grid.setHeight("calc(100% - 60px");
 
         grid.addColumn(EventRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true).setAutoWidth(true).setKey(EVENT.ABBREVIATION.getName());
         grid.addColumn(EventRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setAutoWidth(true).setKey(EVENT.NAME.getName());
