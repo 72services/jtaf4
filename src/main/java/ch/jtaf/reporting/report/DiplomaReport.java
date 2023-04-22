@@ -1,11 +1,7 @@
 package ch.jtaf.reporting.report;
 
 import ch.jtaf.reporting.data.CompetitionRankingData;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.FontFactory;
-import com.lowagie.text.Image;
-import com.lowagie.text.Phrase;
+import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
@@ -89,7 +85,7 @@ public class DiplomaReport extends AbstractReport {
         addCell(table, rank + ".", athleteFontSize);
         addCell(table, athlete.lastName(), athleteFontSize);
         addCell(table, athlete.firstName(), athleteFontSize);
-        addCell(table, "" + athlete.yearOfBirth(), athleteFontSize);
+        addCell(table, String.valueOf(athlete.yearOfBirth()), athleteFontSize);
         addCell(table, category.abbreviation(), athleteFontSize);
 
         document.add(table);

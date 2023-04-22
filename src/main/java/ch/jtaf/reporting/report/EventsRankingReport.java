@@ -78,10 +78,10 @@ public class EventsRankingReport extends RankingReport {
         addCell(table, position + ".");
         addCell(table, result.lastName());
         addCell(table, result.firstName());
-        addCell(table, result.yearOfBirth() + "");
+        addCell(table, String.valueOf(result.yearOfBirth()));
         addCell(table, result.category());
         addCell(table, result.club() != null ? result.club() : "");
-        addCellAlignRight(table, "" + result.result());
+        addCellAlignRight(table, result.result() != null ? result.result() : "");
     }
 
 }

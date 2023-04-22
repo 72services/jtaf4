@@ -17,11 +17,8 @@ import static ch.jtaf.db.tables.Event.EVENT;
 import static ch.jtaf.db.tables.Result.RESULT;
 import static ch.jtaf.db.tables.Series.SERIES;
 import static org.jooq.Records.mapping;
-import static org.jooq.impl.DSL.multiset;
-import static org.jooq.impl.DSL.select;
-import static org.jooq.impl.DSL.selectDistinct;
+import static org.jooq.impl.DSL.*;
 
-@SuppressWarnings("ClassCanBeRecord")
 @Service
 public class CompetitionRankingService {
 
@@ -32,15 +29,15 @@ public class CompetitionRankingService {
     }
 
     public byte[] getCompetitionRankingAsPdf(Long competitionId) {
-        return new CompetitionRankingReport(getCompetitionRanking(competitionId), new Locale("de", "CH")).create();
+        return new CompetitionRankingReport(getCompetitionRanking(competitionId), Locale.of("de", "CH")).create();
     }
 
     public byte[] getDiplomasAsPdf(Long competitionId) {
-        return new DiplomaReport(getCompetitionRanking(competitionId), getLogo(competitionId), new Locale("de", "CH")).create();
+        return new DiplomaReport(getCompetitionRanking(competitionId), getLogo(competitionId), Locale.of("de", "CH")).create();
     }
 
     public byte[] getEventRankingAsPdf(Long competitionId) {
-        return new EventsRankingReport(getEventsRanking(competitionId), new Locale("de", "CH")).create();
+        return new EventsRankingReport(getEventsRanking(competitionId), Locale.of("de", "CH")).create();
     }
 
     public CompetitionRankingData getCompetitionRanking(Long competitionId) {

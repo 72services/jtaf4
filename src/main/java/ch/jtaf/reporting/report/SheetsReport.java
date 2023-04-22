@@ -3,11 +3,7 @@ package ch.jtaf.reporting.report;
 import ch.jtaf.model.EventType;
 import ch.jtaf.reporting.data.NumbersAndSheetsAthlete;
 import ch.jtaf.reporting.data.NumbersAndSheetsCompetition;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.FontFactory;
-import com.lowagie.text.Image;
-import com.lowagie.text.Phrase;
+import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
@@ -118,7 +114,7 @@ public class SheetsReport extends AbstractReport {
         table.setSpacingBefore(cmToPixel(1f));
 
         if (athlete.id() != null) {
-            addInfoCell(table, "" + number);
+            addInfoCell(table, String.valueOf(number));
             addCell(table, athlete.id().toString());
         } else {
             addCell(table, " ");
@@ -137,7 +133,7 @@ public class SheetsReport extends AbstractReport {
         if (athlete.yearOfBirth() == null) {
             addInfoCellWithBorder(table, messages.getString("Year"));
         } else {
-            addInfoCell(table, athlete.yearOfBirth() + "");
+            addInfoCell(table, String.valueOf(athlete.yearOfBirth()));
         }
         if (athlete.club() == null) {
             if (athlete.id() == null) {

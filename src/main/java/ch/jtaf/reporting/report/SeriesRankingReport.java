@@ -92,9 +92,9 @@ public class SeriesRankingReport extends RankingReport {
         addCell(table, rank + ".");
         addCell(table, athlete.lastName());
         addCell(table, athlete.firstName());
-        addCell(table, athlete.yearOfBirth() + "");
+        addCell(table, String.valueOf(athlete.yearOfBirth()));
         addCell(table, athlete.club() != null ? athlete.club() : "");
-        addCellAlignRight(table, athlete.totalPoints() + "");
+        addCellAlignRight(table, String.valueOf(athlete.totalPoints()));
 
         var sb = new StringBuilder();
         for (var result : athlete.results()) {

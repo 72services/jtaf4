@@ -108,9 +108,9 @@ public class CompetitionRankingReport extends RankingReport {
         }
         addCell(table, athlete.lastName());
         addCell(table, athlete.firstName());
-        addCell(table, athlete.yearOfBirth() + "");
+        addCell(table, String.valueOf(athlete.yearOfBirth()));
         addCell(table, athlete.club());
-        addCellAlignRight(table, athlete.totalPoints() + "");
+        addCellAlignRight(table, String.valueOf(athlete.totalPoints()));
 
         if (athlete.results() != null) {
             var sb = new StringBuilder();

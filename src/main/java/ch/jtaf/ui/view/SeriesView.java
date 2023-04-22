@@ -1,11 +1,7 @@
 package ch.jtaf.ui.view;
 
 import ch.jtaf.configuration.security.OrganizationProvider;
-import ch.jtaf.db.tables.records.AthleteRecord;
-import ch.jtaf.db.tables.records.CategoryRecord;
-import ch.jtaf.db.tables.records.ClubRecord;
-import ch.jtaf.db.tables.records.CompetitionRecord;
-import ch.jtaf.db.tables.records.SeriesRecord;
+import ch.jtaf.db.tables.records.*;
 import ch.jtaf.service.NumberAndSheetsService;
 import ch.jtaf.ui.dialog.CategoryDialog;
 import ch.jtaf.ui.dialog.CompetitionDialog;
@@ -58,7 +54,7 @@ import static ch.jtaf.db.tables.Series.SERIES;
 import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
 
 @Route(layout = MainLayout.class)
-public class SeriesView extends ProtectedView implements HasUrlParameter<String> {
+public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -208,14 +204,13 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<String>
     }
 
     @Override
-    public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
-        if (parameter == null) {
+    public void setParameter(BeforeEvent event, @OptionalParameter Long seriesId) {
+        if (seriesId == null) {
             organizationRecord = organizationProvider.getOrganization();
 
             seriesRecord = SERIES.newRecord();
             seriesRecord.setOrganizationId(organizationRecord.getId());
         } else {
-            long seriesId = Long.parseLong(parameter);
             seriesRecord = dsl.selectFrom(SERIES).where(SERIES.ID.eq(seriesId)).fetchOne();
         }
         binder.setBean(seriesRecord);

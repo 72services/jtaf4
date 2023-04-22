@@ -15,12 +15,8 @@ import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Result.RESULT;
 import static ch.jtaf.db.tables.Series.SERIES;
 import static org.jooq.Records.mapping;
-import static org.jooq.impl.DSL.count;
-import static org.jooq.impl.DSL.multiset;
-import static org.jooq.impl.DSL.select;
-import static org.jooq.impl.DSL.sum;
+import static org.jooq.impl.DSL.*;
 
-@SuppressWarnings("ClassCanBeRecord")
 @Service
 public class SeriesRankingService {
 
@@ -31,7 +27,7 @@ public class SeriesRankingService {
     }
 
     public byte[] getSeriesRankingAsPdf(Long seriesId) {
-        return new SeriesRankingReport(getSeriesRanking(seriesId), new Locale("de", "CH")).create();
+        return new SeriesRankingReport(getSeriesRanking(seriesId), Locale.of("de", "CH")).create();
     }
 
     public SeriesRankingData getSeriesRanking(Long seriesId) {
@@ -79,7 +75,7 @@ public class SeriesRankingService {
     }
 
     public byte[] getClubRankingAsPdf(Long seriesId) {
-        return new ClubRankingReport(getClubRanking(seriesId), new Locale("de", "CH")).create();
+        return new ClubRankingReport(getClubRanking(seriesId), Locale.of("de", "CH")).create();
     }
 
     public ClubRankingData getClubRanking(Long seriesId) {
