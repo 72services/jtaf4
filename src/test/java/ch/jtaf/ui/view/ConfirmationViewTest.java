@@ -26,7 +26,7 @@ class ConfirmationViewTest extends KaribuTest {
 
         UI.getCurrent().navigate("confirm", new QueryParameters(Map.of("cf", List.of(user.getConfirmationId()))));
 
-        _assert(H1.class, 1, spec -> spec.withText("The confirmation was successful you can now login."));
+        _assert(H1.class, 1, spec -> spec.withText("The confirmation was successful you can now log in."));
     }
 
     @Test
