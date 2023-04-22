@@ -22,6 +22,7 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import com.vaadin.flow.theme.lumo.LumoUtility.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -94,7 +95,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
         info.add(about, version, register, login, logout);
 
         var header = new Header(toggle, viewTitle, info);
-        header.addClassNames("bg-base", "border-b", "border-contrast-10", "box-border", "flex", "h-xl", "items-center", "w-full");
+        header.addClassNames(Background.BASE, Border.BOTTOM, BorderColor.CONTRAST_10, BoxSizing.BORDER,
+            Display.FLEX, Height.XLARGE, AlignItems.CENTER, Width.FULL);
         return header;
     }
 
@@ -102,17 +104,18 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
         var logo = new Image("icons/logo.png", "JTAF");
 
         var section = new com.vaadin.flow.component.html.Section(logo, createNavigation(), createFooter());
-        section.addClassNames("flex", "flex-col", "items-stretch", "max-h-full", "min-h-full");
+        section.addClassNames(Display.FLEX, FlexDirection.COLUMN, AlignItems.STRETCH, MaxHeight.FULL, MinHeight.FULL);
         return section;
     }
 
     private Nav createNavigation() {
         var nav = new Nav();
-        nav.addClassNames("border-b", "border-contrast-10", "flex-grow", "overflow-auto");
+        nav.addClassNames(Border.BOTTOM, BorderColor.CONTRAST_10, Flex.GROW, Overflow.AUTO);
         nav.getElement().setAttribute("aria-labelledby", "views");
 
         var views = new H3("Views");
-        views.addClassNames("flex", "h-m", "items-center", "mx-m", "my-0", "text-s", "text-tertiary");
+        views.addClassNames(Display.FLEX, Height.MEDIUM, AlignItems.CENTER, Margin.Horizontal.MEDIUM, Margin.Vertical.NONE,
+            FontSize.SMALL, TextColor.TERTIARY);
         views.setId("views");
 
         for (var link : createLinks()) {
@@ -147,17 +150,17 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
 
     private static RouterLink createLink(MenuItemInfo menuItemInfo) {
         var link = new RouterLink();
-        link.addClassNames("flex", "mx-s", "p-s", "relative", "text-secondary");
+        link.addClassNames(Display.FLEX, Margin.Horizontal.SMALL, Padding.SMALL, Position.RELATIVE, TextColor.SECONDARY);
         link.setRoute(menuItemInfo.view());
 
         var icon = new Span();
-        icon.addClassNames("me-s", "text-l");
+        icon.addClassNames(Margin.End.SMALL, FontSize.LARGE);
         if (!menuItemInfo.iconClass().isEmpty()) {
             icon.addClassNames(menuItemInfo.iconClass());
         }
 
         var text = new Span(menuItemInfo.text());
-        text.addClassNames("font-medium", "text-s");
+        text.addClassNames(FontWeight.MEDIUM, FontSize.SMALL);
 
         link.add(icon, text);
         return link;
@@ -165,7 +168,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
 
     private Footer createFooter() {
         var layout = new Footer();
-        layout.addClassNames("flex", "my-s", "px-m", "py-xs");
+        layout.addClassNames(Display.FLEX, Margin.Vertical.SMALL, Padding.Horizontal.MEDIUM, Padding.Vertical.XSMALL);
 
         var htmlByLink = new Html("<p style='color: var(--lumo-primary-color)'>Free and<br>Open Source<br>by 72© Services LLC</p>");
 

@@ -12,7 +12,7 @@
 
     <groupId>ch.jtaf</groupId>
     <artifactId>jtaf4</artifactId>
-    <version>4.5.1</version>
+    <version>4.5.2</version>
 
     <name>JTAF 4</name>
     <description>JTAF - Track And Field</description>
@@ -210,7 +210,7 @@
                         </goals>
                         <configuration>
                             <source>
-                                db = new org.testcontainers.containers.PostgreSQLContainer("postgres:12.7")
+                                db = new org.testcontainers.containers.PostgreSQLContainer("postgres:15.2")
                                     .withUsername("${db.username}")
                                     .withDatabaseName("jtaf4")
                                     .withPassword("${db.password}")

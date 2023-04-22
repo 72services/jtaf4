@@ -89,6 +89,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
         formLayout.add(abbreviation, name, gender, yearFrom, yearTo);
 
         categoryEventsGrid = new Grid<>();
+        categoryEventsGrid.setHeight("380px");
         categoryEventsGrid.setId("category-events-grid");
         categoryEventsGrid.addColumn(CategoryEventVO::abbreviation).setHeader(getTranslation("Abbreviation")).setAutoWidth(true);
         categoryEventsGrid.addColumn(CategoryEventVO::name).setHeader(getTranslation("Name")).setAutoWidth(true);
