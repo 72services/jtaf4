@@ -9,9 +9,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 class UserServiceTest {
@@ -42,8 +40,8 @@ class UserServiceTest {
 
     @Test
     void user_exist() {
-        assertThatExceptionOfType(UserAlreadyExistException.class).isThrownBy(() -> {
-            userService.createUser("Simon", "Martinelli", "simon@martinelli.ch", "pass", null);
-        });
+        assertThatExceptionOfType(UserAlreadyExistException.class)
+            .isThrownBy(() ->
+                userService.createUser("Simon", "Martinelli", "simon@martinelli.ch", "pass", null));
     }
 }

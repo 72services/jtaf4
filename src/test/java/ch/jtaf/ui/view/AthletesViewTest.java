@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
+import static com.github.mvysny.kaributesting.v10.GridKt._sort;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._assert;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -84,10 +85,10 @@ class AthletesViewTest extends KaribuTest {
         assertThat(GridKt._size(athletesGrid)).isEqualTo(140);
 
         // Sort grid
-        GridKt.sort(athletesGrid, new QuerySortOrder(ATHLETE.LAST_NAME.getName(), SortDirection.ASCENDING));
+        _sort(athletesGrid, new QuerySortOrder(ATHLETE.LAST_NAME.getName(), SortDirection.ASCENDING));
         assertThat(GridKt._get(athletesGrid, 0).getLastName()).isEqualTo("Abaterusso");
 
-        GridKt.sort(athletesGrid, new QuerySortOrder(ATHLETE.LAST_NAME.getName(), SortDirection.DESCENDING));
+        _sort(athletesGrid, new QuerySortOrder(ATHLETE.LAST_NAME.getName(), SortDirection.DESCENDING));
         assertThat(GridKt._get(athletesGrid, 0).getLastName()).isEqualTo("Zumstein");
     }
 }
