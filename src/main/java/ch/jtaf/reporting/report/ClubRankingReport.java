@@ -68,7 +68,7 @@ public class ClubRankingReport extends RankingReport {
     private void createClubRow(PdfPTable table, ClubRankingData.Result result, int rank) {
         addCell(table, rank + ".");
         addCell(table, result.club());
-        addCellAlignRight(table, "" + result.points());
+        addCellAlignRight(table, result.points() != null ? result.points().toString() : "");
     }
 
 }

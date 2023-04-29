@@ -89,7 +89,7 @@ public class NumbersReport extends AbstractReport {
         pdfPTable.setWidthPercentage(100);
 
         var cellId = new PdfPCell(
-            new Phrase(number + "",
+            new Phrase(String.valueOf(number),
                 FontFactory.getFont(HELVETICA, FONT_SIZE_TEXT)));
         cellId.setBorder(0);
         cellId.setMinimumHeight(cmToPixel(2.5f));

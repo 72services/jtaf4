@@ -90,7 +90,7 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
             return horizontalLayout;
         }).setTextAlign(ColumnTextAlign.END).setHeader(add).setAutoWidth(true).setKey("delete-column");
 
-        grid.addItemClickListener(event -> UI.getCurrent().navigate(SeriesView.class, "" + event.getItem().getId()));
+        grid.addItemClickListener(event -> UI.getCurrent().navigate(SeriesView.class, event.getItem().getId()));
 
         add(grid);
     }

@@ -17,7 +17,6 @@ import static ch.jtaf.db.tables.SecurityGroup.SECURITY_GROUP;
 import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
 import static ch.jtaf.db.tables.UserGroup.USER_GROUP;
 
-@SuppressWarnings("ClassCanBeRecord")
 @Service
 public class UserService {
 

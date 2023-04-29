@@ -1,17 +1,9 @@
 package ch.jtaf.ui.view;
 
 import ch.jtaf.configuration.security.Role;
-import ch.jtaf.db.tables.records.AthleteRecord;
-import ch.jtaf.db.tables.records.CategoryRecord;
-import ch.jtaf.db.tables.records.CompetitionRecord;
-import ch.jtaf.db.tables.records.EventRecord;
-import ch.jtaf.db.tables.records.SeriesRecord;
+import ch.jtaf.db.tables.records.*;
 import ch.jtaf.ui.KaribuTest;
-import ch.jtaf.ui.dialog.CategoryDialog;
-import ch.jtaf.ui.dialog.CompetitionDialog;
-import ch.jtaf.ui.dialog.ConfirmDialog;
-import ch.jtaf.ui.dialog.SearchAthleteDialog;
-import ch.jtaf.ui.dialog.SearchEventDialog;
+import ch.jtaf.ui.dialog.*;
 import com.github.mvysny.kaributesting.v10.GridKt;
 import com.github.mvysny.kaributesting.v10.UploadKt;
 import com.vaadin.flow.component.UI;
@@ -26,6 +18,8 @@ import com.vaadin.flow.component.upload.Upload;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -221,12 +215,16 @@ class SeriesViewTest extends KaribuTest {
     void logo_upload() {
         try {
             URL imageUrl = getClass().getClassLoader().getResource("images/logo.png");
-            Path path = Paths.get(imageUrl.toURI());
-            byte[] logoData = Files.readAllBytes(path);
+            if (imageUrl == null) {
+                fail("Image not found");
+            } else {
+                Path path = Paths.get(imageUrl.toURI());
+                byte[] logoData = Files.readAllBytes(path);
 
-            Upload upload = _get(Upload.class, spec -> spec.withId("logo-upload"));
-            UploadKt._upload(upload, "logo.png", logoData);
-        } catch (Exception e) {
+                Upload upload = _get(Upload.class, spec -> spec.withId("logo-upload"));
+                UploadKt._upload(upload, "logo.png", logoData);
+            }
+        } catch (URISyntaxException | IOException e) {
             fail(e.getMessage(), e);
         }
     }

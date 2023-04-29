@@ -17,11 +17,8 @@ import static ch.jtaf.db.tables.Event.EVENT;
 import static ch.jtaf.db.tables.Result.RESULT;
 import static ch.jtaf.db.tables.Series.SERIES;
 import static org.jooq.Records.mapping;
-import static org.jooq.impl.DSL.multiset;
-import static org.jooq.impl.DSL.select;
-import static org.jooq.impl.DSL.selectDistinct;
+import static org.jooq.impl.DSL.*;
 
-@SuppressWarnings("ClassCanBeRecord")
 @Service
 public class CompetitionRankingService {
 

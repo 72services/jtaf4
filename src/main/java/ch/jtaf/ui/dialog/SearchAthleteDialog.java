@@ -105,7 +105,7 @@ public class SearchAthleteDialog extends Dialog {
         var grid = new Grid<AthleteRecord>();
         grid.setId("search-athletes-grid");
         grid.setItems(dataProvider);
-        grid.getStyle().set("height", "calc(100% - 300px");
+        grid.setHeight("calc(100% - 60px");
 
         grid.addColumn(AthleteRecord::getLastName).setHeader(getTranslation("Last.Name")).setSortable(true).setAutoWidth(true).setKey(ATHLETE.LAST_NAME.getName());
         grid.addColumn(AthleteRecord::getFirstName).setHeader(getTranslation("First.Name")).setSortable(true).setAutoWidth(true).setKey(ATHLETE.FIRST_NAME.getName());

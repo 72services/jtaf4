@@ -5,7 +5,7 @@ It should be added to Version Control System and committed, so that other develo
 do not have to compile it again.
 
 Frontend development bundle is automatically updated when needed:
-- an npm/pnpm package is added with @NpmPackage or directly into package.json
+- A npm/pnpm package is added with @NpmPackage or directly into package.json
 - CSS, JavaScript or TypeScript files are added with @CssImport, @JsModule or @JavaScript
 - Vaadin add-on with front-end customizations is added
 - Custom theme imports/assets added into 'theme.json' file

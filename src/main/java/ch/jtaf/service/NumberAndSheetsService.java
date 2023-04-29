@@ -24,7 +24,6 @@ import static org.jooq.Records.mapping;
 import static org.jooq.impl.DSL.multiset;
 import static org.jooq.impl.DSL.select;
 
-@SuppressWarnings("ClassCanBeRecord")
 @Service
 public class NumberAndSheetsService {
 

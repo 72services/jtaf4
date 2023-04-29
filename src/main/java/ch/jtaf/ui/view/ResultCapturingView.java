@@ -3,7 +3,9 @@ package ch.jtaf.ui.view;
 import ch.jtaf.configuration.security.Role;
 import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.model.EventType;
+import ch.jtaf.ui.dialog.ConfirmDialog;
 import ch.jtaf.ui.layout.MainLayout;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
@@ -16,6 +18,7 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 import jakarta.annotation.security.RolesAllowed;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Condition;
@@ -171,6 +174,24 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                         }));
                     position++;
                 }
+                var removeResults = new Button(getTranslation("Remove.results"));
+                removeResults.addClassName(Margin.Top.MEDIUM);
+                removeResults.addClickListener(e -> {
+                    new ConfirmDialog("remove-results",
+                        getTranslation("Remove.results"),
+                        getTranslation("Remove.results"),
+                        getTranslation("Confirm"),
+                        () -> transactionTemplate.executeWithoutResult(status ->
+                            dsl.deleteFrom(RESULT)
+                                .where(RESULT.ATHLETE_ID.eq(event.getValue().get(ATHLETE.ID)))
+                                .and(RESULT.COMPETITION_ID.eq(competitionId))
+                                .execute()),
+                        getTranslation("Cancel"),
+                        () -> {
+                        }).open();
+                    ;
+                });
+                form.add(removeResults);
             }
         });
     }
