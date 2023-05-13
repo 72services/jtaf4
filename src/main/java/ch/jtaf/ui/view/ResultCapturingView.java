@@ -57,7 +57,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
         this.dsl = dsl;
         this.transactionTemplate = transactionTemplate;
 
-        CallbackDataProvider<Record4<Long, String, String, Long>, String> callbackDataProvider = new CallbackDataProvider<>(
+        this.dataProvider = new CallbackDataProvider<Record4<Long, String, String, Long>, String>(
             query -> {
                 var records = dsl
                     .select(
@@ -95,8 +95,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                 return count != null ? count : 0;
             },
             athleteRecord -> athleteRecord.get(ATHLETE.ID)
-        );
-        dataProvider = callbackDataProvider.withConfigurableFilter();
+        ).withConfigurableFilter();
 
         var filter = new TextField();
         filter.setId("filter");
@@ -224,7 +223,19 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
     @Override
     public String getPageTitle() {
-        return getTranslation("Enter.Results");
+        var record = dsl
+            .select(COMPETITION.series().NAME, COMPETITION.NAME)
+            .from(COMPETITION)
+            .where(COMPETITION.ID.eq(competitionId))
+            .fetchOne();
+        if (record == null) {
+            return getTranslation("Enter.Results");
+        } else {
+            return "%s | %s %s".formatted(
+                getTranslation("Enter.Results"),
+                record.get(COMPETITION.series().NAME),
+                record.get(COMPETITION.NAME));
+        }
     }
 
     @Override

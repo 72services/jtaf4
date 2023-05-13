@@ -73,7 +73,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShe
         viewTitle = new H1();
         viewTitle.setId("view-title");
         viewTitle.addClassNames(LumoUtility.Margin.NONE, LumoUtility.FontSize.LARGE);
-        viewTitle.setWidth("300px");
+        viewTitle.setMinWidth("400px");
 
         var info = new HorizontalLayout();
         info.setWidthFull();
