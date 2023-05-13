@@ -101,11 +101,12 @@ public class SheetsReport extends AbstractReport {
     private void createCategory(NumbersAndSheetsAthlete athlete) {
         var table = new PdfPTable(1);
         table.setWidthPercentage(100);
-        addCategoryCell(table, athlete.category());
+        addCategoryAbbreviationCell(table, athlete.categoryAbbreviation());
+        addCategoryNameCell(table, athlete.categoryName());
 
         var page = document.getPageSize();
         table.setTotalWidth(page.getWidth() - document.leftMargin() - document.rightMargin());
-        table.writeSelectedRows(0, 1, document.leftMargin(), cmToPixel(20.5f), pdfWriter.getDirectContent());
+        table.writeSelectedRows(0, 2, document.leftMargin(), cmToPixel(20.5f), pdfWriter.getDirectContent());
     }
 
     private void createAthleteInfo(NumbersAndSheetsAthlete athlete, int number) throws DocumentException {
@@ -181,12 +182,21 @@ public class SheetsReport extends AbstractReport {
         document.add(table);
     }
 
-    protected void addCategoryCell(PdfPTable table, String text) {
+    protected void addCategoryAbbreviationCell(PdfPTable table, String text) {
         var cell = new PdfPCell(new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 80f)));
         cell.setBorder(0);
         cell.setHorizontalAlignment(ALIGN_RIGHT);
         table.addCell(cell);
     }
+
+    protected void addCategoryNameCell(PdfPTable table, String text) {
+        var cell = new PdfPCell(new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, 14f)));
+        cell.setBorder(0);
+        cell.setPaddingRight(7f);
+        cell.setHorizontalAlignment(ALIGN_RIGHT);
+        table.addCell(cell);
+    }
+
 
     private void addCompetitionCell(PdfPTable table, String text) {
         var cell = new PdfPCell(new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA_BOLD, FONT_SIZE_TEXT)));

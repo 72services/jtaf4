@@ -97,7 +97,7 @@ public class NumbersReport extends AbstractReport {
         pdfPTable.addCell(cellId);
 
         var text = "%s %s\n".formatted(athlete.lastName(), athlete.firstName());
-        text += athlete.category();
+        text += athlete.categoryAbbreviation();
         if (athlete.club() != null) {
             text += " / " + athlete.club();
         }
