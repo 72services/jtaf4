@@ -231,7 +231,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
         if (record == null) {
             return getTranslation("Enter.Results");
         } else {
-            return "%s | %s %s".formatted(
+            return "%s | %s - %s".formatted(
                 getTranslation("Enter.Results"),
                 record.get(COMPETITION.series().NAME),
                 record.get(COMPETITION.NAME));
