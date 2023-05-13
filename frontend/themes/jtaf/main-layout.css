@@ -58,3 +58,7 @@ vaadin-drawer-toggle {
     align-items: center;
     display: flex;
 }
+
+vaadin-app-layout::part(navbar) {
+    min-height: 0 !important;
+}

@@ -74,7 +74,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
 
         var club = new Select<ClubRecord>();
         club.setLabel(getTranslation("Club"));
-        club.setItemLabelGenerator(item -> item.getAbbreviation() + " " + item.getName());
+        club.setItemLabelGenerator(item -> "%s %s".formatted(item.getAbbreviation(), item.getName()));
         club.setItems(getClubs());
 
         binder.forField(club)

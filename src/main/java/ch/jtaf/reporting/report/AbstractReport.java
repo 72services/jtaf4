@@ -15,9 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static com.lowagie.text.Element.ALIGN_BOTTOM;
-import static com.lowagie.text.Element.ALIGN_CENTER;
-import static com.lowagie.text.Element.ALIGN_RIGHT;
+import static com.lowagie.text.Element.*;
 import static com.lowagie.text.FontFactory.HELVETICA;
 
 public abstract class AbstractReport {
@@ -101,7 +99,7 @@ public abstract class AbstractReport {
             cellCenter.setHorizontalAlignment(ALIGN_CENTER);
             table.addCell(cellCenter);
 
-            var cellRight = new PdfPCell(new Phrase("Page" + " " + document.getPageNumber(), FontFactory.getFont(HELVETICA, DEFAULT_FONT_SIZE)));
+            var cellRight = new PdfPCell(new Phrase("Page %d".formatted(document.getPageNumber()), FontFactory.getFont(HELVETICA, DEFAULT_FONT_SIZE)));
             cellRight.setBorder(0);
             cellRight.setBorderWidthTop(1f);
             cellRight.setHorizontalAlignment(ALIGN_RIGHT);

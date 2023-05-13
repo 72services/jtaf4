@@ -53,6 +53,7 @@ public class NumberAndSheetsService {
                 DSL.inline(null, SQLDataType.VARCHAR),
                 DSL.inline(null, SQLDataType.INTEGER),
                 CATEGORY.ABBREVIATION,
+                CATEGORY.NAME,
                 DSL.inline(null, SQLDataType.VARCHAR),
                 multiset(
                     select(
@@ -94,6 +95,7 @@ public class NumberAndSheetsService {
                 ATHLETE.LAST_NAME,
                 ATHLETE.YEAR_OF_BIRTH,
                 CATEGORY.ABBREVIATION,
+                CATEGORY.NAME,
                 CLUB.ABBREVIATION,
                 multiset(
                     select(

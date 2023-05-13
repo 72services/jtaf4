@@ -115,7 +115,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                 fakeLogo.setWidth("100px");
                 competitionLayout.add(fakeLogo);
 
-                var pCompetition = new Paragraph(competition.getName() + " " + competition.getCompetitionDate());
+                var pCompetition = new Paragraph("%s %s".formatted(competition.getName(), competition.getCompetitionDate()));
                 pCompetition.setMinWidth(NAME_MIN_WIDTH);
                 competitionLayout.add(pCompetition);
 
