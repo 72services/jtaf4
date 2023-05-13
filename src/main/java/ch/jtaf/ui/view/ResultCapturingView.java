@@ -5,6 +5,7 @@ import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.model.EventType;
 import ch.jtaf.ui.dialog.ConfirmDialog;
 import ch.jtaf.ui.layout.MainLayout;
+import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
@@ -46,11 +47,16 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
     private final Grid<Record4<Long, String, String, Long>> grid = new Grid<>();
     private final ConfigurableFilterDataProvider<Record4<Long, String, String, Long>, Void, String> dataProvider;
+    private final Div form;
+    private final DSLContext dsl;
+    private final TransactionTemplate transactionTemplate;
     private TextField resultTextField;
-
     private long competitionId;
 
     public ResultCapturingView(DSLContext dsl, TransactionTemplate transactionTemplate) {
+        this.dsl = dsl;
+        this.transactionTemplate = transactionTemplate;
+
         CallbackDataProvider<Record4<Long, String, String, Long>, String> callbackDataProvider = new CallbackDataProvider<>(
             query -> {
                 var records = dsl
@@ -106,94 +112,98 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
         grid.setHeight("200px");
         add(grid);
 
-        var form = new Div();
+        form = new Div();
         add(form);
 
-        grid.asSingleSelect().addValueChangeListener(event -> {
-            form.removeAll();
+        grid.asSingleSelect().addValueChangeListener(this::createForm);
+    }
 
-            if (event.getValue() != null) {
-                var events = dsl
-                    .select(CATEGORY_EVENT.event().fields())
-                    .from(CATEGORY_EVENT)
-                    .where(CATEGORY_EVENT.CATEGORY_ID.eq(event.getValue().get(CATEGORY.ID)))
-                    .orderBy(CATEGORY_EVENT.POSITION)
-                    .fetchInto(EventRecord.class);
+    private void createForm(AbstractField.ComponentValueChangeEvent<Grid<Record4<Long, String, String, Long>>, Record4<Long, String, String, Long>> event) {
+        form.removeAll();
 
-                var formLayout = new FormLayout();
-                form.add(formLayout);
+        if (event.getValue() != null) {
+            var events = dsl
+                .select(CATEGORY_EVENT.event().fields())
+                .from(CATEGORY_EVENT)
+                .where(CATEGORY_EVENT.CATEGORY_ID.eq(event.getValue().get(CATEGORY.ID)))
+                .orderBy(CATEGORY_EVENT.POSITION)
+                .fetchInto(EventRecord.class);
 
-                boolean first = true;
-                int position = 0;
-                for (var eventRecord : events) {
-                    var resultRecord = dsl
-                        .selectFrom(RESULT)
-                        .where(RESULT.COMPETITION_ID.eq(competitionId))
-                        .and(RESULT.ATHLETE_ID.eq(event.getValue().get(ATHLETE.ID)))
-                        .and(RESULT.CATEGORY_ID.eq(event.getValue().get(CATEGORY.ID)))
-                        .and(RESULT.EVENT_ID.eq(eventRecord.getId()))
-                        .fetchOne();
+            var formLayout = new FormLayout();
+            form.add(formLayout);
 
-                    var result = new TextField(eventRecord.getName());
-                    result.setId("result-" + position);
-                    formLayout.add(result);
+            boolean first = true;
+            int position = 0;
+            for (var eventRecord : events) {
+                var resultRecord = dsl
+                    .selectFrom(RESULT)
+                    .where(RESULT.COMPETITION_ID.eq(competitionId))
+                    .and(RESULT.ATHLETE_ID.eq(event.getValue().get(ATHLETE.ID)))
+                    .and(RESULT.CATEGORY_ID.eq(event.getValue().get(CATEGORY.ID)))
+                    .and(RESULT.EVENT_ID.eq(eventRecord.getId()))
+                    .fetchOne();
 
-                    if (first) {
-                        this.resultTextField = result;
-                        first = false;
-                    }
+                var result = new TextField(eventRecord.getName());
+                result.setId("result-" + position);
+                formLayout.add(result);
 
-                    var points = new TextField();
-                    points.setId("points-" + position);
-                    points.setReadOnly(true);
-                    points.setEnabled(false);
-                    formLayout.add(points);
-
-                    if (resultRecord != null) {
-                        result.setValue(resultRecord.getResult());
-                        points.setValue(resultRecord.getPoints() == null ? "" : resultRecord.getPoints().toString());
-                    } else {
-                        resultRecord = RESULT.newRecord();
-                        resultRecord.setPosition(position);
-                        resultRecord.setEventId(eventRecord.getId());
-                        resultRecord.setAthleteId(event.getValue().get(ATHLETE.ID));
-                        resultRecord.setCategoryId(event.getValue().get(CATEGORY.ID));
-                        resultRecord.setCompetitionId(competitionId);
-                    }
-
-                    var finalResultRecord = resultRecord;
-                    result.addValueChangeListener(ve ->
-                        transactionTemplate.executeWithoutResult(ts -> {
-                            var resultValue = ve.getValue();
-                            finalResultRecord.setResult(resultValue);
-                            finalResultRecord.setPoints(calculatePoints(eventRecord, resultValue));
-                            points.setValue(finalResultRecord.getPoints() == null ? "" : finalResultRecord.getPoints().toString());
-
-                            dsl.attach(finalResultRecord);
-                            finalResultRecord.store();
-                        }));
-                    position++;
+                if (first) {
+                    this.resultTextField = result;
+                    first = false;
                 }
-                var removeResults = new Button(getTranslation("Remove.results"));
-                removeResults.addClassName(Margin.Top.MEDIUM);
-                removeResults.addClickListener(e -> {
-                    new ConfirmDialog("remove-results",
-                        getTranslation("Remove.results"),
-                        getTranslation("Remove.results"),
-                        getTranslation("Confirm"),
-                        () -> transactionTemplate.executeWithoutResult(status ->
-                            dsl.deleteFrom(RESULT)
-                                .where(RESULT.ATHLETE_ID.eq(event.getValue().get(ATHLETE.ID)))
-                                .and(RESULT.COMPETITION_ID.eq(competitionId))
-                                .execute()),
-                        getTranslation("Cancel"),
-                        () -> {
-                        }).open();
-                    ;
-                });
-                form.add(removeResults);
+
+                var points = new TextField();
+                points.setId("points-" + position);
+                points.setReadOnly(true);
+                points.setEnabled(false);
+                formLayout.add(points);
+
+                if (resultRecord != null) {
+                    result.setValue(resultRecord.getResult());
+                    points.setValue(resultRecord.getPoints() == null ? "" : resultRecord.getPoints().toString());
+                } else {
+                    resultRecord = RESULT.newRecord();
+                    resultRecord.setPosition(position);
+                    resultRecord.setEventId(eventRecord.getId());
+                    resultRecord.setAthleteId(event.getValue().get(ATHLETE.ID));
+                    resultRecord.setCategoryId(event.getValue().get(CATEGORY.ID));
+                    resultRecord.setCompetitionId(competitionId);
+                }
+
+                var finalResultRecord = resultRecord;
+                result.addValueChangeListener(ve ->
+                    transactionTemplate.executeWithoutResult(ts -> {
+                        var resultValue = ve.getValue();
+                        finalResultRecord.setResult(resultValue);
+                        finalResultRecord.setPoints(calculatePoints(eventRecord, resultValue));
+                        points.setValue(finalResultRecord.getPoints() == null ? "" : finalResultRecord.getPoints().toString());
+
+                        dsl.attach(finalResultRecord);
+                        finalResultRecord.store();
+                    }));
+                position++;
             }
-        });
+            var removeResults = new Button(getTranslation("Remove.results"));
+            removeResults.addClassName(Margin.Top.MEDIUM);
+            removeResults.addClickListener(e ->
+                new ConfirmDialog("remove-results",
+                    getTranslation("Remove.results"),
+                    getTranslation("Remove.results"),
+                    getTranslation("Confirm"),
+                    () -> transactionTemplate.executeWithoutResult(status ->
+                    {
+                        dsl.deleteFrom(RESULT)
+                            .where(RESULT.ATHLETE_ID.eq(event.getValue().get(ATHLETE.ID)))
+                            .and(RESULT.COMPETITION_ID.eq(competitionId))
+                            .execute();
+
+                        createForm(event);
+                    }),
+                    getTranslation("Cancel"),
+                    () -> {
+                    }).open());
+            form.add(removeResults);
+        }
     }
 
     @SuppressWarnings("DuplicatedCode")
