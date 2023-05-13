@@ -154,7 +154,9 @@ public class SheetsReport extends AbstractReport {
         table.setSpacingBefore(cmToPixel(0.5f));
         table.setSpacingAfter(cmToPixel(0.5f));
 
-        addCompetitionCell(table, competition == null ? "" : competition.name() + " " + DATE_TIME_FORMATTER.format(competition.competitionDate()));
+        addCompetitionCell(table, competition == null
+            ? ""
+            : "%s %s".formatted(competition.name(), DATE_TIME_FORMATTER.format(competition.competitionDate())));
 
         document.add(table);
     }

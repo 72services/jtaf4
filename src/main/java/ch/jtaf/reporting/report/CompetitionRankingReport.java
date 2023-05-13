@@ -95,7 +95,7 @@ public class CompetitionRankingReport extends RankingReport {
 
     private void createCategoryTitle(PdfPTable table, CompetitionRankingData.Category category) {
         addCategoryTitleCellWithColspan(table, category.abbreviation(), 1);
-        addCategoryTitleCellWithColspan(table, category.name() + " " + category.yearFrom() + " - " + category.yearTo(), 5);
+        addCategoryTitleCellWithColspan(table, "%s %d - %d".formatted(category.name(), category.yearFrom(), category.yearTo()), 5);
 
         addCategoryTitleCellWithColspan(table, " ", 6);
     }
