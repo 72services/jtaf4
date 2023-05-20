@@ -36,11 +36,11 @@ public class SecurityConfiguration extends VaadinWebSecurity {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests().requestMatchers(
+        http.authorizeHttpRequests(c -> c.requestMatchers(
             new AntPathRequestMatcher("/icons/*.png"),
             new AntPathRequestMatcher("/line-awesome/**"),
             EndpointRequest.to(HealthEndpoint.class)
-        ).permitAll();
+        ).permitAll());
 
         super.configure(http);
 
