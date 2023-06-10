@@ -224,18 +224,18 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
     @Override
     public String getPageTitle() {
-        var record = dsl
+        var competition = dsl
             .select(COMPETITION.series().NAME, COMPETITION.NAME)
             .from(COMPETITION)
             .where(COMPETITION.ID.eq(competitionId))
             .fetchOne();
-        if (record == null) {
+        if (competition == null) {
             return getTranslation("Enter.Results");
         } else {
             return "%s | %s - %s".formatted(
                 getTranslation("Enter.Results"),
-                record.get(COMPETITION.series().NAME),
-                record.get(COMPETITION.NAME));
+                competition.get(COMPETITION.series().NAME),
+                competition.get(COMPETITION.NAME));
         }
     }
 
