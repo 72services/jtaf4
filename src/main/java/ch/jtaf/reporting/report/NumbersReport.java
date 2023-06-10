@@ -96,7 +96,7 @@ public class NumbersReport extends AbstractReport {
         cellId.setHorizontalAlignment(ALIGN_CENTER);
         pdfPTable.addCell(cellId);
 
-        var text = "%s %s\n".formatted(athlete.lastName(), athlete.firstName());
+        var text = "%s %s%s".formatted(athlete.lastName(), athlete.firstName(), System.lineSeparator());
         text += athlete.categoryAbbreviation();
         if (athlete.club() != null) {
             text += " / " + athlete.club();

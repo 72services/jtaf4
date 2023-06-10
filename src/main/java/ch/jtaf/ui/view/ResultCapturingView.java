@@ -44,11 +44,12 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
     @Serial
     private static final long serialVersionUID = 1L;
+    private static final String REMOVE_RESULTS = "Remove.results";
 
     private final Grid<Record4<Long, String, String, Long>> grid = new Grid<>();
     private final ConfigurableFilterDataProvider<Record4<Long, String, String, Long>, Void, String> dataProvider;
     private final Div form;
-    private final DSLContext dsl;
+    private final transient DSLContext dsl;
     private final TransactionTemplate transactionTemplate;
     private TextField resultTextField;
     private long competitionId;
@@ -182,12 +183,12 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                     }));
                 position++;
             }
-            var removeResults = new Button(getTranslation("Remove.results"));
+            var removeResults = new Button(getTranslation(REMOVE_RESULTS));
             removeResults.addClassName(Margin.Top.MEDIUM);
             removeResults.addClickListener(e ->
                 new ConfirmDialog("remove-results",
-                    getTranslation("Remove.results"),
-                    getTranslation("Remove.results"),
+                    getTranslation(REMOVE_RESULTS),
+                    getTranslation(REMOVE_RESULTS),
                     getTranslation("Confirm"),
                     () -> transactionTemplate.executeWithoutResult(status ->
                     {
