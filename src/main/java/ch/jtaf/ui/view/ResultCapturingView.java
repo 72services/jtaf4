@@ -60,7 +60,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
         this.dataProvider = new CallbackDataProvider<Record4<Long, String, String, Long>, String>(
             query -> {
-                var records = dsl
+                var athletes = dsl
                     .select(
                         ATHLETE.ID,
                         ATHLETE.LAST_NAME,
@@ -75,13 +75,13 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                     .orderBy(ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME)
                     .offset(query.getOffset()).limit(query.getLimit())
                     .fetch();
-                if (records.size() == 1) {
-                    grid.select(records.get(0));
+                if (athletes.size() == 1) {
+                    grid.select(athletes.get(0));
                     if (resultTextField != null) {
                         resultTextField.focus();
                     }
                 }
-                return records.stream();
+                return athletes.stream();
             },
             query -> {
                 var count = dsl
