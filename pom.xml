@@ -51,7 +51,7 @@
     <properties>
         <java.version>17</java.version>
 
-        <vaadin.version>24.0.6</vaadin.version>
+        <vaadin.version>24.1.0</vaadin.version>
         <jooq.version>3.18.3</jooq.version>
         <openpdf.version>1.3.30</openpdf.version>
 
@@ -91,12 +91,6 @@
             <groupId>com.vaadin</groupId>
             <!-- Replace artifactId with vaadin-core to use only free components -->
             <artifactId>vaadin-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.vaadin.addons</groupId>
-            <artifactId>googleanalyticstracker</artifactId>
-            <version>4.1.0</version>
         </dependency>
 
         <dependency>

@@ -25,13 +25,11 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.vaadin.flow.theme.lumo.LumoUtility.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
-import org.vaadin.googleanalytics.tracking.EnableGoogleAnalytics;
 
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
-@EnableGoogleAnalytics(value = "G-PH4RL4J6YT")
 @Theme("jtaf")
 @PWA(name = "JTAF 4", shortName = "JTAF 4", description = "JTAF - Track and Field")
 @StyleSheet("https://fonts.googleapis.com/css2?family=Poppins")
