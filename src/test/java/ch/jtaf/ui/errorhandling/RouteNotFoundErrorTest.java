@@ -18,8 +18,6 @@ class RouteNotFoundErrorTest extends KaribuTest {
     public void login() {
         login("simon@martinelli.ch", "", List.of(Role.ADMIN));
         UI.getCurrent().getPage().reload();
-
-        navigateToSeriesList();
     }
 
     @Test
