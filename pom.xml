@@ -92,6 +92,11 @@
             <!-- Replace artifactId with vaadin-core to use only free components -->
             <artifactId>vaadin-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.vaadin.addons</groupId>
+            <artifactId>googleanalyticstracker</artifactId>
+            <version>5.0.0</version>
+        </dependency>
 
         <dependency>
             <groupId>com.vaadin</groupId>
