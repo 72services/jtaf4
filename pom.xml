@@ -12,7 +12,7 @@
 
     <groupId>ch.jtaf</groupId>
     <artifactId>jtaf4</artifactId>
-    <version>4.5.5</version>
+    <version>4.5.6</version>
 
     <name>JTAF 4</name>
     <description>JTAF - Track And Field</description>
@@ -54,8 +54,8 @@
         <vaadin.version>24.1.0</vaadin.version>
         <jooq.version>3.18.3</jooq.version>
         <openpdf.version>1.3.30</openpdf.version>
-
-        <testcontainers.version>1.17.6</testcontainers.version>
+        <testcontainers-jooq-codegen-maven-plugin.version>0.0.2</testcontainers-jooq-codegen-maven-plugin.version>
+        <testcontainers.version>1.18.3</testcontainers.version>
         <karibu-testing.version>2.0.2</karibu-testing.version>
         <archunit.version>1.0.1</archunit.version>
 
@@ -91,6 +91,11 @@
             <groupId>com.vaadin</groupId>
             <!-- Replace artifactId with vaadin-core to use only free components -->
             <artifactId>vaadin-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.vaadin.addons</groupId>
+            <artifactId>googleanalyticstracker</artifactId>
+            <version>5.0.0</version>
         </dependency>
 
         <dependency>
@@ -198,92 +203,54 @@
 
     <build>
         <plugins>
-            <!-- Start Testcontainer -->
             <plugin>
-                <groupId>org.codehaus.gmaven</groupId>
-                <artifactId>groovy-maven-plugin</artifactId>
-                <version>2.1.1</version>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                            <source>
-                                db = new org.testcontainers.containers.PostgreSQLContainer("postgres:15.2")
-                                    .withUsername("${db.username}")
-                                    .withDatabaseName("jtaf4")
-                                    .withPassword("${db.password}")
-                                db.start()
-                                project.properties.setProperty('db.url', db.getJdbcUrl())
-                            </source>
-                        </configuration>
-                    </execution>
-                </executions>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-jooq-codegen-maven-plugin</artifactId>
+                <version>${testcontainers-jooq-codegen-maven-plugin.version}</version>
                 <dependencies>
                     <dependency>
                         <groupId>org.testcontainers</groupId>
                         <artifactId>postgresql</artifactId>
                         <version>${testcontainers.version}</version>
                     </dependency>
-                    <!-- Junit seems to be a transitive dependency of testcontainers? -->
                     <dependency>
-                        <groupId>junit</groupId>
-                        <artifactId>junit</artifactId>
-                        <version>4.13.1</version>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>${postgresql.version}</version>
                     </dependency>
                 </dependencies>
-            </plugin>
-            <!-- Migrate schema -->
-            <plugin>
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-maven-plugin</artifactId>
-                <version>7.14.0</version>
                 <executions>
                     <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>migrate</goal>
-                        </goals>
-                        <configuration>
-                            <url>${db.url}</url>
-                            <user>${db.username}</user>
-                            <password>${db.password}</password>
-                            <locations>
-                                <location>filesystem:src/main/resources/db/migration</location>
-                            </locations>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- Generate jOOQ code -->
-            <plugin>
-                <groupId>org.jooq</groupId>
-                <artifactId>jooq-codegen-maven</artifactId>
-                <executions>
-                    <execution>
+                        <id>generate-jooq-sources</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <database>
+                                <type>POSTGRES</type>
+                                <containerImage>postgres:15.2</containerImage>
+                                <username>${db.username}</username>
+                                <password>${db.password}</password>
+                                <databaseName>jtaf4</databaseName>
+                            </database>
+                            <flyway>
+                                <locations>filesystem:src/main/resources/db/migration</locations>
+                            </flyway>
+                            <jooq>
+                                <generator>
+                                    <database>
+                                        <inputSchema>public</inputSchema>
+                                        <excludes>flyway_schema_history</excludes>
+                                    </database>
+                                    <target>
+                                        <packageName>ch.jtaf.db</packageName>
+                                    </target>
+                                </generator>
+                            </jooq>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <jdbc>
-                        <driver>${db.driver}</driver>
-                        <url>${db.url}</url>
-                        <user>${db.username}</user>
-                        <password>${db.password}</password>
-                    </jdbc>
-                    <generator>
-                        <database>
-                            <inputSchema>public</inputSchema>
-                        </database>
-                        <target>
-                            <packageName>ch.jtaf.db</packageName>
-                        </target>
-                    </generator>
-                </configuration>
             </plugin>
             <!-- Take care of synchronizing java dependencies and imports in package.json and main.js files. It also creates webpack.config.js if not exists yet. -->
             <plugin>
@@ -305,18 +272,6 @@
                         <phase>pre-clean</phase>
                     </execution>
                 </executions>
-            </plugin>
-            <!-- Reuse Testcontainer in tests -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <systemPropertyVariables>
-                        <spring.datasource.url>${db.url}</spring.datasource.url>
-                        <spring.datasource..username>${db.username}</spring.datasource..username>
-                        <spring.datasource..password>${db.password}</spring.datasource..password>
-                    </systemPropertyVariables>
-                </configuration>
             </plugin>
             <!-- Spring Boot configuration -->
             <plugin>
