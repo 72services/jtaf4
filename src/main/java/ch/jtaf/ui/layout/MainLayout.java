@@ -31,7 +31,7 @@ import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
-@EnableGoogleAnalytics("336871986")
+@EnableGoogleAnalytics("G-PH4RL4J6YT")
 @Theme("jtaf")
 @PWA(name = "JTAF 4", shortName = "JTAF 4", description = "JTAF - Track and Field")
 @StyleSheet("https://fonts.googleapis.com/css2?family=Poppins")
