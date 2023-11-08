@@ -43,7 +43,7 @@ class SeriesViewTest extends KaribuTest {
         GridKt._clickItem(seriesGrid, 0);
 
         TextField name = _get(TextField.class);
-        assertThat(name.getValue()).isEqualTo("CIS 2018");
+        assertThat(name.getValue()).isEqualTo("CIS 2019");
     }
 
     @Test
@@ -169,8 +169,8 @@ class SeriesViewTest extends KaribuTest {
 
         // Check content of athletes grid
         Grid<AthleteRecord> athletesGrid = _get(Grid.class, spec -> spec.withId("athletes-grid"));
-        assertThat(GridKt._size(athletesGrid)).isEqualTo(85);
-        assertThat(GridKt._get(athletesGrid, 0).getLastName()).isEqualTo("Scholer");
+        assertThat(GridKt._size(athletesGrid)).isEqualTo(108);
+        assertThat(GridKt._get(athletesGrid, 0).getLastName()).isEqualTo("Berger");
 
         // Assign athlete
         Button assignAthlete = _get(Button.class, spec -> spec.withId("assign-athlete"));
@@ -188,15 +188,15 @@ class SeriesViewTest extends KaribuTest {
         Grid<AthleteRecord> searchAthletesGrid = _get(Grid.class, spec -> spec.withId("search-athletes-grid"));
         assertThat(GridKt._size(searchAthletesGrid)).isEqualTo(1);
 
-        assertThat(GridKt._get(searchAthletesGrid, 0).getLastName()).isEqualTo("Zumstein");
+        assertThat(GridKt._get(searchAthletesGrid, 0).getLastName()).isEqualTo("Zimmermann");
 
         GridKt._getCellComponent(searchAthletesGrid, 0, "edit-column").getChildren()
             .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
             .ifPresent(Button::click);
 
         // Check if athlete was assigned
-        assertThat(GridKt._size(athletesGrid)).isEqualTo(86);
-        assertThat(GridKt._get(athletesGrid, 40).getLastName()).isEqualTo("Zumstein");
+        assertThat(GridKt._size(athletesGrid)).isEqualTo(109);
+        assertThat(GridKt._get(athletesGrid, 40).getLastName()).isEqualTo("Hermoso");
 
         // Remove athlete from category
         GridKt._getCellComponent(athletesGrid, 40, "remove-column").getChildren()
@@ -208,7 +208,7 @@ class SeriesViewTest extends KaribuTest {
         _get(Button.class, spec -> spec.withId("athlete-delete-confirm-dialog-confirm")).click();
 
         // Check if athlete was removed
-        assertThat(GridKt._size(athletesGrid)).isEqualTo(85);
+        assertThat(GridKt._size(athletesGrid)).isEqualTo(108);
     }
 
     @Test
