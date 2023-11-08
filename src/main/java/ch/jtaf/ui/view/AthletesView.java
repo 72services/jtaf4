@@ -49,7 +49,7 @@ public class AthletesView extends ProtectedGridView<AthleteRecord> {
         grid.addColumn(AthleteRecord::getFirstName).setHeader(getTranslation("First.Name")).setSortable(true).setAutoWidth(true).setKey(ATHLETE.FIRST_NAME.getName());
         grid.addColumn(AthleteRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true).setAutoWidth(true).setKey(ATHLETE.GENDER.getName());
         grid.addColumn(AthleteRecord::getYearOfBirth).setHeader(getTranslation("Year")).setSortable(true).setAutoWidth(true).setKey(ATHLETE.YEAR_OF_BIRTH.getName());
-        grid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
+        var c = grid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
             : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club")).setAutoWidth(true);
 
         addActionColumnAndSetSelectionListener(grid, dialog, athleteRecord -> refreshAll(), () -> {
@@ -57,6 +57,8 @@ public class AthletesView extends ProtectedGridView<AthleteRecord> {
             newRecord.setOrganizationId(organizationRecord.getId());
             return newRecord;
         }, this::refreshAll);
+
+
 
         filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
 
