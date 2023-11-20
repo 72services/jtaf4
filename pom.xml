@@ -193,6 +193,11 @@
             <version>1.25.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>in.virit</groupId>
+            <artifactId>mopo</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>com.tngtech.archunit</groupId>

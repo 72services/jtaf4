@@ -1,50 +1,68 @@
 package ch.jtaf.ui.view;
 
 import ch.jtaf.ui.PlaywrightIT;
-import ch.jtaf.ui.element.GridElement;
 import ch.jtaf.ui.po.LoginPO;
 import com.microsoft.playwright.Locator;
+import in.virit.mopo.GridPw;
+import in.virit.mopo.Mopo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class OrganizationsViewIT extends PlaywrightIT {
+
+    @LocalServerPort
+    private int port;
+
+    @MockBean
+    private JavaMailSender javaMailSender;
+
+    private Mopo mopo;
 
     @BeforeEach
     void login() {
-        page.navigate("http://localhost:8484/organizations");
+        page.navigate("http://localhost:" + port + "/organizations");
 
-        new LoginPO(page).login(System.getenv("JTAF4_TEST_USERNAME"), System.getenv("JTAF4_TEST_PASSWORD"));
+        mopo = new Mopo(page);
+
+        new LoginPO(page).login("simon@martinelli.ch", "pass");
 
         Locator locator = page.locator("#view-title");
-        assertThat(locator.innerText()).isEqualTo("Organisationen");
+        assertThat(locator.innerText()).isEqualTo("Organizations");
     }
 
     @Test
     void add_organization() {
-        try {
-            GridElement organizationsGrid = new GridElement(page.locator("id=organizations-grid").elementHandle());
+        var organizationsGrid = new GridPw(page.locator("id=organizations-grid"));
 
-            organizationsGrid.waitForCellByTextContent("CIS");
-            organizationsGrid.waitForCellByTextContent("Concours InterSection");
-            organizationsGrid.waitForCellByTextContent("TVE");
-            organizationsGrid.waitForCellByTextContent("Turnverein Erlach");
+        var rowCis = organizationsGrid.getTableRow(0);
+        assertThat(rowCis.getCell(0).innerText()).isEqualTo("CIS");
+        var rowTve = organizationsGrid.getTableRow(1);
+        assertThat(rowTve.getCell(0).innerText()).isEqualTo("TVE");
 
-            page.locator("id=add-button").click();
+        page.locator("id=add-button").click();
 
-            page.locator("id=vaadin-text-field-0").fill("TST");
-            page.locator("id=vaadin-text-field-1").fill("Test");
-            page.locator("id=edit-save").click();
+        page.locator("vaadin-text-field[id='key'] > input").fill("TST");
+        page.locator("vaadin-text-field[id='name'] > input").fill("Test");
+        page.locator("id=edit-save").click();
 
-            organizationsGrid.waitForCellByTextContent("TST");
-            organizationsGrid.waitForCellByTextContent("Test");
+        mopo.waitForConnectionToSettle();
 
-            page.locator("id=delete-organization-TST").click();
-            page.locator("id=delete-organization-confirm-dialog-confirm").click();
-        } catch (Exception e) {
-            fail(e.getMessage(), e);
-        }
+        var rowTst = organizationsGrid.getTableRow(2);
+
+        assertThat(rowTst.getCell(0).innerText()).isEqualTo("TST");
+
+        page.locator("id=delete-organization-TST").click();
+        page.locator("id=delete-organization-confirm-dialog-confirm").click();
+
+        mopo.waitForConnectionToSettle();
+
+        assertThat(organizationsGrid.getRenderedRowCount()).isEqualTo(2);
     }
 }
