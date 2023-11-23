@@ -41,9 +41,9 @@ class OrganizationsViewIT extends PlaywrightIT {
     void add_organization() {
         var organizationsGrid = new GridPw(page.locator("id=organizations-grid"));
 
-        var rowCis = organizationsGrid.getTableRow(0);
+        var rowCis = organizationsGrid.getRow(0);
         assertThat(rowCis.getCell(0).innerText()).isEqualTo("CIS");
-        var rowTve = organizationsGrid.getTableRow(1);
+        var rowTve = organizationsGrid.getRow(1);
         assertThat(rowTve.getCell(0).innerText()).isEqualTo("TVE");
 
         page.locator("id=add-button").click();
@@ -54,7 +54,7 @@ class OrganizationsViewIT extends PlaywrightIT {
 
         mopo.waitForConnectionToSettle();
 
-        var rowTst = organizationsGrid.getTableRow(2);
+        var rowTst = organizationsGrid.getRow(2);
 
         assertThat(rowTst.getCell(0).innerText()).isEqualTo("TST");
 
