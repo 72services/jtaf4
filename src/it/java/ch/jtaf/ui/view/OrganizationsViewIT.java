@@ -50,18 +50,16 @@ class OrganizationsViewIT extends PlaywrightIT {
 
         page.locator("vaadin-text-field[id='key'] > input").fill("TST");
         page.locator("vaadin-text-field[id='name'] > input").fill("Test");
-        page.locator("id=edit-save").click();
 
-        mopo.waitForConnectionToSettle();
+        mopo.click("id=edit-save");
 
         var rowTst = organizationsGrid.getRow(2);
 
         assertThat(rowTst.getCell(0).innerText()).isEqualTo("TST");
 
-        page.locator("id=delete-organization-TST").click();
-        page.locator("id=delete-organization-confirm-dialog-confirm").click();
+        mopo.click("id=delete-organization-TST");
 
-        mopo.waitForConnectionToSettle();
+        mopo.click("id=delete-organization-confirm-dialog-confirm");
 
         assertThat(organizationsGrid.getRenderedRowCount()).isEqualTo(2);
     }
