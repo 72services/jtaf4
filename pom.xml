@@ -57,12 +57,11 @@
 
         <testcontainers.version>1.19.3</testcontainers.version>
         <testcontainers-jooq-codegen-maven-plugin.version>0.0.3</testcontainers-jooq-codegen-maven-plugin.version>
+        <gitflow.version>1.12.0</gitflow.version>
+        <jacoco.version>0.8.11</jacoco.version>
 
         <karibu-testing.version>2.1.0</karibu-testing.version>
         <archunit.version>1.2.1</archunit.version>
-
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <drivers.dir>${project.basedir}/drivers</drivers.dir>
         <drivers.downloader.phase>pre-integration-test</drivers.downloader.phase>
@@ -314,7 +313,7 @@
             <plugin>
                 <groupId>com.amashchenko.maven.plugin</groupId>
                 <artifactId>gitflow-maven-plugin</artifactId>
-                <version>1.14.0</version>
+                <version>${gitflow.version}</version>
                 <configuration>
                     <verbose>true</verbose>
                 </configuration>
@@ -330,7 +329,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.7</version>
+                        <version>${jacoco.version}</version>
                         <configuration>
                             <excludes>
                                 <exclude>ch/jtaf/Jtaf4Application.*</exclude>
