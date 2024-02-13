@@ -3,7 +3,7 @@ package ch.jtaf.ui.view;
 import ch.jtaf.configuration.security.Role;
 import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.db.tables.records.ResultRecord;
-import ch.jtaf.model.EventType;
+import ch.jtaf.service.ResultCalculator;
 import ch.jtaf.ui.dialog.ConfirmDialog;
 import ch.jtaf.ui.layout.MainLayout;
 import com.vaadin.flow.component.AbstractField;
@@ -54,12 +54,14 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
     private final Div form;
     private final transient DSLContext dsl;
     private final TransactionTemplate transactionTemplate;
+    private final ResultCalculator resultCalculator;
     private TextField resultTextField;
     private long competitionId;
 
-    public ResultCapturingView(DSLContext dsl, TransactionTemplate transactionTemplate) {
+    public ResultCapturingView(DSLContext dsl, TransactionTemplate transactionTemplate, ResultCalculator resultCalculator) {
         this.dsl = dsl;
         this.transactionTemplate = transactionTemplate;
+        this.resultCalculator = resultCalculator;
 
         this.dataProvider = new CallbackDataProvider<Record4<Long, String, String, Long>, String>(
             query -> {
@@ -142,7 +144,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                     transactionTemplate.executeWithoutResult(ts -> {
                         var resultValue = ve.getValue();
                         finalResultRecord.setResult(resultValue);
-                        finalResultRecord.setPoints(calculatePoints(eventRecord, resultValue));
+                        finalResultRecord.setPoints(resultCalculator.calculatePoints(eventRecord, resultValue));
                         points.setValue(finalResultRecord.getPoints() == null ? "" : finalResultRecord.getPoints().toString());
 
                         dsl.attach(finalResultRecord);
@@ -262,24 +264,4 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
         dataProvider.refreshAll();
     }
 
-    private int calculatePoints(EventRecord event, String result) {
-        double points = 0.0d;
-        if (result != null) {
-            if (EventType.valueOf(event.getEventType()) == EventType.RUN) {
-                points = event.getA() * Math.pow((event.getB() - Double.parseDouble(result) * 100) / 100, event.getC());
-            } else if (EventType.valueOf(event.getEventType()) == EventType.RUN_LONG) {
-                String[] parts = result.split("\\.");
-                double time;
-                if (parts.length == 1) {
-                    time = Double.parseDouble(parts[0]) * 60;
-                } else {
-                    time = Double.parseDouble(parts[0]) * 60 + Double.parseDouble(parts[1]);
-                }
-                points = event.getA() * Math.pow((event.getB() - time * 100) / 100, event.getC());
-            } else if (EventType.valueOf(event.getEventType()) == EventType.JUMP_THROW) {
-                points = event.getA() * Math.pow((Double.parseDouble(result) * 100 - event.getB()) / 100, event.getC());
-            }
-        }
-        return (int) Math.round(points);
-    }
 }

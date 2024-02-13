@@ -31,14 +31,14 @@ public class TranslationProvider implements I18NProvider {
             LOGGER.warn("Got lang request for key with null value!");
             return "";
         }
-        final ResourceBundle bundle = ResourceBundle.getBundle("messages", locale);
+        var bundle = ResourceBundle.getBundle("messages", locale);
         try {
             var value = bundle.getString(key);
             if (params.length > 0) {
                 value = MessageFormat.format(value, params);
             }
             return value;
-        } catch (final MissingResourceException e) {
+        } catch (MissingResourceException e) {
             LOGGER.warn("Missing resource", e);
             return "!" + locale.getLanguage() + ": " + key;
         }

@@ -118,7 +118,7 @@ public abstract class KaribuTest {
         assertThat(GridKt._size(seriesGrid)).isEqualTo(2);
 
         SeriesRecord seriesRecord = GridKt._get(seriesGrid, 0);
-        assertThat(seriesRecord.getName()).isEqualTo("CIS 2018");
+        assertThat(seriesRecord.getName()).isEqualTo("CIS 2019");
 
         return seriesGrid;
     }

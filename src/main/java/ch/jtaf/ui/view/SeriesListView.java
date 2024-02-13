@@ -107,6 +107,6 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
 
     @Override
     protected SortField<?>[] initialSort() {
-        return new SortField[]{SERIES.NAME.asc()};
+        return new SortField[]{SERIES.NAME.desc()};
     }
 }

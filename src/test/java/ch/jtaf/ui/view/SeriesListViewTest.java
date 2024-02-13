@@ -49,10 +49,10 @@ class SeriesListViewTest extends KaribuTest {
         // Check if series was added
         Grid<SeriesRecord> seriesGrid = _get(Grid.class, spec -> spec.withId("series-grid"));
         assertThat(GridKt._size(seriesGrid)).isEqualTo(3);
-        assertThat(GridKt._get(seriesGrid, 2).getName()).isEqualTo("Test");
+        assertThat(GridKt._get(seriesGrid, 0).getName()).isEqualTo("Test");
 
         // Remove series
-        GridKt._getCellComponent(seriesGrid, 2, "delete-column").getChildren()
+        GridKt._getCellComponent(seriesGrid, 0, "delete-column").getChildren()
             .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
             .ifPresent(Button::click);
 

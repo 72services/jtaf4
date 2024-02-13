@@ -1,0 +1,9 @@
+services:
+  postgres:
+    image: 'postgres:16.1'
+    environment:
+      - 'POSTGRES_DB=jtaf4'
+      - 'POSTGRES_USER=jtaf4'
+      - 'POSTGRES_PASSWORD=secret'
+    ports:
+      - '5432'
