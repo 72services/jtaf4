@@ -71,7 +71,7 @@ public class UserService {
 
     public void sendConfirmationEmail(SecurityUserRecord user, Locale locale) {
         var message = new SimpleMailMessage();
-        message.setFrom("no-reply@jtaf.ch");
+        message.setFrom("simon.martinelli@gmail.com");
         message.setTo(user.getEmail());
         message.setSubject(i18n.getTranslation("Confirm.Email.Subject", locale));
         message.setText(i18n.getTranslation("Confirm.Email.Body", locale, publicAddress, user.getConfirmationId()));
