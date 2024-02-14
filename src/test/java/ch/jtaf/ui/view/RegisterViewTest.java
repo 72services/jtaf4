@@ -7,14 +7,12 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
 
 class RegisterViewTest extends KaribuTest {
 
-    @Disabled
     @Test
     void register() {
         UI.getCurrent().navigate(RegisterView.class);
