@@ -3,7 +3,7 @@ package ch.jtaf.ui;
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.db.tables.records.SeriesRecord;
 import ch.jtaf.ui.view.OrganizationsView;
-import com.github.mvysny.kaributesting.mockhttp.MockRequest;
+import com.github.mvysny.fakeservlet.FakeRequest;
 import com.github.mvysny.kaributesting.v10.GridKt;
 import com.github.mvysny.kaributesting.v10.MockVaadin;
 import com.github.mvysny.kaributesting.v10.Routes;
@@ -80,7 +80,7 @@ public abstract class KaribuTest {
 
         // however, you also need to make sure that ViewAccessChecker works properly;
         // that requires a correct MockRequest.userPrincipal and MockRequest.isUserInRole()
-        final MockRequest request = (MockRequest) VaadinServletRequest.getCurrent().getRequest();
+        final FakeRequest request = (FakeRequest) VaadinServletRequest.getCurrent().getRequest();
         request.setUserPrincipalInt(authReq);
         request.setUserInRole((principal, role) -> roles.contains(role));
     }
@@ -89,7 +89,7 @@ public abstract class KaribuTest {
         try {
             SecurityContextHolder.getContext().setAuthentication(null);
             if (VaadinServletRequest.getCurrent() != null) {
-                final MockRequest request = (MockRequest) VaadinServletRequest.getCurrent().getRequest();
+                final FakeRequest request = (FakeRequest) VaadinServletRequest.getCurrent().getRequest();
                 request.setUserPrincipalInt(null);
                 request.setUserInRole((principal, role) -> false);
             }

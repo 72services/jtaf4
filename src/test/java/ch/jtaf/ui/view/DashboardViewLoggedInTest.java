@@ -24,11 +24,11 @@ class DashboardViewLoggedInTest extends KaribuTest {
     void enter_results_is_enabled() {
         UI.getCurrent().getPage().reload();
 
-        _assert(Button.class, 6, spec -> spec.withCaption("Enter Results"));
+        _assert(Button.class, 6, spec -> spec.withText("Enter Results"));
 
         try {
             _get(Button.class, spec -> spec.withId("logout")).click();
-        } catch (IllegalStateException __) {
+        } catch (Exception __) {
             // https://github.com/mvysny/karibu-testing/issues/148
         }
     }
