@@ -51,7 +51,7 @@
     <properties>
         <java.version>21</java.version>
 
-        <vaadin.version>24.3.12</vaadin.version>
+        <vaadin.version>24.4.1</vaadin.version>
         <jooq-version>3.19.6</jooq-version>
         <openpdf.version>2.0.1</openpdf.version>
 
@@ -350,6 +350,20 @@
                     <projectId>jtaf4-414119</projectId>
                     <version>GCLOUD_CONFIG</version>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <buildArgs>
+                        <arg>--initialize-at-build-time=org.slf4j.helpers</arg>
+                    </buildArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.cyclonedx</groupId>
+                <artifactId>cyclonedx-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
