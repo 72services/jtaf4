@@ -6,7 +6,7 @@ import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.ui.KaribuTest;
 import ch.jtaf.ui.dialog.ConfirmDialog;
 import ch.jtaf.ui.dialog.OrganizationDialog;
-import com.github.mvysny.kaributesting.mockhttp.MockRequest;
+import com.github.mvysny.fakeservlet.FakeRequest;
 import com.github.mvysny.kaributesting.v10.GridKt;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -72,7 +72,7 @@ class OrganizationsViewTest extends KaribuTest {
 
     @Test
     void with_cookie() {
-        MockRequest request = (MockRequest) VaadinServletRequest.getCurrent().getRequest();
+        FakeRequest request = (FakeRequest) VaadinServletRequest.getCurrent().getRequest();
         request.addCookie(new Cookie(OrganizationProvider.JTAF_ORGANIZATION_ID, "1"));
 
         UI.getCurrent().navigate(OrganizationsView.class);

@@ -10,32 +10,23 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.server.PWA;
-import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.vaadin.flow.theme.lumo.LumoUtility.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
-import org.vaadin.googleanalytics.tracking.EnableGoogleAnalytics;
 
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
-@EnableGoogleAnalytics("G-PH4RL4J6YT")
-@Theme("jtaf")
-@PWA(name = "JTAF 4", shortName = "JTAF 4", description = "JTAF - Track and Field")
-@StyleSheet("https://fonts.googleapis.com/css2?family=Poppins")
-public class MainLayout extends AppLayout implements BeforeEnterObserver, AppShellConfigurator {
+public class MainLayout extends AppLayout implements BeforeEnterObserver{
 
     @Serial
     private static final long serialVersionUID = 1L;
