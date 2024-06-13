@@ -24,6 +24,7 @@ import org.jooq.impl.DSL;
 
 import java.io.ByteArrayInputStream;
 import java.io.Serial;
+import java.time.format.DateTimeFormatter;
 
 import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Series.SERIES;
@@ -38,6 +39,8 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 
     private static final String NAME_MIN_WIDTH = "350px";
     private static final String BUTTON_WIDTH = "220px";
+
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     private final Anchor downloadWidget;
 
@@ -118,7 +121,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                 fakeLogo.setWidth("100px");
                 competitionLayout.add(fakeLogo);
 
-                var pCompetition = new Paragraph("%s %s".formatted(competition.getName(), competition.getCompetitionDate()));
+                var pCompetition = new Paragraph("%s %s".formatted(competition.getName(), dateTimeFormatter.format(competition.getCompetitionDate())));
                 pCompetition.setMinWidth(NAME_MIN_WIDTH);
                 competitionLayout.add(pCompetition);
 
