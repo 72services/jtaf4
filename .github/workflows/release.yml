@@ -5,6 +5,13 @@ on:
         tags:
             - "*.*.*"
 
+env:
+    PROJECT_ID: 'jtaf4-414119'
+    SERVICE: 'jtaf4'
+    REGION: 'europe-west6'
+    REGISTRY: '${{ env.REGION }}-docker.pkg.dev'
+    REPOSITORY: 'jtaf4-repo'
+
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -35,7 +42,7 @@ jobs:
                 uses: google-github-actions/auth@v2
                 with:
                     token_format: access_token
-                    project_id: 'jtaf4-414119'
+                    project_id: '${{ env.PROJECT_ID }}'
                     service_account: '${{ secrets.SERVICE_ACCOUNT }}'
                     workload_identity_provider: '${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}'
 
@@ -48,18 +55,18 @@ jobs:
                 with:
                     username: 'oauth2accesstoken'
                     password: '${{ steps.auth.outputs.access_token }}'
-                    registry: 'europe-west6-docker.pkg.dev'
+                    registry: '${{ env.REGISTRY }}'
 
             -   name: Docker Build
-                run: docker build -t europe-west6-docker.pkg.dev/jtaf4-414119/jtaf4-repo/jtaf4:${{ github.ref_name }} .
+                run: docker build -t ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:${{ github.ref_name }} .
 
             -   name: Docker push
-                run: docker push europe-west6-docker.pkg.dev/jtaf4-414119/jtaf4-repo/jtaf4:${{ github.ref_name }}
+                run: docker push ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:${{ github.ref_name }}
 
             -   name: Deploy to Cloud Run
                 id: deploy
                 uses: google-github-actions/deploy-cloudrun@v2
                 with:
-                    region: 'europe-west6'
-                    service: 'jtaf4'
-                    image: urope-west6-docker.pkg.dev/jtaf4-414119/jtaf4-repo/jtaf4:${{ github.ref_name }}
+                    region: '${{ env.REGION }}'
+                    service: '${{ env.SERVICE }}'
+                    image: '${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:${{ github.ref_name }}'
