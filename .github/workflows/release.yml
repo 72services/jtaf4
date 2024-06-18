@@ -47,7 +47,7 @@ jobs:
                 with:
                     username: 'oauth2accesstoken'
                     password: '${{ steps.auth.outputs.access_token }}'
-                    registry: '${{ env.REGION }}-docker.pkg.dev'
+                    registry: 'europe-west6-docker.pkg.dev'
 
             -   name: Docker Build
                 run: docker build -t europe-west6-docker.pkg.dev/jtaf4-414119/jtaf4-repo/jtaf4:${{ github.ref_name }} .
