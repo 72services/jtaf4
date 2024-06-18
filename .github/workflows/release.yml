@@ -9,7 +9,7 @@ env:
     PROJECT_ID: 'jtaf4-414119'
     SERVICE: 'jtaf4'
     REGION: 'europe-west6'
-    REGISTRY: '${{ env.REGION }}-docker.pkg.dev'
+    REGISTRY: 'europe-west6-docker.pkg.dev'
     REPOSITORY: 'jtaf4-repo'
 
 jobs:
