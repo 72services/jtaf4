@@ -12,7 +12,7 @@
 
     <groupId>ch.jtaf</groupId>
     <artifactId>jtaf4</artifactId>
-    <version>4.6.2</version>
+    <version>4.6.3</version>
 
     <name>JTAF 4</name>
     <description>JTAF - Track And Field</description>
@@ -87,13 +87,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <dependency>
-                <groupId>com.google.cloud</groupId>
-                <artifactId>spring-cloud-gcp-dependencies</artifactId>
-                <version>${spring-cloud-gcp.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -137,10 +130,6 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-resource-server</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.cloud</groupId>
-            <artifactId>spring-cloud-gcp-starter-secretmanager</artifactId>
         </dependency>
 
         <dependency>
@@ -340,15 +329,6 @@
                 <version>${gitflow.version}</version>
                 <configuration>
                     <verbose>true</verbose>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.google.cloud.tools</groupId>
-                <artifactId>appengine-maven-plugin</artifactId>
-                <version>${appengine-maven-plugin.version}</version>
-                <configuration>
-                    <projectId>jtaf4-414119</projectId>
-                    <version>GCLOUD_CONFIG</version>
                 </configuration>
             </plugin>
             <plugin>

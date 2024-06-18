@@ -33,8 +33,32 @@ jobs:
             -   name: GCP Authentication
                 uses: google-github-actions/auth@v2
                 with:
+                    token_format: access_token
+                    project_id: 'jtaf4-414119'
                     service_account: '${{ secrets.SERVICE_ACCOUNT }}'
                     workload_identity_provider: '${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}'
 
-            -   name: Maven Build and AppEngine Deploy
-                run: mvn -B package appengine:deploy -Pproduction
+            -   name: Maven Package
+                run: mvn -B package -Pproduction
+
+            -   name: Docker Auth
+                id: docker-auth
+                uses: 'docker/login-action@v3'
+                with:
+                    username: 'oauth2accesstoken'
+                    password: '${{ steps.auth.outputs.access_token }}'
+                    registry: '${{ env.REGION }}-docker.pkg.dev'
+
+            -   name: Docker Build
+                run: docker build -t europe-west6-docker.pkg.dev/jtaf4-414119/jtaf4-repo/jtaf4:${{ github.ref_name }} .
+
+            -   name: Docker push
+                run: docker push europe-west6-docker.pkg.dev/jtaf4-414119/jtaf4-repo/jtaf4:${{ github.ref_name }}
+
+            -   name: Deploy to Cloud Run
+                id: deploy
+                uses: google-github-actions/deploy-cloudrun@v2
+                with:
+                    region: 'europe-west6'
+                    service: 'jtaf4'
+                    image: urope-west6-docker.pkg.dev/jtaf4-414119/jtaf4-repo/jtaf4:${{ github.ref_name }}

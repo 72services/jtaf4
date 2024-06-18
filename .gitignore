@@ -28,3 +28,4 @@ error-screenshots/
 /vite.generated.ts
 
 /src/main/frontend/generated/*
+/src/main/bundles/prod.bundle
