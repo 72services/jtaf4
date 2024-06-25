@@ -5,13 +5,6 @@ on:
         tags:
             - "*.*.*"
 
-env:
-    PROJECT_ID: 'jtaf4-414119'
-    SERVICE: 'jtaf4'
-    REGION: 'europe-west6'
-    REGISTRY: 'europe-west6-docker.pkg.dev'
-    REPOSITORY: 'jtaf4-repo'
-
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -38,35 +31,10 @@ jobs:
                         ${{ runner.os }}-maven-
 
             -   name: GCP Authentication
-                id: auth
                 uses: google-github-actions/auth@v2
                 with:
-                    token_format: access_token
-                    project_id: '${{ env.PROJECT_ID }}'
                     service_account: '${{ secrets.SERVICE_ACCOUNT }}'
                     workload_identity_provider: '${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}'
 
-            -   name: Maven Package
-                run: mvn -B package -Pproduction
-
-            -   name: Docker Auth
-                id: docker-auth
-                uses: 'docker/login-action@v3'
-                with:
-                    username: 'oauth2accesstoken'
-                    password: '${{ steps.auth.outputs.access_token }}'
-                    registry: '${{ env.REGISTRY }}'
-
-            -   name: Docker Build
-                run: docker build -t ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:${{ github.ref_name }} .
-
-            -   name: Docker push
-                run: docker push ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:${{ github.ref_name }}
-
-            -   name: Deploy to Cloud Run
-                id: deploy
-                uses: google-github-actions/deploy-cloudrun@v2
-                with:
-                    region: '${{ env.REGION }}'
-                    service: '${{ env.SERVICE }}'
-                    image: '${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:${{ github.ref_name }}'
+            -   name: Maven Build and AppEngine Deploy
+                run: mvn -B package appengine:deploy -Pproduction
