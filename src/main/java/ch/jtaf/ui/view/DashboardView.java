@@ -19,6 +19,7 @@ import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 
@@ -40,14 +41,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
     private static final String NAME_MIN_WIDTH = "350px";
     private static final String BUTTON_WIDTH = "220px";
 
-    private final Anchor downloadWidget;
-
     public DashboardView(DSLContext dsl, SeriesRankingService seriesRankingService, CompetitionRankingService competitionRankingService) {
-        downloadWidget = new Anchor();
-        downloadWidget.getStyle().set("display", "none");
-        downloadWidget.setTarget("_blank");
-        add(downloadWidget);
-
         getClassNames().add("dashboard");
 
         var verticalLayout = new VerticalLayout();
@@ -75,34 +69,38 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
             buttonLayout.getClassNames().add("button-layout");
             seriesLayout.add(buttonLayout);
 
-            var seriesRanking = new Button(getTranslation("Series.Ranking"), new Icon(VaadinIcon.FILE));
-            seriesRanking.setId("series-ranking-" + seriesIndex);
-            seriesRanking.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
-            seriesRanking.setWidth(BUTTON_WIDTH);
-            seriesRanking.addClickListener(event -> {
-                StreamResource streamResource = new StreamResource("series_ranking" + series.getId() + ".pdf",
-                    () -> {
-                        var pdf = seriesRankingService.getSeriesRankingAsPdf(series.getId());
-                        return new ByteArrayInputStream(pdf);
-                    });
-                download(streamResource);
-            });
-            var seriesRankingDiv = new Div(seriesRanking);
+            var seriesRankingAnchor = new Anchor(new StreamResource("series_ranking" + series.getId() + ".pdf",
+                () -> {
+                    var pdf = seriesRankingService.getSeriesRankingAsPdf(series.getId());
+                    return new ByteArrayInputStream(pdf);
+                }), "");
+            seriesRankingAnchor.setId("series-ranking-" + seriesIndex);
+            seriesRankingAnchor.setTarget("_blank");
+
+            Button seriesRankingButton = new Button(getTranslation("Series.Ranking"), new Icon(VaadinIcon.FILE));
+            seriesRankingButton.setWidth(BUTTON_WIDTH);
+            seriesRankingButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+            seriesRankingButton.addClassName(LumoUtility.FontWeight.MEDIUM);
+            seriesRankingAnchor.add(seriesRankingButton);
+
+            var seriesRankingDiv = new Div(seriesRankingAnchor);
             buttonLayout.add(seriesRankingDiv);
 
-            var clubRanking = new Button(getTranslation("Club.Ranking"), new Icon(VaadinIcon.FILE));
-            clubRanking.setId("club-ranking-" + seriesIndex);
-            clubRanking.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
-            clubRanking.setWidth(BUTTON_WIDTH);
-            clubRanking.addClickListener(event -> {
-                StreamResource streamResource = new StreamResource("club_ranking" + series.getId() + ".pdf",
-                    () -> {
-                        byte[] pdf = seriesRankingService.getClubRankingAsPdf(series.getId());
-                        return new ByteArrayInputStream(pdf);
-                    });
-                download(streamResource);
-            });
-            var clubRankingDiv = new Div(clubRanking);
+            var clubRankingAnchor = new Anchor(new StreamResource("club_ranking" + series.getId() + ".pdf",
+                () -> {
+                    byte[] pdf = seriesRankingService.getClubRankingAsPdf(series.getId());
+                    return new ByteArrayInputStream(pdf);
+                }), "");
+            clubRankingAnchor.setId("club-ranking-" + seriesIndex);
+            clubRankingAnchor.setTarget("_blank");
+
+            Button clubRankingButton = new Button(getTranslation("Club.Ranking"), new Icon(VaadinIcon.FILE));
+            clubRankingButton.setWidth(BUTTON_WIDTH);
+            clubRankingButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+            clubRankingButton.addClassName(LumoUtility.FontWeight.MEDIUM);
+            clubRankingAnchor.add(clubRankingButton);
+
+            var clubRankingDiv = new Div(clubRankingAnchor);
             buttonLayout.add(clubRankingDiv);
 
             int competitionIndex = 1;
@@ -128,50 +126,56 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                 links.getClassNames().add("links-layout");
                 competitionLayout.add(links);
 
-                var competitionRanking = new Button(getTranslation("Competition.Ranking"), new Icon(VaadinIcon.FILE));
-                competitionRanking.setId("competition-ranking-" + seriesIndex + "-" + competitionIndex);
-                competitionRanking.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
-                competitionRanking.setWidth(BUTTON_WIDTH);
-                competitionRanking.addClickListener(event -> {
-                    StreamResource streamResource = new StreamResource("competition_ranking" + competition.getId() + ".pdf",
-                        () -> {
-                            byte[] pdf = competitionRankingService.getCompetitionRankingAsPdf(competition.getId());
-                            return new ByteArrayInputStream(pdf);
-                        });
-                    download(streamResource);
-                });
-                var competitionRankingDiv = new Div(competitionRanking);
+                var competitionRankingAnchor = new Anchor(new StreamResource("competition_ranking" + competition.getId() + ".pdf",
+                    () -> {
+                        byte[] pdf = competitionRankingService.getCompetitionRankingAsPdf(competition.getId());
+                        return new ByteArrayInputStream(pdf);
+                    }), "");
+                competitionRankingAnchor.setId("competition-ranking-" + seriesIndex + "-" + competitionIndex);
+                competitionRankingAnchor.setTarget("_blank");
+
+                Button competitionRankingButton = new Button(getTranslation("Competition.Ranking"), new Icon(VaadinIcon.FILE));
+                competitionRankingButton.setWidth(BUTTON_WIDTH);
+                competitionRankingButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+                competitionRankingButton.addClassName(LumoUtility.FontWeight.MEDIUM);
+                competitionRankingAnchor.add(competitionRankingButton);
+
+                var competitionRankingDiv = new Div(competitionRankingAnchor);
                 links.add(competitionRankingDiv);
 
                 if (SecurityContext.isUserLoggedIn()) {
-                    var diploma = new Button(getTranslation("Diploma"), new Icon(VaadinIcon.FILE));
-                    diploma.setId("diploma-" + seriesIndex + "-" + competitionIndex);
-                    diploma.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
-                    diploma.setWidth(BUTTON_WIDTH);
-                    diploma.addClickListener(event -> {
-                        var streamResource = new StreamResource("diploma" + competition.getId() + ".pdf",
-                            () -> {
-                                var pdf = competitionRankingService.getDiplomasAsPdf(competition.getId());
-                                return new ByteArrayInputStream(pdf);
-                            });
-                        download(streamResource);
-                    });
-                    var diplomaDiv = new Div(diploma);
+                    var diplomaAnchor = new Anchor(new StreamResource("diploma" + competition.getId() + ".pdf",
+                        () -> {
+                            var pdf = competitionRankingService.getDiplomasAsPdf(competition.getId());
+                            return new ByteArrayInputStream(pdf);
+                        }), "");
+                    diplomaAnchor.setId("diploma-" + seriesIndex + "-" + competitionIndex);
+                    diplomaAnchor.setTarget("_blank");
+
+                    Button diplomaButton = new Button(getTranslation("Diploma"), new Icon(VaadinIcon.FILE));
+                    diplomaButton.setWidth(BUTTON_WIDTH);
+                    diplomaButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+                    diplomaButton.addClassName(LumoUtility.FontWeight.MEDIUM);
+                    diplomaAnchor.add(diplomaButton);
+
+                    var diplomaDiv = new Div(diplomaAnchor);
                     links.add(diplomaDiv);
 
-                    var eventRanking = new Button(getTranslation("Event.Ranking"), new Icon(VaadinIcon.FILE));
-                    eventRanking.setId("event-ranking-" + seriesIndex + "-" + competitionIndex);
-                    eventRanking.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
-                    eventRanking.setWidth(BUTTON_WIDTH);
-                    eventRanking.addClickListener(event -> {
-                        StreamResource streamResource = new StreamResource("event_ranking" + competition.getId() + ".pdf",
-                            () -> {
-                                var pdf = competitionRankingService.getEventRankingAsPdf(competition.getId());
-                                return new ByteArrayInputStream(pdf);
-                            });
-                        download(streamResource);
-                    });
-                    var eventRankingDiv = new Div(eventRanking);
+                    var eventRankingAnchor = new Anchor(new StreamResource("event_ranking" + competition.getId() + ".pdf",
+                        () -> {
+                            var pdf = competitionRankingService.getEventRankingAsPdf(competition.getId());
+                            return new ByteArrayInputStream(pdf);
+                        }), "");
+                    eventRankingAnchor.setId("event-ranking-" + seriesIndex + "-" + competitionIndex);
+                    eventRankingAnchor.setTarget("_blank");
+
+                    Button eventRankingButton = new Button(getTranslation("Event.Ranking"), new Icon(VaadinIcon.FILE));
+                    eventRankingButton.setWidth(BUTTON_WIDTH);
+                    eventRankingButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+                    eventRankingButton.addClassName(LumoUtility.FontWeight.MEDIUM);
+                    eventRankingAnchor.add(eventRankingButton);
+
+                    var eventRankingDiv = new Div(eventRankingAnchor);
                     links.add(eventRankingDiv);
 
                     var enterResults = new Button(getTranslation("Enter.Results"), new Icon(VaadinIcon.KEYBOARD));
@@ -196,10 +200,5 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
     @Override
     public String getPageTitle() {
         return getTranslation("Dashboard");
-    }
-
-    protected void download(StreamResource resource) {
-        downloadWidget.setHref(resource);
-        UI.getCurrent().getPage().executeJs("$0.click();", downloadWidget.getElement());
     }
 }
