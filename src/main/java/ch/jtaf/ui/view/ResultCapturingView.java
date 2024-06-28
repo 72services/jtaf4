@@ -63,11 +63,11 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
         this.transactionTemplate = transactionTemplate;
         this.resultCalculator = resultCalculator;
 
-        this.dataProvider = new CallbackDataProvider<Record4<Long, String, String, Long>, String>(
+        this.dataProvider = new CallbackDataProvider<>(
             query -> {
                 var athletes = getAthletes(dsl, query);
                 if (athletes.size() == 1) {
-                    grid.select(athletes.get(0));
+                    grid.select(athletes.getFirst());
                     if (resultTextField != null) {
                         resultTextField.focus();
                     }

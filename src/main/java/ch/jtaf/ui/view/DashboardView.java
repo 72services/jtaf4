@@ -40,8 +40,6 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
     private static final String NAME_MIN_WIDTH = "350px";
     private static final String BUTTON_WIDTH = "220px";
 
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-
     private final Anchor downloadWidget;
 
     public DashboardView(DSLContext dsl, SeriesRankingService seriesRankingService, CompetitionRankingService competitionRankingService) {
@@ -121,6 +119,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                 fakeLogo.setWidth("100px");
                 competitionLayout.add(fakeLogo);
 
+                var dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
                 var pCompetition = new Paragraph("%s %s".formatted(competition.getName(), dateTimeFormatter.format(competition.getCompetitionDate())));
                 pCompetition.setMinWidth(NAME_MIN_WIDTH);
                 competitionLayout.add(pCompetition);

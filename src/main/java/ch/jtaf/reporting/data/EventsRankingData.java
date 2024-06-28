@@ -30,7 +30,7 @@ public record EventsRankingData(String name, LocalDate competitionDate, List<Eve
 
             double resultAsDouble() {
                 try {
-                    if (result == null || result.length() == 0) {
+                    if (result == null || result.isEmpty()) {
                         return 0.0d;
                     } else {
                         String[] parts = result.split("\\.");
