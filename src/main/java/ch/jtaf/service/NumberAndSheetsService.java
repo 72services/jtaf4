@@ -34,15 +34,15 @@ public class NumberAndSheetsService {
     }
 
     public byte[] createNumbers(Long seriesId, Field<?>... orderBy) {
-        return new NumbersReport(getAthletes(seriesId, orderBy), new Locale("de", "CH")).create();
+        return new NumbersReport(getAthletes(seriesId, orderBy), Locale.of("de", "CH")).create();
     }
 
     public byte[] createSheets(Long seriesId, Long competitionId, Field<?>... orderBy) {
-        return new SheetsReport(getCompetition(competitionId), getAthletes(seriesId, orderBy), getLogo(seriesId), new Locale("de", "CH")).create();
+        return new SheetsReport(getCompetition(competitionId), getAthletes(seriesId, orderBy), getLogo(seriesId), Locale.of("de", "CH")).create();
     }
 
     public byte[] createEmptySheets(Long seriesId, Long categoryId) {
-        return new SheetsReport(createDummyAthlete(categoryId), getLogo(seriesId), new Locale("de", "CH")).create();
+        return new SheetsReport(createDummyAthlete(categoryId), getLogo(seriesId), Locale.of("de", "CH")).create();
     }
 
     private NumbersAndSheetsAthlete createDummyAthlete(Long categoryId) {
