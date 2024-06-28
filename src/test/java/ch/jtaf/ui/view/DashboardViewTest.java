@@ -3,7 +3,7 @@ package ch.jtaf.ui.view;
 import ch.jtaf.configuration.security.Role;
 import ch.jtaf.ui.KaribuTest;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static com.github.mvysny.kaributesting.v10.DownloadKt._download;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._assert;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,26 +38,26 @@ class DashboardViewTest extends KaribuTest {
 
     @Test
     void series_ranking() {
-        assertThatNoException().isThrownBy(() -> _get(Button.class, spec -> spec.withId("series-ranking-1")).click());
+        assertThatNoException().isThrownBy(() -> _download(_get(Anchor.class, spec -> spec.withId("series-ranking-1"))));
     }
 
     @Test
     void club_ranking() {
-        assertThatNoException().isThrownBy(() ->_get(Button.class, spec -> spec.withId("club-ranking-1")).click());
+        assertThatNoException().isThrownBy(() -> _download(_get(Anchor.class, spec -> spec.withId("club-ranking-1"))));
     }
 
     @Test
     void competition_ranking() {
-        assertThatNoException().isThrownBy(() ->_get(Button.class, spec -> spec.withId("competition-ranking-1-1")).click());
+        assertThatNoException().isThrownBy(() -> _download(_get(Anchor.class, spec -> spec.withId("competition-ranking-1-1"))));
     }
 
     @Test
     void diploma() {
-        assertThatNoException().isThrownBy(() ->_get(Button.class, spec -> spec.withId("diploma-1-1")).click());
+        assertThatNoException().isThrownBy(() -> _download(_get(Anchor.class, spec -> spec.withId("diploma-1-1"))));
     }
 
     @Test
     void event_ranking() {
-        assertThatNoException().isThrownBy(() ->_get(Button.class, spec -> spec.withId("event-ranking-1-1")).click());
+        assertThatNoException().isThrownBy(() -> _download(_get(Anchor.class, spec -> spec.withId("event-ranking-1-1"))));
     }
 }
