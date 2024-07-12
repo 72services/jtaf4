@@ -1,0 +1,22 @@
+# fly.toml app configuration file generated for jtaf4-wispy-dream-3913 on 2024-07-12T11:16:22+02:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'jtaf4'
+primary_region = 'ams'
+
+[build]
+
+[http_service]
+  internal_port = 8484
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1

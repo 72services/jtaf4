@@ -37,4 +37,12 @@ jobs:
                     workload_identity_provider: '${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}'
 
             -   name: Maven Build and AppEngine Deploy
-                run: mvn -B clean package appengine:deploy -Pproduction
+                run: mvn -B clean package -Pproduction
+
+            -   uses: superfly/flyctl-actions/setup-flyctl@master
+
+            -   name: Fly Deploy
+                run: flyctl deploy --remote-only
+                env:
+                    FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
