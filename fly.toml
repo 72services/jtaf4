@@ -16,6 +16,13 @@ primary_region = 'ams'
   min_machines_running = 1
   processes = ['app']
 
+[[http_service.checks]]
+  grace_period = "20s"
+  interval = "30s"
+  method = "GET"
+  timeout = "5s"
+  path = "/actuator/health"
+
 [[vm]]
   memory = '1gb'
   cpu_kind = 'shared'
