@@ -30,12 +30,6 @@ jobs:
                     restore-keys: |
                         ${{ runner.os }}-maven-
 
-            -   name: GCP Authentication
-                uses: google-github-actions/auth@v2
-                with:
-                    service_account: '${{ secrets.SERVICE_ACCOUNT }}'
-                    workload_identity_provider: '${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}'
-
             -   name: Maven Build and AppEngine Deploy
                 run: mvn -B clean package -Pproduction
 
