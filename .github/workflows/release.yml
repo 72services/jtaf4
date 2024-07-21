@@ -30,7 +30,7 @@ jobs:
                     restore-keys: |
                         ${{ runner.os }}-maven-
 
-            -   name: Maven Build and AppEngine Deploy
+            -   name: Maven Build
                 run: mvn -B clean package -Pproduction
 
             -   uses: superfly/flyctl-actions/setup-flyctl@master

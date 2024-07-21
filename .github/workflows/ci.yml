@@ -40,7 +40,7 @@ jobs:
                     restore-keys: |
                         ${{ runner.os }}-maven-
 
-            -   name: Maven Build and Sonar Checks and Create Docker Image
+            -   name: Maven Build, Test, and Sonar
                 run: mvn -B verify sonar:sonar -Pcoverage -Dsonar.projectKey=72services_jtaf4
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
