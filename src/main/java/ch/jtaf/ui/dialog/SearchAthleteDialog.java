@@ -2,6 +2,8 @@ package ch.jtaf.ui.dialog;
 
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
+import com.vaadin.flow.component.ComponentEvent;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -20,7 +22,6 @@ import org.jooq.impl.DSL;
 
 import java.io.Serial;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
@@ -44,9 +45,11 @@ public class SearchAthleteDialog extends Dialog {
     private final Map<Long, ClubRecord> clubRecordMap;
     private final ConfigurableFilterDataProvider<AthleteRecord, Void, String> dataProvider;
 
-    public SearchAthleteDialog(DSLContext dsl, Long organizationId, Long seriesId, Consumer<AthleteRecord> onSelect) {
+    public SearchAthleteDialog(DSLContext dsl, Long organizationId, Long seriesId, ComponentEventListener<AthleteSelectedEvent> athleteSelectedtListener) {
         setDraggable(true);
         setResizable(true);
+
+        addListener(AthleteSelectedEvent.class, athleteSelectedtListener);
 
         setHeaderTitle(getTranslation("Athletes"));
 
@@ -119,7 +122,7 @@ public class SearchAthleteDialog extends Dialog {
             newRecord.setOrganizationId(organizationId);
             return newRecord;
         }, getTranslation("Assign.Athlete"), athleteRecord -> {
-            onSelect.accept(athleteRecord);
+            fireEvent(new AthleteSelectedEvent(this, athleteRecord));
             close();
         }, dataProvider::refreshAll);
 
@@ -169,4 +172,18 @@ public class SearchAthleteDialog extends Dialog {
         }
     }
 
+    public static class AthleteSelectedEvent extends ComponentEvent<SearchAthleteDialog> {
+
+        private final AthleteRecord athleteRecord;
+
+        public AthleteSelectedEvent(SearchAthleteDialog source, AthleteRecord athleteRecord) {
+            super(source, false);
+
+            this.athleteRecord = athleteRecord;
+        }
+
+        public AthleteRecord getAthleteRecord() {
+            return athleteRecord;
+        }
+    }
 }

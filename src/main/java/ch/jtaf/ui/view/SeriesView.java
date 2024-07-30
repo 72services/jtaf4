@@ -330,8 +330,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
                     "athlete-delete-confirm-dialog",
                     getTranslation("Confirm"),
                     getTranslation("Are.you.sure"),
-                    getTranslation("Remove"), () -> removeAthleteFromSeries(athleteRecord),
-                    getTranslation("Cancel"), () -> {
+                    getTranslation("Remove"), e -> removeAthleteFromSeries(athleteRecord),
+                    getTranslation("Cancel"), e -> {
                 }).open());
 
             var horizontalLayout = new HorizontalLayout(remove);
@@ -340,8 +340,10 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
         }).setTextAlign(ColumnTextAlign.END).setHeader(assign).setAutoWidth(true).setKey("remove-column");
     }
 
-    private void onAthleteSelect(AthleteRecord athleteRecord) {
+    private void onAthleteSelect(SearchAthleteDialog.AthleteSelectedEvent athleteSelectedEvent) {
         transactionTemplate.executeWithoutResult(transactionStatus -> {
+            var athleteRecord = athleteSelectedEvent.getAthleteRecord();
+
             var categoryId = dsl
                 .select(CATEGORY.ID)
                 .from(CATEGORY)

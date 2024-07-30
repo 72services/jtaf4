@@ -81,7 +81,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
                     "delete-organization-confirm-dialog",
                     getTranslation("Confirm"),
                     getTranslation("Are.you.sure"),
-                    getTranslation("Delete"), () -> transactionTemplate.executeWithoutResult(transactionStatus -> {
+                    getTranslation("Delete"), e -> transactionTemplate.executeWithoutResult(transactionStatus -> {
                     try {
                         dsl.deleteFrom(ORGANIZATION_USER).where(ORGANIZATION_USER.ORGANIZATION_ID.eq(organizationRecord.getId())).execute();
 
@@ -93,7 +93,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
                         Notification.show(ex.getMessage());
                     }
                 }),
-                    getTranslation("Cancel"), () -> {
+                    getTranslation("Cancel"), e -> {
                 }).open());
 
             var horizontalLayout = new HorizontalLayout(select, delete);

@@ -24,15 +24,20 @@ public class GridBuilder {
     private GridBuilder() {
     }
 
-    public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(Grid<R> grid, EditDialog<R> dialog,
-                                                                                             Consumer<R> afterSave, Supplier<R> onNewRecord,
+    public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(Grid<R> grid,
+                                                                                             EditDialog<R> dialog,
+                                                                                             Consumer<R> afterSave,
+                                                                                             Supplier<R> onNewRecord,
                                                                                              Runnable afterDelete) {
         addActionColumnAndSetSelectionListener(grid, dialog, afterSave, onNewRecord, null, null, afterDelete);
     }
 
-    public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(Grid<R> grid, EditDialog<R> dialog,
-                                                                                             Consumer<R> afterSave, Supplier<R> onNewRecord,
-                                                                                             String insteadOfDeleteTitle, Consumer<R> insteadOfDelete,
+    public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(Grid<R> grid,
+                                                                                             EditDialog<R> dialog,
+                                                                                             Consumer<R> afterSave,
+                                                                                             Supplier<R> onNewRecord,
+                                                                                             String insteadOfDeleteTitle,
+                                                                                             Consumer<R> insteadOfDelete,
                                                                                              Runnable afterDelete) {
         var buttonAdd = new Button(grid.getTranslation("Add"));
         buttonAdd.setId("add-button");
@@ -48,7 +53,7 @@ public class GridBuilder {
                         "delete-confirm-dialog",
                         grid.getTranslation("Confirm"),
                         grid.getTranslation("Are.you.sure"),
-                        grid.getTranslation("Delete"), () ->
+                        grid.getTranslation("Delete"), e ->
                         getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> {
                             try {
                                 getBean(DSLContext.class).attach(updatableRecord);
@@ -59,7 +64,7 @@ public class GridBuilder {
                                 Notification.show(ex.getMessage());
                             }
                         }),
-                        grid.getTranslation("Cancel"), () -> {
+                        grid.getTranslation("Cancel"), e -> {
                     }).open();
                 }
             });

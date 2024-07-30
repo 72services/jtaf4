@@ -2,7 +2,6 @@ package ch.jtaf.ui.dialog;
 
 import ch.jtaf.db.tables.records.CategoryEventRecord;
 import ch.jtaf.db.tables.records.CategoryRecord;
-import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.model.CategoryEventVO;
 import ch.jtaf.model.Gender;
 import ch.jtaf.ui.converter.JtafStringToIntegerConverter;
@@ -103,7 +102,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
         var addEvent = new Button(getTranslation("Add.Event"));
         addEvent.setId("add-event");
         addEvent.addClickListener(event -> {
-            SearchEventDialog dialog = new SearchEventDialog(getBean(DSLContext.class), binder.getBean(), this::onEventSelect);
+            SearchEventDialog dialog = new SearchEventDialog(getBean(DSLContext.class), binder.getBean(), this::onAssignEvent);
             dialog.open();
         });
 
@@ -124,11 +123,11 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
         add(categoryEventsGrid);
     }
 
-    private void onEventSelect(EventRecord eventRecord) {
+    private void onAssignEvent(SearchEventDialog.AssignEvent assignEvent) {
         getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus -> {
             var categoryEvent = new CategoryEventRecord();
             categoryEvent.setCategoryId(binder.getBean().getId());
-            categoryEvent.setEventId(eventRecord.getId());
+            categoryEvent.setEventId(assignEvent.getEventRecord().getId());
 
             var newPosition = getCategoryEvents().stream()
                 .max(Comparator.comparingInt(CategoryEventVO::position))
@@ -171,7 +170,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
             "remove-event-from-category-confirm-dialog",
             getTranslation("Confirm"),
             getTranslation("Are.you.sure"),
-            getTranslation("Remove"), () -> {
+            getTranslation("Remove"), e -> {
             getBean(TransactionTemplate.class).executeWithoutResult(transactionStatus ->
                 getBean(DSLContext.class)
                     .deleteFrom(CATEGORY_EVENT)
@@ -181,7 +180,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
             categoryEventsGrid.setItems(getCategoryEvents());
             categoryEventsGrid.getDataProvider().refreshAll();
         },
-            getTranslation("Cancel"), () -> {
+            getTranslation("Cancel"), e -> {
         }).open();
     }
 }
