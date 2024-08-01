@@ -9,6 +9,7 @@ import org.jooq.DSLContext;
 import org.springframework.stereotype.Service;
 
 import java.util.Locale;
+import java.util.Optional;
 
 import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
@@ -28,19 +29,19 @@ public class CompetitionRankingService {
         this.dsl = dsl;
     }
 
-    public byte[] getCompetitionRankingAsPdf(Long competitionId) {
-        return new CompetitionRankingReport(getCompetitionRanking(competitionId), Locale.of("de", "CH")).create();
+    public byte[] getCompetitionRankingAsPdf(Long competitionId, Locale locale) {
+        return new CompetitionRankingReport(getCompetitionRanking(competitionId).orElseThrow(), locale).create();
     }
 
-    public byte[] getDiplomasAsPdf(Long competitionId) {
-        return new DiplomaReport(getCompetitionRanking(competitionId), getLogo(competitionId), Locale.of("de", "CH")).create();
+    public byte[] getDiplomasAsPdf(Long competitionId, Locale locale) {
+        return new DiplomaReport(getCompetitionRanking(competitionId).orElseThrow(), getLogo(competitionId), locale).create();
     }
 
-    public byte[] getEventRankingAsPdf(Long competitionId) {
-        return new EventsRankingReport(getEventsRanking(competitionId), Locale.of("de", "CH")).create();
+    public byte[] getEventRankingAsPdf(Long competitionId, Locale locale) {
+        return new EventsRankingReport(getEventsRanking(competitionId).orElseThrow(), locale).create();
     }
 
-    public CompetitionRankingData getCompetitionRanking(Long competitionId) {
+    public Optional<CompetitionRankingData> getCompetitionRanking(Long competitionId) {
         return dsl
             .select(
                 COMPETITION.NAME,
@@ -83,10 +84,10 @@ public class CompetitionRankingService {
             )
             .from(COMPETITION)
             .where(COMPETITION.ID.eq(competitionId))
-            .fetchOne(mapping(CompetitionRankingData::new));
+            .fetchOptional(mapping(CompetitionRankingData::new));
     }
 
-    public EventsRankingData getEventsRanking(Long competitionId) {
+    public Optional<EventsRankingData> getEventsRanking(Long competitionId) {
         return dsl
             .select(
                 COMPETITION.NAME,
@@ -115,7 +116,7 @@ public class CompetitionRankingService {
                     .convertFrom(r -> r.map(mapping(EventsRankingData.Event::new))))
             .from(COMPETITION)
             .where(COMPETITION.ID.eq(competitionId))
-            .fetchOne(mapping(EventsRankingData::new));
+            .fetchOptional(mapping(EventsRankingData::new));
     }
 
     private byte[] getLogo(Long competitionId) {

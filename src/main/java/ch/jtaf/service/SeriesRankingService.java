@@ -8,6 +8,7 @@ import org.jooq.DSLContext;
 import org.springframework.stereotype.Service;
 
 import java.util.Locale;
+import java.util.Optional;
 
 import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
@@ -26,11 +27,11 @@ public class SeriesRankingService {
         this.dsl = dsl;
     }
 
-    public byte[] getSeriesRankingAsPdf(Long seriesId) {
-        return new SeriesRankingReport(getSeriesRanking(seriesId), Locale.of("de", "CH")).create();
+    public byte[] getSeriesRankingAsPdf(Long seriesId, Locale locale) {
+        return new SeriesRankingReport(getSeriesRanking(seriesId).orElseThrow(), locale).create();
     }
 
-    public SeriesRankingData getSeriesRanking(Long seriesId) {
+    public Optional<SeriesRankingData> getSeriesRanking(Long seriesId) {
         return dsl
             .select(
                 COMPETITION.series().NAME,
@@ -71,14 +72,14 @@ public class SeriesRankingService {
             .from(COMPETITION)
             .where(COMPETITION.SERIES_ID.eq(seriesId))
             .groupBy(COMPETITION.series().ID, COMPETITION.series().NAME)
-            .fetchOne(mapping(SeriesRankingData::new));
+            .fetchOptional(mapping(SeriesRankingData::new));
     }
 
-    public byte[] getClubRankingAsPdf(Long seriesId) {
-        return new ClubRankingReport(getClubRanking(seriesId), Locale.of("de", "CH")).create();
+    public byte[] getClubRankingAsPdf(Long seriesId, Locale locale) {
+        return new ClubRankingReport(getClubRanking(seriesId).orElseThrow(), locale).create();
     }
 
-    public ClubRankingData getClubRanking(Long seriesId) {
+    public Optional<ClubRankingData> getClubRanking(Long seriesId) {
         return dsl
             .select(
                 SERIES.NAME,
@@ -94,6 +95,6 @@ public class SeriesRankingService {
             )
             .from(SERIES)
             .where(SERIES.ID.eq(seriesId))
-            .fetchOne(mapping(ClubRankingData::new));
+            .fetchOptional(mapping(ClubRankingData::new));
     }
 }

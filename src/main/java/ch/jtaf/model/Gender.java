@@ -8,8 +8,8 @@ public enum Gender {
     M, F;
 
     public static List<String> valuesAsStrings() {
-        List<String> valuesAsStrings = new ArrayList<>();
-        for (Gender value : values()) {
+        var valuesAsStrings = new ArrayList<String>();
+        for (var value : values()) {
             valuesAsStrings.add(value.name());
         }
         return valuesAsStrings;

@@ -9,7 +9,7 @@ public enum EventType {
 
     public static List<String> valuesAsStrings() {
         List<String> valuesAsStrings = new ArrayList<>();
-        for (EventType value : values()) {
+        for (var value : values()) {
             valuesAsStrings.add(value.name());
         }
         return valuesAsStrings;

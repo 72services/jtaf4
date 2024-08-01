@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import static com.github.mvysny.kaributesting.v10.LocatorJ._assert;
@@ -22,7 +23,7 @@ class ConfirmationViewTest extends KaribuTest {
 
     @Test
     void confirmation_successful() throws UserAlreadyExistException {
-        SecurityUserRecord user = userService.createUser("Martha", "Keller", "martha.keller@nodomain.xyz", "pass", null);
+        SecurityUserRecord user = userService.createUser("Martha", "Keller", "martha.keller@nodomain.xyz", "pass", Locale.of("de", "CH"));
 
         UI.getCurrent().navigate("confirm", new QueryParameters(Map.of("cf", List.of(user.getConfirmationId()))));
 

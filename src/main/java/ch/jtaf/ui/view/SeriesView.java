@@ -233,7 +233,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
         competitionsGrid.addColumn(new ComponentRenderer<>(competition -> {
             var sheetsOrderedByAthlete = new Anchor(new StreamResource("sheets_orderby_athlete" + competition.getId() + ".pdf",
                 () -> {
-                    byte[] pdf = numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(),
+                    byte[] pdf = numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(), getLocale(),
                         CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Sheets"));
@@ -241,7 +241,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
             var sheetsOrderedByClub = new Anchor(new StreamResource("sheets_orderby_club" + competition.getId() + ".pdf",
                 () -> {
-                    byte[] pdf = numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(),
+                    byte[] pdf = numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(), getLocale(),
                         CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Ordered.by.club"));
@@ -249,7 +249,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
             var numbersOrderedByAthlete = new Anchor(new StreamResource("numbers_orderby_athlete" + competition.getId() + ".pdf",
                 () -> {
-                    byte[] pdf = numberAndSheetsService.createNumbers(competition.getSeriesId(),
+                    byte[] pdf = numberAndSheetsService.createNumbers(competition.getSeriesId(), getLocale(),
                         CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Numbers"));
@@ -257,7 +257,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
             var numbersOrderedByClub = new Anchor(new StreamResource("numbers_orderby_club" + competition.getId() + ".pdf",
                 () -> {
-                    byte[] pdf = numberAndSheetsService.createNumbers(competition.getSeriesId(),
+                    byte[] pdf = numberAndSheetsService.createNumbers(competition.getSeriesId(), getLocale(),
                         CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Ordered.by.club"));
@@ -288,7 +288,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
         categoriesGrid.addColumn(new ComponentRenderer<>(category -> {
             var sheet = new Anchor(new StreamResource("sheet" + category.getId() + ".pdf",
                 () -> {
-                    byte[] pdf = numberAndSheetsService.createEmptySheets(seriesRecord.getId(), category.getId());
+                    byte[] pdf = numberAndSheetsService.createEmptySheets(seriesRecord.getId(), category.getId(), getLocale());
                     return new ByteArrayInputStream(pdf);
                 }), getTranslation("Sheets"));
             sheet.setTarget(BLANK);

@@ -60,8 +60,7 @@ public final class SecurityContext {
 
         getBean(AuthenticationContext.class).logout();
 
-        var cookieName = "remember-me";
-        var cookie = new Cookie(cookieName, null);
+        var cookie = new Cookie("remember-me", null);
         cookie.setMaxAge(0);
         cookie.setPath(StringUtils.hasLength(request.getContextPath()) ? request.getContextPath() : "/");
 

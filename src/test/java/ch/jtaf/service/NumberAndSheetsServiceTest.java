@@ -6,6 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import java.util.Locale;
+
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.Club.CLUB;
@@ -22,35 +24,35 @@ class NumberAndSheetsServiceTest {
 
     @Test
     void create_numbers() {
-        byte[] pdf = numberAndSheetsService.createNumbers(1L);
+        byte[] pdf = numberAndSheetsService.createNumbers(1L, Locale.of("de", "CH"));
 
         assertThat(pdf).isNotEmpty();
     }
 
     @Test
     void create_numbers_ordered_by_club() {
-        byte[] pdf = numberAndSheetsService.createNumbers(1L, CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
+        byte[] pdf = numberAndSheetsService.createNumbers(1L, Locale.of("de", "CH"), CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
 
         assertThat(pdf).isNotEmpty();
     }
 
     @Test
     void create_empty_sheets() {
-        byte[] pdf = numberAndSheetsService.createEmptySheets(1L, 1L);
+        byte[] pdf = numberAndSheetsService.createEmptySheets(1L, 1L, Locale.of("de", "CH"));
 
         assertThat(pdf).isNotEmpty();
     }
 
     @Test
     void create_sheets() {
-        byte[] pdf = numberAndSheetsService.createSheets(1L, 6L);
+        byte[] pdf = numberAndSheetsService.createSheets(1L, 6L, Locale.of("de", "CH"));
 
         assertThat(pdf).isNotEmpty();
     }
 
     @Test
     void create_sheets_ordered_by_club() {
-        byte[] pdf = numberAndSheetsService.createSheets(1L, 6L, CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
+        byte[] pdf = numberAndSheetsService.createSheets(1L, 6L, Locale.of("de", "CH"), CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
 
         assertThat(pdf).isNotEmpty();
     }

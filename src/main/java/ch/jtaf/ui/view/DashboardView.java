@@ -71,7 +71,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 
             var seriesRankingAnchor = new Anchor(new StreamResource("series_ranking" + series.getId() + ".pdf",
                 () -> {
-                    var pdf = seriesRankingService.getSeriesRankingAsPdf(series.getId());
+                    var pdf = seriesRankingService.getSeriesRankingAsPdf(series.getId(), getLocale());
                     return new ByteArrayInputStream(pdf);
                 }), "");
             seriesRankingAnchor.setId("series-ranking-" + seriesIndex);
@@ -88,7 +88,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 
             var clubRankingAnchor = new Anchor(new StreamResource("club_ranking" + series.getId() + ".pdf",
                 () -> {
-                    byte[] pdf = seriesRankingService.getClubRankingAsPdf(series.getId());
+                    byte[] pdf = seriesRankingService.getClubRankingAsPdf(series.getId(), getLocale());
                     return new ByteArrayInputStream(pdf);
                 }), "");
             clubRankingAnchor.setId("club-ranking-" + seriesIndex);
@@ -128,7 +128,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 
                 var competitionRankingAnchor = new Anchor(new StreamResource("competition_ranking" + competition.getId() + ".pdf",
                     () -> {
-                        byte[] pdf = competitionRankingService.getCompetitionRankingAsPdf(competition.getId());
+                        byte[] pdf = competitionRankingService.getCompetitionRankingAsPdf(competition.getId(), getLocale());
                         return new ByteArrayInputStream(pdf);
                     }), "");
                 competitionRankingAnchor.setId("competition-ranking-" + seriesIndex + "-" + competitionIndex);
@@ -146,7 +146,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                 if (SecurityContext.isUserLoggedIn()) {
                     var diplomaAnchor = new Anchor(new StreamResource("diploma" + competition.getId() + ".pdf",
                         () -> {
-                            var pdf = competitionRankingService.getDiplomasAsPdf(competition.getId());
+                            var pdf = competitionRankingService.getDiplomasAsPdf(competition.getId(), getLocale());
                             return new ByteArrayInputStream(pdf);
                         }), "");
                     diplomaAnchor.setId("diploma-" + seriesIndex + "-" + competitionIndex);
@@ -163,7 +163,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 
                     var eventRankingAnchor = new Anchor(new StreamResource("event_ranking" + competition.getId() + ".pdf",
                         () -> {
-                            var pdf = competitionRankingService.getEventRankingAsPdf(competition.getId());
+                            var pdf = competitionRankingService.getEventRankingAsPdf(competition.getId(), getLocale());
                             return new ByteArrayInputStream(pdf);
                         }), "");
                     eventRankingAnchor.setId("event-ranking-" + seriesIndex + "-" + competitionIndex);

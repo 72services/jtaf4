@@ -94,9 +94,9 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
         categoryEventsGrid.addColumn(CategoryEventVO::name).setHeader(getTranslation("Name")).setAutoWidth(true);
         categoryEventsGrid.addColumn(CategoryEventVO::gender).setHeader(getTranslation("Gender")).setAutoWidth(true);
         categoryEventsGrid.addColumn(CategoryEventVO::eventType).setHeader(getTranslation("Event.Type")).setAutoWidth(true);
-        categoryEventsGrid.addColumn(CategoryEventVO::A).setHeader("A").setAutoWidth(true);
-        categoryEventsGrid.addColumn(CategoryEventVO::B).setHeader("B").setAutoWidth(true);
-        categoryEventsGrid.addColumn(CategoryEventVO::C).setHeader("C").setAutoWidth(true);
+        categoryEventsGrid.addColumn(CategoryEventVO::a).setHeader("A").setAutoWidth(true);
+        categoryEventsGrid.addColumn(CategoryEventVO::b).setHeader("B").setAutoWidth(true);
+        categoryEventsGrid.addColumn(CategoryEventVO::c).setHeader("C").setAutoWidth(true);
         categoryEventsGrid.addColumn(CategoryEventVO::position).setHeader(getTranslation("Position")).setAutoWidth(true);
 
         var addEvent = new Button(getTranslation("Add.Event"));

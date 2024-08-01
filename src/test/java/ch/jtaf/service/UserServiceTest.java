@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import java.util.Locale;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
@@ -23,7 +24,7 @@ class UserServiceTest {
     @Test
     void create_user_and_confirm() {
         assertThatNoException().isThrownBy(() -> {
-            SecurityUserRecord user = userService.createUser("Peter", "Muster", "peter.muster@nodomain.xyz", "pass", null);
+            SecurityUserRecord user = userService.createUser("Peter", "Muster", "peter.muster@nodomain.xyz", "pass", Locale.of("de", "CH"));
 
             boolean confirmed = userService.confirm(user.getConfirmationId());
 
