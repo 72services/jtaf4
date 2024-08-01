@@ -3,6 +3,8 @@ package ch.jtaf.ui.dialog;
 import ch.jtaf.configuration.security.OrganizationProvider;
 import ch.jtaf.db.tables.records.CategoryRecord;
 import ch.jtaf.db.tables.records.EventRecord;
+import com.vaadin.flow.component.ComponentEvent;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -21,7 +23,6 @@ import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 
 import java.io.Serial;
-import java.util.function.Consumer;
 
 import static ch.jtaf.context.ApplicationContextHolder.getBean;
 import static ch.jtaf.db.tables.CategoryEvent.CATEGORY_EVENT;
@@ -41,8 +42,10 @@ public class SearchEventDialog extends Dialog {
 
     private final ConfigurableFilterDataProvider<EventRecord, Void, String> dataProvider;
 
-    public SearchEventDialog(DSLContext dsl, CategoryRecord categoryRecord, Consumer<EventRecord> onSelect) {
+    public SearchEventDialog(DSLContext dsl, CategoryRecord categoryRecord, ComponentEventListener<AssignEvent> assignEventListener) {
         setId("search-event-dialog");
+
+        addListener(AssignEvent.class, assignEventListener);
 
         setDraggable(true);
         setResizable(true);
@@ -110,7 +113,8 @@ public class SearchEventDialog extends Dialog {
         grid.addColumn(EventRecord::getA).setHeader("C").setAutoWidth(true);
 
         grid.addComponentColumn(eventRecord -> new Button(getTranslation("Assign.Event"), e -> {
-            onSelect.accept(eventRecord);
+            fireEvent(new AssignEvent(this, eventRecord));
+
             Notification.show(getTranslation("Event.assigned"), 6000, Notification.Position.TOP_END);
             dataProvider.refreshAll();
         })).setAutoWidth(true).setKey("assign-column");
@@ -160,4 +164,17 @@ public class SearchEventDialog extends Dialog {
         }
     }
 
+    public static class AssignEvent extends ComponentEvent<SearchEventDialog> {
+
+        private final EventRecord eventRecord;
+
+        public AssignEvent(SearchEventDialog source, EventRecord eventRecord) {
+            super(source, false);
+            this.eventRecord = eventRecord;
+        }
+
+        public EventRecord getEventRecord() {
+            return eventRecord;
+        }
+    }
 }

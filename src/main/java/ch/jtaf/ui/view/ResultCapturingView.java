@@ -159,7 +159,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                     getTranslation(REMOVE_RESULTS),
                     getTranslation(REMOVE_RESULTS),
                     getTranslation("Confirm"),
-                    () -> transactionTemplate.executeWithoutResult(status ->
+                    ev -> transactionTemplate.executeWithoutResult(status ->
                     {
                         dsl.deleteFrom(RESULT)
                             .where(RESULT.ATHLETE_ID.eq(event.getValue().get(ATHLETE.ID)))
@@ -169,7 +169,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                         createForm(event);
                     }),
                     getTranslation("Cancel"),
-                    () -> {
+                    ev -> {
                     }).open());
             form.add(removeResults);
         }

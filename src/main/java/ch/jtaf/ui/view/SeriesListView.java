@@ -73,7 +73,7 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
                     "delete-series-confirm-dialog",
                     getTranslation("Confirm"),
                     getTranslation("Are.you.sure"),
-                    getTranslation("Delete"), () -> {
+                    getTranslation("Delete"), e -> {
                     try {
                         dsl.attach(seriesRecord);
                         seriesRecord.delete();
@@ -82,7 +82,7 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
                         Notification.show(ex.getMessage());
                     }
                 },
-                    getTranslation("Cancel"), () -> {
+                    getTranslation("Cancel"), e -> {
                 }).open());
 
             var horizontalLayout = new HorizontalLayout(delete);
