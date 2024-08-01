@@ -59,9 +59,7 @@ public class UserService {
             userGroup.setGroupId(group.getId());
             userGroup.store();
 
-            if (locale != null) {
-                sendConfirmationEmail(user, locale);
-            }
+            sendConfirmationEmail(user, locale);
 
             return user;
         } else {

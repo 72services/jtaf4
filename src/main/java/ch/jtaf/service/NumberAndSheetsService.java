@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
@@ -33,19 +34,19 @@ public class NumberAndSheetsService {
         this.dsl = dsl;
     }
 
-    public byte[] createNumbers(Long seriesId, Field<?>... orderBy) {
-        return new NumbersReport(getAthletes(seriesId, orderBy), Locale.of("de", "CH")).create();
+    public byte[] createNumbers(Long seriesId, Locale locale, Field<?>... orderBy) {
+        return new NumbersReport(getAthletes(seriesId, orderBy), locale).create();
     }
 
-    public byte[] createSheets(Long seriesId, Long competitionId, Field<?>... orderBy) {
-        return new SheetsReport(getCompetition(competitionId), getAthletes(seriesId, orderBy), getLogo(seriesId), Locale.of("de", "CH")).create();
+    public byte[] createSheets(Long seriesId, Long competitionId, Locale locale, Field<?>... orderBy) {
+        return new SheetsReport(getCompetition(competitionId).orElseThrow(), getAthletes(seriesId, orderBy), getLogo(seriesId), locale).create();
     }
 
-    public byte[] createEmptySheets(Long seriesId, Long categoryId) {
-        return new SheetsReport(createDummyAthlete(categoryId), getLogo(seriesId), Locale.of("de", "CH")).create();
+    public byte[] createEmptySheets(Long seriesId, Long categoryId, Locale locale) {
+        return new SheetsReport(createDummyAthlete(categoryId).orElseThrow(), getLogo(seriesId), locale).create();
     }
 
-    private NumbersAndSheetsAthlete createDummyAthlete(Long categoryId) {
+    private Optional<NumbersAndSheetsAthlete> createDummyAthlete(Long categoryId) {
         return dsl
             .select(
                 DSL.inline(null, SQLDataType.BIGINT),
@@ -67,15 +68,15 @@ public class NumberAndSheetsService {
             )
             .from(CATEGORY)
             .where(CATEGORY.ID.eq(categoryId))
-            .fetchOne(mapping(NumbersAndSheetsAthlete::new));
+            .fetchOptional(mapping(NumbersAndSheetsAthlete::new));
     }
 
-    private NumbersAndSheetsCompetition getCompetition(Long competitionId) {
+    private Optional<NumbersAndSheetsCompetition> getCompetition(Long competitionId) {
         return dsl
             .select(COMPETITION.NAME, COMPETITION.COMPETITION_DATE)
             .from(COMPETITION)
             .where(COMPETITION.ID.eq(competitionId))
-            .fetchOneInto(NumbersAndSheetsCompetition.class);
+            .fetchOptionalInto(NumbersAndSheetsCompetition.class);
     }
 
     private byte[] getLogo(Long id) {
