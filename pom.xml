@@ -53,7 +53,7 @@
 
         <vaadin.version>24.4.8</vaadin.version>
         <jooq-version>3.19.10</jooq-version>
-        <openpdf.version>2.0.2</openpdf.version>
+        <openpdf.version>2.0.3</openpdf.version>
         <googleanalyticstracker.version>5.0.0</googleanalyticstracker.version>
 
         <testcontainers.version>1.20.1</testcontainers.version>
