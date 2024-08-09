@@ -57,7 +57,7 @@
         <googleanalyticstracker.version>5.0.0</googleanalyticstracker.version>
 
         <testcontainers.version>1.20.1</testcontainers.version>
-        <testcontainers-jooq-codegen-maven-plugin.version>0.0.3</testcontainers-jooq-codegen-maven-plugin.version>
+        <testcontainers-jooq-codegen-maven-plugin.version>0.0.4</testcontainers-jooq-codegen-maven-plugin.version>
         <gitflow.version>1.21.0</gitflow.version>
         <jacoco.version>0.8.12</jacoco.version>
         <playwright.version>1.45.1</playwright.version>
