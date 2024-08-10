@@ -32,7 +32,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -56,8 +55,8 @@ public abstract class KaribuTest {
 
     @BeforeEach
     public void setup() {
-        final Function0<UI> uiFactory = UI::new;
-        final SpringServlet servlet = new MockSpringServlet(routes, ctx, uiFactory);
+        Function0<UI> uiFactory = UI::new;
+        SpringServlet servlet = new MockSpringServlet(routes, ctx, uiFactory);
         MockVaadin.setup(uiFactory, servlet);
     }
 
@@ -67,11 +66,9 @@ public abstract class KaribuTest {
         MockVaadin.tearDown();
     }
 
-    protected void login(String user, String pass, final List<String> roles) {
-        // taken from https://www.baeldung.com/manually-set-user-authentication-spring-security
-        // also see https://github.com/mvysny/karibu-testing/issues/47 for more details.
-        final List<SimpleGrantedAuthority> authorities =
-            roles.stream().map(it -> new SimpleGrantedAuthority("ROLE_" + it)).collect(Collectors.toList());
+    protected void login(String user, String pass, List<String> roles) {
+        List<SimpleGrantedAuthority> authorities =
+            roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role)).toList();
 
         UserDetails userDetails = new User(user, pass, authorities);
         UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(userDetails, pass, authorities);
@@ -80,7 +77,7 @@ public abstract class KaribuTest {
 
         // however, you also need to make sure that ViewAccessChecker works properly;
         // that requires a correct MockRequest.userPrincipal and MockRequest.isUserInRole()
-        final FakeRequest request = (FakeRequest) VaadinServletRequest.getCurrent().getRequest();
+        FakeRequest request = (FakeRequest) VaadinServletRequest.getCurrent().getRequest();
         request.setUserPrincipalInt(authReq);
         request.setUserInRole((principal, role) -> roles.contains(role));
     }
@@ -89,11 +86,11 @@ public abstract class KaribuTest {
         try {
             SecurityContextHolder.getContext().setAuthentication(null);
             if (VaadinServletRequest.getCurrent() != null) {
-                final FakeRequest request = (FakeRequest) VaadinServletRequest.getCurrent().getRequest();
+                FakeRequest request = (FakeRequest) VaadinServletRequest.getCurrent().getRequest();
                 request.setUserPrincipalInt(null);
                 request.setUserInRole((principal, role) -> false);
             }
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException ignore) {
             // Ignored
         }
     }
