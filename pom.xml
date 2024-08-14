@@ -328,6 +328,9 @@
                 <version>${gitflow.version}</version>
                 <configuration>
                     <verbose>true</verbose>
+                    <gitFlowConfig>
+                        <productionBranch>main</productionBranch>
+                    </gitFlowConfig>
                 </configuration>
             </plugin>
             <plugin>
