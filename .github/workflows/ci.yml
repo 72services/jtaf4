@@ -43,5 +43,4 @@ jobs:
             -   name: Maven Build, Test, and Sonar
                 run: mvn -B verify sonar:sonar -Pcoverage -Dsonar.projectKey=72services_jtaf4
                 env:
-                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
