@@ -34,6 +34,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             var groups = dsl
                 .select(USER_GROUP.securityGroup().NAME)
                 .from(USER_GROUP)
+                .where(USER_GROUP.USER_ID.eq(securityUserRecord.getId()))
                 .fetch();
 
             return new User(securityUserRecord.getEmail(), securityUserRecord.getSecret(),
