@@ -47,9 +47,9 @@ class ClubsViewTest extends KaribuTest {
         toggle.click();
         toggle.click();
 
-        _get(TextField.class, spec -> spec.withCaption("Abbreviation")).setValue("Test");
-        _get(TextField.class, spec -> spec.withCaption("Name")).setValue("Test");
-        _get(Button.class, spec -> spec.withCaption("Save")).click();
+        _get(TextField.class, spec -> spec.withLabel("Abbreviation")).setValue("Test");
+        _get(TextField.class, spec -> spec.withLabel("Name")).setValue("Test");
+        _get(Button.class, spec -> spec.withText("Save")).click();
 
         // Check if club was added
         assertThat(GridKt._size(clubsGrid)).isEqualTo(5);

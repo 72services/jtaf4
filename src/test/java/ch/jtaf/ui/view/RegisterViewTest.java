@@ -17,11 +17,11 @@ class RegisterViewTest extends KaribuTest {
     void register() {
         UI.getCurrent().navigate(RegisterView.class);
 
-        _get(TextField.class, spec -> spec.withCaption("First Name")).setValue("John");
-        _get(TextField.class, spec -> spec.withCaption("Last Name")).setValue("Doe");
-        _get(EmailField.class, spec -> spec.withCaption("Email")).setValue("john@doe.dev");
-        _get(PasswordField.class, spec -> spec.withCaption("Password")).setValue("pass");
-        _get(Button.class, spec -> spec.withCaption("Register")).click();
+        _get(TextField.class, spec -> spec.withLabel("First Name")).setValue("John");
+        _get(TextField.class, spec -> spec.withLabel("Last Name")).setValue("Doe");
+        _get(EmailField.class, spec -> spec.withLabel("Email")).setValue("john@doe.dev");
+        _get(PasswordField.class, spec -> spec.withLabel("Password")).setValue("pass");
+        _get(Button.class, spec -> spec.withText("Register")).click();
 
         NotificationsKt.expectNotifications("Thanks for registering. An email was sent to your address. Please check your inbox.");
     }

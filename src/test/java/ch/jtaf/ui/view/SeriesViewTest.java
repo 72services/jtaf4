@@ -57,8 +57,8 @@ class SeriesViewTest extends KaribuTest {
         _get(Button.class, spec -> spec.withId("add-button")).click();
         _assert(CompetitionDialog.class, 1);
 
-        _get(TextField.class, spec -> spec.withCaption("Name").withValue("")).setValue("Test");
-        _get(DatePicker.class, spec -> spec.withCaption("Date")).setValue(LocalDate.now());
+        _get(TextField.class, spec -> spec.withLabel("Name").withValue("")).setValue("Test");
+        _get(DatePicker.class, spec -> spec.withLabel("Date")).setValue(LocalDate.now());
         _get(Button.class, spec -> spec.withId("edit-save")).click();
 
         // Check if competition was added
@@ -81,7 +81,7 @@ class SeriesViewTest extends KaribuTest {
     @Test
     void add_category_and_assign_event() {
         Tabs tabs = _get(Tabs.class);
-        Tab categories = _get(Tab.class, spec -> spec.withCaption("Categories"));
+        Tab categories = _get(Tab.class, spec -> spec.withLabel("Categories"));
         tabs.setSelectedTab(categories);
 
         // Check content of categories grid
@@ -93,11 +93,11 @@ class SeriesViewTest extends KaribuTest {
         _get(Button.class, spec -> spec.withId("add-button")).click();
         _assert(CategoryDialog.class, 1);
 
-        _get(TextField.class, spec -> spec.withCaption("Abbreviation").withValue("")).setValue("1");
-        _get(TextField.class, spec -> spec.withCaption("Name").withValue("")).setValue("Test");
-        _get(Select.class, spec -> spec.withCaption("Gender")).setValue("M");
-        _get(TextField.class, spec -> spec.withCaption("Year from")).setValue("1999");
-        _get(TextField.class, spec -> spec.withCaption("Year to")).setValue("2000");
+        _get(TextField.class, spec -> spec.withLabel("Abbreviation").withValue("")).setValue("1");
+        _get(TextField.class, spec -> spec.withLabel("Name").withValue("")).setValue("Test");
+        _get(Select.class, spec -> spec.withLabel("Gender")).setValue("M");
+        _get(TextField.class, spec -> spec.withLabel("Year from")).setValue("1999");
+        _get(TextField.class, spec -> spec.withLabel("Year to")).setValue("2000");
         _get(Button.class, spec -> spec.withId("edit-save")).click();
 
         // Check if category was added
@@ -164,7 +164,7 @@ class SeriesViewTest extends KaribuTest {
     @Test
     void assign_athelete() {
         Tabs tabs = _get(Tabs.class);
-        Tab athletes = _get(Tab.class, spec -> spec.withCaption("Athletes"));
+        Tab athletes = _get(Tab.class, spec -> spec.withLabel("Athletes"));
         tabs.setSelectedTab(athletes);
 
         // Check content of athletes grid
@@ -183,7 +183,7 @@ class SeriesViewTest extends KaribuTest {
         toggle.click();
         toggle.click();
 
-        _get(TextField.class, spec -> spec.withCaption("Filter").withValue("")).setValue("z");
+        _get(TextField.class, spec -> spec.withLabel("Filter").withValue("")).setValue("z");
 
         Grid<AthleteRecord> searchAthletesGrid = _get(Grid.class, spec -> spec.withId("search-athletes-grid"));
         assertThat(GridKt._size(searchAthletesGrid)).isEqualTo(1);
