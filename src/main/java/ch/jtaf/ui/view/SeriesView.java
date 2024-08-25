@@ -3,10 +3,7 @@ package ch.jtaf.ui.view;
 import ch.jtaf.configuration.security.OrganizationProvider;
 import ch.jtaf.db.tables.records.*;
 import ch.jtaf.service.NumberAndSheetsService;
-import ch.jtaf.ui.dialog.CategoryDialog;
-import ch.jtaf.ui.dialog.CompetitionDialog;
-import ch.jtaf.ui.dialog.ConfirmDialog;
-import ch.jtaf.ui.dialog.SearchAthleteDialog;
+import ch.jtaf.ui.dialog.*;
 import ch.jtaf.ui.layout.MainLayout;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.button.Button;
@@ -63,6 +60,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
     private final transient NumberAndSheetsService numberAndSheetsService;
     private final TransactionTemplate transactionTemplate;
+    private final Button copyCategories;
 
     private SeriesRecord seriesRecord;
 
@@ -133,6 +131,10 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
         binder.forField(locked)
             .bind(SeriesRecord::getLocked, SeriesRecord::setLocked);
 
+        var buttons = new HorizontalLayout();
+        buttons.setPadding(false);
+        add(buttons);
+
         var save = new Button(getTranslation("Save"));
         save.setId("save-series");
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -144,7 +146,19 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
                 Notification.show(getTranslation("Series.saved"), 6000, Notification.Position.TOP_END);
             })
         );
-        add(save);
+        buttons.add(save);
+
+        copyCategories = new Button(getTranslation("Copy.Categories"));
+        copyCategories.setId("copy-categories");
+        copyCategories.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        copyCategories.addClickListener(event -> {
+            if (seriesRecord != null) {
+                var dialog = new CopyCategoriesDialog(organizationProvider.getOrganization().getId(), seriesRecord.getId());
+                dialog.addAfterCopyListener(e-> refreshAll());
+                dialog.open();
+            }
+        });
+        buttons.add(copyCategories);
 
         sectionTabs.setWidthFull();
         add(sectionTabs);
@@ -214,6 +228,16 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
             seriesRecord = dsl.selectFrom(SERIES).where(SERIES.ID.eq(seriesId)).fetchOne();
         }
         binder.setBean(seriesRecord);
+
+        if (seriesId == null) {
+            // Series must be saved first
+            copyCategories.setVisible(false);
+        } else {
+            if (dsl.fetchCount(CATEGORY, CATEGORY.SERIES_ID.eq(seriesId)) > 0) {
+                // Copy is only possible if no categories are added
+                copyCategories.setVisible(false);
+            }
+        }
     }
 
     @Override

@@ -7,12 +7,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.2</version>
+        <version>3.3.3</version>
     </parent>
 
     <groupId>ch.jtaf</groupId>
     <artifactId>jtaf4</artifactId>
-    <version>4.7.3</version>
+    <version>4.7.4</version>
 
     <name>JTAF 4</name>
     <description>JTAF - Track And Field</description>
@@ -25,7 +25,7 @@
     <developers>
         <developer>
             <name>Simon Martinelli</name>
-            <email>simon@72.services</email>
+            <email>simon@martinelli.ch</email>
             <organization>72 Services LLC</organization>
             <organizationUrl>https://72.services</organizationUrl>
             <timezone>Europe/Zurich</timezone>
@@ -51,7 +51,7 @@
     <properties>
         <java.version>21</java.version>
 
-        <vaadin.version>24.4.8</vaadin.version>
+        <vaadin.version>24.4.10</vaadin.version>
         <jooq-version>3.19.10</jooq-version>
         <openpdf.version>2.0.3</openpdf.version>
         <googleanalyticstracker.version>5.0.0</googleanalyticstracker.version>
@@ -60,7 +60,7 @@
         <testcontainers-jooq-codegen-maven-plugin.version>0.0.4</testcontainers-jooq-codegen-maven-plugin.version>
         <gitflow.version>1.21.0</gitflow.version>
         <jacoco.version>0.8.12</jacoco.version>
-        <playwright.version>1.45.1</playwright.version>
+        <playwright.version>1.46.0</playwright.version>
         <mopo.version>0.0.2</mopo.version>
 
         <karibu-testing.version>2.1.8</karibu-testing.version>
@@ -328,6 +328,9 @@
                 <version>${gitflow.version}</version>
                 <configuration>
                     <verbose>true</verbose>
+                    <gitFlowConfig>
+                        <productionBranch>main</productionBranch>
+                    </gitFlowConfig>
                 </configuration>
             </plugin>
             <plugin>
@@ -342,7 +345,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>3.4.0</version>
                 <dependencies>
                     <dependency>
                         <groupId>me.fabriciorby</groupId>

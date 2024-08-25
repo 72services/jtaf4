@@ -39,7 +39,7 @@ class DashboardViewLoggedInTest extends KaribuTest {
 
         UI.getCurrent().getPage().reload();
 
-        _assert(Button.class, 6, spec -> spec.withCaption("Resultate eingeben"));
+        _assert(Button.class, 6, spec -> spec.withText("Resultate eingeben"));
 
         Locale.setDefault(Locale.ENGLISH);
     }

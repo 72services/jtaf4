@@ -43,14 +43,14 @@ class EventsViewTest extends KaribuTest {
         _get(Button.class, spec -> spec.withId("add-button")).click();
         _assert(EventDialog.class, 1);
 
-        _get(TextField.class, spec -> spec.withCaption("Abbreviation")).setValue("10");
-        _get(TextField.class, spec -> spec.withCaption("Name")).setValue("Test");
-        _get(Select.class, spec -> spec.withCaption("Gender")).setValue("F");
-        _get(Select.class, spec -> spec.withCaption("Event Type")).setValue("RUN");
-        _get(TextField.class, spec -> spec.withCaption("A")).setValue("1");
-        _get(TextField.class, spec -> spec.withCaption("B")).setValue("1");
-        _get(TextField.class, spec -> spec.withCaption("C")).setValue("1");
-        _get(Button.class, spec -> spec.withCaption("Save")).click();
+        _get(TextField.class, spec -> spec.withLabel("Abbreviation")).setValue("10");
+        _get(TextField.class, spec -> spec.withLabel("Name")).setValue("Test");
+        _get(Select.class, spec -> spec.withLabel("Gender")).setValue("F");
+        _get(Select.class, spec -> spec.withLabel("Event Type")).setValue("RUN");
+        _get(TextField.class, spec -> spec.withLabel("A")).setValue("1");
+        _get(TextField.class, spec -> spec.withLabel("B")).setValue("1");
+        _get(TextField.class, spec -> spec.withLabel("C")).setValue("1");
+        _get(Button.class, spec -> spec.withText("Save")).click();
 
         // Check if event was added
         assertThat(GridKt._size(eventsGrid)).isEqualTo(18);
