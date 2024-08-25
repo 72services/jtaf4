@@ -2,6 +2,7 @@ package ch.jtaf.ui.view;
 
 import ch.jtaf.configuration.security.OrganizationProvider;
 import ch.jtaf.db.tables.records.SeriesRecord;
+import ch.jtaf.service.SeriesService;
 import ch.jtaf.ui.dialog.ConfirmDialog;
 import ch.jtaf.ui.layout.MainLayout;
 import ch.jtaf.ui.util.LogoUtil;
@@ -30,7 +31,7 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public SeriesListView(DSLContext dsl, OrganizationProvider organizationProvider) {
+    public SeriesListView(DSLContext dsl, OrganizationProvider organizationProvider, SeriesService seriesService) {
         super(dsl, organizationProvider, SERIES);
 
         setHeightFull();
@@ -75,8 +76,7 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
                     getTranslation("Are.you.sure"),
                     getTranslation("Delete"), e -> {
                     try {
-                        dsl.attach(seriesRecord);
-                        seriesRecord.delete();
+                        seriesService.deleteSeries(seriesRecord.getId());
                         refreshAll();
                     } catch (DataAccessException ex) {
                         Notification.show(ex.getMessage());

@@ -30,6 +30,7 @@ public class CopyCategoriesDialog extends Dialog {
         getHeader().add(close);
 
         var seriesSelection = new ComboBox<SeriesRecord>(getTranslation("Select.series.to.copy"));
+        seriesSelection.setId("series-selection");
         seriesSelection.setWidth("300px");
         seriesSelection.setItemLabelGenerator(SeriesRecord::getName);
         seriesSelection.setItems(query -> dsl
