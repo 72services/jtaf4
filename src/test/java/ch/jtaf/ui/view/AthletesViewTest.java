@@ -47,11 +47,11 @@ class AthletesViewTest extends KaribuTest {
         _get(Button.class, spec -> spec.withId("add-button")).click();
         _assert(AthleteDialog.class, 1);
 
-        _get(TextField.class, spec -> spec.withCaption("Last Name")).setValue("Test");
-        _get(TextField.class, spec -> spec.withCaption("First Name")).setValue("Test");
-        _get(Select.class, spec -> spec.withCaption("Gender")).setValue("F");
-        _get(TextField.class, spec -> spec.withCaption("Year")).setValue("2000");
-        _get(Button.class, spec -> spec.withCaption("Save")).click();
+        _get(TextField.class, spec -> spec.withLabel("Last Name")).setValue("Test");
+        _get(TextField.class, spec -> spec.withLabel("First Name")).setValue("Test");
+        _get(Select.class, spec -> spec.withLabel("Gender")).setValue("F");
+        _get(TextField.class, spec -> spec.withLabel("Year")).setValue("2000");
+        _get(Button.class, spec -> spec.withText("Save")).click();
 
         // Check if athlete was added
         assertThat(GridKt._size(athletesGrid)).isEqualTo(141);
