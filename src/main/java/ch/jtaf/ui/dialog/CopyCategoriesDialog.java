@@ -64,6 +64,7 @@ public class CopyCategoriesDialog extends Dialog {
                             .forEach(categoryEvent -> {
                                 var copyCategoryEvent = categoryEvent.copy();
                                 copyCategoryEvent.setCategoryId(copyCategory.getId());
+                                copyCategoryEvent.setEventId(categoryEvent.getEventId());
                                 dsl.attach(copyCategoryEvent);
                                 copyCategoryEvent.store();
                             });
