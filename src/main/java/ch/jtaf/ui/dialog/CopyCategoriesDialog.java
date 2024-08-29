@@ -59,11 +59,12 @@ public class CopyCategoriesDialog extends Dialog {
                         dsl.attach(copyCategory);
                         copyCategory.store();
                         dsl.selectFrom(CATEGORY_EVENT)
-                            .where(CATEGORY_EVENT.CATEGORY_ID.eq(copyCategory.getId()))
+                            .where(CATEGORY_EVENT.CATEGORY_ID.eq(category.getId()))
                             .fetch()
                             .forEach(categoryEvent -> {
                                 var copyCategoryEvent = categoryEvent.copy();
                                 copyCategoryEvent.setCategoryId(copyCategory.getId());
+                                copyCategoryEvent.setEventId(categoryEvent.getEventId());
                                 dsl.attach(copyCategoryEvent);
                                 copyCategoryEvent.store();
                             });
