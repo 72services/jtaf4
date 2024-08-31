@@ -30,3 +30,5 @@ error-screenshots/
 /src/main/frontend/generated/*
 /src/main/bundles/prod.bundle
 /src/main/resources/rebel.xml
+
+/src/main/resources/application-dev.properties
