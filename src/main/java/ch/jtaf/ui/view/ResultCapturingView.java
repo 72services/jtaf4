@@ -51,7 +51,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
     private final Grid<Record4<Long, String, String, Long>> grid = new Grid<>();
     private final ConfigurableFilterDataProvider<Record4<Long, String, String, Long>, Void, String> dataProvider;
-    private final Div form;
+    private final Div form = new Div();
     private final transient DSLContext dsl;
     private final TransactionTemplate transactionTemplate;
     private final ResultCalculator resultCalculator;
@@ -74,7 +74,13 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                 }
                 return athletes.stream();
             },
-            this::countAthletes,
+            (Query<Record4<Long, String, String, Long>, String> query) -> {
+                int count = countAthletes(query);
+                if (count == 0) {
+                    form.removeAll();
+                }
+                return count;
+            },
             athleteRecord -> athleteRecord.get(ATHLETE.ID)
         ).withConfigurableFilter();
 
@@ -92,7 +98,6 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
         grid.setHeight("200px");
         add(grid);
 
-        form = new Div();
         add(form);
 
         grid.asSingleSelect().addValueChangeListener(this::createForm);
