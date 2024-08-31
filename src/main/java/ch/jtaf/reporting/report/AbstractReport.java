@@ -93,7 +93,7 @@ public abstract class AbstractReport {
             cellLeft.setBorderWidthTop(1f);
             table.addCell(cellLeft);
 
-            var cellCenter = new PdfPCell(new Phrase("JTAF - Track and Field | www.jtaf.io | sponsored by Martinelli LLC", FontFactory.getFont(HELVETICA, DEFAULT_FONT_SIZE)));
+            var cellCenter = new PdfPCell(new Phrase("JTAF - Track and Field | www.jtaf.ch | sponsored by Martinelli LLC", FontFactory.getFont(HELVETICA, DEFAULT_FONT_SIZE)));
             cellCenter.setBorder(0);
             cellCenter.setBorderWidthTop(1f);
             cellCenter.setHorizontalAlignment(ALIGN_CENTER);
