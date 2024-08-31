@@ -64,7 +64,7 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
             locked.setReadOnly(true);
             locked.setValue(seriesRecord.getLocked());
             return locked;
-        }).setHeader(getTranslation("Hidden")).setAutoWidth(true);
+        }).setHeader(getTranslation("Locked")).setAutoWidth(true);
 
         grid.addComponentColumn(seriesRecord -> {
             var delete = new Button(getTranslation("Delete"));

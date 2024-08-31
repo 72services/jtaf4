@@ -61,6 +61,11 @@ public class NumbersReport extends AbstractReport {
                 i++;
                 number++;
             }
+            if (number % 2 == 0) {
+                // An even number indicates an odd number of athletes so we need to add an empty cell to complete the row
+                addEmptyCell(table);
+            }
+
             document.add(table);
 
             document.close();
