@@ -29,7 +29,7 @@ import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
 import static ch.jtaf.db.tables.Club.CLUB;
 import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
-import static org.jooq.impl.DSL.upper;
+import static org.jooq.impl.DSL.lower;
 
 public class SearchAthleteDialog extends Dialog {
 
@@ -164,8 +164,8 @@ public class SearchAthleteDialog extends Dialog {
             if (StringUtils.isNumeric(filterString)) {
                 return ATHLETE.ID.eq(Long.valueOf(filterString));
             } else {
-                return upper(ATHLETE.LAST_NAME).like(filterString.toUpperCase() + "%")
-                    .or(upper(ATHLETE.FIRST_NAME).like(filterString.toUpperCase() + "%"));
+                return lower(ATHLETE.LAST_NAME).like(filterString.toLowerCase() + "%")
+                    .or(lower(ATHLETE.FIRST_NAME).like(filterString.toLowerCase() + "%"));
             }
         } else {
             return DSL.condition("1 = 2");
