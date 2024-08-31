@@ -12,22 +12,22 @@
 
     <groupId>ch.jtaf</groupId>
     <artifactId>jtaf4</artifactId>
-    <version>4.7.6</version>
+    <version>4.7.7</version>
 
     <name>JTAF 4</name>
     <description>JTAF - Track And Field</description>
 
     <organization>
-        <name>72 Services LLC</name>
-        <url>https://72.services</url>
+        <name>Martinelli LLC</name>
+        <url>https://martinelli.ch</url>
     </organization>
 
     <developers>
         <developer>
             <name>Simon Martinelli</name>
             <email>simon@martinelli.ch</email>
-            <organization>72 Services LLC</organization>
-            <organizationUrl>https://72.services</organizationUrl>
+            <organization>Martinelli LLC</organization>
+            <organizationUrl>https://martinelli.ch</organizationUrl>
             <timezone>Europe/Zurich</timezone>
             <roles>
                 <role>Project Lead</role>
