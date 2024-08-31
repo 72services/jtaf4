@@ -163,7 +163,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver{
         var layout = new Footer();
         layout.addClassNames(Display.FLEX, Margin.Vertical.SMALL, Padding.Horizontal.MEDIUM, Padding.Vertical.XSMALL);
 
-        var htmlByLink = new Html("<p style='color: var(--lumo-primary-color)'>Free and<br>Open Source<br>by 72© Services LLC</p>");
+        var htmlByLink = new Html("<p style='color: var(--lumo-primary-color)'>Free and<br>Open Source<br>by Martinelli LLC</p>");
 
         var byLink = new Anchor();
         byLink.setWidth("300px");
