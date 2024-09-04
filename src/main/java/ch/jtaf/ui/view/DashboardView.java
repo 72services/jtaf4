@@ -77,7 +77,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
             seriesRankingAnchor.setId("series-ranking-" + seriesIndex);
             seriesRankingAnchor.setTarget("_blank");
 
-            Button seriesRankingButton = new Button(getTranslation("Series.Ranking"), new Icon(VaadinIcon.FILE));
+            var seriesRankingButton = new Button(getTranslation("Series.Ranking"), new Icon(VaadinIcon.FILE));
             seriesRankingButton.setWidth(BUTTON_WIDTH);
             seriesRankingButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
             seriesRankingButton.addClassName(LumoUtility.FontWeight.MEDIUM);
@@ -94,7 +94,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
             clubRankingAnchor.setId("club-ranking-" + seriesIndex);
             clubRankingAnchor.setTarget("_blank");
 
-            Button clubRankingButton = new Button(getTranslation("Club.Ranking"), new Icon(VaadinIcon.FILE));
+            var clubRankingButton = new Button(getTranslation("Club.Ranking"), new Icon(VaadinIcon.FILE));
             clubRankingButton.setWidth(BUTTON_WIDTH);
             clubRankingButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
             clubRankingButton.addClassName(LumoUtility.FontWeight.MEDIUM);
@@ -134,7 +134,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                 competitionRankingAnchor.setId("competition-ranking-" + seriesIndex + "-" + competitionIndex);
                 competitionRankingAnchor.setTarget("_blank");
 
-                Button competitionRankingButton = new Button(getTranslation("Competition.Ranking"), new Icon(VaadinIcon.FILE));
+                var competitionRankingButton = new Button(getTranslation("Competition.Ranking"), new Icon(VaadinIcon.FILE));
                 competitionRankingButton.setWidth(BUTTON_WIDTH);
                 competitionRankingButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
                 competitionRankingButton.addClassName(LumoUtility.FontWeight.MEDIUM);
@@ -152,7 +152,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                     diplomaAnchor.setId("diploma-" + seriesIndex + "-" + competitionIndex);
                     diplomaAnchor.setTarget("_blank");
 
-                    Button diplomaButton = new Button(getTranslation("Diploma"), new Icon(VaadinIcon.FILE));
+                    var diplomaButton = new Button(getTranslation("Diploma"), new Icon(VaadinIcon.FILE));
                     diplomaButton.setWidth(BUTTON_WIDTH);
                     diplomaButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
                     diplomaButton.addClassName(LumoUtility.FontWeight.MEDIUM);
@@ -169,7 +169,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                     eventRankingAnchor.setId("event-ranking-" + seriesIndex + "-" + competitionIndex);
                     eventRankingAnchor.setTarget("_blank");
 
-                    Button eventRankingButton = new Button(getTranslation("Event.Ranking"), new Icon(VaadinIcon.FILE));
+                    var eventRankingButton = new Button(getTranslation("Event.Ranking"), new Icon(VaadinIcon.FILE));
                     eventRankingButton.setWidth(BUTTON_WIDTH);
                     eventRankingButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
                     eventRankingButton.addClassName(LumoUtility.FontWeight.MEDIUM);
