@@ -52,25 +52,27 @@ public class CompetitionRankingReport extends RankingReport {
 
     private void createRanking() {
         for (var category : ranking.categories()) {
-            if (numberOfRows > 20) {
-                document.newPage();
-            }
-            PdfPTable table = createAthletesTable();
-            createCategoryTitle(table, category);
-            numberOfRows += 2;
-
-            int rank = 1;
-            for (var athlete : category.sortedAthletes()) {
-                if (numberOfRows > 23) {
-                    document.add(table);
-                    table = createAthletesTable();
+            if (!category.athletes().isEmpty()) {
+                if (numberOfRows > 20) {
                     document.newPage();
                 }
-                createAthleteRow(table, rank, athlete, calculateNumberOfMedals(category));
-                rank++;
-                numberOfRows += 1;
+                PdfPTable table = createAthletesTable();
+                createCategoryTitle(table, category);
+                numberOfRows += 2;
+
+                int rank = 1;
+                for (var athlete : category.sortedAthletes()) {
+                    if (numberOfRows > 23) {
+                        document.add(table);
+                        table = createAthletesTable();
+                        document.newPage();
+                    }
+                    createAthleteRow(table, rank, athlete, calculateNumberOfMedals(category));
+                    rank++;
+                    numberOfRows += 1;
+                }
+                document.add(table);
             }
-            document.add(table);
         }
     }
 
