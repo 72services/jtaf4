@@ -71,6 +71,16 @@ public class CompetitionRankingReport extends RankingReport {
                     rank++;
                     numberOfRows += 1;
                 }
+                for (var athlete : category.sortedDnfAthletes()) {
+                    if (numberOfRows > 23) {
+                        document.add(table);
+                        table = createAthletesTable();
+                        document.newPage();
+                    }
+                    createAthleteRow(table, -1, athlete, calculateNumberOfMedals(category));
+                    rank++;
+                    numberOfRows += 1;
+                }
                 document.add(table);
             }
         }
@@ -89,7 +99,7 @@ public class CompetitionRankingReport extends RankingReport {
     }
 
     private PdfPTable createAthletesTable() {
-        var table = new PdfPTable(new float[]{2f, 10f, 10f, 2f, 5f, 5f});
+        var table = new PdfPTable(new float[]{3f, 10f, 10f, 2f, 5f, 5f});
         table.setWidthPercentage(100);
         table.setSpacingBefore(cmToPixel(0.6f));
         return table;
@@ -103,7 +113,9 @@ public class CompetitionRankingReport extends RankingReport {
     }
 
     private void createAthleteRow(PdfPTable table, int rank, CompetitionRankingData.Category.Athlete athlete, int numberOfMedals) {
-        if (rank <= numberOfMedals) {
+        if (athlete.dnf()) {
+            addCell(table, "DNF");
+        } else if (rank <= numberOfMedals) {
             addCell(table, "* " + rank + ".");
         } else {
             addCell(table, rank + ".");
@@ -112,7 +124,11 @@ public class CompetitionRankingReport extends RankingReport {
         addCell(table, athlete.firstName());
         addCell(table, String.valueOf(athlete.yearOfBirth()));
         addCell(table, athlete.club());
-        addCellAlignRight(table, String.valueOf(athlete.totalPoints()));
+        if (athlete.dnf()) {
+            addCellAlignRight(table, "DNF");
+        } else {
+            addCellAlignRight(table, String.valueOf(athlete.totalPoints()));
+        }
 
         if (athlete.results() != null) {
             var sb = new StringBuilder();

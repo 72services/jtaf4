@@ -8,9 +8,11 @@ import ch.jtaf.ui.dialog.ConfirmDialog;
 import ch.jtaf.ui.layout.MainLayout;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
@@ -157,6 +159,29 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                     }));
                 position++;
             }
+
+            var dnf = new Checkbox(getTranslation("Dnf"));
+            dnf.addValueChangeListener(e ->
+                transactionTemplate.executeWithoutResult(t -> {
+                    int updatedRows = dsl.update(CATEGORY_ATHLETE)
+                        .set(CATEGORY_ATHLETE.DNF, e.getValue())
+                        .where(CATEGORY_ATHLETE.ATHLETE_ID.eq(event.getValue().get(ATHLETE.ID)))
+                        .and(CATEGORY_ATHLETE.CATEGORY_ID.eq(event.getValue().get(CATEGORY.ID)))
+                        .execute();
+                    if (updatedRows != 1) {
+                        Notification.show(getTranslation("Set.dnf.unsuccessful"), 6000, Notification.Position.TOP_END);
+                        t.setRollbackOnly();
+                    }
+                }));
+
+            dsl.selectFrom(CATEGORY_ATHLETE)
+                .where(CATEGORY_ATHLETE.ATHLETE_ID.eq(event.getValue().get(ATHLETE.ID)))
+                .and(CATEGORY_ATHLETE.CATEGORY_ID.eq(event.getValue().get(CATEGORY.ID)))
+                .fetchOptional()
+                .ifPresent(categoryAthleteRecord -> dnf.setValue(categoryAthleteRecord.getDnf()));
+
+            form.add(dnf);
+
             var removeResults = new Button(getTranslation(REMOVE_RESULTS));
             removeResults.addClassName(Margin.Top.MEDIUM);
             removeResults.addClickListener(e ->
@@ -164,8 +189,9 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                     getTranslation(REMOVE_RESULTS),
                     getTranslation(REMOVE_RESULTS),
                     getTranslation("Confirm"),
-                    ev -> transactionTemplate.executeWithoutResult(status ->
-                    {
+                    ev -> transactionTemplate.executeWithoutResult(status -> {
+                        dnf.setValue(false);
+
                         dsl.deleteFrom(RESULT)
                             .where(RESULT.ATHLETE_ID.eq(event.getValue().get(ATHLETE.ID)))
                             .and(RESULT.COMPETITION_ID.eq(competitionId))

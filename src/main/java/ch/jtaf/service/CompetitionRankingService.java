@@ -60,6 +60,7 @@ public class CompetitionRankingService {
                                 CATEGORY_ATHLETE.athlete().LAST_NAME,
                                 CATEGORY_ATHLETE.athlete().YEAR_OF_BIRTH,
                                 CATEGORY_ATHLETE.athlete().club().NAME,
+                                CATEGORY_ATHLETE.DNF,
                                 multiset(
                                     select(
                                         RESULT.event().ABBREVIATION,

@@ -10,15 +10,21 @@ public record CompetitionRankingData(String name, LocalDate competitionDate, boo
 
         public List<Athlete> sortedAthletes() {
             return athletes.stream()
-                .filter(athlete -> !athlete.results.isEmpty())
+                .filter(athlete -> !athlete.results.isEmpty() && !athlete.dnf)
                 .sorted((o1, o2) -> Integer.compare(o2.totalPoints(), o1.totalPoints()))
                 .toList();
         }
 
-        public record Athlete(String firstName, String lastName, int yearOfBirth, String club, List<Result> results) {
+        public List<Athlete> sortedDnfAthletes() {
+            return athletes.stream()
+                .filter(athlete -> athlete.dnf)
+                .toList();
+        }
+
+        public record Athlete(String firstName, String lastName, int yearOfBirth, String club, boolean dnf, List<Result> results) {
 
             public int totalPoints() {
-                if (results == null) {
+                if (results == null || dnf) {
                     return 0;
                 } else {
                     return results.stream().mapToInt(Result::points).sum();

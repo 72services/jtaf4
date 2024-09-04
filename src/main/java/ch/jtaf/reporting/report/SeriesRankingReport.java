@@ -74,7 +74,7 @@ public class SeriesRankingReport extends RankingReport {
     }
 
     private PdfPTable createAthletesTable() {
-        var table = new PdfPTable(new float[]{2f, 10f, 10f, 2f, 5f, 5f});
+        var table = new PdfPTable(new float[]{3f, 10f, 10f, 2f, 5f, 5f});
         table.setWidthPercentage(100);
         table.setSpacingBefore(cmToPixel(1f));
         return table;

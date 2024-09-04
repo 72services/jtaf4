@@ -62,6 +62,7 @@ public class SeriesRankingService {
                             )
                                 .from(CATEGORY_ATHLETE)
                                 .where(CATEGORY_ATHLETE.CATEGORY_ID.eq(CATEGORY.ID))
+                                .and(CATEGORY_ATHLETE.DNF.eq(false))
                         ).convertFrom(r -> r.map(mapping(SeriesRankingData.Category.Athlete::new)))
                     )
                         .from(CATEGORY)
